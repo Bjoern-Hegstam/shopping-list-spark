@@ -1,4 +1,4 @@
 #parse("/velocity/layout.vm")
 #@mainLayout()
-Index
+Welcome $currentUser.username
 #end

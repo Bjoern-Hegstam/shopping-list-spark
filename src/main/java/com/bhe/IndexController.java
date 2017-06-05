@@ -10,7 +10,10 @@ import java.util.HashMap;
 public class IndexController {
 
     public static Route serveIndexPage = (request, response) -> {
-        LoginController.redirectIfUserNotLoggedIn(request, response);
+        if (!LoginController.userIsLoggedIn(request)) {
+            response.redirect(Path.Web.LOGIN);
+            return null;
+        }
 
         return ViewUtil.render(request, new HashMap<>(), Path.Template.INDEX);
     };

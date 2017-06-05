@@ -1,5 +1,6 @@
 package com.bhe.login;
 
+import com.bhe.user.User;
 import com.bhe.util.Path;
 import com.bhe.util.Repositories;
 import com.bhe.util.ViewUtil;
@@ -9,6 +10,7 @@ import spark.Route;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class LoginController {
     public static Route serveLoginPage = (request, responze) -> {
@@ -26,34 +28,25 @@ public class LoginController {
         String username = request.queryParams("username");
         String password = request.queryParams("password");
 
-        if (!areValidCredentials(username, password)) {
+        Optional<User> user = Repositories
+                .users()
+                .findByUsername(username)
+                .filter(u -> u.passwordIsValid(password));
+
+        if (!user.isPresent()) {
             model.put("errorMessage", "LOGIN_AUTH_FAILED");
             return ViewUtil.render(request, model, Path.Template.LOGIN);
         }
 
-        request.session().attribute("currentUser", username);
+        request.session().attribute("currentUser", user.get());
         response.redirect(Path.Web.INDEX);
         return null;
     };
-
-    private static boolean areValidCredentials(String username, String password) {
-        return Repositories
-                .users()
-                .findByUsername(username)
-                .filter(user -> user.passwordIsValid(password))
-                .isPresent();
-    }
 
     public static Route handleLogoutPost = (request, response) -> {
         // TODO: Implement
         return null;
     };
-
-    public static void redirectIfUserNotLoggedIn(Request request, Response response) {
-        if (!userIsLoggedIn(request)) {
-            response.redirect(Path.Web.LOGIN);
-        }
-    }
 
     public static boolean userIsLoggedIn(Request request) {
         return request.session().attribute("currentUser") != null;

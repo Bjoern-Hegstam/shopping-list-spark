@@ -1,4 +1,4 @@
 #* @implicitly included *#
 #* @vtlvariable name="msg" type="com.bhe.util.MessageBundle" *#
-#* @vtlvariable name="currentUser" type="java.lang.String" *#
+#* @vtlvariable name="currentUser" type="com.bhe.user.User" *#
 #* @vtlvariable name="authenticationFailed" type="java.lang.String" *#

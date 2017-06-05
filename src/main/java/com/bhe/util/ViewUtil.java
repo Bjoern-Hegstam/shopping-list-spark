@@ -11,6 +11,7 @@ public class ViewUtil {
 
     public static String render(Request request, Map<String, Object> model, String templatePath) {
         model.put("msg", new MessageBundle(request.session().attribute("locale")));
+        model.put("currentUser", request.session().attribute("currentUser"));
         return strictVelocityEngine().render(new ModelAndView(model, templatePath));
     }
 
