@@ -1,6 +1,7 @@
 package com.bhe.login;
 
 import com.bhe.util.Path;
+import com.bhe.util.Repositories;
 import com.bhe.util.ViewUtil;
 import spark.Request;
 import spark.Response;
@@ -8,8 +9,6 @@ import spark.Route;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static spark.Spark.halt;
 
 public class LoginController {
     public static Route serveLoginPage = (request, responze) -> {
@@ -38,8 +37,11 @@ public class LoginController {
     };
 
     private static boolean areValidCredentials(String username, String password) {
-        // TODO: Go via repository, implement fake repository for testing
-        return false;
+        return Repositories
+                .users()
+                .findByUsername(username)
+                .filter(user -> user.passwordIsValid(password))
+                .isPresent();
     }
 
     public static Route handleLogoutPost = (request, response) -> {
