@@ -1,5 +1,7 @@
 package com.bhe;
 
+import com.bhe.login.LoginController;
+
 import static spark.Spark.*;
 
 public class Application {
@@ -10,8 +12,15 @@ public class Application {
         staticFiles.location("/public");
         staticFiles.expireTime(600);
 
-        get("/hello", (req, res) -> "Hello World!");
-        // TODO: Organize routes better
-        // TODO: Get basic administration site up and running with in memory storage
+        get("/", IndexController.serveIndexPage);
+
+        get("/login", LoginController.serveLoginPage);
+        post("/login", LoginController.handleLoginPost);
+        post("/logout", LoginController.handleLogoutPost);
+        
+        path("/api", () -> {
+            before("/*", LoginController::userIsLoggedIn);
+            // TODO: Add api routes
+        });
     }
 }
