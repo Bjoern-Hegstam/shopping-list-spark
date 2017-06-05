@@ -28,16 +28,29 @@
         </div>
         <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="nav navbar-nav">
-
+                #if($currentUser)
+                #else
                 <li>
                     <a href="/login">Login</a>
                 </li>
                 <li>
                     <a href="/register">Register</a>
                 </li>
-
+                #end
 
             </ul>
+
+            #if($currentUser)
+                <form id="logout-form" style="display:none" action="/logout" method="post"></form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#">$currentUser.username</a>
+                    </li>
+                    <li>
+                        <a onclick="document.getElementById('logout-form').submit()">Log out</a>
+                    </li>
+                </ul>
+            #end
         </div>
     </div>
 </nav>
