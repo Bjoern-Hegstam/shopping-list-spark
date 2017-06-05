@@ -1,5 +1,6 @@
 package com.bhe.login;
 
+import com.bhe.util.Path;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -9,7 +10,7 @@ import static spark.Spark.halt;
 public class LoginController {
     public static Route serveLoginPage = (request, responze) -> {
         if (userIsLoggedIn(request)) {
-            responze.redirect("/");
+            responze.redirect(Path.Web.INDEX);
             return null;
         }
 
@@ -29,7 +30,7 @@ public class LoginController {
 
     public static void redirectIfUserNotAuthorized(Request request, Response response) {
         if (!userIsLoggedIn(request)) {
-            response.redirect("/login");
+            response.redirect(Path.Web.LOGIN);
         }
     }
 
