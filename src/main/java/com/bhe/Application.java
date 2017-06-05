@@ -1,6 +1,7 @@
 package com.bhe;
 
 import com.bhe.login.LoginController;
+import com.bhe.util.Filters;
 
 import static spark.Spark.*;
 
@@ -19,7 +20,7 @@ public class Application {
         post("/logout", LoginController.handleLogoutPost);
         
         path("/api", () -> {
-            before("/*", LoginController::userIsLoggedIn);
+            before("/*", Filters::userIsLoggedIn);
             // TODO: Add api routes
         });
     }

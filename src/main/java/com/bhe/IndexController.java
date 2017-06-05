@@ -9,6 +9,6 @@ public class IndexController {
         LoginController.redirectIfUserNotAuthorized(request, response);
 
         // TODO: List shopping lists
-        return null;
+        return "Index page";
     };
 }
