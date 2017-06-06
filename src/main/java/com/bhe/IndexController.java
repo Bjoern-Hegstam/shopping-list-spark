@@ -1,20 +1,18 @@
 package com.bhe;
 
-import com.bhe.login.LoginController;
 import com.bhe.util.Path;
-import com.bhe.util.ViewUtil;
-import spark.Route;
+import com.bhe.util.webapp.Request;
+import com.bhe.util.webapp.Result;
 
-import java.util.HashMap;
+import static com.bhe.util.webapp.ResultBuilder.result;
 
 public class IndexController {
 
-    public static Route serveIndexPage = (request, response) -> {
-        if (!LoginController.userIsLoggedIn(request)) {
-            response.redirect(Path.Web.LOGIN);
-            return null;
+    public Result serveIndexPage(Request request) {
+        if (!request.session().isUserLoggedIn()) {
+            return result().redirectTo(Path.Web.LOGIN);
         }
 
-        return ViewUtil.render(request, new HashMap<>(), Path.Template.INDEX);
-    };
+        return result().render(Path.Template.INDEX);
+    }
 }

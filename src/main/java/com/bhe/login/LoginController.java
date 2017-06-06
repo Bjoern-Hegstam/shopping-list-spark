@@ -1,55 +1,54 @@
 package com.bhe.login;
 
 import com.bhe.user.User;
+import com.bhe.user.UserRepository;
 import com.bhe.util.Path;
-import com.bhe.util.Repositories;
-import com.bhe.util.ViewUtil;
-import spark.Request;
-import spark.Response;
-import spark.Route;
+import com.bhe.util.webapp.Request;
+import com.bhe.util.webapp.Result;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.bhe.util.webapp.ResultBuilder.result;
+
 public class LoginController {
-    public static Route serveLoginPage = (request, responze) -> {
-        if (userIsLoggedIn(request)) {
-            responze.redirect(Path.Web.INDEX);
-            return null;
+    private UserRepository userRepository;
+
+    public LoginController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public Result serveLoginPage(Request request) {
+        if (request.session().isUserLoggedIn()) {
+            return result().redirectTo(Path.Web.INDEX);
         }
 
-        return ViewUtil.render(request, new HashMap<>(), Path.Template.LOGIN);
-    };
+        return result().render(Path.Template.LOGIN);
+    }
 
-    public static Route handleLoginPost = (request, response) -> {
+    public Result handleLoginPost(Request request) {
         Map<String, Object> model = new HashMap<>();
 
         String username = request.queryParams("username");
         String password = request.queryParams("password");
 
-        Optional<User> user = Repositories
-                .users()
+        Optional<User> user = userRepository
                 .findByUsername(username)
                 .filter(u -> u.passwordIsValid(password));
 
         if (!user.isPresent()) {
             model.put("errorMessage", "LOGIN_AUTH_FAILED");
-            return ViewUtil.render(request, model, Path.Template.LOGIN);
+            return result()
+                    .render(Path.Template.LOGIN, model);
         }
 
-        request.session().attribute("currentUser", user.get());
-        response.redirect(Path.Web.INDEX);
-        return null;
-    };
+        request.session().setCurrentUser(user.get());
+        return result().redirectTo(Path.Web.INDEX);
+    }
 
-    public static Route handleLogoutPost = (request, response) -> {
-        request.session().removeAttribute("currentUser");
-        response.redirect(Path.Web.LOGIN);
-        return null;
-    };
-
-    public static boolean userIsLoggedIn(Request request) {
-        return request.session().attribute("currentUser") != null;
+    public Result handleLogoutPost(Request request) {
+        request.session().unsetCurrentUser();
+        return result().redirectTo(Path.Web.LOGIN);
     }
 }
