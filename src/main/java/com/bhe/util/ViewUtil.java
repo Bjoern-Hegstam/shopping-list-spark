@@ -1,8 +1,8 @@
 package com.bhe.util;
 
+import com.bhe.util.webapp.Request;
 import org.apache.velocity.app.VelocityEngine;
 import spark.ModelAndView;
-import spark.Request;
 import spark.template.velocity.VelocityTemplateEngine;
 
 import java.util.Map;
@@ -10,8 +10,12 @@ import java.util.Map;
 public class ViewUtil {
 
     public static String render(Request request, Map<String, Object> model, String templatePath) {
-        model.put("msg", new MessageBundle(request.session().attribute("locale")));
-        model.put("currentUser", request.session().attribute("currentUser"));
+        model.put("msg", new MessageBundle(request.session().locale()));
+        request.session().currentUser().ifPresent(user -> model.put("currentUser", user));
+        request.session().errorMessage().ifPresent(error -> {
+            model.put("errorMessage", error);
+            request.session().clearErrorMessage();
+        });
         return strictVelocityEngine().render(new ModelAndView(model, templatePath));
     }
 

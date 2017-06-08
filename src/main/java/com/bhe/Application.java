@@ -59,7 +59,7 @@ public class Application {
         }
 
         if (result.isRender()) {
-            return ViewUtil.render(request, result.renderModel, result.renderTemplatePath);
+            return ViewUtil.render(new SparkRequest(request), result.renderModel, result.renderTemplatePath);
         }
 
         return null;

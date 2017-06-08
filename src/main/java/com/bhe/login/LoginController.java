@@ -38,9 +38,8 @@ public class LoginController {
                 .filter(u -> u.passwordIsValid(password));
 
         if (!user.isPresent()) {
-            model.put("errorMessage", "LOGIN_AUTH_FAILED");
-            return result()
-                    .render(Path.Template.LOGIN, model);
+            request.session().setErrorMessage("LOGIN_AUTH_FAILED");
+            return result().render(Path.Template.LOGIN, model);
         }
 
         request.session().setCurrentUser(user.get());
