@@ -9,6 +9,8 @@ import com.bhe.util.Path;
 import com.bhe.util.ViewUtil;
 import com.bhe.util.webapp.Result;
 import com.bhe.util.webapp.Route;
+import spark.Request;
+import spark.Response;
 
 import static spark.Spark.*;
 
@@ -42,21 +44,24 @@ public class Application {
         return (request, response) -> {
             Result result = route.handle(new SparkRequest(request));
 
-            // TODO: Convert nullchecks to methods in Result and add unit tests
-            if (result.redirectPath != null) {
-                response.redirect(result.redirectPath);
-                return null;
-            }
-
-            if (result.responsePayload != null) {
-                return result.responsePayload;
-            }
-
-            if (result.renderTemplatePath != null) {
-                return ViewUtil.render(request, result.renderModel, result.renderTemplatePath);
-            }
-
-            return null;
+            return parseResult(request, response, result);
         };
+    }
+
+    private static Object parseResult(Request request, Response response, Result result) {
+        if (result.isRedirect()) {
+            response.redirect(result.redirectPath);
+            return null;
+        }
+
+        if (result.isPayloadResponse()) {
+            return result.responsePayload;
+        }
+
+        if (result.isRender()) {
+            return ViewUtil.render(request, result.renderModel, result.renderTemplatePath);
+        }
+
+        return null;
     }
 }
