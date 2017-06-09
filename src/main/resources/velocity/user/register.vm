@@ -1,0 +1,29 @@
+#parse("/velocity/layout.vm")
+#@mainLayout()
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+
+            <form action="/register" method="post">
+                <fieldset class="form-group">
+                    <label class="sr-only" for="usernameInput">Username</label>
+                    <input type="text" name="username" class="form-control" id="usernameInput" placeholder="Username">
+                </fieldset>
+
+                <fieldset class="form-group">
+                    <label class="sr-only" for="passwordInput">Password</label>
+                    <input type="password" name="password" class="form-control" id="passwordInput" placeholder="Password">
+                </fieldset>
+
+                <fieldset class="form-group">
+                    <label class="sr-only" for="emailInput">Email</label>
+                    <input type="text" name="email" class="form-control" id="emailInput" placeholder="Email">
+                </fieldset>
+
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+#end

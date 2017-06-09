@@ -3,6 +3,8 @@ package com.bhe;
 import com.bhe.login.LoginController;
 import com.bhe.sparkwrapper.SparkRequest;
 import com.bhe.user.User;
+import com.bhe.user.UserController;
+import com.bhe.user.UserRegistration;
 import com.bhe.user.UserRepositoryInMem;
 import com.bhe.util.Filters;
 import com.bhe.util.Path;
@@ -33,7 +35,10 @@ public class Application {
         get(Path.Web.LOGIN, asSparkRoute(new LoginController(userRepository)::serveLoginPage));
         post(Path.Web.LOGIN, asSparkRoute(new LoginController(userRepository)::handleLoginPost));
         post(Path.Web.LOGOUT, asSparkRoute(new LoginController(userRepository)::handleLogoutPost));
-        
+
+        get(Path.Web.REGISTER, asSparkRoute(new UserController(new UserRegistration(userRepository))::serveRegistrationPage));
+        post(Path.Web.REGISTER, asSparkRoute(new UserController(new UserRegistration(userRepository))::registerNewUser));
+
         path("/api", () -> {
             before("/*", Filters::userIsLoggedIn);
             // TODO: Add api routes
