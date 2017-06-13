@@ -22,7 +22,7 @@ public class UserController {
         String password = request.queryParams("password");
         String email = request.queryParams("email");
 
-        boolean registrationSucceeded = userRegistration.registerNewUser(username, password, email);
+        boolean registrationSucceeded = userRegistration.register(new User(username, password, email));
         if (registrationSucceeded) {
             return result().redirectTo(Path.Web.LOGIN);
         } else {

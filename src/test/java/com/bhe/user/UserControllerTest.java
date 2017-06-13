@@ -72,6 +72,6 @@ public class UserControllerTest {
     }
 
     private void userRegistrationAllowed(boolean allowed) {
-        when(userRegistration.registerNewUser(any(), any(), any())).thenReturn(allowed);
+        when(userRegistration.register(any())).thenReturn(allowed);
     }
 }

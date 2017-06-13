@@ -1,15 +1,35 @@
 package com.bhe.user;
 
+import java.util.Optional;
+
 public class UserRegistration {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserRegistration(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public boolean registerNewUser(String username, String password, String email) {
-        // TODO: Write unit tests and fill in implementation
-        return false;
+    boolean register(User user) {
+        return Optional
+                .of(user)
+                .filter(User::hasValidUsername)
+                .filter(User::hasValidEmail)
+                .filter(this::usernameNotInUse)
+                .filter(this::emailNotInUse)
+                .map(userRepository::create)
+                .orElse(false);
+    }
+
+    private boolean usernameNotInUse(User user) {
+        return !userRepository
+                .findByUsername(user.getUsername())
+                .isPresent();
+    }
+
+    private boolean emailNotInUse(User user) {
+        return !userRepository
+                .findByEmail(user.getEmail())
+                .isPresent();
     }
 }

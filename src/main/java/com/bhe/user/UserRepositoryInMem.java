@@ -3,15 +3,23 @@ package com.bhe.user;
 import java.util.*;
 
 public class UserRepositoryInMem implements UserRepository {
-    private Map<String, User> users = new HashMap<>();
+    private final Map<String, User> usersByUsername = new HashMap<>();
+    private final Map<String, User> usersByEmail = new HashMap<>();
 
     @Override
-    public void create(User user) {
-        users.put(user.getUsername(), user);
+    public boolean create(User user) {
+        usersByUsername.put(user.getUsername(), user);
+        usersByEmail.put(user.getEmail(), user);
+        return true;
     }
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return Optional.ofNullable(users.getOrDefault(username, null));
+        return Optional.ofNullable(usersByUsername.getOrDefault(username, null));
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return Optional.ofNullable(usersByEmail.getOrDefault(email, null));
     }
 }

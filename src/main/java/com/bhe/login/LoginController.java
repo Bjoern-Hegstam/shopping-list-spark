@@ -13,7 +13,7 @@ import java.util.Optional;
 import static com.bhe.util.webapp.ResultBuilder.result;
 
 public class LoginController {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public LoginController(UserRepository userRepository) {
         this.userRepository = userRepository;
