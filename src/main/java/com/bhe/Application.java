@@ -22,7 +22,7 @@ public class Application {
     private static final UserRepositoryInMem userRepository = new UserRepositoryInMem();
 
     public static void main(String[] args) {
-        userRepository.create(new User("a", "a"));
+        userRepository.create(new User("a", "a", "email@domain.com"));
 
         // Configure spark
         port(4567);

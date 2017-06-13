@@ -1,15 +1,20 @@
 package com.bhe.user;
 
+import org.apache.commons.validator.routines.EmailValidator;
 import org.mindrot.jbcrypt.BCrypt;
 
-public class User {
-    private String username;
-    private String hashedPassword;
-    private String salt;
+import java.util.Objects;
 
-    public User(String username, String password) {
-        this.username = username;
-        this.salt = BCrypt.gensalt();
+public class User {
+    private final String username;
+    private final String email;
+    private final String hashedPassword;
+    private final String salt;
+
+    public User(String username, String password, String email) {
+        this.username = Objects.requireNonNull(username);
+        this.email = Objects.requireNonNull(email);
+        this.salt = Objects.requireNonNull(BCrypt.gensalt());
         this.hashedPassword = BCrypt.hashpw(password, this.salt);
     }
     
@@ -19,5 +24,19 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public boolean hasValidUsername() {
+        return !username.isEmpty();
+    }
+
+    public boolean hasValidEmail() {
+        return EmailValidator
+                .getInstance()
+                .isValid(this.email);
     }
 }
