@@ -35,7 +35,7 @@ public class LoginController {
 
         Optional<User> user = userRepository
                 .findByUsername(username)
-                .filter(u -> u.passwordIsValid(password));
+                .filter(u -> u.hasPassword(password));
 
         if (!user.isPresent()) {
             request.session().setErrorMessage("LOGIN_AUTH_FAILED");

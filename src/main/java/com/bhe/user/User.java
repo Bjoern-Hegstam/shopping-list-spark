@@ -13,7 +13,7 @@ public class User {
         this.hashedPassword = BCrypt.hashpw(password, this.salt);
     }
     
-    public boolean passwordIsValid(String password) {
+    public boolean hasPassword(String password) {
         return BCrypt.hashpw(password, salt).equals(hashedPassword);
     }
 
