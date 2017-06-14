@@ -17,6 +17,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class LoginControllerTest {
+    private static final String USERNAME = "John";
+    private static final String PASSWORD = "jp93";
+    private static final String EMAIL = "john@domain.com";
+    private static final String WRONG_USERNAME = "Peter";
+    private static final String WRONG_PASSWORD = "abc";
 
     private UserRepositoryInMem userRepository;
     private LoginController loginController;
@@ -56,17 +61,10 @@ public class LoginControllerTest {
     @Test
     public void login_normalCase() {
         // given
-        User user = new User(
-                "John",
-                "jp93",
-                "john@domain.com",
-                true
-        );
+        User user = new User(USERNAME, PASSWORD, EMAIL, true);
         userRepository.create(user);
 
-        Request request = mockRequest();
-        when(request.queryParams(LoginParameter.USERNAME)).thenReturn("John");
-        when(request.queryParams(LoginParameter.PASSWORD)).thenReturn("jp93");
+        Request request = mockLoginRequest(USERNAME, PASSWORD);
 
         // when
         Result result = loginController.handleLoginPost(request);
@@ -76,24 +74,44 @@ public class LoginControllerTest {
         assertUserLoggedIn(request, user);
     }
 
-    private void assertUserLoggedIn(Request request, User user) {
-        verify(request.session()).setCurrentUser(user);
+    @Test
+    public void login_whenUsernameNotRecognized() {
+        // given
+        userRepository.create(new User(USERNAME, PASSWORD, EMAIL, true));
+
+        Request request = mockLoginRequest(WRONG_USERNAME, PASSWORD);
+
+        // when
+        Result result = loginController.handleLoginPost(request);
+
+        // then
+        assertEquals(Path.Template.LOGIN, result.renderTemplatePath);
+        verify(request.session()).setErrorMessage(Message.LOGIN_AUTH_FAILED);
+        assertUserNotLoggedIn(request);
+    }
+
+    @Test
+    public void login_whenPasswordInvalid() {
+        // given
+        userRepository.create(new User(USERNAME, PASSWORD, EMAIL, true));
+
+        Request request = mockLoginRequest(USERNAME, WRONG_PASSWORD);
+
+        // when
+        Result result = loginController.handleLoginPost(request);
+
+        // then
+        assertEquals(Path.Template.LOGIN, result.renderTemplatePath);
+        verify(request.session()).setErrorMessage(Message.LOGIN_AUTH_FAILED);
+        assertUserNotLoggedIn(request);
     }
 
     @Test
     public void login_whenUserNotVerified_shouldShowErrorMessage() {
         // given
-        User unverifiedUser = new User(
-                "John",
-                "jp93",
-                "john@domain.com",
-                false
-        );
-        userRepository.create(unverifiedUser);
+        userRepository.create(new User(USERNAME, PASSWORD, EMAIL, false));
 
-        Request request = mockRequest();
-        when(request.queryParams(LoginParameter.USERNAME)).thenReturn("John");
-        when(request.queryParams(LoginParameter.PASSWORD)).thenReturn("jp93");
+        Request request = mockLoginRequest(USERNAME, PASSWORD);
 
         // when
         Result result = loginController.handleLoginPost(request);
@@ -102,6 +120,17 @@ public class LoginControllerTest {
         assertEquals(Path.Template.LOGIN, result.renderTemplatePath);
         verify(request.session()).setErrorMessage(Message.LOGIN_USER_PENDING_VERIFICATION);
         assertUserNotLoggedIn(request);
+    }
+
+    private Request mockLoginRequest(String username, String password) {
+        Request request = mockRequest();
+        when(request.queryParams(LoginParameter.USERNAME)).thenReturn(username);
+        when(request.queryParams(LoginParameter.PASSWORD)).thenReturn(password);
+        return request;
+    }
+
+    private void assertUserLoggedIn(Request request, User user) {
+        verify(request.session()).setCurrentUser(user);
     }
 
     private void assertUserNotLoggedIn(Request request) {
