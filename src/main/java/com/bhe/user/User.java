@@ -10,14 +10,20 @@ public class User {
     private final String email;
     private final String hashedPassword;
     private final String salt;
+    private final boolean verified;
 
     public User(String username, String password, String email) {
+        this(username, password, email, false);
+    }
+
+    public User(String username, String password, String email, boolean verified) {
         this.username = Objects.requireNonNull(username);
         this.email = Objects.requireNonNull(email);
+        this.verified = verified;
         this.salt = Objects.requireNonNull(BCrypt.gensalt());
         this.hashedPassword = BCrypt.hashpw(password, this.salt);
     }
-    
+
     public boolean hasPassword(String password) {
         return BCrypt.hashpw(password, salt).equals(hashedPassword);
     }
@@ -38,5 +44,9 @@ public class User {
         return EmailValidator
                 .getInstance()
                 .isValid(this.email);
+    }
+
+    public boolean isVerified() {
+        return verified;
     }
 }

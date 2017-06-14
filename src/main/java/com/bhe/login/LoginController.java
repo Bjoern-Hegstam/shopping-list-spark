@@ -2,6 +2,7 @@ package com.bhe.login;
 
 import com.bhe.user.User;
 import com.bhe.user.UserRepository;
+import com.bhe.util.Message;
 import com.bhe.util.Path;
 import com.bhe.util.webapp.Request;
 import com.bhe.util.webapp.Result;
@@ -38,7 +39,12 @@ public class LoginController {
                 .filter(u -> u.hasPassword(password));
 
         if (!user.isPresent()) {
-            request.session().setErrorMessage("LOGIN_AUTH_FAILED");
+            request.session().setErrorMessage(Message.LOGIN_AUTH_FAILED);
+            return result().render(Path.Template.LOGIN, model);
+        }
+
+        if (!user.get().isVerified()) {
+            request.session().setErrorMessage(Message.LOGIN_USER_PENDING_VERIFICATION);
             return result().render(Path.Template.LOGIN, model);
         }
 
