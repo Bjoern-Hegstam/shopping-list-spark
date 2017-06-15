@@ -49,4 +49,8 @@ public class User {
     public boolean isVerified() {
         return verified;
     }
+
+    public boolean isAdmin() {
+        return true;
+    }
 }
