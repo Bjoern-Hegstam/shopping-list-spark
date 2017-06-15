@@ -7,10 +7,10 @@ import com.bhe.util.webapp.Result;
 
 import static com.bhe.util.webapp.ResultBuilder.result;
 
-public class UserController {
+public class UserRegistrationController {
     private final UserRegistration userRegistration;
 
-    public UserController(UserRegistration userRegistration) {
+    public UserRegistrationController(UserRegistration userRegistration) {
         this.userRegistration = userRegistration;
     }
 

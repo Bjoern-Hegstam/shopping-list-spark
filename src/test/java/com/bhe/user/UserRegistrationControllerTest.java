@@ -14,9 +14,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class UserControllerTest {
+public class UserRegistrationControllerTest {
 
-    private UserController userController;
+    private UserRegistrationController userRegistrationController;
     private UserRegistration userRegistration;
 
     @Rule
@@ -25,13 +25,13 @@ public class UserControllerTest {
     @Before
     public void setUp() throws Exception {
         userRegistration = mock(UserRegistration.class);
-        userController = new UserController(userRegistration);
+        userRegistrationController = new UserRegistrationController(userRegistration);
     }
 
     @Test
     public void serveRegistrationPage() {
         // when
-        Result result = userController.serveRegistrationPage(mock(Request.class));
+        Result result = userRegistrationController.serveRegistrationPage(mock(Request.class));
 
         // then
         errorCollector.checkThat(result.renderTemplatePath, is(Path.Template.REGISTER));
@@ -44,7 +44,7 @@ public class UserControllerTest {
         userRegistrationAllowed(true);
 
         // when
-        Result result = userController.registerNewUser(request);
+        Result result = userRegistrationController.registerNewUser(request);
 
         // then
         errorCollector.checkThat(result.redirectPath, is(Path.Web.LOGIN));
@@ -57,7 +57,7 @@ public class UserControllerTest {
         userRegistrationAllowed(false);
 
         // when
-        Result result = userController.registerNewUser(request);
+        Result result = userRegistrationController.registerNewUser(request);
 
         // then
         errorCollector.checkThat(result.renderTemplatePath, is(Path.Template.REGISTER));
