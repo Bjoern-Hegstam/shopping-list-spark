@@ -1,5 +1,6 @@
 package com.bhe.user;
 
+import com.bhe.util.Message;
 import com.bhe.util.Path;
 import com.bhe.util.webapp.Request;
 import com.bhe.util.webapp.Result;
@@ -26,7 +27,7 @@ public class UserController {
         if (registrationSucceeded) {
             return result().redirectTo(Path.Web.LOGIN);
         } else {
-            request.session().setErrorMessage("USER_REGISTER_NOT_ALLOWED");
+            request.session().setErrorMessage(Message.USER_REGISTRATION_FAILED);
             return result().render(Path.Template.REGISTER);
         }
     }

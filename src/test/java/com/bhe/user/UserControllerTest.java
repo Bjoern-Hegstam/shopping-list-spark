@@ -1,5 +1,6 @@
 package com.bhe.user;
 
+import com.bhe.util.Message;
 import com.bhe.util.Path;
 import com.bhe.util.webapp.Request;
 import com.bhe.util.webapp.Result;
@@ -60,7 +61,7 @@ public class UserControllerTest {
 
         // then
         errorCollector.checkThat(result.renderTemplatePath, is(Path.Template.REGISTER));
-        verify(request.session()).setErrorMessage("USER_REGISTER_NOT_ALLOWED");
+        verify(request.session()).setErrorMessage(Message.USER_REGISTRATION_FAILED);
     }
 
     private Request mockRegistrationRequest() {
