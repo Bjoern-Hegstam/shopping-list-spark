@@ -3,7 +3,6 @@ package com.bhe.admin;
 import com.bhe.user.UserRepository;
 import com.bhe.util.Filters;
 import com.bhe.util.Path;
-import com.bhe.util.webapp.Request;
 import com.bhe.util.webapp.Result;
 import com.google.inject.Inject;
 import spark.Service;
@@ -24,11 +23,11 @@ public class UserAdministrationController {
     public void configureRoutes(Service http) {
         http.path(Path.Web.ADMIN, () -> {
             http.before("/*", Filters::userIsAdmin);
-            http.get(Path.Web.USERS, asSparkRoute(this::serverUserList));
+            http.get(Path.Web.USERS, asSparkRoute(request -> serverUserList()));
         });
     }
 
-    private Result serverUserList(Request request) {
+    private Result serverUserList() {
         HashMap<String, Object> model = new HashMap<>();
         model.put("users", userRepository.getUsers());
 

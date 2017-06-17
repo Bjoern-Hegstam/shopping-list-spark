@@ -8,7 +8,7 @@ import spark.Service;
 import static com.bhe.util.webapp.ResultBuilder.result;
 import static com.bhe.util.webapp.SparkWrappers.asSparkRoute;
 
-public class IndexController {
+class IndexController {
 
     void configureRoutes(Service http) {
         http.get(Path.Web.INDEX, asSparkRoute(this::serveIndexPage));
