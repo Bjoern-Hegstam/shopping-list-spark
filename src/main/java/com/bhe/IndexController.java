@@ -3,12 +3,18 @@ package com.bhe;
 import com.bhe.util.Path;
 import com.bhe.util.webapp.Request;
 import com.bhe.util.webapp.Result;
+import spark.Service;
 
 import static com.bhe.util.webapp.ResultBuilder.result;
+import static com.bhe.util.webapp.SparkWrappers.asSparkRoute;
 
 public class IndexController {
 
-    public Result serveIndexPage(Request request) {
+    void configureRoutes(Service http) {
+        http.get(Path.Web.INDEX, asSparkRoute(this::serveIndexPage));
+    }
+
+    private Result serveIndexPage(Request request) {
         if (!request.session().isUserLoggedIn()) {
             return result().redirectTo(Path.Web.LOGIN);
         }

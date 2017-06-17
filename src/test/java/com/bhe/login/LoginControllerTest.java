@@ -12,9 +12,7 @@ import org.junit.Test;
 import static com.bhe.util.Mocks.mockRequest;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class LoginControllerTest {
     private static final String USERNAME = "John";
@@ -120,6 +118,18 @@ public class LoginControllerTest {
         assertEquals(Path.Template.LOGIN, result.renderTemplatePath);
         verify(request.session()).setErrorMessage(Message.LOGIN_USER_PENDING_VERIFICATION);
         assertUserNotLoggedIn(request);
+    }
+
+    @Test
+    public void logout() {
+        // given
+        Request request = mockRequest();
+        // when
+        Result result = loginController.handleLogoutPost(request);
+
+        // then
+        verify(request.session()).unsetCurrentUser();
+        assertEquals(Path.Web.LOGIN, result.redirectPath);
     }
 
     private Request mockLoginRequest(String username, String password) {

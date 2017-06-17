@@ -4,8 +4,10 @@ import com.bhe.util.Message;
 import com.bhe.util.Path;
 import com.bhe.util.webapp.Request;
 import com.bhe.util.webapp.Result;
+import spark.Service;
 
 import static com.bhe.util.webapp.ResultBuilder.result;
+import static com.bhe.util.webapp.SparkWrappers.asSparkRoute;
 
 public class UserRegistrationController {
     private final UserRegistration userRegistration;
@@ -14,11 +16,16 @@ public class UserRegistrationController {
         this.userRegistration = userRegistration;
     }
 
-    public Result serveRegistrationPage(Request request) {
+    public void configuresRoutes(Service http) {
+        http.get(Path.Web.REGISTER, asSparkRoute(this::serveRegistrationPage));
+        http.post(Path.Web.REGISTER, asSparkRoute(this::registerNewUser));
+    }
+
+    Result serveRegistrationPage(Request request) {
         return result().render(Path.Template.REGISTER);
     }
 
-    public Result registerNewUser(Request request) {
+    Result registerNewUser(Request request) {
         String username = request.queryParams("username");
         String password = request.queryParams("password");
         String email = request.queryParams("email");

@@ -6,12 +6,14 @@ import com.bhe.util.Message;
 import com.bhe.util.Path;
 import com.bhe.util.webapp.Request;
 import com.bhe.util.webapp.Result;
+import spark.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import static com.bhe.util.webapp.ResultBuilder.result;
+import static com.bhe.util.webapp.SparkWrappers.asSparkRoute;
 
 public class LoginController {
     private final UserRepository userRepository;
@@ -20,7 +22,13 @@ public class LoginController {
         this.userRepository = userRepository;
     }
 
-    public Result serveLoginPage(Request request) {
+    public void configureRoutes(Service http) {
+        http.get(Path.Web.LOGIN, asSparkRoute(this::serveLoginPage));
+        http.post(Path.Web.LOGIN, asSparkRoute(this::handleLoginPost));
+        http.post(Path.Web.LOGOUT, asSparkRoute(this::handleLogoutPost));
+    }
+
+    Result serveLoginPage(Request request) {
         if (request.session().isUserLoggedIn()) {
             return result().redirectTo(Path.Web.INDEX);
         }
@@ -28,7 +36,7 @@ public class LoginController {
         return result().render(Path.Template.LOGIN);
     }
 
-    public Result handleLoginPost(Request request) {
+    Result handleLoginPost(Request request) {
         Map<String, Object> model = new HashMap<>();
 
         String username = request.queryParams("username");
@@ -52,7 +60,7 @@ public class LoginController {
         return result().redirectTo(Path.Web.INDEX);
     }
 
-    public Result handleLogoutPost(Request request) {
+    Result handleLogoutPost(Request request) {
         request.session().unsetCurrentUser();
         return result().redirectTo(Path.Web.LOGIN);
     }
