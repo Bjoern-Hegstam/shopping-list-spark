@@ -6,6 +6,7 @@ import com.bhe.util.Message;
 import com.bhe.util.Path;
 import com.bhe.util.webapp.Request;
 import com.bhe.util.webapp.Result;
+import com.google.inject.Inject;
 import spark.Service;
 
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import static com.bhe.util.webapp.SparkWrappers.asSparkRoute;
 public class LoginController {
     private final UserRepository userRepository;
 
+    @Inject
     public LoginController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

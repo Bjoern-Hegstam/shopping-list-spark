@@ -1,11 +1,14 @@
 package com.bhe.user;
 
+import com.google.inject.Inject;
+
 import java.util.Optional;
 
 public class UserRegistration {
 
     private final UserRepository userRepository;
 
+    @Inject
     public UserRegistration(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

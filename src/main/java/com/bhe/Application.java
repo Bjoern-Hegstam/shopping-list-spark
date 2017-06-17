@@ -4,28 +4,39 @@ import com.bhe.admin.UserAdministrationController;
 import com.bhe.login.LoginController;
 import com.bhe.user.*;
 import com.bhe.util.Filters;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
 import spark.Service;
 
 import static spark.Service.ignite;
 
 public class Application {
     private final UserRepository userRepository;
+
     private final IndexController indexController;
     private final LoginController loginController;
     private final UserRegistrationController userRegistrationController;
     private final UserAdministrationController userAdministrationController;
 
     public static void main(String[] args) {
-        new Application().init();
+        Guice.createInjector(new UserModule())
+             .getInstance(Application.class)
+             .init();
     }
-    
-    private Application() {
-        userRepository = new UserRepositoryInMem();
 
-        indexController = new IndexController();
-        loginController = new LoginController(userRepository);
-        userRegistrationController = new UserRegistrationController(new UserRegistration(userRepository));
-        userAdministrationController = new UserAdministrationController(userRepository);
+    @Inject
+    public Application(
+            UserRepository userRepository,
+            IndexController indexController,
+            LoginController loginController,
+            UserRegistrationController userRegistrationController,
+            UserAdministrationController userAdministrationController
+    ) {
+        this.userRepository = userRepository;
+        this.indexController = indexController;
+        this.loginController = loginController;
+        this.userRegistrationController = userRegistrationController;
+        this.userAdministrationController = userAdministrationController;
     }
 
     private void init() {

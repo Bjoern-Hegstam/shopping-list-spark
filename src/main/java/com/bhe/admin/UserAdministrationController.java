@@ -5,6 +5,7 @@ import com.bhe.util.Filters;
 import com.bhe.util.Path;
 import com.bhe.util.webapp.Request;
 import com.bhe.util.webapp.Result;
+import com.google.inject.Inject;
 import spark.Service;
 
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import static com.bhe.util.webapp.SparkWrappers.asSparkRoute;
 public class UserAdministrationController {
     private final UserRepository userRepository;
 
+    @Inject
     public UserAdministrationController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

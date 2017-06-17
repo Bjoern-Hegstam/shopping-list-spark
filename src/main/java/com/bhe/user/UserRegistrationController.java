@@ -4,6 +4,7 @@ import com.bhe.util.Message;
 import com.bhe.util.Path;
 import com.bhe.util.webapp.Request;
 import com.bhe.util.webapp.Result;
+import com.google.inject.Inject;
 import spark.Service;
 
 import static com.bhe.util.webapp.ResultBuilder.result;
@@ -12,6 +13,7 @@ import static com.bhe.util.webapp.SparkWrappers.asSparkRoute;
 public class UserRegistrationController {
     private final UserRegistration userRegistration;
 
+    @Inject
     public UserRegistrationController(UserRegistration userRegistration) {
         this.userRegistration = userRegistration;
     }
