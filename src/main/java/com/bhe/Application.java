@@ -39,8 +39,8 @@ public class Application {
         get(Path.Web.REGISTER, asSparkRoute(new UserRegistrationController(new UserRegistration(userRepository))::serveRegistrationPage));
         post(Path.Web.REGISTER, asSparkRoute(new UserRegistrationController(new UserRegistration(userRepository))::registerNewUser));
 
-        before(Path.Web.ADMIN + "/*", Filters::userIsAdmin);
         path(Path.Web.ADMIN, () -> {
+            before("/*", Filters::userIsAdmin);
             get(Path.Web.USERS, asSparkRoute(new UserAdministrationController(userRepository)::serverUserList));
         });
 
