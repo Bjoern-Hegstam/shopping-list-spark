@@ -1,0 +1,20 @@
+#parse("/velocity/layout.vm")
+#@mainLayout()
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+
+            <ul class="users">
+
+                #foreach( $user in $users )
+                    <li class="user-list-item">
+                        <span class="name">$user.username</span>
+                    </li>
+                #end
+
+            </ul>
+
+        </div>
+    </div>
+</div>
+#end

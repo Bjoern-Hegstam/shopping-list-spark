@@ -15,6 +15,30 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>biz.gabrys.maven.plugins</groupId>
+                <artifactId>lesscss-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <sourceDirectory>${project.basedir}/src/main/resources/public/less</sourceDirectory>
+                    <outputDirectory>${project.basedir}/src/main/resources/public/css</outputDirectory>
+                    <compress>true</compress>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>com.sparkjava</groupId>

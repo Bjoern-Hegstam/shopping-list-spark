@@ -1,5 +1,6 @@
 package com.bhe;
 
+import com.bhe.admin.UserAdministrationController;
 import com.bhe.login.LoginController;
 import com.bhe.sparkwrapper.SparkRequest;
 import com.bhe.user.User;
@@ -39,6 +40,10 @@ public class Application {
 
         get(Path.Web.REGISTER, asSparkRoute(new UserRegistrationController(new UserRegistration(userRepository))::serveRegistrationPage));
         post(Path.Web.REGISTER, asSparkRoute(new UserRegistrationController(new UserRegistration(userRepository))::registerNewUser));
+
+        path(Path.Web.ADMIN, () -> {
+            get(Path.Web.USERS, asSparkRoute(new UserAdministrationController(userRepository)::serverUserList));
+        });
 
         path("/api", () -> {
             before("/*", Filters::userIsLoggedIn);

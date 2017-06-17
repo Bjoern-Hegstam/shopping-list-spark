@@ -22,4 +22,9 @@ public class UserRepositoryInMem implements UserRepository {
     public Optional<User> findByEmail(String email) {
         return Optional.ofNullable(usersByEmail.getOrDefault(email, null));
     }
+
+    @Override
+    public List<User> getUsers() {
+        return new ArrayList<>(usersByUsername.values());
+    }
 }
