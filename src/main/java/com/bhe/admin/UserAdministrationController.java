@@ -17,10 +17,6 @@ public class UserAdministrationController {
     }
 
     public Result serverUserList(Request request) {
-        if (!request.session().isUserLoggedIn()) {
-            return result().redirectTo(Path.Web.LOGIN);
-        }
-
         HashMap<String, Object> model = new HashMap<>();
         model.put("users", userRepository.getUsers());
 
