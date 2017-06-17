@@ -11,17 +11,23 @@ public class User {
     private final String hashedPassword;
     private final String salt;
     private final boolean verified;
+    private final Role role;
 
     public User(String username, String password, String email) {
         this(username, password, email, false);
     }
 
     public User(String username, String password, String email, boolean verified) {
+        this(username, password, email, verified, Role.USER);
+    }
+
+    public User(String username, String password, String email, boolean verified, Role role) {
         this.username = Objects.requireNonNull(username);
         this.email = Objects.requireNonNull(email);
         this.verified = verified;
         this.salt = Objects.requireNonNull(BCrypt.gensalt());
         this.hashedPassword = BCrypt.hashpw(password, this.salt);
+        this.role = role;
     }
 
     public boolean hasPassword(String password) {
@@ -51,6 +57,6 @@ public class User {
     }
 
     public boolean isAdmin() {
-        return true;
+        return role == Role.ADMIN;
     }
 }

@@ -3,10 +3,7 @@ package com.bhe;
 import com.bhe.admin.UserAdministrationController;
 import com.bhe.login.LoginController;
 import com.bhe.sparkwrapper.SparkRequest;
-import com.bhe.user.User;
-import com.bhe.user.UserRegistrationController;
-import com.bhe.user.UserRegistration;
-import com.bhe.user.UserRepositoryInMem;
+import com.bhe.user.*;
 import com.bhe.util.Filters;
 import com.bhe.util.Path;
 import com.bhe.util.ViewUtil;
@@ -23,8 +20,9 @@ public class Application {
     private static final UserRepositoryInMem userRepository = new UserRepositoryInMem();
 
     public static void main(String[] args) {
-        userRepository.create(new User("a", "a", "a@domain.com", true));
-        userRepository.create(new User("b", "b", "b@domain.com", false));
+        userRepository.create(new User("a", "a", "a@domain.com", true, Role.ADMIN));
+        userRepository.create(new User("b", "b", "b@domain.com", true));
+        userRepository.create(new User("c", "c", "b@domain.com", false));
 
         // Configure spark
         port(4567);
@@ -41,7 +39,7 @@ public class Application {
         get(Path.Web.REGISTER, asSparkRoute(new UserRegistrationController(new UserRegistration(userRepository))::serveRegistrationPage));
         post(Path.Web.REGISTER, asSparkRoute(new UserRegistrationController(new UserRegistration(userRepository))::registerNewUser));
 
-        before(Path.Web.ADMIN + "/*", Filters::userIsLoggedIn);
+        before(Path.Web.ADMIN + "/*", Filters::userIsAdmin);
         path(Path.Web.ADMIN, () -> {
             get(Path.Web.USERS, asSparkRoute(new UserAdministrationController(userRepository)::serverUserList));
         });
