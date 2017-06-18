@@ -56,6 +56,10 @@ public class User {
         return verified;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
     public boolean isAdmin() {
         return role == Role.ADMIN;
     }
