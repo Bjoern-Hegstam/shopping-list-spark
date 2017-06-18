@@ -1,6 +1,44 @@
+@user-list-item-radius: 4px;
+
+.body-content-container {
+  display: flex;
+  justify-content: center;
+}
+
 .admin-user-list {
+  padding: 0;
+  margin: 0 4%;
+
+  width: 100%;
+  max-width: 640px;
+
   .user-list-item {
     display: flex;
     justify-content: space-between;
+
+    border: 1px solid lightgray;
+    padding: 1%;
+
+    &:first-of-type {
+      border-top-left-radius: @user-list-item-radius;
+      border-top-right-radius: @user-list-item-radius;
+      border-bottom: none;
+    }
+
+    &:last-of-type {
+      border-bottom-left-radius: @user-list-item-radius;
+      border-bottom-right-radius: @user-list-item-radius;
+      border-top: none;
+    }
+
+    .user-info {
+    }
+
+    .user-controls {
+      width: 160px;
+
+      display: flex;
+      justify-content: space-between;
+    }
   }
 }
