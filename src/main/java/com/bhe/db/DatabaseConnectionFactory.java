@@ -1,6 +1,7 @@
 package com.bhe.db;
 
 import com.bhe.configuration.ApplicationConfiguration;
+import com.bhe.configuration.property.Database;
 import com.google.inject.Inject;
 
 import java.sql.Connection;
@@ -15,17 +16,11 @@ public class DatabaseConnectionFactory {
 
     @Inject
     public DatabaseConnectionFactory(ApplicationConfiguration conf) {
-        this(
-                conf.getDatabase().getUrl(),
-                conf.getDatabase().getUser(),
-                conf.getDatabase().getPassword()
-        );
-    }
+        Database database = conf.getDatabase();
 
-    private DatabaseConnectionFactory(String url, String username, String password) {
-        this.url = url;
-        this.username = username;
-        this.password = password;
+        this.url = database.getUrl();
+        this.username = database.getUser();
+        this.password = database.getPassword();
     }
 
     public void withConnection(Consumer<Connection> consumer) {

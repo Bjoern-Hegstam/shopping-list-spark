@@ -30,6 +30,15 @@ public class User {
         this.role = role;
     }
 
+    public User(String username, String email, String hashedPassword, String salt, boolean verified, Role role) {
+        this.username = username;
+        this.email = email;
+        this.hashedPassword = hashedPassword;
+        this.salt = salt;
+        this.verified = verified;
+        this.role = role;
+    }
+
     public boolean hasPassword(String password) {
         return BCrypt.hashpw(password, salt).equals(hashedPassword);
     }
@@ -42,6 +51,22 @@ public class User {
         return email;
     }
 
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
     public boolean hasValidUsername() {
         return !username.isEmpty();
     }
@@ -50,14 +75,6 @@ public class User {
         return EmailValidator
                 .getInstance()
                 .isValid(this.email);
-    }
-
-    public boolean isVerified() {
-        return verified;
-    }
-
-    public Role getRole() {
-        return role;
     }
 
     public boolean isAdmin() {
