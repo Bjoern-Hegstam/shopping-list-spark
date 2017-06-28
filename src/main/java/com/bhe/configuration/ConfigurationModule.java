@@ -9,8 +9,7 @@ public class ConfigurationModule extends AbstractModule {
     protected void configure() {
         bind(ApplicationConfiguration.class)
                 .toProvider(() -> {
-                    // TODO: Determine which conf to load based on environment variable
-                    String configurationName = "conf/development.yml";
+                    String configurationName = "conf/application.yml";
                     URL confUrl = getClass()
                             .getClassLoader()
                             .getResource(configurationName);

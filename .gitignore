@@ -4,4 +4,4 @@
 target
 *.css
 
-development.yml
+src/main/resources/conf/application.yml
