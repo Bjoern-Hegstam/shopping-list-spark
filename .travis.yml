@@ -1,3 +1,14 @@
 language: java
 jdk:
   - oraclejdk8
+
+services:
+ - postgresql
+
+before_install:
+ - psql -c 'create database travis_ci_test;' -U postgres
+ - mvn flyway:migrate -Ddb.url=jdbc:postgresql://localhost/travis_ci_test -Ddb.user=postgres -Ddb.password=''
+
+install: true # Disable default install step. Maven runs install as part of the test life cycle anyway.
+
+script: mvn test -B -Ddb.url=jdbc:postgresql://localhost/travis_ci_test -Ddb.user=postgres -Ddb.password=''
