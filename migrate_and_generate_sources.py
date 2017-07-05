@@ -15,6 +15,7 @@ def main():
     db_user = data['database']['user']
     db_password = data['database']['password']
 
+    # Run database migrations
     subprocess.call([
         'mvn',
         'flyway:migrate',
@@ -23,6 +24,7 @@ def main():
         '-Ddb.password={}'.format(db_password),
     ], shell=True)
 
+    # Generate sources from database
     subprocess.call([
         'mvn',
         'generate-sources',
@@ -30,7 +32,6 @@ def main():
         '-Ddb.user={}'.format(db_user),
         '-Ddb.password={}'.format(db_password)
     ], shell=True)
-    # Generate sources from database
 
 
 if __name__ == '__main__':
