@@ -1,5 +1,5 @@
 #parse("/velocity/layout.vm")
-#@mainLayout()
+#@mainLayout("app/admin/user")
 <div class="body-content-container">
     <ul class="admin-user-list">
         #foreach( $user in $users )
