@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
-    Integer create(User user);
+    UserId create(User user);
 
-    User get(int userId);
+    User get(UserId userId);
 
     Optional<User> findByUsername(String username);
 

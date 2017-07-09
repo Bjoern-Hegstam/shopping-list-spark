@@ -5,6 +5,7 @@ import com.bhe.jooq.enums.UserRole;
 import com.bhe.jooq.tables.records.ApplicationUserRecord;
 import com.bhe.user.Role;
 import com.bhe.user.User;
+import com.bhe.user.UserId;
 import com.bhe.user.UserRepository;
 import com.google.inject.Inject;
 import org.jooq.Condition;
@@ -28,8 +29,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Integer create(User user) {
-        List<Integer> userIdContainer = new ArrayList<>();
+    public UserId create(User user) {
+        List<UserId> userIdContainer = new ArrayList<>();
 
         connectionFactory
                 .withConnection(conn -> {
@@ -45,7 +46,7 @@ public class UserRepositoryImpl implements UserRepository {
                                     .returning(APPLICATION_USER.ID)
                                     .fetch();
 
-                            userIdContainer.add(newUser.get(0).getId());
+                            userIdContainer.add(UserId.from(newUser.get(0).getId()));
                         }
                 );
 
@@ -57,8 +58,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User get(int userId) {
-        return findUsersWhere(APPLICATION_USER.ID.eq(userId))
+    public User get(UserId userId) {
+        return findUsersWhere(APPLICATION_USER.ID.eq(userId.getId()))
                 .stream()
                 .collect(onlyElement());
     }
@@ -101,7 +102,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     private User mapRecordToUser(ApplicationUserRecord r) {
         return new User(
-                r.getId(),
+                UserId.from(r.getId()),
                 r.getUsername(),
                 r.getEmail(),
                 r.getHashedPassword(),
@@ -127,7 +128,7 @@ public class UserRepositoryImpl implements UserRepository {
                         .set(APPLICATION_USER.EMAIL, user.getEmail())
                         .set(APPLICATION_USER.VERIFIED, user.isVerified())
                         .set(APPLICATION_USER.ROLE, getUserRole(user))
-                        .where(APPLICATION_USER.ID.eq(user.getId()))
+                        .where(APPLICATION_USER.ID.eq(user.getId().getId()))
                         .execute()
                 );
     }

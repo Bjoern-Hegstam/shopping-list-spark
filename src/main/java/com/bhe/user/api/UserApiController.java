@@ -1,6 +1,7 @@
 package com.bhe.user.api;
 
 import com.bhe.user.User;
+import com.bhe.user.UserId;
 import com.bhe.user.UserRepository;
 import com.bhe.util.Filters;
 import com.bhe.util.JsonResponseTransformer;
@@ -36,11 +37,9 @@ public class UserApiController {
     }
 
     private Result patchUser(Request request) {
-        String userId = request.params("userId");
+        User user = userRepository.get(UserId.from(request.params("userId")));
+
         UserBean userBean = UserBean.fromJson(request.body());
-
-        User user = userRepository.get(Integer.parseInt(userId));
-
         Optional.ofNullable(userBean.getRole()).ifPresent(user::setRole);
         Optional.ofNullable(userBean.getVerified()).ifPresent(user::setVerified);
 

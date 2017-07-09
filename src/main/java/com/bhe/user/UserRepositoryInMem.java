@@ -3,14 +3,14 @@ package com.bhe.user;
 import java.util.*;
 
 public class UserRepositoryInMem implements UserRepository {
-    private final Map<Integer, User> users = new HashMap<>();
+    private final Map<UserId, User> users = new HashMap<>();
     private final Map<String, User> usersByUsername = new HashMap<>();
     private final Map<String, User> usersByEmail = new HashMap<>();
 
     @Override
-    public Integer create(User user) {
+    public UserId create(User user) {
         User userWithId = new User(
-                users.size(),
+                UserId.from(users.size()),
                 user.getUsername(),
                 user.getEmail(),
                 user.getHashedPassword(),
@@ -24,7 +24,7 @@ public class UserRepositoryInMem implements UserRepository {
     }
 
     @Override
-    public User get(int userId) {
+    public User get(UserId userId) {
         return users.get(userId);
     }
 

@@ -1,6 +1,7 @@
 package com.bhe.login;
 
 import com.bhe.user.User;
+import com.bhe.user.UserId;
 import com.bhe.user.UserRepositoryInMem;
 import com.bhe.util.Message;
 import com.bhe.util.Path;
@@ -59,7 +60,7 @@ public class LoginControllerTest {
     @Test
     public void login_normalCase() {
         // given
-        Integer userId = userRepository.create(new User(USERNAME, PASSWORD, EMAIL, true));
+        UserId userId = userRepository.create(new User(USERNAME, PASSWORD, EMAIL, true));
         User user = userRepository.get(userId);
 
         Request request = mockLoginRequest(USERNAME, PASSWORD);
