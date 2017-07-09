@@ -3,9 +3,11 @@ package com.bhe.user.api;
 import com.bhe.user.Role;
 import com.bhe.user.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
 
 import java.io.IOException;
 
+@Data
 public class UserBean {
     private Integer id;
     private String username;
@@ -32,45 +34,5 @@ public class UserBean {
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Boolean isVerified() {
-        return verified;
-    }
-
-    public void setVerified(Boolean verified) {
-        this.verified = verified;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 }

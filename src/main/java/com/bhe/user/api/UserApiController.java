@@ -42,7 +42,7 @@ public class UserApiController {
         User user = userRepository.get(Integer.parseInt(userId));
 
         Optional.ofNullable(userBean.getRole()).ifPresent(user::setRole);
-        Optional.ofNullable(userBean.isVerified()).ifPresent(user::setVerified);
+        Optional.ofNullable(userBean.getVerified()).ifPresent(user::setVerified);
 
         userRepository.update(user);
 

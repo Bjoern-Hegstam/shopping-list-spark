@@ -156,6 +156,14 @@
             <version>2.8.9</version>
         </dependency>
 
+        <!-- Automatic bean generation. Requires IDE plugin to work -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.18</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Database driver -->
         <dependency>
             <groupId>postgresql</groupId>
