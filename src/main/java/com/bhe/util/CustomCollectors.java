@@ -36,7 +36,11 @@ public class CustomCollectors {
                         throw new IllegalArgumentException("More than one element found");
                     }
 
-                    return list.stream().findFirst().orElseThrow(() -> new IllegalArgumentException("No element found"));
+                    if (list.isEmpty()) {
+                        throw new IllegalArgumentException("No element found");
+                    }
+
+                    return list.get(0);
                 }
         );
     }
