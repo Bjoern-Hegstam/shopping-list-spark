@@ -6,6 +6,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.util.Objects;
 
 public class User {
+    private final Integer id;
     private final String username;
     private final String email;
     private final String hashedPassword;
@@ -22,6 +23,7 @@ public class User {
     }
 
     public User(String username, String password, String email, boolean verified, Role role) {
+        this.id = null;
         this.username = Objects.requireNonNull(username);
         this.email = Objects.requireNonNull(email);
         this.verified = verified;
@@ -30,7 +32,8 @@ public class User {
         this.role = role;
     }
 
-    public User(String username, String email, String hashedPassword, String salt, boolean verified, Role role) {
+    public User(Integer id, String username, String email, String hashedPassword, String salt, boolean verified, Role role) {
+        this.id = id;
         this.username = username;
         this.email = email;
         this.hashedPassword = hashedPassword;
@@ -41,6 +44,10 @@ public class User {
 
     public boolean hasPassword(String password) {
         return BCrypt.hashpw(password, salt).equals(hashedPassword);
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getUsername() {

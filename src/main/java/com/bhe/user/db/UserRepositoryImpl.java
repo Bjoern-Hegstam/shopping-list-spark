@@ -81,6 +81,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     private User mapRecordToUser(ApplicationUserRecord r) {
         return new User(
+                r.getId(),
                 r.getUsername(),
                 r.getEmail(),
                 r.getHashedPassword(),
