@@ -59,8 +59,8 @@ public class LoginControllerTest {
     @Test
     public void login_normalCase() {
         // given
-        User user = new User(USERNAME, PASSWORD, EMAIL, true);
-        userRepository.create(user);
+        Integer userId = userRepository.create(new User(USERNAME, PASSWORD, EMAIL, true));
+        User user = userRepository.get(userId);
 
         Request request = mockLoginRequest(USERNAME, PASSWORD);
 

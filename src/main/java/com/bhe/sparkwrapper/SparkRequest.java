@@ -3,7 +3,7 @@ package com.bhe.sparkwrapper;
 import spark.Request;
 
 public class SparkRequest implements com.bhe.util.webapp.Request {
-    private Request request;
+    private final Request request;
 
     public SparkRequest(Request request) {
         this.request = request;
@@ -15,7 +15,17 @@ public class SparkRequest implements com.bhe.util.webapp.Request {
     }
 
     @Override
+    public String params(String key) {
+        return request.params(key);
+    }
+
+    @Override
     public String queryParams(String key) {
         return request.queryParams(key);
+    }
+
+    @Override
+    public String body() {
+        return request.body();
     }
 }

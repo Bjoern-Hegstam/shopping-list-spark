@@ -1,6 +1,5 @@
-package com.bhe.admin;
+package com.bhe.user;
 
-import com.bhe.user.UserRepository;
 import com.bhe.util.Filters;
 import com.bhe.util.Path;
 import com.bhe.util.webapp.Result;

@@ -1,9 +1,10 @@
 package com.bhe;
 
-import com.bhe.admin.UserAdministrationController;
+import com.bhe.user.UserAdministrationController;
 import com.bhe.configuration.ConfigurationModule;
 import com.bhe.login.LoginController;
 import com.bhe.user.*;
+import com.bhe.user.api.UserApiController;
 import com.bhe.util.Filters;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -18,6 +19,7 @@ public class Application {
     private final LoginController loginController;
     private final UserRegistrationController userRegistrationController;
     private final UserAdministrationController userAdministrationController;
+    private final UserApiController userApiController;
 
     public static void main(String[] args) {
         Injector injector = Guice.createInjector(
@@ -35,12 +37,14 @@ public class Application {
             IndexController indexController,
             LoginController loginController,
             UserRegistrationController userRegistrationController,
-            UserAdministrationController userAdministrationController
+            UserAdministrationController userAdministrationController,
+            UserApiController userApiController
     ) {
         this.indexController = indexController;
         this.loginController = loginController;
         this.userRegistrationController = userRegistrationController;
         this.userAdministrationController = userAdministrationController;
+        this.userApiController = userApiController;
     }
 
     private void init() {
@@ -64,7 +68,7 @@ public class Application {
 
         http.path("/api", () -> {
             http.before("/*", Filters::userIsLoggedIn);
-            // TODO: Add api routes
+            userApiController.configureRoutes(http);
         });
     }
 }

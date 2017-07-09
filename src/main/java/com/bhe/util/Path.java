@@ -17,4 +17,8 @@ public class Path {
         public static final String REGISTER = "/velocity/user/register.vm";
         public static final String ADMIN_USERS = "velocity/admin/users.vm";
     }
+
+    public static class Api {
+        public static final String USER = "/user";
+    }
 }

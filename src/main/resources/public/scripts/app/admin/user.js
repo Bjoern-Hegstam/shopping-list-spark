@@ -1,11 +1,11 @@
-define(['jquery'], function ($) {
+define(['jquery', 'app/db/user'], function ($, db) {
 
     $('.user-role-selector').on('change', function setUserRole() {
         var $userControl = $(this);
         var userId = getUserId($userControl);
         var newRole = $userControl.val();
 
-        console.log('User ' + userId + ": " + newRole);
+        db.setRole(userId, newRole);
     });
 
     $('.user-verified-toggle').on('change', function setVerifiedState() {
@@ -13,7 +13,7 @@ define(['jquery'], function ($) {
         var userId = getUserId($userControl);
         var newVerifiedState = $userControl.is(':checked');
 
-        console.log('User ' + userId + ': ' + newVerifiedState);
+        db.setVerified(userId, newVerifiedState);
     });
 
     function getUserId($userControl) {

@@ -2,6 +2,7 @@ package com.bhe.user;
 
 import com.google.inject.Inject;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class UserRegistration {
@@ -21,6 +22,7 @@ public class UserRegistration {
                 .filter(this::usernameNotInUse)
                 .filter(this::emailNotInUse)
                 .map(userRepository::create)
+                .map(Objects::nonNull)
                 .orElse(false);
     }
 

@@ -8,6 +8,7 @@ import com.bhe.user.User;
 import com.bhe.user.UserRepository;
 import com.google.inject.Inject;
 import org.jooq.Condition;
+import org.jooq.Result;
 import org.jooq.impl.DSL;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.bhe.jooq.Tables.APPLICATION_USER;
+import static com.bhe.util.CustomCollectors.onlyElement;
 import static com.bhe.util.CustomCollectors.onlyOptionalElement;
 
 public class UserRepositoryImpl implements UserRepository {
@@ -26,21 +28,39 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public boolean create(User user) {
+    public Integer create(User user) {
+        List<Integer> userIdContainer = new ArrayList<>();
+
         connectionFactory
-                .withConnection(conn -> DSL
-                        .using(conn)
-                        .insertInto(APPLICATION_USER)
-                        .set(APPLICATION_USER.USERNAME, user.getUsername())
-                        .set(APPLICATION_USER.EMAIL, user.getEmail())
-                        .set(APPLICATION_USER.HASHED_PASSWORD, user.getHashedPassword())
-                        .set(APPLICATION_USER.SALT, user.getSalt())
-                        .set(APPLICATION_USER.VERIFIED, user.isVerified())
-                        .set(APPLICATION_USER.ROLE, user.getRole() == Role.USER ? UserRole.USER : UserRole.ADMIN)
-                        .execute()
+                .withConnection(conn -> {
+                            Result<ApplicationUserRecord> newUser = DSL
+                                    .using(conn)
+                                    .insertInto(APPLICATION_USER)
+                                    .set(APPLICATION_USER.USERNAME, user.getUsername())
+                                    .set(APPLICATION_USER.EMAIL, user.getEmail())
+                                    .set(APPLICATION_USER.HASHED_PASSWORD, user.getHashedPassword())
+                                    .set(APPLICATION_USER.SALT, user.getSalt())
+                                    .set(APPLICATION_USER.VERIFIED, user.isVerified())
+                                    .set(APPLICATION_USER.ROLE, getUserRole(user))
+                                    .returning(APPLICATION_USER.ID)
+                                    .fetch();
+
+                            userIdContainer.add(newUser.get(0).getId());
+                        }
                 );
 
-        return true;
+        return userIdContainer.get(0);
+    }
+
+    private UserRole getUserRole(User user) {
+        return user.getRole() == Role.USER ? UserRole.USER : UserRole.ADMIN;
+    }
+
+    @Override
+    public User get(int userId) {
+        return findUsersWhere(APPLICATION_USER.ID.eq(userId))
+                .stream()
+                .collect(onlyElement());
     }
 
     @Override
@@ -91,5 +111,24 @@ public class UserRepositoryImpl implements UserRepository {
                         Role.USER :
                         Role.ADMIN
         );
+    }
+
+    @Override
+    public void update(User user) {
+        if (user.getId() == null) {
+            throw new IllegalArgumentException("Cannot update user that does not have an id");
+        }
+
+        connectionFactory
+                .withConnection(conn -> DSL
+                        .using(conn)
+                        .update(APPLICATION_USER)
+                        .set(APPLICATION_USER.USERNAME, user.getUsername())
+                        .set(APPLICATION_USER.EMAIL, user.getEmail())
+                        .set(APPLICATION_USER.VERIFIED, user.isVerified())
+                        .set(APPLICATION_USER.ROLE, getUserRole(user))
+                        .where(APPLICATION_USER.ID.eq(user.getId()))
+                        .execute()
+                );
     }
 }

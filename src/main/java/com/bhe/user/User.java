@@ -11,8 +11,8 @@ public class User {
     private final String email;
     private final String hashedPassword;
     private final String salt;
-    private final boolean verified;
-    private final Role role;
+    private boolean verified;
+    private Role role;
 
     public User(String username, String password, String email) {
         this(username, password, email, false);
@@ -70,8 +70,16 @@ public class User {
         return role;
     }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public boolean isVerified() {
         return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 
     public boolean hasValidUsername() {
