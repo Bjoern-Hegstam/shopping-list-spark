@@ -1,6 +1,7 @@
 package com.bhe;
 
 import com.bhe.util.Path;
+import com.bhe.util.webapp.Controller;
 import com.bhe.util.webapp.Request;
 import com.bhe.util.webapp.Result;
 import spark.Service;
@@ -8,9 +9,10 @@ import spark.Service;
 import static com.bhe.util.webapp.ResultBuilder.result;
 import static com.bhe.util.webapp.SparkWrappers.asSparkRoute;
 
-class IndexController {
+class IndexController implements Controller {
 
-    void configureRoutes(Service http) {
+    @Override
+    public void configureRoutes(Service http) {
         http.get(Path.Web.INDEX, asSparkRoute(this::serveIndexPage));
     }
 

@@ -2,6 +2,7 @@ package com.bhe.user;
 
 import com.bhe.util.Message;
 import com.bhe.util.Path;
+import com.bhe.util.webapp.Controller;
 import com.bhe.util.webapp.Request;
 import com.bhe.util.webapp.Result;
 import com.google.inject.Inject;
@@ -10,7 +11,7 @@ import spark.Service;
 import static com.bhe.util.webapp.ResultBuilder.result;
 import static com.bhe.util.webapp.SparkWrappers.asSparkRoute;
 
-public class UserRegistrationController {
+public class UserRegistrationController implements Controller {
     private final UserRegistration userRegistration;
 
     @Inject
@@ -18,7 +19,8 @@ public class UserRegistrationController {
         this.userRegistration = userRegistration;
     }
 
-    public void configuresRoutes(Service http) {
+    @Override
+    public void configureRoutes(Service http) {
         http.get(Path.Web.REGISTER, asSparkRoute(this::serveRegistrationPage));
         http.post(Path.Web.REGISTER, asSparkRoute(this::registerNewUser));
     }

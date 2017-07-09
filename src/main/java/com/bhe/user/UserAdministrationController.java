@@ -2,6 +2,7 @@ package com.bhe.user;
 
 import com.bhe.util.Filters;
 import com.bhe.util.Path;
+import com.bhe.util.webapp.Controller;
 import com.bhe.util.webapp.Result;
 import com.google.inject.Inject;
 import spark.Service;
@@ -11,7 +12,7 @@ import java.util.HashMap;
 import static com.bhe.util.webapp.ResultBuilder.result;
 import static com.bhe.util.webapp.SparkWrappers.asSparkRoute;
 
-public class UserAdministrationController {
+public class UserAdministrationController implements Controller {
     private final UserRepository userRepository;
 
     @Inject
@@ -19,6 +20,7 @@ public class UserAdministrationController {
         this.userRepository = userRepository;
     }
 
+    @Override
     public void configureRoutes(Service http) {
         http.path(Path.Web.ADMIN, () -> {
             http.before("/*", Filters::userIsAdmin);

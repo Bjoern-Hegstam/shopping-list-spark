@@ -4,6 +4,7 @@ import com.bhe.user.User;
 import com.bhe.user.UserRepository;
 import com.bhe.util.Message;
 import com.bhe.util.Path;
+import com.bhe.util.webapp.Controller;
 import com.bhe.util.webapp.Request;
 import com.bhe.util.webapp.Result;
 import com.google.inject.Inject;
@@ -16,7 +17,7 @@ import java.util.Optional;
 import static com.bhe.util.webapp.ResultBuilder.result;
 import static com.bhe.util.webapp.SparkWrappers.asSparkRoute;
 
-public class LoginController {
+public class LoginController implements Controller {
     private final UserRepository userRepository;
 
     @Inject
@@ -24,6 +25,7 @@ public class LoginController {
         this.userRepository = userRepository;
     }
 
+    @Override
     public void configureRoutes(Service http) {
         http.get(Path.Web.LOGIN, asSparkRoute(this::serveLoginPage));
         http.post(Path.Web.LOGIN, asSparkRoute(this::handleLoginPost));

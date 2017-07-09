@@ -6,6 +6,7 @@ import com.bhe.user.UserRepository;
 import com.bhe.util.Filters;
 import com.bhe.util.JsonResponseTransformer;
 import com.bhe.util.Path;
+import com.bhe.util.webapp.Controller;
 import com.bhe.util.webapp.Request;
 import com.bhe.util.webapp.Result;
 import com.google.inject.Inject;
@@ -16,7 +17,7 @@ import java.util.Optional;
 import static com.bhe.util.webapp.ResultBuilder.result;
 import static com.bhe.util.webapp.SparkWrappers.asSparkRoute;
 
-public class UserApiController {
+public class UserApiController implements Controller {
     private final UserRepository userRepository;
 
     @Inject
@@ -24,6 +25,7 @@ public class UserApiController {
         this.userRepository = userRepository;
     }
 
+    @Override
     public void configureRoutes(Service http) {
         http.path(Path.Api.USER, () -> {
             http.before("/*", Filters::userIsAdmin);

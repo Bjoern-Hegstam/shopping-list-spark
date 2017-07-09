@@ -1,25 +1,28 @@
 package com.bhe;
 
-import com.bhe.user.UserAdministrationController;
 import com.bhe.configuration.ConfigurationModule;
 import com.bhe.login.LoginController;
-import com.bhe.user.*;
+import com.bhe.user.UserAdministrationController;
+import com.bhe.user.UserModule;
+import com.bhe.user.UserRegistrationController;
 import com.bhe.user.api.UserApiController;
 import com.bhe.util.Filters;
+import com.bhe.util.webapp.Controller;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import spark.Service;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static spark.Service.ignite;
 
 public class Application {
 
-    private final IndexController indexController;
-    private final LoginController loginController;
-    private final UserRegistrationController userRegistrationController;
-    private final UserAdministrationController userAdministrationController;
-    private final UserApiController userApiController;
+    private final List<Controller> appControllers;
+    private final List<Controller> apiControllers;
 
     public static void main(String[] args) {
         Injector injector = Guice.createInjector(
@@ -40,11 +43,16 @@ public class Application {
             UserAdministrationController userAdministrationController,
             UserApiController userApiController
     ) {
-        this.indexController = indexController;
-        this.loginController = loginController;
-        this.userRegistrationController = userRegistrationController;
-        this.userAdministrationController = userAdministrationController;
-        this.userApiController = userApiController;
+        appControllers = asList(
+                indexController,
+                loginController,
+                userRegistrationController,
+                userAdministrationController
+        );
+
+        apiControllers = singletonList(
+                userApiController
+        );
     }
 
     private void init() {
@@ -61,14 +69,11 @@ public class Application {
     }
 
     private void configureRoutes(Service http) {
-        indexController.configureRoutes(http);
-        loginController.configureRoutes(http);
-        userRegistrationController.configuresRoutes(http);
-        userAdministrationController.configureRoutes(http);
+        appControllers.forEach(c -> c.configureRoutes(http));
 
         http.path("/api", () -> {
             http.before("/*", Filters::userIsLoggedIn);
-            userApiController.configureRoutes(http);
+            apiControllers.forEach(c -> c.configureRoutes(http));
         });
     }
 }
