@@ -1,11 +1,11 @@
 package com.bhe.configuration;
 
-public class ApplicationConfigurationException extends RuntimeException {
-    public ApplicationConfigurationException(String message) {
+class ApplicationConfigurationException extends RuntimeException {
+    ApplicationConfigurationException(String message) {
         super(message);
     }
 
-    public ApplicationConfigurationException(Throwable cause) {
+    ApplicationConfigurationException(Throwable cause) {
         super(cause);
     }
 }

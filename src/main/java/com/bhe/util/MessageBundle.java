@@ -6,9 +6,9 @@ import java.util.ResourceBundle;
 
 public class MessageBundle {
 
-    private ResourceBundle messages;
+    private final ResourceBundle messages;
 
-    public MessageBundle(String languageTag) {
+    MessageBundle(String languageTag) {
         Locale locale = languageTag != null ? new Locale(languageTag) : Locale.ENGLISH;
         this.messages = ResourceBundle.getBundle("localization/messages", locale);
     }

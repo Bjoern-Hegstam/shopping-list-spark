@@ -6,8 +6,8 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.File;
 import java.io.IOException;
 
-public class ApplicationConfigurationLoader {
-    public static ApplicationConfiguration load(String path) {
+class ApplicationConfigurationLoader {
+    static ApplicationConfiguration load(String path) {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         try {
             return mapper.readValue(new File(path), ApplicationConfiguration.class);

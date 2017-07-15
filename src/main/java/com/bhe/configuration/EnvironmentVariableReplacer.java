@@ -9,11 +9,11 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EnvironmentVariableReplacer {
+class EnvironmentVariableReplacer {
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\{([A-Z_]+)}");
     private final Map<String, String> environment;
 
-    public EnvironmentVariableReplacer() {
+    EnvironmentVariableReplacer() {
         this(System.getenv());
     }
 
@@ -21,7 +21,7 @@ public class EnvironmentVariableReplacer {
         this.environment = environment;
     }
 
-    public void applyTo(ApplicationConfiguration configuration) {
+    void applyTo(ApplicationConfiguration configuration) {
         Database database = configuration.getDatabase();
         replaceIfNeeded(database.getUrl(), database::setUrl);
         replaceIfNeeded(database.getUser(), database::setUser);
