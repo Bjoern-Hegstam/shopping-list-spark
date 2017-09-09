@@ -18,7 +18,7 @@ public class ConfigurationModule extends AbstractModule {
                         throw new ApplicationConfigurationException("Configuration not found: " + configurationName);
                     }
 
-                    ApplicationConfiguration configuration = ApplicationConfigurationLoader.load(confUrl.getFile());
+                    ApplicationConfiguration configuration = ApplicationConfigurationLoader.load(confUrl);
                     new EnvironmentVariableReplacer().applyTo(configuration);
                     return configuration;
                 })
