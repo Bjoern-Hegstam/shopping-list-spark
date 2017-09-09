@@ -1,5 +1,6 @@
 package com.bhe;
 
+import com.bhe.configuration.ApplicationConfiguration;
 import com.bhe.configuration.ConfigurationModule;
 import com.bhe.login.LoginController;
 import com.bhe.user.UserAdministrationController;
@@ -21,6 +22,7 @@ import static spark.Service.ignite;
 
 public class Application {
 
+    private final ApplicationConfiguration configuration;
     private final List<Controller> appControllers;
     private final List<Controller> apiControllers;
 
@@ -37,12 +39,15 @@ public class Application {
 
     @Inject
     public Application(
+            ApplicationConfiguration configuration,
             IndexController indexController,
             LoginController loginController,
             UserRegistrationController userRegistrationController,
             UserAdministrationController userAdministrationController,
             UserApiController userApiController
     ) {
+        this.configuration = configuration;
+
         appControllers = asList(
                 indexController,
                 loginController,
@@ -62,7 +67,7 @@ public class Application {
     }
 
     private void configureServer(Service http) {
-        http.port(4567);
+        http.port(configuration.getServer().getPort());
 
         http.staticFiles.location("/public");
         http.staticFiles.expireTime(600);

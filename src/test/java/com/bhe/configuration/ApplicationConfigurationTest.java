@@ -1,6 +1,7 @@
 package com.bhe.configuration;
 
 import com.bhe.configuration.property.Database;
+import com.bhe.configuration.property.Server;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.junit.Rule;
@@ -20,7 +21,11 @@ public class ApplicationConfigurationTest {
     @Test
     public void loadConfiguration() {
         // given
-        String conf = "database:\n" +
+        String conf = "" +
+                "server:\n" +
+                "  port: 4567\n" +
+                "\n" +
+                "database:\n" +
                 "  url: TEST_URL\n" +
                 "  user: TEST_USER\n" +
                 "  password: TEST_PASSWORD\n";
@@ -30,6 +35,10 @@ public class ApplicationConfigurationTest {
 
         // then
         assertNotNull(value);
+
+        Server server = value.getServer();
+        assertNotNull(server);
+        errorCollector.checkThat(server.getPort(), is(4567));
 
         Database database = value.getDatabase();
         assertNotNull(database);
