@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.bhe.jooq.Tables.APPLICATION_USER;
-import static com.github.bhe.webutil.CustomCollectors.onlyElement;
-import static com.github.bhe.webutil.CustomCollectors.onlyOptionalElement;
+import static com.bhe.webutil.CustomCollectors.onlyElement;
+import static com.bhe.webutil.CustomCollectors.onlyOptionalElement;
 
 public class UserRepositoryImpl implements UserRepository {
     private final DatabaseConnectionFactory connectionFactory;

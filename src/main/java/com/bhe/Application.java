@@ -7,7 +7,7 @@ import com.bhe.user.UserAdministrationController;
 import com.bhe.user.UserModule;
 import com.bhe.user.UserRegistrationController;
 import com.bhe.user.api.UserApiController;
-import com.github.bhe.webutil.webapp.ApplicationBase;
+import com.bhe.webutil.webapp.ApplicationBase;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
