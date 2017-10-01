@@ -2,8 +2,8 @@ package com.bhe.user;
 
 import com.bhe.util.Message;
 import com.bhe.util.Path;
-import com.bhe.util.webapp.Request;
-import com.bhe.util.webapp.Result;
+import com.github.bhe.webutil.webapp.Request;
+import com.github.bhe.webutil.webapp.Result;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

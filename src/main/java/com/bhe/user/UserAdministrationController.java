@@ -1,16 +1,16 @@
 package com.bhe.user;
 
-import com.bhe.util.Filters;
 import com.bhe.util.Path;
-import com.bhe.util.webapp.Controller;
-import com.bhe.util.webapp.Result;
+import com.github.bhe.webutil.Filters;
+import com.github.bhe.webutil.webapp.Controller;
+import com.github.bhe.webutil.webapp.Result;
 import com.google.inject.Inject;
 import spark.Service;
 
 import java.util.HashMap;
 
-import static com.bhe.util.webapp.ResultBuilder.result;
-import static com.bhe.util.webapp.SparkWrappers.asSparkRoute;
+import static com.github.bhe.webutil.webapp.ResultBuilder.result;
+import static com.github.bhe.webutil.webapp.SparkWrappers.asSparkRoute;
 
 public class UserAdministrationController implements Controller {
     private final UserRepository userRepository;

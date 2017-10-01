@@ -23,6 +23,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <!-- Automatically convert css to less -->
@@ -124,18 +131,10 @@
     </build>
 
     <dependencies>
-        <!--Project is based on the spark framework -->
         <dependency>
-            <groupId>com.sparkjava</groupId>
-            <artifactId>spark-core</artifactId>
-            <version>2.6.0</version>
-        </dependency>
-
-        <!-- Required by Spark. Error is given if slf4j is not explicitly included -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.25</version>
+            <groupId>com.github.Bjoern-Hegstam</groupId>
+            <artifactId>web-util</artifactId>
+            <version>1.0</version>
         </dependency>
 
         <!--Template engince -->

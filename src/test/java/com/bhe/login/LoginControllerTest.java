@@ -5,8 +5,8 @@ import com.bhe.user.UserId;
 import com.bhe.user.UserRepositoryInMem;
 import com.bhe.util.Message;
 import com.bhe.util.Path;
-import com.bhe.util.webapp.Request;
-import com.bhe.util.webapp.Result;
+import com.github.bhe.webutil.webapp.Request;
+import com.github.bhe.webutil.webapp.Result;
 import org.junit.Before;
 import org.junit.Test;
 

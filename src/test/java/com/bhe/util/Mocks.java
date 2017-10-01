@@ -1,7 +1,8 @@
 package com.bhe.util;
 
-import com.bhe.util.webapp.Request;
-import com.bhe.util.webapp.Session;
+
+import com.github.bhe.webutil.webapp.Request;
+import com.github.bhe.webutil.webapp.Session;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

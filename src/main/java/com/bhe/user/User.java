@@ -5,7 +5,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Objects;
 
-public class User {
+public class User implements com.github.bhe.webutil.webapp.User {
     private final UserId id;
     private final String username;
     private final String email;

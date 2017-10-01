@@ -1,13 +1,14 @@
 package com.bhe;
 
 import com.bhe.util.Path;
-import com.bhe.util.webapp.Controller;
-import com.bhe.util.webapp.Request;
-import com.bhe.util.webapp.Result;
+import com.github.bhe.webutil.webapp.Controller;
+import com.github.bhe.webutil.webapp.Request;
+import com.github.bhe.webutil.webapp.Result;
 import spark.Service;
 
-import static com.bhe.util.webapp.ResultBuilder.result;
-import static com.bhe.util.webapp.SparkWrappers.asSparkRoute;
+import static com.github.bhe.webutil.webapp.ResultBuilder.result;
+import static com.github.bhe.webutil.webapp.SparkWrappers.asSparkRoute;
+
 
 class IndexController implements Controller {
 

@@ -3,19 +3,19 @@ package com.bhe.user.api;
 import com.bhe.user.User;
 import com.bhe.user.UserId;
 import com.bhe.user.UserRepository;
-import com.bhe.util.Filters;
-import com.bhe.util.JsonResponseTransformer;
 import com.bhe.util.Path;
-import com.bhe.util.webapp.Controller;
-import com.bhe.util.webapp.Request;
-import com.bhe.util.webapp.Result;
+import com.github.bhe.webutil.Filters;
+import com.github.bhe.webutil.JsonResponseTransformer;
+import com.github.bhe.webutil.webapp.Controller;
+import com.github.bhe.webutil.webapp.Request;
+import com.github.bhe.webutil.webapp.Result;
 import com.google.inject.Inject;
 import spark.Service;
 
 import java.util.Optional;
 
-import static com.bhe.util.webapp.ResultBuilder.result;
-import static com.bhe.util.webapp.SparkWrappers.asSparkRoute;
+import static com.github.bhe.webutil.webapp.ResultBuilder.result;
+import static com.github.bhe.webutil.webapp.SparkWrappers.asSparkRoute;
 
 public class UserApiController implements Controller {
     private final UserRepository userRepository;
