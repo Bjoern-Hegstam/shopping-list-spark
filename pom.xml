@@ -122,7 +122,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.bhe.Application</mainClass>
+                            <mainClass>com.bhegstam.Application</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -134,7 +134,7 @@
         <dependency>
             <groupId>com.github.Bjoern-Hegstam</groupId>
             <artifactId>web-util</artifactId>
-            <version>2.0</version>
+            <version>3.0</version>
         </dependency>
 
         <dependency>
