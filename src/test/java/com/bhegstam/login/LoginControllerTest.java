@@ -41,7 +41,7 @@ public class LoginControllerTest {
         Result result = loginController.serveLoginPage(request);
 
         // then
-        assertEquals(Path.Web.INDEX, result.redirectPath);
+        assertEquals(Path.Web.INDEX, result.getRedirectPath());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class LoginControllerTest {
         Result result = loginController.serveLoginPage(request);
 
         // then
-        assertEquals(Path.Template.LOGIN, result.renderTemplatePath);
+        assertEquals(Path.Template.LOGIN, result.getRenderTemplatePath());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class LoginControllerTest {
         Result result = loginController.handleLoginPost(request);
 
         // then
-        assertEquals(Path.Web.INDEX, result.redirectPath);
+        assertEquals(Path.Web.INDEX, result.getRedirectPath());
         assertUserLoggedIn(request, user);
     }
 
@@ -84,7 +84,7 @@ public class LoginControllerTest {
         Result result = loginController.handleLoginPost(request);
 
         // then
-        assertEquals(Path.Template.LOGIN, result.renderTemplatePath);
+        assertEquals(Path.Template.LOGIN, result.getRenderTemplatePath());
         verify(request.session()).setErrorMessage(Message.LOGIN_AUTH_FAILED);
         assertUserNotLoggedIn(request);
     }
@@ -100,7 +100,7 @@ public class LoginControllerTest {
         Result result = loginController.handleLoginPost(request);
 
         // then
-        assertEquals(Path.Template.LOGIN, result.renderTemplatePath);
+        assertEquals(Path.Template.LOGIN, result.getRenderTemplatePath());
         verify(request.session()).setErrorMessage(Message.LOGIN_AUTH_FAILED);
         assertUserNotLoggedIn(request);
     }
@@ -116,7 +116,7 @@ public class LoginControllerTest {
         Result result = loginController.handleLoginPost(request);
 
         // then
-        assertEquals(Path.Template.LOGIN, result.renderTemplatePath);
+        assertEquals(Path.Template.LOGIN, result.getRenderTemplatePath());
         verify(request.session()).setErrorMessage(Message.LOGIN_USER_PENDING_VERIFICATION);
         assertUserNotLoggedIn(request);
     }
@@ -130,7 +130,7 @@ public class LoginControllerTest {
 
         // then
         verify(request.session()).unsetCurrentUser();
-        assertEquals(Path.Web.LOGIN, result.redirectPath);
+        assertEquals(Path.Web.LOGIN, result.getRedirectPath());
     }
 
     private Request mockLoginRequest(String username, String password) {

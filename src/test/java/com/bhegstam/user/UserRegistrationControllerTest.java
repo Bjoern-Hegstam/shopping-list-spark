@@ -23,7 +23,7 @@ public class UserRegistrationControllerTest {
     public ErrorCollector errorCollector = new ErrorCollector();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         userRegistration = mock(UserRegistration.class);
         userRegistrationController = new UserRegistrationController(userRegistration);
     }
@@ -34,7 +34,7 @@ public class UserRegistrationControllerTest {
         Result result = userRegistrationController.serveRegistrationPage(mock(Request.class));
 
         // then
-        errorCollector.checkThat(result.renderTemplatePath, is(Path.Template.REGISTER));
+        errorCollector.checkThat(result.getRenderTemplatePath(), is(Path.Template.REGISTER));
     }
 
     @Test
@@ -47,7 +47,7 @@ public class UserRegistrationControllerTest {
         Result result = userRegistrationController.registerNewUser(request);
 
         // then
-        errorCollector.checkThat(result.redirectPath, is(Path.Web.LOGIN));
+        errorCollector.checkThat(result.getRedirectPath(), is(Path.Web.LOGIN));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class UserRegistrationControllerTest {
         Result result = userRegistrationController.registerNewUser(request);
 
         // then
-        errorCollector.checkThat(result.renderTemplatePath, is(Path.Template.REGISTER));
+        errorCollector.checkThat(result.getRenderTemplatePath(), is(Path.Template.REGISTER));
         verify(request.session()).setErrorMessage(Message.USER_REGISTRATION_FAILED);
     }
 
