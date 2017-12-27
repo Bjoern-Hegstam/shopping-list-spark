@@ -1,5 +1,6 @@
 package com.bhegstam.shoppinglist;
 
+import com.bhegstam.shoppinglist.api.ShoppingListBean;
 import com.bhegstam.util.Path;
 import com.bhegstam.webutil.Filters;
 import com.bhegstam.webutil.webapp.Controller;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 import static com.bhegstam.webutil.webapp.ResultBuilder.result;
 import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
+import static java.util.stream.Collectors.toList;
 
 public class ShoppingListController implements Controller {
     private final ShoppingListRepository shoppingListRepository;
@@ -31,7 +33,13 @@ public class ShoppingListController implements Controller {
 
     private Result serveListOfShoppingLists() {
         Map<String, Object> model = new HashMap<>();
-        model.put("shoppingLists", shoppingListRepository.getShoppingLists());
+        model.put(
+                "shoppingLists",
+                shoppingListRepository
+                        .getShoppingLists().stream()
+                        .map(ShoppingListBean::fromShoppingList)
+                        .collect(toList())
+        );
 
         return result().render(Path.Template.SHOPPING_LISTS, model);
     }

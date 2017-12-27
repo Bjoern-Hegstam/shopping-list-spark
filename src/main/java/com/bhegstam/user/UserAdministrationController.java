@@ -1,5 +1,6 @@
 package com.bhegstam.user;
 
+import com.bhegstam.user.api.UserBean;
 import com.bhegstam.util.Path;
 import com.bhegstam.webutil.Filters;
 import com.bhegstam.webutil.webapp.Controller;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 import static com.bhegstam.webutil.webapp.ResultBuilder.result;
 import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
+import static java.util.stream.Collectors.toList;
 
 public class UserAdministrationController implements Controller {
     private final UserRepository userRepository;
@@ -31,7 +33,13 @@ public class UserAdministrationController implements Controller {
 
     private Result serveUserList() {
         Map<String, Object> model = new HashMap<>();
-        model.put("users", userRepository.getUsers());
+        model.put(
+                "users",
+                userRepository
+                        .getUsers().stream()
+                        .map(UserBean::fromUser)
+                        .collect(toList())
+        );
 
         return result().render(Path.Template.ADMIN_USERS, model);
     }
