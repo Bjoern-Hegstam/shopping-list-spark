@@ -1,12 +1,13 @@
 package com.bhegstam.user.db;
 
-import com.bhegstam.db.DatabaseConnectionFactory;
 import com.bhe.jooq.enums.UserRole;
 import com.bhe.jooq.tables.records.ApplicationUserRecord;
+import com.bhegstam.db.DatabaseConnectionFactory;
 import com.bhegstam.user.Role;
 import com.bhegstam.user.User;
 import com.bhegstam.user.UserId;
 import com.bhegstam.user.UserRepository;
+import com.bhegstam.util.DatabaseUtil;
 import com.google.inject.Inject;
 import org.jooq.Condition;
 import org.jooq.Result;
@@ -22,10 +23,12 @@ import static com.bhegstam.webutil.CustomCollectors.onlyOptionalElement;
 
 public class UserRepositoryImpl implements UserRepository {
     private final DatabaseConnectionFactory connectionFactory;
+    private final DatabaseUtil databaseUtil;
 
     @Inject
-    public UserRepositoryImpl(DatabaseConnectionFactory connectionFactory) {
+    public UserRepositoryImpl(DatabaseConnectionFactory connectionFactory, DatabaseUtil databaseUtil) {
         this.connectionFactory = connectionFactory;
+        this.databaseUtil = databaseUtil;
     }
 
     @Override
@@ -84,20 +87,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private List<User> findUsersWhere(Condition... conditions) {
-        List<User> users = new ArrayList<>();
-
-        connectionFactory
-                .withConnection(conn -> DSL
-                        .using(conn)
-                        .selectFrom(APPLICATION_USER)
-                        .where(conditions)
-                        .fetch()
-                        .stream()
-                        .map(this::mapRecordToUser)
-                        .forEach(users::add)
-                );
-
-        return users;
+        return databaseUtil.findObjectsWhere(APPLICATION_USER, this::mapRecordToUser, conditions);
     }
 
     private User mapRecordToUser(ApplicationUserRecord r) {

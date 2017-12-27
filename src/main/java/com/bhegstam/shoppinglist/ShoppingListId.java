@@ -13,11 +13,11 @@ public class ShoppingListId {
         id = UUID.randomUUID();
     }
 
-    private ShoppingListId(UUID id) {
+    ShoppingListId(UUID id) {
         this.id = id;
     }
 
-    public static ShoppingListId fromString(String s) {
-        return new ShoppingListId(UUID.fromString(s));
+    public UUID getId() {
+        return id;
     }
 }

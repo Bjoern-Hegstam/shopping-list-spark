@@ -3,6 +3,8 @@ package com.bhegstam;
 import com.bhegstam.configuration.ApplicationConfiguration;
 import com.bhegstam.configuration.ConfigurationModule;
 import com.bhegstam.login.LoginController;
+import com.bhegstam.shoppinglist.ShoppingListController;
+import com.bhegstam.shoppinglist.ShoppingListModule;
 import com.bhegstam.user.UserAdministrationController;
 import com.bhegstam.user.UserModule;
 import com.bhegstam.user.UserRegistrationController;
@@ -23,6 +25,7 @@ public class Application extends ApplicationBase {
     public static void main(String[] args) {
         Injector injector = Guice.createInjector(
                 new ConfigurationModule(),
+                new ShoppingListModule(),
                 new UserModule()
         );
 
@@ -36,6 +39,7 @@ public class Application extends ApplicationBase {
             ApplicationConfiguration configuration,
             IndexController indexController,
             LoginController loginController,
+            ShoppingListController shoppingListController,
             UserRegistrationController userRegistrationController,
             UserAdministrationController userAdministrationController,
             UserApiController userApiController
@@ -44,6 +48,7 @@ public class Application extends ApplicationBase {
                 asList(
                         indexController,
                         loginController,
+                        shoppingListController,
                         userRegistrationController,
                         userAdministrationController
                 ),

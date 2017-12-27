@@ -1,6 +1,7 @@
 #* @implicitly included *#
-#* @vtlvariable name="msg" type="com.bhegstam.webutil.MessageBundle" *#
-#* @vtlvariable name="currentUser" type="com.bhegstam.user.User" *#
-#* @vtlvariable name="users" type="java.util.List<com.bhegstam.user.User>" *#
 #* @vtlvariable name="authenticationFailed" type="java.lang.String" *#
+#* @vtlvariable name="currentUser" type="com.bhegstam.user.User" *#
 #* @vtlvariable name="errorMessage" type="java.lang.String" *#
+#* @vtlvariable name="msg" type="com.bhegstam.webutil.MessageBundle" *#
+#* @vtlvariable name="shoppingLists" type="java.util.List<com.bhegstam.shoppinglist.ShoppingList>" *#
+#* @vtlvariable name="users" type="java.util.List<com.bhegstam.user.User>" *#

@@ -1,6 +1,8 @@
 package com.bhegstam.shoppinglist;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InMemoryShoppingListRepository implements ShoppingListRepository {
@@ -24,5 +26,10 @@ public class InMemoryShoppingListRepository implements ShoppingListRepository {
     @Override
     public ShoppingList get(ShoppingListId id) {
         return lists.get(id);
+    }
+
+    @Override
+    public List<ShoppingList> getShoppingLists() {
+        return new ArrayList<>(lists.values());
     }
 }

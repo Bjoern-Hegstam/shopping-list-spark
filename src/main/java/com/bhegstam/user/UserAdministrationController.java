@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import spark.Service;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static com.bhegstam.webutil.webapp.ResultBuilder.result;
 import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
@@ -29,7 +30,7 @@ public class UserAdministrationController implements Controller {
     }
 
     private Result serveUserList() {
-        HashMap<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<>();
         model.put("users", userRepository.getUsers());
 
         return result().render(Path.Template.ADMIN_USERS, model);
