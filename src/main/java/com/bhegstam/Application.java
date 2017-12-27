@@ -5,6 +5,7 @@ import com.bhegstam.configuration.ConfigurationModule;
 import com.bhegstam.login.LoginController;
 import com.bhegstam.shoppinglist.ShoppingListController;
 import com.bhegstam.shoppinglist.ShoppingListModule;
+import com.bhegstam.shoppinglist.api.ShoppingListApiController;
 import com.bhegstam.user.UserAdministrationController;
 import com.bhegstam.user.UserModule;
 import com.bhegstam.user.UserRegistrationController;
@@ -16,7 +17,6 @@ import com.google.inject.Injector;
 import spark.Service;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 
 public class Application extends ApplicationBase {
 
@@ -40,6 +40,7 @@ public class Application extends ApplicationBase {
             IndexController indexController,
             LoginController loginController,
             ShoppingListController shoppingListController,
+            ShoppingListApiController shoppingListApiController,
             UserRegistrationController userRegistrationController,
             UserAdministrationController userAdministrationController,
             UserApiController userApiController
@@ -52,7 +53,8 @@ public class Application extends ApplicationBase {
                         userRegistrationController,
                         userAdministrationController
                 ),
-                singletonList(
+                asList(
+                        shoppingListApiController,
                         userApiController
                 ),
                 true

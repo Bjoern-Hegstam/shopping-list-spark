@@ -30,7 +30,7 @@
             <ul class="nav navbar-nav">
                 #if($currentUser)
                     <li>
-                        <a href="/shopping-list">Lists</a>
+                        <a href="/shopping-list/">Lists</a>
                     </li>
 
                     #if($currentUser.isAdmin())

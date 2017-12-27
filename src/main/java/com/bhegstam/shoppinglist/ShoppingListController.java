@@ -1,6 +1,7 @@
 package com.bhegstam.shoppinglist;
 
 import com.bhegstam.util.Path;
+import com.bhegstam.webutil.Filters;
 import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Result;
 import com.google.inject.Inject;
@@ -22,7 +23,10 @@ public class ShoppingListController implements Controller {
 
     @Override
     public void configureRoutes(Service http) {
-        http.get(Path.Web.SHOPPING_LIST, asSparkRoute(request -> serveListOfShoppingLists()));
+        http.path(Path.Web.SHOPPING_LIST, () -> {
+            http.before("/*", Filters::userIsLoggedIn);
+            http.get("/", asSparkRoute(request -> serveListOfShoppingLists()));
+        });
     }
 
     private Result serveListOfShoppingLists() {
