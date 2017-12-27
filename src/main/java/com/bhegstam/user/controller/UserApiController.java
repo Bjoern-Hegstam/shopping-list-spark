@@ -28,7 +28,7 @@ public class UserApiController implements Controller {
     @Override
     public void configureRoutes(Service http) {
         http.path(Path.Api.USER, () -> {
-            http.before("/*", Filters::userIsAdmin);
+            http.before("/*", Filters.userIsAdmin(Filters.Actions.redirectNotAuthorized(Path.Web.INDEX)));
             http.patch(
                     "/:userId",
                     "application/json",

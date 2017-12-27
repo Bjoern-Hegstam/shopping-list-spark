@@ -29,7 +29,7 @@ public class ShoppingListController implements Controller {
     @Override
     public void configureRoutes(Service http) {
         http.path(Path.Web.SHOPPING_LIST, () -> {
-            http.before("/*", Filters::userIsLoggedIn);
+            http.before("/*", Filters.userIsLoggedIn(Filters.Actions.redirectNotAuthorized(Path.Web.INDEX)));
             http.get("/", asSparkRoute(request -> serveListOfShoppingLists()));
             http.get("/:shoppingListId/", asSparkRoute(this::getShoppingList));
         });

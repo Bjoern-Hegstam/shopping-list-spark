@@ -26,7 +26,7 @@ public class UserAdministrationController implements Controller {
     @Override
     public void configureRoutes(Service http) {
         http.path(Path.Web.ADMIN, () -> {
-            http.before("/*", Filters::userIsAdmin);
+            http.before("/*", Filters.userIsAdmin(Filters.Actions.redirectNotAuthorized(Path.Web.INDEX)));
             http.get(Path.Web.USERS, asSparkRoute(request -> serveUserList()));
         });
     }
