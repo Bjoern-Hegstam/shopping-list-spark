@@ -20,4 +20,8 @@ public class ShoppingListId {
     public UUID getId() {
         return id;
     }
+
+    public static ShoppingListId fromString(String s) {
+        return new ShoppingListId(UUID.fromString(s));
+    }
 }

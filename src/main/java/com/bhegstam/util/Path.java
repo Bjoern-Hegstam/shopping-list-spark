@@ -17,6 +17,7 @@ public class Path {
         public static final String LOGIN = "/velocity/login/login.vm";
         public static final String INDEX = "/velocity/index/index.vm";
         public static final String SHOPPING_LISTS = "/velocity/shopping_list/shopping_lists.vm";
+        public static final String SHOPPING_LIST = "/velocity/shopping_list/shopping_list.vm";
         public static final String REGISTER = "/velocity/user/register.vm";
     }
 

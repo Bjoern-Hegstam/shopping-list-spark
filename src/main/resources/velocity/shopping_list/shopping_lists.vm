@@ -4,7 +4,7 @@
     <div class="row">
         #foreach( $shoppingList in $shoppingLists )
             <div class="col-sm-4">
-                <a class="btn btn-link btn-block" href="/shopping-list/$shoppingList.id">
+                <a class="btn btn-link btn-block" href="/shopping-list/$shoppingList.id/">
                     <h2>
                         $shoppingList.name
                     </h2>

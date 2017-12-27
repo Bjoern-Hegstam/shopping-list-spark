@@ -49,3 +49,27 @@
   background-color: #ddd;
   color: #666;
 }
+
+
+@list-radius: 10px;
+@base-color: black;
+
+.shopping-list {
+  border: 1px solid black;
+  border-radius: @list-radius;
+  background-color: lighten(@base-color, 100%);
+
+  .name {
+    float: left;
+    font-weight: bold;
+    font-size: 18pt;
+  }
+
+  .shopping-list-btns {
+    float: right;
+  }
+
+  .shopping-list-header {
+    padding: 15px 20px 15px 15px;
+  }
+}

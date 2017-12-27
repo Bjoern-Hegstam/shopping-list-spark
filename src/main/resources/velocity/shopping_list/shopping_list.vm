@@ -1,0 +1,51 @@
+#parse("/velocity/layout.vm")
+#@mainLayout("app/shopping-list/shopping-list")
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div class="shopping-list" data-id="$shoppingList.id">
+                <div class="shopping-list-header clearfix">
+                    <span class="name">
+                        $shoppingList.name
+                    </span>
+
+                    <div class="shopping-list-btns">
+                        <button type="button" class="btn btn-lg btn-danger btn-finish-shopping">
+                            <span class="glyphicon glyphicon-shopping-cart"/>
+                        </button>
+                        <button type="button" class="btn btn-lg btn-success btn-add-item" data-toggle="modal"
+                                data-target="#addItemModal">
+                            Add item
+                        </button>
+                    </div>
+                </div>
+
+##                <ul class="shopping-list-items">
+##                    {{#each shopping_list.items}}
+##                    {{> shopping_list_item}}
+##                    {{/each}}
+##                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="addItemModal" role="dialog" class="modal fade">
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <select id="nameInput"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+#end

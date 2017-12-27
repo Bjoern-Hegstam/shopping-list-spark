@@ -1,9 +1,12 @@
 package com.bhegstam.shoppinglist.controller;
 
+import com.bhegstam.shoppinglist.domain.ShoppingList;
+import com.bhegstam.shoppinglist.domain.ShoppingListId;
 import com.bhegstam.shoppinglist.domain.ShoppingListRepository;
 import com.bhegstam.util.Path;
 import com.bhegstam.webutil.Filters;
 import com.bhegstam.webutil.webapp.Controller;
+import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
 import com.google.inject.Inject;
 import spark.Service;
@@ -28,6 +31,7 @@ public class ShoppingListController implements Controller {
         http.path(Path.Web.SHOPPING_LIST, () -> {
             http.before("/*", Filters::userIsLoggedIn);
             http.get("/", asSparkRoute(request -> serveListOfShoppingLists()));
+            http.get("/:shoppingListId/", asSparkRoute(this::getShoppingList));
         });
     }
 
@@ -42,5 +46,14 @@ public class ShoppingListController implements Controller {
         );
 
         return result().render(Path.Template.SHOPPING_LISTS, model);
+    }
+
+    private Result getShoppingList(Request request) {
+        ShoppingListId listId = ShoppingListId.fromString(request.params("shoppingListId"));
+        ShoppingList shoppingList = shoppingListRepository.get(listId);
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("shoppingList", ShoppingListBean.fromShoppingList(shoppingList));
+        return result().render(Path.Template.SHOPPING_LIST, model);
     }
 }
