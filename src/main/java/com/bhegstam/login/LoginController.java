@@ -1,7 +1,7 @@
 package com.bhegstam.login;
 
-import com.bhegstam.user.User;
-import com.bhegstam.user.UserRepository;
+import com.bhegstam.user.domain.User;
+import com.bhegstam.user.domain.UserRepository;
 import com.bhegstam.util.Message;
 import com.bhegstam.util.Path;
 import com.bhegstam.webutil.webapp.Controller;

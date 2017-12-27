@@ -1,10 +1,10 @@
-package com.bhegstam.shoppinglist;
+package com.bhegstam.shoppinglist.domain;
 
 public class ShoppingList {
     private final String name;
     private final ShoppingListId id;
 
-    ShoppingList(ShoppingListId id, String name) {
+    public ShoppingList(ShoppingListId id, String name) {
         this.id = id;
         this.name = name;
     }

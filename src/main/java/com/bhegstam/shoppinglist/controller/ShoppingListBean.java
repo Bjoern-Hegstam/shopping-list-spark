@@ -1,6 +1,6 @@
-package com.bhegstam.shoppinglist.api;
+package com.bhegstam.shoppinglist.controller;
 
-import com.bhegstam.shoppinglist.ShoppingList;
+import com.bhegstam.shoppinglist.domain.ShoppingList;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 

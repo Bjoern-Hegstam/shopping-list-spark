@@ -1,4 +1,4 @@
-package com.bhegstam.user;
+package com.bhegstam.user.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

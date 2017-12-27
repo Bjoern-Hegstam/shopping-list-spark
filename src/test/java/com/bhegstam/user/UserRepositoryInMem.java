@@ -1,5 +1,9 @@
 package com.bhegstam.user;
 
+import com.bhegstam.user.domain.User;
+import com.bhegstam.user.domain.UserId;
+import com.bhegstam.user.domain.UserRepository;
+
 import java.util.*;
 
 public class UserRepositoryInMem implements UserRepository {

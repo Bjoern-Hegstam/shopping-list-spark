@@ -1,7 +1,10 @@
-package com.bhegstam.shoppinglist;
+package com.bhegstam.shoppinglist.db;
 
 import com.bhe.jooq.tables.records.ShoppingListRecord;
 import com.bhegstam.db.DatabaseConnectionFactory;
+import com.bhegstam.shoppinglist.domain.ShoppingList;
+import com.bhegstam.shoppinglist.domain.ShoppingListId;
+import com.bhegstam.shoppinglist.domain.ShoppingListRepository;
 import com.bhegstam.util.DatabaseUtil;
 import com.google.inject.Inject;
 import org.jooq.Condition;

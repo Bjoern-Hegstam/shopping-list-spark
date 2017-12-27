@@ -1,6 +1,6 @@
-package com.bhegstam.user;
+package com.bhegstam.user.controller;
 
-import com.bhegstam.user.api.UserBean;
+import com.bhegstam.user.domain.UserRepository;
 import com.bhegstam.util.Path;
 import com.bhegstam.webutil.Filters;
 import com.bhegstam.webutil.webapp.Controller;

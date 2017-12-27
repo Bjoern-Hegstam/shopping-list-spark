@@ -1,4 +1,4 @@
-package com.bhegstam.user;
+package com.bhegstam.user.domain;
 
 import com.google.inject.Inject;
 
@@ -14,7 +14,7 @@ public class UserRegistration {
         this.userRepository = userRepository;
     }
 
-    boolean register(User user) {
+    public boolean register(User user) {
         return Optional
                 .of(user)
                 .filter(User::hasValidUsername)

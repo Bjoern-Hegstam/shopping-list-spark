@@ -1,8 +1,8 @@
-package com.bhegstam.user.api;
+package com.bhegstam.user.controller;
 
-import com.bhegstam.user.User;
-import com.bhegstam.user.UserId;
-import com.bhegstam.user.UserRepository;
+import com.bhegstam.user.domain.User;
+import com.bhegstam.user.domain.UserId;
+import com.bhegstam.user.domain.UserRepository;
 import com.bhegstam.util.Path;
 import com.bhegstam.webutil.Filters;
 import com.bhegstam.webutil.JsonResponseTransformer;

@@ -1,4 +1,4 @@
-package com.bhegstam.shoppinglist;
+package com.bhegstam.shoppinglist.domain;
 
 import java.util.List;
 

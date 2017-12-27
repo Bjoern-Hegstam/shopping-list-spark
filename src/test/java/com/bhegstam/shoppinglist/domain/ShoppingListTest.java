@@ -1,5 +1,6 @@
-package com.bhegstam.shoppinglist;
+package com.bhegstam.shoppinglist.domain;
 
+import com.bhegstam.shoppinglist.InMemoryShoppingListRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

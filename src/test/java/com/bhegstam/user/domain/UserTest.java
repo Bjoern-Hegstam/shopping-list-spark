@@ -1,6 +1,5 @@
-package com.bhegstam.user;
+package com.bhegstam.user.domain;
 
-import com.bhegstam.user.User;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

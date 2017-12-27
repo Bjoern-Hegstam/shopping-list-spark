@@ -1,4 +1,4 @@
-package com.bhegstam.user;
+package com.bhegstam.user.domain;
 
 import java.util.List;
 import java.util.Optional;

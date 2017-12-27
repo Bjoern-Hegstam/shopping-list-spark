@@ -1,4 +1,4 @@
-package com.bhegstam.user;
+package com.bhegstam.user.domain;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.mindrot.jbcrypt.BCrypt;

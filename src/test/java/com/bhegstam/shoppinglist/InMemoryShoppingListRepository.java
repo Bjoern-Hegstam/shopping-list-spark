@@ -1,5 +1,9 @@
 package com.bhegstam.shoppinglist;
 
+import com.bhegstam.shoppinglist.domain.ShoppingList;
+import com.bhegstam.shoppinglist.domain.ShoppingListId;
+import com.bhegstam.shoppinglist.domain.ShoppingListRepository;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

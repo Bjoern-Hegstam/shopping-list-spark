@@ -1,7 +1,5 @@
-package com.bhegstam.user;
+package com.bhegstam.user.domain;
 
-import com.bhegstam.user.User;
-import com.bhegstam.user.UserRegistration;
 import com.bhegstam.user.UserRepositoryInMem;
 import org.junit.Before;
 import org.junit.Test;

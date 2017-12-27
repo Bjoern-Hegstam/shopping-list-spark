@@ -1,7 +1,7 @@
-package com.bhegstam.shoppinglist.api;
+package com.bhegstam.shoppinglist.controller;
 
-import com.bhegstam.shoppinglist.ShoppingList;
-import com.bhegstam.shoppinglist.ShoppingListRepository;
+import com.bhegstam.shoppinglist.domain.ShoppingList;
+import com.bhegstam.shoppinglist.domain.ShoppingListRepository;
 import com.bhegstam.util.Path;
 import com.bhegstam.webutil.Filters;
 import com.bhegstam.webutil.JsonResponseTransformer;

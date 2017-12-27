@@ -1,5 +1,6 @@
-package com.bhegstam.user;
+package com.bhegstam.user.controller;
 
+import com.bhegstam.user.domain.UserRegistration;
 import com.bhegstam.util.Message;
 import com.bhegstam.util.Mocks;
 import com.bhegstam.util.Path;

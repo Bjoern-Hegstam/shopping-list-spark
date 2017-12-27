@@ -1,4 +1,4 @@
-package com.bhegstam.shoppinglist;
+package com.bhegstam.shoppinglist.domain;
 
 import lombok.EqualsAndHashCode;
 
@@ -9,11 +9,11 @@ public class ShoppingListId {
 
     private final UUID id;
 
-    ShoppingListId() {
+    public ShoppingListId() {
         id = UUID.randomUUID();
     }
 
-    ShoppingListId(UUID id) {
+    public ShoppingListId(UUID id) {
         this.id = id;
     }
 

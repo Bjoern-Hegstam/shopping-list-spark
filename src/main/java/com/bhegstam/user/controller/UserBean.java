@@ -1,7 +1,7 @@
-package com.bhegstam.user.api;
+package com.bhegstam.user.controller;
 
-import com.bhegstam.user.Role;
-import com.bhegstam.user.User;
+import com.bhegstam.user.domain.Role;
+import com.bhegstam.user.domain.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 

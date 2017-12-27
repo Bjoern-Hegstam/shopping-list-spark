@@ -1,6 +1,6 @@
-package com.bhegstam.shoppinglist;
+package com.bhegstam.shoppinglist.controller;
 
-import com.bhegstam.shoppinglist.api.ShoppingListBean;
+import com.bhegstam.shoppinglist.domain.ShoppingListRepository;
 import com.bhegstam.util.Path;
 import com.bhegstam.webutil.Filters;
 import com.bhegstam.webutil.webapp.Controller;

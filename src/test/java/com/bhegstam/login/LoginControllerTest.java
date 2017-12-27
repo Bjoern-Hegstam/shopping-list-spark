@@ -1,13 +1,13 @@
 package com.bhegstam.login;
 
-import com.bhegstam.webutil.webapp.Request;
-import com.bhegstam.webutil.webapp.Result;
-import com.bhegstam.user.User;
-import com.bhegstam.user.UserId;
 import com.bhegstam.user.UserRepositoryInMem;
+import com.bhegstam.user.domain.User;
+import com.bhegstam.user.domain.UserId;
 import com.bhegstam.util.Message;
 import com.bhegstam.util.Mocks;
 import com.bhegstam.util.Path;
+import com.bhegstam.webutil.webapp.Request;
+import com.bhegstam.webutil.webapp.Result;
 import org.junit.Before;
 import org.junit.Test;
 
