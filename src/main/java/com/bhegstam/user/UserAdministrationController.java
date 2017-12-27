@@ -1,9 +1,9 @@
 package com.bhegstam.user;
 
+import com.bhegstam.util.Path;
 import com.bhegstam.webutil.Filters;
 import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Result;
-import com.bhegstam.util.Path;
 import com.google.inject.Inject;
 import spark.Service;
 
@@ -24,11 +24,11 @@ public class UserAdministrationController implements Controller {
     public void configureRoutes(Service http) {
         http.path(Path.Web.ADMIN, () -> {
             http.before("/*", Filters::userIsAdmin);
-            http.get(Path.Web.USERS, asSparkRoute(request -> serverUserList()));
+            http.get(Path.Web.USERS, asSparkRoute(request -> serveUserList()));
         });
     }
 
-    private Result serverUserList() {
+    private Result serveUserList() {
         HashMap<String, Object> model = new HashMap<>();
         model.put("users", userRepository.getUsers());
 
