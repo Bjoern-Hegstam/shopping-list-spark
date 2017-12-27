@@ -3,7 +3,6 @@ package com.bhegstam.shoppinglist.controller;
 import com.bhegstam.shoppinglist.domain.ShoppingList;
 import com.bhegstam.shoppinglist.domain.ShoppingListRepository;
 import com.bhegstam.util.Path;
-import com.bhegstam.webutil.Filters;
 import com.bhegstam.webutil.JsonResponseTransformer;
 import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Request;
@@ -25,7 +24,6 @@ public class ShoppingListApiController implements Controller {
     @Override
     public void configureRoutes(Service http) {
         http.path(Path.Api.SHOPPING_LIST, () -> {
-            http.before("/*", Filters::userIsLoggedIn);
             http.post(
                     "/",
                     "application/json",
