@@ -21,11 +21,29 @@
                     </div>
                 </div>
 
-##                <ul class="shopping-list-items">
-##                    {{#each shopping_list.items}}
-##                    {{> shopping_list_item}}
-##                    {{/each}}
-##                </ul>
+                <ul class="shopping-list-items">
+                    #foreach( $item in $shoppingList.items )
+                        <li class="shopping-list-item" data-id="$item.id"> ## TODO: Readd inCart class toggle
+                            <span class="quantity">
+                                $item.quantity
+                            </span>
+
+                            <span class="item-type-name">
+                                $item.itemType.name
+                            </span>
+
+                            <div class="btn-group pull-right">
+                                <button type="button" class="btn btn-success btn-item-inc">
+                                    <span class="glyphicon glyphicon-plus"/>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-item-dec">
+                                    <span class="glyphicon glyphicon-minus"/>
+                                </button>
+                            </div>
+                        </li>
+
+                    #end
+                </ul>
             </div>
 
         </div>
