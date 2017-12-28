@@ -74,4 +74,24 @@ public class ShoppingListTest {
         // then
         errorCollector.checkThat(list.contains(itemType.getId()), is(false));
     }
+
+    @Test
+    public void cartManagement() {
+        // given
+        ShoppingList list = shoppingListRepository.createShoppingList("LIST");
+        ItemType itemTypeA = itemTypeRepository.createItemType("ITEM_TYPE_A");
+        ItemType itemTypeB = itemTypeRepository.createItemType("ITEM_TYPE_B");
+
+        ShoppingListItem itemA = list.add(itemTypeA.getId());
+        list.add(itemTypeB.getId());
+
+        // when
+        itemA.setInCart(true);
+        list.removeItemsInCart();
+
+        // then
+        errorCollector.checkThat(list.contains(itemTypeA.getId()), is(false));
+        errorCollector.checkThat(list.contains(itemTypeB.getId()), is(true));
+
+    }
 }

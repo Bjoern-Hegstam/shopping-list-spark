@@ -3,7 +3,10 @@ package com.bhegstam.shoppinglist.domain;
 import com.bhegstam.itemtype.domain.ItemTypeId;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static java.util.stream.Collectors.toList;
 
 public class ShoppingList {
     private final String name;
@@ -40,5 +43,15 @@ public class ShoppingList {
 
     public void remove(ItemTypeId itemTypeId) {
         items.remove(itemTypeId);
+    }
+
+    public void removeItemsInCart() {
+        List<ItemTypeId> itemTypeIds = items
+                .entrySet().stream()
+                .filter(e -> e.getValue().isInCart())
+                .map(Map.Entry::getKey)
+                .collect(toList());
+
+        itemTypeIds.forEach(this::remove);
     }
 }
