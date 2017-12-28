@@ -50,14 +50,14 @@ public class ShoppingListTest {
         ItemType itemType = itemTypeRepository.createItemType("ITEM_TYPE");
 
         // when item added for the first time
-        ShoppingListItem listItem = list.add(itemType.getId());
+        ShoppingListItem listItem = list.add(itemType);
 
         // then
         errorCollector.checkThat(list.get(itemType.getId()).getQuantity(), is(1));
         errorCollector.checkThat(list.contains(itemType.getId()), is(true));
 
         // when item added again
-        list.add(itemType.getId());
+        list.add(itemType);
 
         // then
         errorCollector.checkThat(list.get(itemType.getId()).getQuantity(), is(2));
@@ -83,8 +83,8 @@ public class ShoppingListTest {
         ItemType itemTypeA = itemTypeRepository.createItemType("ITEM_TYPE_A");
         ItemType itemTypeB = itemTypeRepository.createItemType("ITEM_TYPE_B");
 
-        ShoppingListItem itemA = list.add(itemTypeA.getId());
-        list.add(itemTypeB.getId());
+        ShoppingListItem itemA = list.add(itemTypeA);
+        list.add(itemTypeB);
 
         // when
         itemA.setInCart(true);

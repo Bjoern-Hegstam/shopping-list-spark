@@ -2,10 +2,9 @@ package com.bhegstam.shoppinglist.db;
 
 import com.bhe.jooq.tables.records.ShoppingListRecord;
 import com.bhegstam.db.DatabaseConnectionFactory;
-import com.bhegstam.shoppinglist.domain.ShoppingList;
-import com.bhegstam.shoppinglist.domain.ShoppingListId;
-import com.bhegstam.shoppinglist.domain.ShoppingListItem;
-import com.bhegstam.shoppinglist.domain.ShoppingListRepository;
+import com.bhegstam.itemtype.domain.ItemType;
+import com.bhegstam.itemtype.domain.ItemTypeId;
+import com.bhegstam.shoppinglist.domain.*;
 import com.bhegstam.util.DatabaseUtil;
 import com.bhegstam.util.db.PersistenceStatus;
 import com.google.inject.Inject;
@@ -16,10 +15,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static com.bhe.jooq.tables.ItemType.ITEM_TYPE;
 import static com.bhe.jooq.tables.ShoppingList.SHOPPING_LIST;
 import static com.bhe.jooq.tables.ShoppingListItem.SHOPPING_LIST_ITEM;
 import static com.bhegstam.webutil.CustomCollectors.onlyElement;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 public class JdbcShoppingListRepository implements ShoppingListRepository {
     private final DatabaseConnectionFactory connectionFactory;
@@ -86,7 +87,7 @@ public class JdbcShoppingListRepository implements ShoppingListRepository {
                                          .using(configuration)
                                          .insertInto(SHOPPING_LIST_ITEM)
                                          .set(SHOPPING_LIST_ITEM.ID, item.getId().getId())
-                                         .set(SHOPPING_LIST_ITEM.ITEM_TYPE_ID, item.getItemTypeId().getId())
+                                         .set(SHOPPING_LIST_ITEM.ITEM_TYPE_ID, item.getItemType().getId().getId())
                                          .set(SHOPPING_LIST_ITEM.QUANTITY, item.getQuantity())
                                          .set(SHOPPING_LIST_ITEM.IN_CART, item.isInCart())
                                          .execute()
@@ -105,7 +106,34 @@ public class JdbcShoppingListRepository implements ShoppingListRepository {
     }
 
     private List<ShoppingList> findShoppingListsWhere(Condition... conditions) {
-        return databaseUtil.findObjectsWhere(SHOPPING_LIST, this::mapRecordToShoppingList, conditions);
+        List<ShoppingList> lists = databaseUtil.findObjectsWhere(SHOPPING_LIST, this::mapRecordToShoppingList, conditions);
+        lists.forEach(list -> {
+            connectionFactory
+                    .withConnection(conn -> {
+                        List<ShoppingListItem> items = DSL
+                                .using(conn)
+                                .select()
+                                .from(SHOPPING_LIST_ITEM)
+                                .join(ITEM_TYPE).on(ITEM_TYPE.ID.eq(SHOPPING_LIST_ITEM.ITEM_TYPE_ID))
+                                .where(SHOPPING_LIST_ITEM.SHOPPING_LIST_ID.eq(list.getId().getId()))
+                                .fetch()
+                                .stream()
+                                .map(record -> new ShoppingListItem(
+                                        new ShoppingListItemId(SHOPPING_LIST_ITEM.ID.get(record)),
+                                        new ItemType(
+                                                new ItemTypeId(ITEM_TYPE.ID.get(record)),
+                                                ITEM_TYPE.NAME.get(record)
+                                        ),
+                                        SHOPPING_LIST_ITEM.QUANTITY.get(record),
+                                        SHOPPING_LIST_ITEM.IN_CART.get(record),
+                                        PersistenceStatus.NOT_CHANGED
+                                )).collect(toList());
+
+                        list.setItems(items);
+                    });
+        });
+
+        return lists;
     }
 
     private ShoppingList mapRecordToShoppingList(ShoppingListRecord record) {

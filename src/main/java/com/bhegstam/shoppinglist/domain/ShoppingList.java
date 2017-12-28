@@ -1,5 +1,6 @@
 package com.bhegstam.shoppinglist.domain;
 
+import com.bhegstam.itemtype.domain.ItemType;
 import com.bhegstam.itemtype.domain.ItemTypeId;
 
 import java.util.*;
@@ -27,8 +28,8 @@ public class ShoppingList {
         return id;
     }
 
-    public ShoppingListItem add(ItemTypeId itemTypeId) {
-        ShoppingListItem item = items.computeIfAbsent(itemTypeId, k -> new ShoppingListItem(itemTypeId));
+    public ShoppingListItem add(ItemType itemType) {
+        ShoppingListItem item = items.computeIfAbsent(itemType.getId(), k -> new ShoppingListItem(itemType));
         item.setQuantity(item.getQuantity() + 1);
         return item;
     }
@@ -62,5 +63,11 @@ public class ShoppingList {
 
     public Collection<ShoppingListItem> getItems() {
         return Collections.unmodifiableCollection(items.values());
+    }
+
+    public void setItems(Collection<ShoppingListItem> items) {
+        this.items.clear();
+        this.removedItems.clear();
+        items.forEach(item -> this.items.put(item.getItemType().getId(), item));
     }
 }

@@ -1,7 +1,7 @@
 package com.bhegstam.shoppinglist.domain;
 
 import com.bhegstam.itemtype.InMemoryItemTypeRepository;
-import com.bhegstam.itemtype.domain.ItemTypeId;
+import com.bhegstam.itemtype.domain.ItemType;
 import com.bhegstam.util.db.PersistenceStatus;
 import org.junit.Before;
 import org.junit.Rule;
@@ -11,22 +11,20 @@ import org.junit.rules.ErrorCollector;
 import static org.hamcrest.CoreMatchers.is;
 
 public class ShoppingListItemTest {
-    private ItemTypeId itemTypeId;
+    private ItemType itemType;
 
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
 
     @Before
     public void setUp() {
-        itemTypeId = new InMemoryItemTypeRepository()
-                .createItemType("TEST_ITEM_TYPE")
-                .getId();
+        itemType = new InMemoryItemTypeRepository().createItemType("TEST_ITEM_TYPE");
     }
 
     @Test
     public void createNewItem_shouldBeMarkedAsNew() {
         // when
-        ShoppingListItem item = new ShoppingListItem(itemTypeId);
+        ShoppingListItem item = new ShoppingListItem(itemType);
 
         // then
         errorCollector.checkThat(item.getPersistenceStatus(), is(PersistenceStatus.INSERT_REQUIRED));
@@ -41,7 +39,7 @@ public class ShoppingListItemTest {
     @Test
     public void setQuantity_shouldMarkItemAsUpdated() {
         // given
-        ShoppingListItem item = new ShoppingListItem(itemTypeId);
+        ShoppingListItem item = new ShoppingListItem(itemType);
         item.setPersistenceStatus(PersistenceStatus.NOT_CHANGED);
 
         // when
@@ -54,7 +52,7 @@ public class ShoppingListItemTest {
     @Test
     public void setInCart_shouldMarkItemAsUpdated() {
         // given
-        ShoppingListItem item = new ShoppingListItem(itemTypeId);
+        ShoppingListItem item = new ShoppingListItem(itemType);
         item.setPersistenceStatus(PersistenceStatus.NOT_CHANGED);
 
         // when
