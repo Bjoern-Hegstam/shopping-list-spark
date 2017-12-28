@@ -21,12 +21,12 @@ import static com.bhe.jooq.Tables.APPLICATION_USER;
 import static com.bhegstam.webutil.CustomCollectors.onlyElement;
 import static com.bhegstam.webutil.CustomCollectors.onlyOptionalElement;
 
-public class UserRepositoryImpl implements UserRepository {
+public class JdbcUserRepository implements UserRepository {
     private final DatabaseConnectionFactory connectionFactory;
     private final DatabaseUtil databaseUtil;
 
     @Inject
-    public UserRepositoryImpl(DatabaseConnectionFactory connectionFactory, DatabaseUtil databaseUtil) {
+    public JdbcUserRepository(DatabaseConnectionFactory connectionFactory, DatabaseUtil databaseUtil) {
         this.connectionFactory = connectionFactory;
         this.databaseUtil = databaseUtil;
     }
