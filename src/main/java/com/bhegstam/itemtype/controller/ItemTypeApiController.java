@@ -10,8 +10,11 @@ import com.bhegstam.webutil.webapp.Result;
 import com.google.inject.Inject;
 import spark.Service;
 
+import java.util.List;
+
 import static com.bhegstam.webutil.webapp.ResultBuilder.result;
 import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
+import static java.util.stream.Collectors.toList;
 
 public class ItemTypeApiController implements Controller {
     private final ItemTypeRepository itemTypeRepository;
@@ -30,6 +33,11 @@ public class ItemTypeApiController implements Controller {
                     asSparkRoute(this::postItemType),
                     new JsonResponseTransformer()
             );
+            http.get(
+                    "",
+                    asSparkRoute(this::findItemTypes),
+                    new JsonResponseTransformer()
+            );
         });
     }
 
@@ -38,5 +46,19 @@ public class ItemTypeApiController implements Controller {
 
         ItemType itemType = itemTypeRepository.createItemType(itemTypeBean.getName());
         return result().returnPayload(ItemTypeBean.fromItemType(itemType));
+    }
+
+    private Result findItemTypes(Request request) {
+        String nameStart = request.queryParams("name");
+        int limit = Integer.parseInt(request.queryParams("limit"));
+
+        List<ItemTypeBean> itemTypeBeans = itemTypeRepository
+                .findItemTypes(nameStart, limit).stream()
+                .map(ItemTypeBean::fromItemType)
+                .collect(toList());
+
+        return result()
+                .type("application/json")
+                .returnPayload(itemTypeBeans);
     }
 }

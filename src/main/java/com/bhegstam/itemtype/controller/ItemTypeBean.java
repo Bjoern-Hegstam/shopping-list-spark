@@ -13,7 +13,7 @@ public class ItemTypeBean {
 
     public static ItemTypeBean fromItemType(ItemType itemType) {
         ItemTypeBean bean = new ItemTypeBean();
-        bean.setId(itemType.getId().toString());
+        bean.setId(itemType.getId().getId().toString());
         bean.setName(itemType.getName());
         return bean;
     }

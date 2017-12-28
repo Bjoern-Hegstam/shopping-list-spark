@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 import org.jooq.Condition;
 import org.jooq.impl.DSL;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.bhe.jooq.tables.ItemType.ITEM_TYPE;
@@ -49,6 +50,25 @@ public class JdbcItemTypeRepository implements ItemTypeRepository {
         return findItemTypesWhere(ITEM_TYPE.ID.eq(id.getId()))
                 .stream()
                 .collect(onlyElement());
+    }
+
+    @Override
+    public List<ItemType> findItemTypes(String nameStart, int limit) {
+        List<ItemType> result = new ArrayList<>();
+
+        connectionFactory
+                .withConnection(conn -> {
+                    List<ItemType> itemTypes = DSL
+                            .using(conn)
+                            .selectFrom(ITEM_TYPE)
+                            .where(ITEM_TYPE.NAME.startsWith(nameStart))
+                            .limit(limit)
+                            .fetch(this::mapRecordToItemType);
+
+                    result.addAll(itemTypes);
+                });
+
+        return result;
     }
 
     private List<ItemType> findItemTypesWhere(Condition... conditions) {

@@ -1,4 +1,4 @@
-define(['jquery', 'app/db/shopping-list', 'app/db/item-type'], function ($, listDb, itemTypeDb) {
+define(['jquery', 'app/db/shopping-list', 'app/db/item-type', 'selectize'], function ($, listDb, itemTypeDb) {
     // Wire up shopping list buttons
     var $shoppingList = $('.shopping-list');
     var $addItemModal = $('#addItemModal');
@@ -14,17 +14,19 @@ define(['jquery', 'app/db/shopping-list', 'app/db/item-type'], function ($, list
                     return callback();
                 }
 
-                itemTypeDb.findItemTypesWithNameLike(query, 5)
-                    .done(function(result) {
-                        callback(result.item_type);
+                itemTypeDb
+                    .findItemTypesWithNameLike(query, 5)
+                    .done(function (result) {
+                        callback(result);
                     });
             },
             create: function(input, callback) {
                 var self = this;
-                itemTypeDb.createItemType(input)
+                itemTypeDb
+                    .createItemType(input)
                     .done(function(result) {
                         $addItemModal.modal('hide');
-                        addToShoppingList(result.item_type.id);
+                        addToShoppingList(result.id);
 
                         // Must be called or the selectized input can't be used
                         // again without a reload.

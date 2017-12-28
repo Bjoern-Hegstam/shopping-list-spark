@@ -3,8 +3,10 @@ package com.bhegstam.itemtype;
 import com.bhegstam.itemtype.domain.ItemType;
 import com.bhegstam.itemtype.domain.ItemTypeId;
 import com.bhegstam.itemtype.domain.ItemTypeRepository;
+import org.apache.commons.lang.NotImplementedException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InMemoryItemTypeRepository implements ItemTypeRepository {
@@ -27,5 +29,10 @@ public class InMemoryItemTypeRepository implements ItemTypeRepository {
     @Override
     public ItemType get(ItemTypeId id) {
         return itemTypes.get(id);
+    }
+
+    @Override
+    public List<ItemType> findItemTypes(String nameStart, int limit) {
+        throw new NotImplementedException("NYI");
     }
 }

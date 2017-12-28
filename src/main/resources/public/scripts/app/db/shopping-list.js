@@ -6,9 +6,7 @@ define(['jquery'], function ($) {
     return {
         createShoppingList: function (name) {
             var data = {
-                shopping_list: {
-                    name: name
-                }
+                name: name
             };
 
             return $.ajax({

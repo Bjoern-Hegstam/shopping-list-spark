@@ -6,13 +6,11 @@ define(['jquery'], function ($) {
     return {
         createItemType: function(name) {
             var data = {
-                item_type: {
-                    name: name
-                }
+                name: name
             };
 
             return $.ajax({
-                url: '/api/item_type',
+                url: '/api/item-type/',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(data),
@@ -22,7 +20,7 @@ define(['jquery'], function ($) {
 
         findItemTypesWithNameLike: function (nameStart, limit) {
             return $.ajax({
-                url: '/api/item_type?name=' + nameStart + '&limit=' + limit,
+                url: '/api/item-type?name=' + nameStart + '&limit=' + limit,
                 type: 'GET',
                 error: ajaxErrorHandler
             });
