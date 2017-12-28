@@ -6,18 +6,19 @@ import lombok.Data;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
 @Data
 public class ShoppingListBean {
-    private String id;
+    private UUID id;
     private String name;
     private List<ShoppingListItemBean> items;
 
     public static ShoppingListBean fromShoppingList(ShoppingList shoppingList) {
         ShoppingListBean bean = new ShoppingListBean();
-        bean.id = shoppingList.getId().getId().toString();
+        bean.id = shoppingList.getId().getId();
         bean.name = shoppingList.getName();
         bean.items = shoppingList
                 .getItems().stream()

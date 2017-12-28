@@ -6,17 +6,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Data
 public class ShoppingListItemBean {
-    private String id;
+    private UUID id;
     private ItemTypeBean itemType;
     private int quantity;
     private boolean inCart;
 
     public static ShoppingListItemBean fromShoppingListItem(ShoppingListItem item) {
         ShoppingListItemBean bean = new ShoppingListItemBean();
-        bean.id = item.getId().toString();
+        bean.id = item.getId().getId();
         bean.itemType = ItemTypeBean.fromItemType(item.getItemType());
         bean.quantity = item.getQuantity();
         bean.inCart = item.isInCart();

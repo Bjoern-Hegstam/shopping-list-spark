@@ -59,7 +59,7 @@ public class ShoppingListApiController implements Controller {
     private Result postShoppingListItem(Request request) {
         ShoppingListId listId = ShoppingListId.fromString(request.params("shoppingListId"));
         ShoppingListItemBean itemBean = ShoppingListItemBean.fromJson(request.body());
-        ItemTypeId itemTypeId = ItemTypeId.fromString(itemBean.getItemType().getId());
+        ItemTypeId itemTypeId = new ItemTypeId(itemBean.getItemType().getId());
 
         ItemType itemType = itemTypeRepository.get(itemTypeId);
 

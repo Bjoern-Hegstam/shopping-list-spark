@@ -86,6 +86,7 @@ public class JdbcShoppingListRepository implements ShoppingListRepository {
                                  .forEach(item -> DSL
                                          .using(configuration)
                                          .insertInto(SHOPPING_LIST_ITEM)
+                                         .set(SHOPPING_LIST_ITEM.SHOPPING_LIST_ID, shoppingList.getId().getId())
                                          .set(SHOPPING_LIST_ITEM.ID, item.getId().getId())
                                          .set(SHOPPING_LIST_ITEM.ITEM_TYPE_ID, item.getItemType().getId().getId())
                                          .set(SHOPPING_LIST_ITEM.QUANTITY, item.getQuantity())
@@ -107,31 +108,29 @@ public class JdbcShoppingListRepository implements ShoppingListRepository {
 
     private List<ShoppingList> findShoppingListsWhere(Condition... conditions) {
         List<ShoppingList> lists = databaseUtil.findObjectsWhere(SHOPPING_LIST, this::mapRecordToShoppingList, conditions);
-        lists.forEach(list -> {
-            connectionFactory
-                    .withConnection(conn -> {
-                        List<ShoppingListItem> items = DSL
-                                .using(conn)
-                                .select()
-                                .from(SHOPPING_LIST_ITEM)
-                                .join(ITEM_TYPE).on(ITEM_TYPE.ID.eq(SHOPPING_LIST_ITEM.ITEM_TYPE_ID))
-                                .where(SHOPPING_LIST_ITEM.SHOPPING_LIST_ID.eq(list.getId().getId()))
-                                .fetch()
-                                .stream()
-                                .map(record -> new ShoppingListItem(
-                                        new ShoppingListItemId(SHOPPING_LIST_ITEM.ID.get(record)),
-                                        new ItemType(
-                                                new ItemTypeId(ITEM_TYPE.ID.get(record)),
-                                                ITEM_TYPE.NAME.get(record)
-                                        ),
-                                        SHOPPING_LIST_ITEM.QUANTITY.get(record),
-                                        SHOPPING_LIST_ITEM.IN_CART.get(record),
-                                        PersistenceStatus.NOT_CHANGED
-                                )).collect(toList());
+        lists.forEach(list -> connectionFactory
+                .withConnection(conn -> {
+                    List<ShoppingListItem> items = DSL
+                            .using(conn)
+                            .select()
+                            .from(SHOPPING_LIST_ITEM)
+                            .join(ITEM_TYPE).on(ITEM_TYPE.ID.eq(SHOPPING_LIST_ITEM.ITEM_TYPE_ID))
+                            .where(SHOPPING_LIST_ITEM.SHOPPING_LIST_ID.eq(list.getId().getId()))
+                            .fetch()
+                            .stream()
+                            .map(record -> new ShoppingListItem(
+                                    new ShoppingListItemId(SHOPPING_LIST_ITEM.ID.get(record)),
+                                    new ItemType(
+                                            new ItemTypeId(ITEM_TYPE.ID.get(record)),
+                                            ITEM_TYPE.NAME.get(record)
+                                    ),
+                                    SHOPPING_LIST_ITEM.QUANTITY.get(record),
+                                    SHOPPING_LIST_ITEM.IN_CART.get(record),
+                                    PersistenceStatus.NOT_CHANGED
+                            )).collect(toList());
 
-                        list.setItems(items);
-                    });
-        });
+                    list.setItems(items);
+                }));
 
         return lists;
     }

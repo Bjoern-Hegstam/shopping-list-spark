@@ -10,7 +10,7 @@ define(['jquery'], function ($) {
             };
 
             return $.ajax({
-                url: '/api/shopping_list',
+                url: '/api/shopping-list',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(data),
@@ -20,12 +20,14 @@ define(['jquery'], function ($) {
 
         addToShoppingList: function(listId, itemTypeId) {
             var data = {
-                item_type_id: itemTypeId,
+                itemType: {
+                    id: itemTypeId
+                },
                 quantity: 1
             };
 
             return $.ajax({
-                url: '/api/shopping_list/' + listId + '/item',
+                url: '/api/shopping-list/' + listId + '/item',
                 type: 'POST',
                 contentType: 'application/json',
                 accept: 'text/html',
@@ -36,7 +38,7 @@ define(['jquery'], function ($) {
 
         deleteShoppingListItem: function(listId, listItemId) {
             return $.ajax({
-                url: '/api/shopping_list/' + listId + '/item/' + listItemId,
+                url: '/api/shopping-list/' + listId + '/item/' + listItemId,
                 type: 'DELETE',
                 error: ajaxErrorHandler
             });
@@ -48,7 +50,7 @@ define(['jquery'], function ($) {
             };
 
             return $.ajax({
-                url: '/api/shopping_list/' + listId + '/item/' + listItemId,
+                url: '/api/shopping-list/' + listId + '/item/' + listItemId,
                 type: 'PATCH',
                 contentType: 'application/json',
                 data: JSON.stringify(data),
@@ -58,7 +60,7 @@ define(['jquery'], function ($) {
 
         deleteItemsInCart: function(listId) {
             return $.ajax({
-                url: '/api/shopping_list/' + listId + '/cart',
+                url: '/api/shopping-list/' + listId + '/cart',
                 type: 'DELETE',
                 error: ajaxErrorHandler
             });

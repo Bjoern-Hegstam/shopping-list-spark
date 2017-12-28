@@ -51,6 +51,8 @@
 }
 
 
+// SHOPPING LIST ADMIN
+
 @list-radius: 10px;
 @base-color: black;
 
@@ -75,6 +77,8 @@
 }
 
 
+// ITEM TYPES ADMIN
+
 .item-types {
   padding: 0;
   margin: 0;
@@ -98,4 +102,54 @@
   padding: 20px 0 20px 0;
   list-style-type: none;
   text-align: center;
+}
+
+
+// SHOPPING LIST VIEW
+
+@row-color-odd: lighten(@base-color, 75%);
+@row-color-even: lighten(@base-color, 100%);
+
+.shopping-list-items {
+  padding: 0;
+  margin: 0;
+}
+
+.shopping-list-item {
+  list-style-type: none;
+  padding: 20px 0 20px 0;
+  margin: 0;
+
+  &:nth-of-type(odd) {
+    background-color: @row-color-odd;
+  }
+
+  &:nth-of-type(even) {
+    background-color: @row-color-even;
+  }
+
+  &:last-of-type {
+    border-radius: 0 0 @list-radius @list-radius;
+  }
+
+  .item-type-name {
+    font-size: 16px;
+    text-transform: uppercase;
+    margin: 0 0 0 40px;
+  }
+
+  .quantity {
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 0 0 0 15px;
+  }
+
+  .btn-group {
+    margin: 0 20px 0 0;
+    font-weight: bold;
+  }
+}
+
+.in-cart:nth-of-type(n) {
+  background-color: #b3e6b3;
 }
