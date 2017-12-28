@@ -73,6 +73,7 @@ public class ShoppingListTest {
 
         // then
         errorCollector.checkThat(list.contains(itemType.getId()), is(false));
+        errorCollector.checkThat(list.removedItemIds().contains(listItem.getId()), is(true));
     }
 
     @Test
@@ -91,6 +92,8 @@ public class ShoppingListTest {
 
         // then
         errorCollector.checkThat(list.contains(itemTypeA.getId()), is(false));
+        errorCollector.checkThat(list.removedItemIds().contains(itemA.getId()), is(true));
+
         errorCollector.checkThat(list.contains(itemTypeB.getId()), is(true));
 
     }

@@ -2,9 +2,7 @@ package com.bhegstam.shoppinglist.domain;
 
 import com.bhegstam.itemtype.domain.ItemTypeId;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -12,11 +10,13 @@ public class ShoppingList {
     private final String name;
     private final ShoppingListId id;
     private final Map<ItemTypeId, ShoppingListItem> items;
+    private final Set<ShoppingListItemId> removedItems;
 
     public ShoppingList(ShoppingListId id, String name) {
         this.id = id;
         this.name = name;
         items = new HashMap<>();
+        removedItems = new HashSet<>();
     }
 
     public String getName() {
@@ -28,7 +28,7 @@ public class ShoppingList {
     }
 
     public ShoppingListItem add(ItemTypeId itemTypeId) {
-        ShoppingListItem item = items.computeIfAbsent(itemTypeId, k -> new ShoppingListItem());
+        ShoppingListItem item = items.computeIfAbsent(itemTypeId, k -> new ShoppingListItem(itemTypeId));
         item.setQuantity(item.getQuantity() + 1);
         return item;
     }
@@ -42,7 +42,8 @@ public class ShoppingList {
     }
 
     public void remove(ItemTypeId itemTypeId) {
-        items.remove(itemTypeId);
+        ShoppingListItem item = items.remove(itemTypeId);
+        removedItems.add(item.getId());
     }
 
     public void removeItemsInCart() {
@@ -53,5 +54,13 @@ public class ShoppingList {
                 .collect(toList());
 
         itemTypeIds.forEach(this::remove);
+    }
+
+    public Collection<ShoppingListItemId> removedItemIds() {
+        return Collections.unmodifiableCollection(removedItems);
+    }
+
+    public Collection<ShoppingListItem> getItems() {
+        return Collections.unmodifiableCollection(items.values());
     }
 }

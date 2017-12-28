@@ -1,20 +1,23 @@
 package com.bhegstam.shoppinglist.domain;
 
+import com.bhegstam.itemtype.domain.ItemTypeId;
 import com.bhegstam.util.db.PersistenceStatus;
 
 public class ShoppingListItem {
     private final ShoppingListItemId id;
+    private final ItemTypeId itemTypeId;
     private int quantity;
     private boolean inCart;
     private PersistenceStatus persistenceStatus;
 
-    public ShoppingListItem() {
-        this(new ShoppingListItemId());
+    public ShoppingListItem(ItemTypeId itemTypeId) {
+        this(new ShoppingListItemId(), itemTypeId);
         this.persistenceStatus = PersistenceStatus.INSERT_REQUIRED;
     }
 
-    public ShoppingListItem(ShoppingListItemId id) {
+    public ShoppingListItem(ShoppingListItemId id, ItemTypeId itemTypeId) {
         this.id = id;
+        this.itemTypeId = itemTypeId;
         this.quantity = 0;
         this.inCart = false;
         this.persistenceStatus = PersistenceStatus.NOT_CHANGED;
@@ -22,6 +25,10 @@ public class ShoppingListItem {
 
     public ShoppingListItemId getId() {
         return id;
+    }
+
+    public ItemTypeId getItemTypeId() {
+        return itemTypeId;
     }
 
     public int getQuantity() {

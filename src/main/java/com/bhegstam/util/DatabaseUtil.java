@@ -28,16 +28,14 @@ public class DatabaseUtil {
         List<ObjectType> objects = new ArrayList<>();
 
         connectionFactory
-                .withConnection(conn -> {
-                            DSL
-                                    .using(conn)
-                                    .selectFrom(table)
-                                    .where(conditions)
-                                    .fetch()
-                                    .stream()
-                                    .map(objectMapper)
-                                    .forEach(objects::add);
-                        }
+                .withConnection(conn -> DSL
+                        .using(conn)
+                        .selectFrom(table)
+                        .where(conditions)
+                        .fetch()
+                        .stream()
+                        .map(objectMapper)
+                        .forEach(objects::add)
                 );
 
         return objects;

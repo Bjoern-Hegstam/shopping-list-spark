@@ -36,4 +36,9 @@ public class InMemoryShoppingListRepository implements ShoppingListRepository {
     public List<ShoppingList> getShoppingLists() {
         return new ArrayList<>(lists.values());
     }
+
+    @Override
+    public void update(ShoppingList shoppingList) {
+        lists.put(shoppingList.getId(), shoppingList);
+    }
 }
