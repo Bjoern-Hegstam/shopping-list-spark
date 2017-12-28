@@ -1,24 +1,17 @@
 package com.bhegstam.shoppinglist.domain;
 
-import lombok.EqualsAndHashCode;
+import com.bhegstam.util.domain.Identifier;
 
 import java.util.UUID;
 
-@EqualsAndHashCode
-public class ShoppingListId {
-
-    private final UUID id;
+public class ShoppingListId extends Identifier {
 
     public ShoppingListId() {
-        id = UUID.randomUUID();
+        super();
     }
 
     public ShoppingListId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getId() {
-        return id;
+        super(id);
     }
 
     public static ShoppingListId fromString(String s) {
