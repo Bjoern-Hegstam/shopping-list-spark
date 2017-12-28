@@ -8,4 +8,8 @@ public interface ItemTypeRepository {
     ItemType get(ItemTypeId id);
 
     List<ItemType> findItemTypes(String nameStart, int limit);
+
+    List<ItemType> getItemTypes();
+
+    void deleteItemType(ItemTypeId itemTypeId);
 }

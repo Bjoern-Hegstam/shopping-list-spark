@@ -27,7 +27,7 @@ define(['jquery'], function ($) {
             };
 
             return $.ajax({
-                url: '/api/shopping_list/' + listId + '/item',
+                url: '/api/shopping_list/' + listId + '/item', /* TODO: Implement endpoint */
                 type: 'POST',
                 contentType: 'application/json',
                 accept: 'text/html',

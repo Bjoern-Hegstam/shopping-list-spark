@@ -1,6 +1,7 @@
 package com.bhegstam.itemtype.controller;
 
 import com.bhegstam.itemtype.domain.ItemType;
+import com.bhegstam.itemtype.domain.ItemTypeId;
 import com.bhegstam.itemtype.domain.ItemTypeRepository;
 import com.bhegstam.util.Path;
 import com.bhegstam.webutil.JsonResponseTransformer;
@@ -8,6 +9,7 @@ import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
 import com.google.inject.Inject;
+import org.eclipse.jetty.http.HttpStatus;
 import spark.Service;
 
 import java.util.List;
@@ -38,6 +40,10 @@ public class ItemTypeApiController implements Controller {
                     asSparkRoute(this::findItemTypes),
                     new JsonResponseTransformer()
             );
+            http.delete(
+                    "/:itemTypeId",
+                    asSparkRoute(this::deleteItemType)
+            );
         });
     }
 
@@ -60,5 +66,13 @@ public class ItemTypeApiController implements Controller {
         return result()
                 .type("application/json")
                 .returnPayload(itemTypeBeans);
+    }
+
+    private Result deleteItemType(Request request) {
+        ItemTypeId itemTypeId = ItemTypeId.fromString(request.params("itemTypeId"));
+        itemTypeRepository.deleteItemType(itemTypeId);
+        return result()
+                .statusCode(HttpStatus.OK_200)
+                .returnPayload(new Object());
     }
 }

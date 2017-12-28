@@ -24,6 +24,14 @@ define(['jquery'], function ($) {
                 type: 'GET',
                 error: ajaxErrorHandler
             });
+        },
+
+        deleteItemType: function(itemTypeId) {
+            return $.ajax({
+                url: '/api/item-type/' + itemTypeId,
+                type: 'DELETE',
+                error: ajaxErrorHandler
+            });
         }
     };
 });

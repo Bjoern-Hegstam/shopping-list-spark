@@ -3,6 +3,7 @@ package com.bhegstam;
 import com.bhegstam.configuration.ApplicationConfiguration;
 import com.bhegstam.configuration.ConfigurationModule;
 import com.bhegstam.itemtype.ItemTypeModule;
+import com.bhegstam.itemtype.controller.ItemTypeAdministrationController;
 import com.bhegstam.itemtype.controller.ItemTypeApiController;
 import com.bhegstam.login.LoginController;
 import com.bhegstam.shoppinglist.ShoppingListModule;
@@ -41,6 +42,7 @@ public class Application extends ApplicationBase {
     public Application(
             ApplicationConfiguration configuration,
             IndexController indexController,
+            ItemTypeAdministrationController itemTypeAdministrationController,
             ItemTypeApiController itemTypeApiController,
             LoginController loginController,
             ShoppingListController shoppingListController,
@@ -52,6 +54,7 @@ public class Application extends ApplicationBase {
         super(
                 asList(
                         indexController,
+                        itemTypeAdministrationController,
                         loginController,
                         shoppingListController,
                         userRegistrationController,

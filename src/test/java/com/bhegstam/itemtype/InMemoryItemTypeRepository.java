@@ -35,4 +35,14 @@ public class InMemoryItemTypeRepository implements ItemTypeRepository {
     public List<ItemType> findItemTypes(String nameStart, int limit) {
         throw new NotImplementedException("NYI");
     }
+
+    @Override
+    public List<ItemType> getItemTypes() {
+        throw new NotImplementedException("NYI");
+    }
+
+    @Override
+    public void deleteItemType(ItemTypeId itemTypeId) {
+        throw new NotImplementedException("NYI");
+    }
 }

@@ -40,7 +40,10 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="/admin/users">Users</a>
+                                    <a href="/admin/item-types/">Item types</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/users/">Users</a>
                                 </li>
                             </ul>
                         </li>

@@ -71,6 +71,22 @@ public class JdbcItemTypeRepository implements ItemTypeRepository {
         return result;
     }
 
+    @Override
+    public List<ItemType> getItemTypes() {
+        return findItemTypesWhere();
+    }
+
+    @Override
+    public void deleteItemType(ItemTypeId itemTypeId) {
+        connectionFactory
+                .withConnection(conn -> DSL
+                        .using(conn)
+                        .deleteFrom(ITEM_TYPE)
+                        .where(ITEM_TYPE.ID.eq(itemTypeId.getId()))
+                        .execute()
+                );
+    }
+
     private List<ItemType> findItemTypesWhere(Condition... conditions) {
         return databaseUtil.findObjectsWhere(ITEM_TYPE, this::mapRecordToItemType, conditions);
     }
