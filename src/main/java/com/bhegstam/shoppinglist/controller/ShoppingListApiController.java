@@ -16,6 +16,7 @@ import com.google.inject.Inject;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.Service;
 
+import static com.bhegstam.util.ContentType.APPLICATION_JSON;
 import static com.bhegstam.webutil.webapp.ResultBuilder.result;
 import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
 
@@ -36,14 +37,14 @@ public class ShoppingListApiController implements Controller {
     public void configureRoutes(Service http) {
         http.post(
                 Path.Api.SHOPPING_LIST,
-                "application/json",
+                APPLICATION_JSON,
                 asSparkRoute(this::postShoppingList),
                 new JsonResponseTransformer()
         );
 
         http.post(
                 Path.Api.SHOPPING_LIST + "/:shoppingListId/item",
-                "application/json",
+                APPLICATION_JSON,
                 asSparkRoute(this::postShoppingListItem),
                 new JsonResponseTransformer()
         );
@@ -53,7 +54,10 @@ public class ShoppingListApiController implements Controller {
         ShoppingListBean shoppingListBean = ShoppingListBean.fromJson(request.body());
 
         ShoppingList shoppingList = shoppingListRepository.createShoppingList(shoppingListBean.getName());
-        return result().returnPayload(ShoppingListBean.fromShoppingList(shoppingList));
+        return result()
+                .statusCode(HttpStatus.CREATED_201)
+                .type(APPLICATION_JSON)
+                .returnPayload(ShoppingListBean.fromShoppingList(shoppingList));
     }
 
     private Result postShoppingListItem(Request request) {
@@ -70,7 +74,8 @@ public class ShoppingListApiController implements Controller {
         shoppingListRepository.update(shoppingList);
 
         return result()
-                .statusCode(HttpStatus.OK_200)
+                .statusCode(HttpStatus.CREATED_201)
+                .type(APPLICATION_JSON)
                 .returnPayload(ShoppingListBean.fromShoppingList(shoppingList));
     }
 }

@@ -14,6 +14,7 @@ import spark.Service;
 
 import java.util.List;
 
+import static com.bhegstam.util.ContentType.APPLICATION_JSON;
 import static com.bhegstam.webutil.webapp.ResultBuilder.result;
 import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
 import static java.util.stream.Collectors.toList;
@@ -30,7 +31,7 @@ public class ItemTypeApiController implements Controller {
     public void configureRoutes(Service http) {
         http.post(
                 Path.Api.ITEM_TYPE,
-                "application/json",
+                APPLICATION_JSON,
                 asSparkRoute(this::postItemType),
                 new JsonResponseTransformer()
         );
@@ -53,6 +54,7 @@ public class ItemTypeApiController implements Controller {
         ItemType itemType = itemTypeRepository.createItemType(itemTypeBean.getName());
         return result()
                 .statusCode(HttpStatus.CREATED_201)
+                .type(APPLICATION_JSON)
                 .returnPayload(ItemTypeBean.fromItemType(itemType));
     }
 
@@ -66,7 +68,7 @@ public class ItemTypeApiController implements Controller {
                 .collect(toList());
 
         return result()
-                .type("application/json")
+                .type(APPLICATION_JSON)
                 .returnPayload(itemTypeBeans);
     }
 

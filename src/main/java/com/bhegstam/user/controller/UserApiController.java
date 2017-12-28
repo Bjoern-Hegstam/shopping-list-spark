@@ -10,10 +10,12 @@ import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
 import com.google.inject.Inject;
+import org.eclipse.jetty.http.HttpStatus;
 import spark.Service;
 
 import java.util.Optional;
 
+import static com.bhegstam.util.ContentType.APPLICATION_JSON;
 import static com.bhegstam.webutil.webapp.ResultBuilder.result;
 import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
 
@@ -31,7 +33,7 @@ public class UserApiController implements Controller {
             http.before("/*", Filters.userIsAdmin(Filters.Actions.redirectNotAuthorized(Path.Web.INDEX)));
             http.patch(
                     "/:userId",
-                    "application/json",
+                    APPLICATION_JSON,
                     asSparkRoute(this::patchUser),
                     new JsonResponseTransformer()
             );
@@ -47,6 +49,9 @@ public class UserApiController implements Controller {
 
         userRepository.update(user);
 
-        return result().returnPayload(UserBean.fromUser(user));
+        return result()
+                .statusCode(HttpStatus.OK_200)
+                .type(APPLICATION_JSON)
+                .returnPayload(UserBean.fromUser(user));
     }
 }
