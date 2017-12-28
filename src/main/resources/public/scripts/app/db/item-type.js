@@ -10,7 +10,7 @@ define(['jquery'], function ($) {
             };
 
             return $.ajax({
-                url: '/api/item-type/',
+                url: '/api/item-type',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(data),

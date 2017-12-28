@@ -20,14 +20,12 @@ define(['jquery'], function ($) {
 
         addToShoppingList: function(listId, itemTypeId) {
             var data = {
-                shopping_list_item: {
-                    item_type_id: itemTypeId,
-                    quantity: 1
-                }
+                item_type_id: itemTypeId,
+                quantity: 1
             };
 
             return $.ajax({
-                url: '/api/shopping_list/' + listId + '/item', /* TODO: Implement endpoint */
+                url: '/api/shopping_list/' + listId + '/item',
                 type: 'POST',
                 contentType: 'application/json',
                 accept: 'text/html',

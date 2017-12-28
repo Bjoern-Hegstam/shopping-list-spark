@@ -28,30 +28,32 @@ public class ItemTypeApiController implements Controller {
 
     @Override
     public void configureRoutes(Service http) {
-        http.path(Path.Api.ITEM_TYPE, () -> {
-            http.post(
-                    "/",
-                    "application/json",
-                    asSparkRoute(this::postItemType),
-                    new JsonResponseTransformer()
-            );
-            http.get(
-                    "",
-                    asSparkRoute(this::findItemTypes),
-                    new JsonResponseTransformer()
-            );
-            http.delete(
-                    "/:itemTypeId",
-                    asSparkRoute(this::deleteItemType)
-            );
-        });
+        http.post(
+                Path.Api.ITEM_TYPE,
+                "application/json",
+                asSparkRoute(this::postItemType),
+                new JsonResponseTransformer()
+        );
+
+        http.get(
+                Path.Api.ITEM_TYPE,
+                asSparkRoute(this::findItemTypes),
+                new JsonResponseTransformer()
+        );
+
+        http.delete(
+                Path.Api.ITEM_TYPE + "/:itemTypeId",
+                asSparkRoute(this::deleteItemType)
+        );
     }
 
     private Result postItemType(Request request) {
         ItemTypeBean itemTypeBean = ItemTypeBean.fromJson(request.body());
 
         ItemType itemType = itemTypeRepository.createItemType(itemTypeBean.getName());
-        return result().returnPayload(ItemTypeBean.fromItemType(itemType));
+        return result()
+                .statusCode(HttpStatus.CREATED_201)
+                .returnPayload(ItemTypeBean.fromItemType(itemType));
     }
 
     private Result findItemTypes(Request request) {

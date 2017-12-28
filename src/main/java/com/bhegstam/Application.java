@@ -13,6 +13,8 @@ import com.bhegstam.user.UserModule;
 import com.bhegstam.user.controller.UserAdministrationController;
 import com.bhegstam.user.controller.UserApiController;
 import com.bhegstam.user.controller.UserRegistrationController;
+import com.bhegstam.util.Path;
+import com.bhegstam.webutil.Filters;
 import com.bhegstam.webutil.webapp.ApplicationBase;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -77,6 +79,17 @@ public class Application extends ApplicationBase {
 
         http.staticFiles.location("/public");
         http.staticFiles.expireTime(600);
+
+        // Admin area requires admin rights
+        http.before("/admin/*", Filters.userIsAdmin(Filters.Actions.redirectNotAuthorized(Path.Web.INDEX)));
+
+        // Strip trailing slash
+        http.before((req, res) -> {
+            String path = req.pathInfo();
+            if (path.endsWith("/") && path.length() > 1) {
+                res.redirect(path.substring(0, path.length() - 1));
+            }
+        });
     }
 
 }

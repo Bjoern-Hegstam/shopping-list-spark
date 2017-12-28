@@ -28,11 +28,18 @@ public class ShoppingListController implements Controller {
 
     @Override
     public void configureRoutes(Service http) {
-        http.path(Path.Web.SHOPPING_LIST, () -> {
-            http.before("/*", Filters.userIsLoggedIn(Filters.Actions.redirectNotAuthorized(Path.Web.INDEX)));
-            http.get("/", asSparkRoute(request -> serveListOfShoppingLists()));
-            http.get("/:shoppingListId/", asSparkRoute(this::getShoppingList));
-        });
+        http.before(Path.Web.SHOPPING_LIST, Filters.userIsLoggedIn(Filters.Actions.redirectNotAuthorized(Path.Web.INDEX)));
+        http.before(Path.Web.SHOPPING_LIST + "/*", Filters.userIsLoggedIn(Filters.Actions.redirectNotAuthorized(Path.Web.INDEX)));
+        
+        http.get(
+                Path.Web.SHOPPING_LIST,
+                asSparkRoute(request -> serveListOfShoppingLists())
+        );
+
+        http.get(
+                Path.Web.SHOPPING_LIST + "/:shoppingListId",
+                asSparkRoute(this::getShoppingList)
+        );
     }
 
     private Result serveListOfShoppingLists() {

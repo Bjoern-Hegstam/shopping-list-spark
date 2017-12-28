@@ -2,7 +2,6 @@ package com.bhegstam.user.controller;
 
 import com.bhegstam.user.domain.UserRepository;
 import com.bhegstam.util.Path;
-import com.bhegstam.webutil.Filters;
 import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Result;
 import com.google.inject.Inject;
@@ -25,10 +24,10 @@ public class UserAdministrationController implements Controller {
 
     @Override
     public void configureRoutes(Service http) {
-        http.path(Path.Web.ADMIN + "/" + Path.Web.USERS, () -> {
-            http.before("/*", Filters.userIsAdmin(Filters.Actions.redirectNotAuthorized(Path.Web.INDEX)));
-            http.get("/", asSparkRoute(request -> serveUserList()));
-        });
+        http.get(
+                Path.Web.ADMIN + Path.Web.USERS,
+                asSparkRoute(request -> serveUserList())
+        );
     }
 
     private Result serveUserList() {

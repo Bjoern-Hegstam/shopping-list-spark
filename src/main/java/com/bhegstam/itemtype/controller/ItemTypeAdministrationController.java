@@ -2,7 +2,6 @@ package com.bhegstam.itemtype.controller;
 
 import com.bhegstam.itemtype.domain.ItemTypeRepository;
 import com.bhegstam.util.Path;
-import com.bhegstam.webutil.Filters;
 import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Result;
 import com.google.inject.Inject;
@@ -25,10 +24,10 @@ public class ItemTypeAdministrationController implements Controller {
 
     @Override
     public void configureRoutes(Service http) {
-        http.path(Path.Web.ADMIN + "/" + Path.Web.ITEM_TYPES, () -> {
-            http.before("/*", Filters.userIsAdmin(Filters.Actions.redirectNotAuthorized(Path.Web.INDEX)));
-            http.get("/", asSparkRoute(request -> serveItemTypeList()));
-        });
+        http.get(
+                Path.Web.ADMIN + "/" + Path.Web.ITEM_TYPES,
+                asSparkRoute(request -> serveItemTypeList())
+        );
     }
 
     private Result serveItemTypeList() {
