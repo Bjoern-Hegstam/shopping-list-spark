@@ -1,6 +1,6 @@
 package com.bhegstam.login;
 
-import com.bhegstam.user.UserRepositoryInMem;
+import com.bhegstam.user.InMemoryUserRepository;
 import com.bhegstam.user.domain.User;
 import com.bhegstam.user.domain.UserId;
 import com.bhegstam.util.Message;
@@ -22,12 +22,12 @@ public class LoginControllerTest {
     private static final String WRONG_USERNAME = "Peter";
     private static final String WRONG_PASSWORD = "abc";
 
-    private UserRepositoryInMem userRepository;
+    private InMemoryUserRepository userRepository;
     private LoginController loginController;
 
     @Before
     public void setUp() throws Exception {
-        userRepository = new UserRepositoryInMem();
+        userRepository = new InMemoryUserRepository();
         loginController = new LoginController(userRepository);
     }
 

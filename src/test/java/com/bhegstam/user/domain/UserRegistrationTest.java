@@ -1,6 +1,6 @@
 package com.bhegstam.user.domain;
 
-import com.bhegstam.user.UserRepositoryInMem;
+import com.bhegstam.user.InMemoryUserRepository;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,13 +16,13 @@ public class UserRegistrationTest {
     private static final String INVALID_USERNANE = "";
     private static final String INVALID_EMAIL = "";
 
-    private UserRepositoryInMem userRepository;
+    private InMemoryUserRepository userRepository;
     private UserRegistration userRegistration;
     private User existingUser;
 
     @Before
     public void setUp() throws Exception {
-        userRepository = new UserRepositoryInMem();
+        userRepository = new InMemoryUserRepository();
         userRegistration = new UserRegistration(userRepository);
 
         existingUser = new User(

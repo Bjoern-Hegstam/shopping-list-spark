@@ -6,7 +6,7 @@ import com.bhegstam.user.domain.UserRepository;
 
 import java.util.*;
 
-public class UserRepositoryInMem implements UserRepository {
+public class InMemoryUserRepository implements UserRepository {
     private final Map<UserId, User> users = new HashMap<>();
     private final Map<String, User> usersByUsername = new HashMap<>();
     private final Map<String, User> usersByEmail = new HashMap<>();
