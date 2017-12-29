@@ -77,6 +77,27 @@ public class ShoppingListTest {
     }
 
     @Test
+    public void accessByShoppingListItemId() {
+        // given
+        ShoppingList list = shoppingListRepository.createShoppingList("LIST");
+        ItemType itemType = itemTypeRepository.createItemType("ITEM_TYPE");
+
+
+        // when
+        ShoppingListItem listItem = list.add(itemType);
+
+        // then
+        ShoppingListItem retrievedListItem = list.get(listItem.getId());
+        errorCollector.checkThat(retrievedListItem.getId(), is(listItem.getId()));
+
+        // when
+        list.remove(listItem.getId());
+
+        //
+        errorCollector.checkThat(list.contains(itemType.getId()), is(false));
+    }
+
+    @Test
     public void cartManagement() {
         // given
         ShoppingList list = shoppingListRepository.createShoppingList("LIST");
@@ -95,6 +116,5 @@ public class ShoppingListTest {
         errorCollector.checkThat(list.removedItemIds().contains(itemA.getId()), is(true));
 
         errorCollector.checkThat(list.contains(itemTypeB.getId()), is(true));
-
     }
 }

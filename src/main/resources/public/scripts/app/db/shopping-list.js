@@ -45,15 +45,11 @@ define(['jquery'], function ($) {
         },
 
         updateShoppingListItem: function(listId, listItemId, values) {
-            var data = {
-                shopping_list_item: values
-            };
-
             return $.ajax({
                 url: '/api/shopping-list/' + listId + '/item/' + listItemId,
                 type: 'PATCH',
                 contentType: 'application/json',
-                data: JSON.stringify(data),
+                data: JSON.stringify(values),
                 error: ajaxErrorHandler
             });
         },

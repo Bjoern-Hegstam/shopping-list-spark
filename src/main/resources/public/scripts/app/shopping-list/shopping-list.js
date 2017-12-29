@@ -66,7 +66,7 @@ define(['jquery', 'app/db/shopping-list', 'app/db/item-type', 'selectize'], func
                     getId($shoppingList),
                     getId($shoppingListItem),
                     {
-                        in_cart: !isInCart
+                        inCart: !isInCart
                     }
                 )
                 .done(function(result) {
@@ -127,7 +127,7 @@ define(['jquery', 'app/db/shopping-list', 'app/db/item-type', 'selectize'], func
                 }
             )
             .done(function (result) {
-                $quantity.html(result.shopping_list_item.quantity);
+                $quantity.html(quantity + dQuantity);
             });
     }
 

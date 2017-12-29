@@ -5,6 +5,7 @@ import com.bhegstam.itemtype.domain.ItemTypeId;
 
 import java.util.*;
 
+import static com.bhegstam.webutil.CustomCollectors.onlyElement;
 import static java.util.stream.Collectors.toList;
 
 public class ShoppingList {
@@ -38,11 +39,29 @@ public class ShoppingList {
         return items.containsKey(itemTypeId);
     }
 
-    public ShoppingListItem get(ItemTypeId id) {
-        return items.get(id);
+    public ShoppingListItem get(ItemTypeId itemTypeId) {
+        return items.get(itemTypeId);
+    }
+
+    public ShoppingListItem get(ShoppingListItemId itemId) {
+        return items
+                .values().stream()
+                .filter(item -> item.getId().equals(itemId))
+                .collect(onlyElement());
     }
 
     public void remove(ItemTypeId itemTypeId) {
+        ShoppingListItem item = items.remove(itemTypeId);
+        removedItems.add(item.getId());
+    }
+
+    public void remove(ShoppingListItemId listItemId) {
+        ItemTypeId itemTypeId = items
+                .entrySet().stream()
+                .filter(e -> e.getValue().getId().equals(listItemId))
+                .map(Map.Entry::getKey)
+                .collect(onlyElement());
+
         ShoppingListItem item = items.remove(itemTypeId);
         removedItems.add(item.getId());
     }

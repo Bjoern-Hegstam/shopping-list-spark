@@ -100,6 +100,7 @@ public class JdbcShoppingListRepository implements ShoppingListRepository {
                                          .update(SHOPPING_LIST_ITEM)
                                          .set(SHOPPING_LIST_ITEM.QUANTITY, item.getQuantity())
                                          .set(SHOPPING_LIST_ITEM.IN_CART, item.isInCart())
+                                         .where(SHOPPING_LIST_ITEM.ID.eq(item.getId().getId()))
                                          .execute()
                                  );
                         })

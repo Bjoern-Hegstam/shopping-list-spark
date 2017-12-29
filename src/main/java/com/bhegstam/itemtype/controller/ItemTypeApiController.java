@@ -76,7 +76,7 @@ public class ItemTypeApiController implements Controller {
         ItemTypeId itemTypeId = ItemTypeId.fromString(request.params("itemTypeId"));
         itemTypeRepository.deleteItemType(itemTypeId);
         return result()
-                .statusCode(HttpStatus.OK_200)
+                .statusCode(HttpStatus.NO_CONTENT_204)
                 .returnPayload(new Object());
     }
 }
