@@ -12,8 +12,8 @@ import java.util.UUID;
 public class ShoppingListItemBean {
     private UUID id;
     private ItemTypeBean itemType;
-    private int quantity;
-    private boolean inCart;
+    private Integer quantity;
+    private Boolean inCart;
 
     public static ShoppingListItemBean fromShoppingListItem(ShoppingListItem item) {
         ShoppingListItemBean bean = new ShoppingListItemBean();

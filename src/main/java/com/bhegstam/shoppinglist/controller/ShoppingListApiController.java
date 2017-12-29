@@ -13,6 +13,8 @@ import com.google.inject.Inject;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.Service;
 
+import java.util.Optional;
+
 import static com.bhegstam.util.ContentType.APPLICATION_JSON;
 import static com.bhegstam.webutil.webapp.ResultBuilder.result;
 import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
@@ -97,9 +99,10 @@ public class ShoppingListApiController implements Controller {
 
         ShoppingList shoppingList = shoppingListRepository.get(listId);
 
-        shoppingList
-                .get(listItemId)
-                .setQuantity(itemBean.getQuantity());
+        ShoppingListItem listItem = shoppingList.get(listItemId);
+
+        Optional.ofNullable(itemBean.getQuantity()).ifPresent(listItem::setQuantity);
+        Optional.ofNullable(itemBean.getInCart()).ifPresent(listItem::setInCart);
 
         shoppingListRepository.update(shoppingList);
 
