@@ -23,7 +23,8 @@
 
                 <ul class="shopping-list-items">
                     #foreach( $item in $shoppingList.items )
-                        <li class="shopping-list-item" data-id="$item.id"> ## TODO: Readd inCart class toggle
+                        <li class="shopping-list-item #if( $item.inCart ) in-cart #end"
+                            data-id="$item.id">
                             <span class="quantity">
                                 $item.quantity
                             </span>
