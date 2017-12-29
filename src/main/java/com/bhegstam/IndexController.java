@@ -22,6 +22,6 @@ class IndexController implements Controller {
             return result().redirectTo(Path.Web.LOGIN);
         }
 
-        return result().render(Path.Template.INDEX);
+        return result().redirectTo(Path.Web.SHOPPING_LIST);
     }
 }
