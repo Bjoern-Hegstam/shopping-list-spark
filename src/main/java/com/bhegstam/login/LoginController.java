@@ -1,5 +1,6 @@
 package com.bhegstam.login;
 
+import com.bhegstam.logging.InjectLogger;
 import com.bhegstam.user.domain.User;
 import com.bhegstam.user.domain.UserRepository;
 import com.bhegstam.util.Message;
@@ -8,6 +9,7 @@ import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
 import com.google.inject.Inject;
+import org.apache.logging.log4j.Logger;
 import spark.Service;
 
 import java.util.HashMap;
@@ -19,6 +21,9 @@ import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
 
 
 public class LoginController implements Controller {
+    @InjectLogger
+    private Logger logger;
+
     private final UserRepository userRepository;
 
     @Inject
@@ -35,9 +40,11 @@ public class LoginController implements Controller {
 
     Result serveLoginPage(Request request) {
         if (request.session().isUserLoggedIn()) {
+            logger.debug("User not logged in, redirecting to index page");
             return result().redirectTo(Path.Web.INDEX);
         }
 
+        logger.debug("Serving login page");
         return result().render(Path.Template.LOGIN);
     }
 
@@ -62,10 +69,13 @@ public class LoginController implements Controller {
         }
 
         request.session().setCurrentUser(user.get());
+        logger.debug("User {} has logged in. Redirecting to {}", user.get().getId(), Path.Web.INDEX);
+
         return result().redirectTo(Path.Web.INDEX);
     }
 
     Result handleLogoutPost(Request request) {
+        logger.debug("Logging out");
         request.session().unsetCurrentUser();
         return result().redirectTo(Path.Web.LOGIN);
     }
