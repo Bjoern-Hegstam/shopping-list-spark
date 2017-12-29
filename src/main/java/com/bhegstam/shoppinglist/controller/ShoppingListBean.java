@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 @Data
@@ -23,6 +24,7 @@ public class ShoppingListBean {
         bean.items = shoppingList
                 .getItems().stream()
                 .map(ShoppingListItemBean::fromShoppingListItem)
+                .sorted(comparing(itemBean -> itemBean.getItemType().getName()))
                 .collect(toList());
         return bean;
     }
