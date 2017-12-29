@@ -9,7 +9,7 @@ define(['jquery', 'app/db/shopping-list', 'app/db/item-type', 'selectize'], func
             valueField: 'id',
             labelField: 'name',
             searchField: 'name',
-            load: function(query, callback) {
+            load: function (query, callback) {
                 if (!query.length) {
                     return callback();
                 }
@@ -20,11 +20,11 @@ define(['jquery', 'app/db/shopping-list', 'app/db/item-type', 'selectize'], func
                         callback(result);
                     });
             },
-            create: function(input, callback) {
+            create: function (input, callback) {
                 var self = this;
                 itemTypeDb
                     .createItemType(input)
-                    .done(function(result) {
+                    .done(function (result) {
                         $addItemModal.modal('hide');
                         addToShoppingList(result.id);
 
@@ -33,7 +33,7 @@ define(['jquery', 'app/db/shopping-list', 'app/db/item-type', 'selectize'], func
                         callback();
                     });
             },
-            onItemAdd: function(value, $item) {
+            onItemAdd: function (value) {
                 $addItemModal.modal('hide');
                 addToShoppingList(value);
             }
@@ -69,7 +69,7 @@ define(['jquery', 'app/db/shopping-list', 'app/db/item-type', 'selectize'], func
                         inCart: !isInCart
                     }
                 )
-                .done(function(result) {
+                .done(function () {
                     $shoppingListItem.toggleClass('in-cart');
                 });
         });
@@ -98,7 +98,7 @@ define(['jquery', 'app/db/shopping-list', 'app/db/item-type', 'selectize'], func
     function addToShoppingList(itemTypeId) {
         listDb
             .addToShoppingList(getId($shoppingList), itemTypeId)
-            .done(function(result) {
+            .done(function () {
                 location.reload();
             });
     }
@@ -110,8 +110,8 @@ define(['jquery', 'app/db/shopping-list', 'app/db/item-type', 'selectize'], func
 
         if (quantity + dQuantity <= 0) {
             listDb
-                .deleteShoppingListItem(getId($shoppingList),  getId($shoppingListItem))
-                .done(function() {
+                .deleteShoppingListItem(getId($shoppingList), getId($shoppingListItem))
+                .done(function () {
                     $shoppingListItem.remove();
                 });
             return;
@@ -125,7 +125,7 @@ define(['jquery', 'app/db/shopping-list', 'app/db/item-type', 'selectize'], func
                     quantity: quantity + dQuantity
                 }
             )
-            .done(function (result) {
+            .done(function () {
                 $quantity.html(quantity + dQuantity);
             });
     }
@@ -141,7 +141,7 @@ define(['jquery', 'app/db/shopping-list', 'app/db/item-type', 'selectize'], func
 
             listDb
                 .deleteItemsInCart(getId($shoppingList))
-                .done(function(result) {
+                .done(function () {
                     $shoppingList
                         .find('.in-cart')
                         .remove();
