@@ -12,3 +12,9 @@ Environment variables:
 * JDBC_DATABASE_URL
 * JDBC_DATABASE_USER
 * JDBC_DATABASE_PASSWORD
+
+## To deploy new version to Heroku
+1. Migrate production database
+   1. export JDBC_DATABASE_URL="<JDBC_URL>?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory" JDBC_DATABASE_USERNAME=<USERNAME> JDBC_DATABASE_PASSWORD=<PASSWORD>
+   2. `mvn flyway:migrate`
+2. Manually deploy corresponding code version
