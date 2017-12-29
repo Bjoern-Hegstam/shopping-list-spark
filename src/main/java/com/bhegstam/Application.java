@@ -5,7 +5,6 @@ import com.bhegstam.configuration.ConfigurationModule;
 import com.bhegstam.itemtype.ItemTypeModule;
 import com.bhegstam.itemtype.controller.ItemTypeAdministrationController;
 import com.bhegstam.itemtype.controller.ItemTypeApiController;
-import com.bhegstam.logging.LoggingModule;
 import com.bhegstam.login.LoginController;
 import com.bhegstam.shoppinglist.ShoppingListModule;
 import com.bhegstam.shoppinglist.controller.ShoppingListApiController;
@@ -31,7 +30,6 @@ public class Application extends ApplicationBase {
     public static void main(String[] args) {
         Injector injector = Guice.createInjector(
                 new ConfigurationModule(),
-                new LoggingModule(),
                 new ItemTypeModule(),
                 new ShoppingListModule(),
                 new UserModule()

@@ -1,6 +1,5 @@
 package com.bhegstam.login;
 
-import com.bhegstam.logging.InjectLogger;
 import com.bhegstam.user.domain.User;
 import com.bhegstam.user.domain.UserRepository;
 import com.bhegstam.util.Message;
@@ -9,6 +8,7 @@ import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
 import com.google.inject.Inject;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import spark.Service;
 
@@ -21,8 +21,7 @@ import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
 
 
 public class LoginController implements Controller {
-    @InjectLogger
-    private Logger logger;
+    private static final Logger logger = LogManager.getLogger(LoginController.class);
 
     private final UserRepository userRepository;
 
