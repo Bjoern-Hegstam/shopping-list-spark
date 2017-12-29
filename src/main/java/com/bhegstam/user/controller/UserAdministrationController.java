@@ -12,6 +12,7 @@ import java.util.Map;
 
 import static com.bhegstam.webutil.webapp.ResultBuilder.result;
 import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 public class UserAdministrationController implements Controller {
@@ -37,6 +38,7 @@ public class UserAdministrationController implements Controller {
                 userRepository
                         .getUsers().stream()
                         .map(UserBean::fromUser)
+                        .sorted(comparing(UserBean::getUsername))
                         .collect(toList())
         );
 
