@@ -40,7 +40,7 @@ public class LoginController implements Controller {
 
     Result serveLoginPage(Request request) {
         if (request.session().isUserLoggedIn()) {
-            logger.debug("User not logged in, redirecting to index page");
+            logger.debug("User logged in, redirecting to index page");
             return result().redirectTo(Path.Web.INDEX);
         }
 
