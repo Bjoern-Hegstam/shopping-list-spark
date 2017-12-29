@@ -11,7 +11,8 @@
     <properties>
         <java.version>1.8</java.version>
         <jooq.version>3.10.2</jooq.version>
-        <postgresql.version>9.4.1208</postgresql.version>
+        <postgresql.version>42.1.4</postgresql.version>
+        <flyway.version>4.2.0</flyway.version>
 
         <db.url>${env.JDBC_DATABASE_URL}</db.url>
         <db.user>${env.JDBC_DATABASE_USERNAME}</db.user>
@@ -57,7 +58,7 @@
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
-                <version>4.2.0</version>
+                <version>${flyway.version}</version>
                 <configuration>
                     <url>${db.url}</url>
                     <user>${db.user}</user>
@@ -106,26 +107,43 @@
                 </configuration>
             </plugin>
 
+            <!-- Required by Heroku -->
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
+                        <id>copy-dependencies</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>copy-flyway-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.flywaydb</groupId>
+                                    <artifactId>flyway-core</artifactId>
+                                    <version>${flyway.version}</version>
+                                    <destFileName>flyway.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.postgresql</groupId>
+                                    <artifactId>postgresql</artifactId>
+                                    <version>${postgresql.version}</version>
+                                    <destFileName>postgres.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.bhegstam.Application</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -191,11 +209,19 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Database migrations -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>
+
+
         <!-- Database driver -->
         <dependency>
-            <groupId>postgresql</groupId>
+            <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.1-901-1.jdbc4</version>
+            <version>${postgresql.version}</version>
         </dependency>
 
         <!-- ORM -->
