@@ -5,3 +5,10 @@
 ## When there are new migration scripts
 1. Configure database in `conf/application.yml`
 2. Run `migrate_and_generate_sources.py`
+
+## Configuration
+Environment variables:
+* PORT
+* JDBC_DATABASE_URL
+* JDBC_DATABASE_USER
+* JDBC_DATABASE_PASSWORD

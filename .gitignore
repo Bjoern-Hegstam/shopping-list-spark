@@ -3,5 +3,3 @@
 
 target
 *.css
-
-src/main/resources/conf/application.yml

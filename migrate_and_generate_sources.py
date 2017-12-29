@@ -1,19 +1,11 @@
-from yaml import load
-try:
-    from yaml import CLoader as Loader, CDumper as Dumper
-except ImportError:
-    from yaml import Loader, Dumper
-
+import os
 import subprocess
 
 
 def main():
-    with open('src/main/resources/conf/application.yml', 'r') as file:
-        data = load(file.read())
-
-    db_url = data['database']['url']
-    db_user = data['database']['user']
-    db_password = data['database']['password']
+    db_url = os.getenv('JDBC_DATABASE_URL')
+    db_user = os.getenv('JDBC_DATABASE_USERNAME')
+    db_password = os.getenv('JDBC_DATABASE_PASSWORD')
 
     # Run database migrations
     subprocess.call([

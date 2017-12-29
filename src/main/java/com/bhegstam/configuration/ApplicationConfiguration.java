@@ -8,4 +8,9 @@ import lombok.Data;
 public class ApplicationConfiguration {
     private Server server;
     private Database database;
+
+    public ApplicationConfiguration() {
+        server = new Server();
+        database = new Database();
+    }
 }

@@ -13,9 +13,9 @@
         <jooq.version>3.10.2</jooq.version>
         <postgresql.version>9.4.1208</postgresql.version>
 
-        <db.url>${env.DB_URL}</db.url> <!-- e.g. jdbc:postgresql://[host]/[database] -->
-        <db.user>${env.DB_USER}</db.user>
-        <db.password>${env.DB_PASSWORD}</db.password>
+        <db.url>${env.JDBC_DATABASE_URL}</db.url>
+        <db.user>${env.JDBC_DATABASE_USERNAME}</db.user>
+        <db.password>${env.JDBC_DATABASE_PASSWORD}</db.password>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
