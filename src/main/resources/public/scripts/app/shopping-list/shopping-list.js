@@ -99,8 +99,7 @@ define(['jquery', 'app/db/shopping-list', 'app/db/item-type', 'selectize'], func
         listDb
             .addToShoppingList(getId($shoppingList), itemTypeId)
             .done(function(result) {
-                // TODO: Format and append shopping list item html
-                $('.shopping-list-items').append(result);
+                location.reload();
             });
     }
 
