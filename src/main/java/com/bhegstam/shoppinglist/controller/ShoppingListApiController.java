@@ -61,6 +61,11 @@ public class ShoppingListApiController implements Controller {
                 Path.Api.SHOPPING_LIST + "/:" + SHOPPING_LIST_ID + "/item/:" + SHOPPING_LIST_ITEM_ID,
                 asSparkRoute(this::deleteShoppingListItem)
         );
+
+        http.delete(
+                Path.Api.SHOPPING_LIST + "/:" + SHOPPING_LIST_ID + "/cart",
+                asSparkRoute(this::emptyCart)
+        );
     }
 
     private Result postShoppingList(Request request) {
@@ -118,6 +123,20 @@ public class ShoppingListApiController implements Controller {
         ShoppingList shoppingList = shoppingListRepository.get(listId);
 
         shoppingList.remove(listItemId);
+
+        shoppingListRepository.update(shoppingList);
+
+        return result()
+                .statusCode(HttpStatus.NO_CONTENT_204)
+                .returnPayload(new Object());
+    }
+
+    private Result emptyCart(Request request) {
+        ShoppingListId listId = ShoppingListId.fromString(request.params(SHOPPING_LIST_ID));
+
+        ShoppingList shoppingList = shoppingListRepository.get(listId);
+
+        shoppingList.removeItemsInCart();
 
         shoppingListRepository.update(shoppingList);
 
