@@ -5,9 +5,8 @@ import com.bhegstam.db.DatabaseConnectionFactory;
 import com.bhegstam.itemtype.domain.ItemType;
 import com.bhegstam.itemtype.domain.ItemTypeId;
 import com.bhegstam.itemtype.domain.ItemTypeRepository;
-import com.bhegstam.util.DatabaseUtil;
+import com.bhegstam.util.QueryUtil;
 import com.google.inject.Inject;
-import org.jooq.Condition;
 import org.jooq.impl.DSL;
 
 import java.util.ArrayList;
@@ -18,12 +17,12 @@ import static com.bhegstam.webutil.CustomCollectors.onlyElement;
 
 public class JdbcItemTypeRepository implements ItemTypeRepository {
     private final DatabaseConnectionFactory connectionFactory;
-    private final DatabaseUtil databaseUtil;
+    private final QueryUtil queryUtil;
 
     @Inject
-    public JdbcItemTypeRepository(DatabaseConnectionFactory connectionFactory, DatabaseUtil databaseUtil) {
+    public JdbcItemTypeRepository(DatabaseConnectionFactory connectionFactory, QueryUtil queryUtil) {
         this.connectionFactory = connectionFactory;
-        this.databaseUtil = databaseUtil;
+        this.queryUtil = queryUtil;
     }
 
     @Override
@@ -47,13 +46,26 @@ public class JdbcItemTypeRepository implements ItemTypeRepository {
 
     @Override
     public ItemType get(ItemTypeId id) {
-        return findItemTypesWhere(ITEM_TYPE.ID.eq(id.getId()))
-                .stream()
-                .collect(onlyElement());
+        return queryUtil.selectObjects(
+                dsl -> dsl
+                        .selectFrom(ITEM_TYPE)
+                        .where(ITEM_TYPE.ID.eq(id.getId()))
+                        .fetch(this::mapRecordToItemType)
+        ).stream().collect(onlyElement());
     }
 
     @Override
     public List<ItemType> findItemTypes(String nameStart, int limit) {
+        queryUtil.selectObjects(
+                sql -> sql
+                        .selectFrom(ITEM_TYPE)
+                        .where(ITEM_TYPE.NAME.startsWith(nameStart))
+                        .orderBy(ITEM_TYPE.NAME)
+                        .limit(limit)
+                        .fetch(this::mapRecordToItemType)
+        );
+
+
         List<ItemType> result = new ArrayList<>();
 
         connectionFactory
@@ -62,6 +74,7 @@ public class JdbcItemTypeRepository implements ItemTypeRepository {
                             .using(conn)
                             .selectFrom(ITEM_TYPE)
                             .where(ITEM_TYPE.NAME.startsWith(nameStart))
+                            .orderBy(ITEM_TYPE.NAME)
                             .limit(limit)
                             .fetch(this::mapRecordToItemType);
 
@@ -73,7 +86,12 @@ public class JdbcItemTypeRepository implements ItemTypeRepository {
 
     @Override
     public List<ItemType> getItemTypes() {
-        return findItemTypesWhere();
+        return queryUtil.selectObjects(
+                dsl -> dsl
+                        .selectFrom(ITEM_TYPE)
+                        .orderBy(ITEM_TYPE.NAME)
+                        .fetch(this::mapRecordToItemType)
+        );
     }
 
     @Override
@@ -85,10 +103,6 @@ public class JdbcItemTypeRepository implements ItemTypeRepository {
                         .where(ITEM_TYPE.ID.eq(itemTypeId.getId()))
                         .execute()
                 );
-    }
-
-    private List<ItemType> findItemTypesWhere(Condition... conditions) {
-        return databaseUtil.findObjectsWhere(ITEM_TYPE, this::mapRecordToItemType, conditions);
     }
 
     private ItemType mapRecordToItemType(ItemTypeRecord record) {

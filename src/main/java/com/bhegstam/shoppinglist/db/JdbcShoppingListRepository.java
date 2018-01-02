@@ -5,7 +5,7 @@ import com.bhegstam.db.DatabaseConnectionFactory;
 import com.bhegstam.itemtype.domain.ItemType;
 import com.bhegstam.itemtype.domain.ItemTypeId;
 import com.bhegstam.shoppinglist.domain.*;
-import com.bhegstam.util.DatabaseUtil;
+import com.bhegstam.util.QueryUtil;
 import com.bhegstam.util.db.PersistenceStatus;
 import com.google.inject.Inject;
 import org.jooq.Condition;
@@ -24,12 +24,12 @@ import static java.util.stream.Collectors.toList;
 
 public class JdbcShoppingListRepository implements ShoppingListRepository {
     private final DatabaseConnectionFactory connectionFactory;
-    private final DatabaseUtil databaseUtil;
+    private final QueryUtil queryUtil;
 
     @Inject
-    public JdbcShoppingListRepository(DatabaseConnectionFactory connectionFactory, DatabaseUtil databaseUtil) {
+    public JdbcShoppingListRepository(DatabaseConnectionFactory connectionFactory, QueryUtil queryUtil) {
         this.connectionFactory = connectionFactory;
-        this.databaseUtil = databaseUtil;
+        this.queryUtil = queryUtil;
     }
 
 
@@ -108,7 +108,13 @@ public class JdbcShoppingListRepository implements ShoppingListRepository {
     }
 
     private List<ShoppingList> findShoppingListsWhere(Condition... conditions) {
-        List<ShoppingList> lists = databaseUtil.findObjectsWhere(SHOPPING_LIST, this::mapRecordToShoppingList, conditions);
+        List<ShoppingList> lists = queryUtil.selectObjects(
+                dsl -> dsl
+                        .selectFrom(SHOPPING_LIST)
+                        .where(conditions)
+                        .fetch(this::mapRecordToShoppingList)
+        );
+
         lists.forEach(list -> connectionFactory
                 .withConnection(conn -> {
                     List<ShoppingListItem> items = DSL
@@ -142,5 +148,4 @@ public class JdbcShoppingListRepository implements ShoppingListRepository {
                 record.getName()
         );
     }
-
 }

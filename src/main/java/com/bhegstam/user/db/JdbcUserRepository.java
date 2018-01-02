@@ -7,7 +7,7 @@ import com.bhegstam.user.domain.Role;
 import com.bhegstam.user.domain.User;
 import com.bhegstam.user.domain.UserId;
 import com.bhegstam.user.domain.UserRepository;
-import com.bhegstam.util.DatabaseUtil;
+import com.bhegstam.util.QueryUtil;
 import com.google.inject.Inject;
 import org.jooq.Condition;
 import org.jooq.Result;
@@ -23,12 +23,12 @@ import static com.bhegstam.webutil.CustomCollectors.onlyOptionalElement;
 
 public class JdbcUserRepository implements UserRepository {
     private final DatabaseConnectionFactory connectionFactory;
-    private final DatabaseUtil databaseUtil;
+    private final QueryUtil queryUtil;
 
     @Inject
-    public JdbcUserRepository(DatabaseConnectionFactory connectionFactory, DatabaseUtil databaseUtil) {
+    public JdbcUserRepository(DatabaseConnectionFactory connectionFactory, QueryUtil queryUtil) {
         this.connectionFactory = connectionFactory;
-        this.databaseUtil = databaseUtil;
+        this.queryUtil = queryUtil;
     }
 
     @Override
@@ -87,7 +87,13 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     private List<User> findUsersWhere(Condition... conditions) {
-        return databaseUtil.findObjectsWhere(APPLICATION_USER, this::mapRecordToUser, conditions);
+        return queryUtil.selectObjects(
+                dsl -> dsl
+                        .selectFrom(APPLICATION_USER)
+                        .where(conditions)
+                        .orderBy(APPLICATION_USER.USERNAME)
+                        .fetch(this::mapRecordToUser)
+        );
     }
 
     private User mapRecordToUser(ApplicationUserRecord r) {
