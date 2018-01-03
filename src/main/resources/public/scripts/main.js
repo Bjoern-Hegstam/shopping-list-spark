@@ -1,3 +1,3 @@
 define(['jquery'], function($) {
-    $('a.navbar-brand').html('shopping-list-spark (beta)');
+    $('a.navbar-brand').html('shopping-list-spark');
 });
