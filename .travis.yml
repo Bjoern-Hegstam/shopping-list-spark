@@ -5,6 +5,9 @@ jdk:
 services:
  - postgresql
 
+addons:
+  postgresql: "9.6"
+
 before_install:
  - psql -c 'create database travis_ci_test;' -U postgres
  - mvn flyway:migrate -Ddb.url=jdbc:postgresql://localhost/travis_ci_test -Ddb.user=postgres -Ddb.password=''
