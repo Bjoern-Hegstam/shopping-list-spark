@@ -1,13 +1,13 @@
-import React from "react";
+import React from 'react';
 import {connect} from 'react-redux';
 import {Redirect, Route, Switch, withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import LoginPage from "./components/LoginPage";
-import RegistrationPage from "./components/RegistrationPage";
-import PageNotFound from "./components/PageNotFound";
-import ShoppingListsView from "./components/ShoppingListsView";
-import ShoppingListView from "./components/ShoppingListView";
-import AdminArea from "./components/AdminArea";
+import LoginPage from './components/LoginPage';
+import RegistrationPage from './components/RegistrationPage';
+import PageNotFound from './components/PageNotFound';
+import ShoppingListsView from './components/ShoppingListsView';
+import ShoppingListView from './components/ShoppingListView';
+import AdminArea from './components/AdminArea';
 
 class App extends React.Component {
     static propTypes = {
@@ -22,10 +22,10 @@ class App extends React.Component {
         if (this.props.user) {
             return (
                 <Switch>
-                    <Route exact path="/lists" component={ShoppingListsView}/>
-                    <Route path="/lists/:listId" component={ShoppingListView}/>
-                    ( this.props.user.roles.contains("admin") &&
-                    <Route path="/admin" component={AdminArea}/>
+                    <Route exact path='/lists' component={ShoppingListsView}/>
+                    <Route path='/lists/:listId' component={ShoppingListView}/>
+                    ( this.props.user.roles.contains('admin') &&
+                    <Route path='/admin' component={AdminArea}/>
                     )
                     <Route component={PageNotFound}/>
                 </Switch>
@@ -33,9 +33,9 @@ class App extends React.Component {
         } else {
             return (
                 <Switch>
-                    <Redirect exact path="/" to="/login"/>
-                    <Route exact path="/login" component={LoginPage}/>
-                    <Route exact path="/register" component={RegistrationPage}/>
+                    <Redirect exact path='/' to='/login'/>
+                    <Route exact path='/login' component={LoginPage}/>
+                    <Route exact path='/register' component={RegistrationPage}/>
                     <Route component={PageNotFound}/>
                 </Switch>
             )
