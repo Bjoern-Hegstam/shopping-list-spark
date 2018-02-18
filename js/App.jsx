@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from 'react-redux';
-import {Redirect, Route, Switch} from 'react-router-dom';
+import {Redirect, Route, Switch, withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import LoginPage from "./components/LoginPage";
 import RegistrationPage from "./components/RegistrationPage";
@@ -43,4 +43,4 @@ class App extends React.Component {
     }
 }
 
-export default connect(store => ({}))(App);
+export default withRouter(connect(store => ({}))(App));

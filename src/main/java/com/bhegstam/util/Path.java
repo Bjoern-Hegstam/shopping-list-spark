@@ -4,7 +4,7 @@ public class Path {
 
     public static class Web {
         public static final String ADMIN = "/admin";
-        public static final String INDEX = "/";
+        public static final String INDEX = "/*";
         public static final String ITEM_TYPES = "/item-types";
         public static final String LOGIN = "/login";
         public static final String LOGOUT = "/logout";
@@ -14,7 +14,7 @@ public class Path {
     }
 
     public static class Template {
-        public static final String INDEX = "/index.html";
+        public static final String INDEX = "/public/index.html";
 
         public static final String ADMIN_ITEM_TYPES = "/velocity/admin/item_types.vm";
         public static final String ADMIN_USERS = "velocity/admin/users.vm";

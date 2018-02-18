@@ -50,6 +50,7 @@ public class Application extends ApplicationBase {
                         shoppingListApiController,
                         userApiController
                 ),
+                true,
                 true
         );
 
@@ -62,13 +63,5 @@ public class Application extends ApplicationBase {
 
         http.staticFiles.location("/public");
         http.staticFiles.expireTime(600);
-
-        // Strip trailing slash
-        http.before((req, res) -> {
-            String path = req.pathInfo();
-            if (path.endsWith("/") && path.length() > 1) {
-                res.redirect(path.substring(0, path.length() - 1));
-            }
-        });
     }
 }

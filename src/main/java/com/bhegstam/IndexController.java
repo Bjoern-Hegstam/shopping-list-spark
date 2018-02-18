@@ -2,8 +2,6 @@ package com.bhegstam;
 
 import com.bhegstam.util.Path;
 import com.bhegstam.webutil.webapp.Controller;
-import com.bhegstam.webutil.webapp.Request;
-import com.bhegstam.webutil.webapp.Result;
 import spark.Service;
 
 import static com.bhegstam.webutil.webapp.ResultBuilder.result;
@@ -14,10 +12,6 @@ class IndexController implements Controller {
 
     @Override
     public void configureRoutes(Service http) {
-        http.get(Path.Web.INDEX, asSparkRoute(this::serveIndexPage));
-    }
-
-    private Result serveIndexPage(Request request) {
-        return result().render(Path.Template.INDEX);
+        http.get("/*", asSparkRoute(request -> result().render(Path.Template.INDEX)));
     }
 }
