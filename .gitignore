@@ -2,4 +2,6 @@
 *.iml
 
 target
-*.css
+
+node_modules
+dist

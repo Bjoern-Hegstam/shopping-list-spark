@@ -18,10 +18,6 @@ class IndexController implements Controller {
     }
 
     private Result serveIndexPage(Request request) {
-        if (!request.session().isUserLoggedIn()) {
-            return result().redirectTo(Path.Web.LOGIN);
-        }
-
-        return result().redirectTo(Path.Web.SHOPPING_LIST);
+        return result().render(Path.Template.INDEX);
     }
 }
