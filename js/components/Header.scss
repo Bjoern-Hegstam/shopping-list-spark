@@ -1,3 +1,5 @@
+@import '../styles/variables';
+
 header {
   background: #f8f8f8;
   color: #777;
@@ -7,7 +9,7 @@ header {
   height: 45px;
 
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: $app-layout-grid-template-columns;
 }
 
 .header-content {

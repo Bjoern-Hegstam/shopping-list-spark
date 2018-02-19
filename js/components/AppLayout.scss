@@ -12,7 +12,7 @@ body {
 
 main {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: $app-layout-grid-template-columns;
 }
 
 .main-content {
@@ -21,10 +21,10 @@ main {
 
 @media (max-width: $small-screen-width) {
   header {
-    grid-template-columns: $small-screen-page-margin 1fr $small-screen-page-margin;
+    grid-template-columns: $small-screen-app-layout-grid-template-columns;
   }
 
   main {
-    grid-template-columns: $small-screen-page-margin 1fr $small-screen-page-margin;
+    grid-template-columns: $small-screen-app-layout-grid-template-columns;
   }
 }

@@ -1,2 +1,6 @@
-$small-screen-width: 700px;
-$small-screen-page-margin: 10px;
+$app-layout-min-side-margin: 10px;
+$app-layout-min-width: 1200px;
+$app-layout-grid-template-columns: minmax($app-layout-min-side-margin, 1fr) minmax($app-layout-min-width, 2fr) minmax($app-layout-min-side-margin, 1fr);
+
+$small-screen-width: $app-layout-min-width + 2 * $app-layout-min-side-margin;
+$small-screen-app-layout-grid-template-columns: $app-layout-min-side-margin 2fr $app-layout-min-side-margin;
