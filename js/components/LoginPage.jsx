@@ -1,5 +1,20 @@
 import React from 'react';
+import AppLayout from "./AppLayout";
 
-// TODO: Create AppLayout component and use for LoginPage, Create LoginForm and post input to backend
+import './LoginPage.scss';
 
-export default () => (<div>LoginPage</div>)
+export default class LoginPage extends React.Component {
+    render() {
+        return (
+            <AppLayout>
+                <form action="#" id="login-form">
+                    <input type="text" placeholder="Username"/>
+                    <input type="password" placeholder="Password"/>
+                    <div>
+                        <button>Login</button>
+                    </div>
+                </form>
+            </AppLayout>
+        )
+    }
+}

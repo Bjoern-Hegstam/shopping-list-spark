@@ -1,0 +1,30 @@
+@import "../styles/variables";
+
+body {
+  margin: 0;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.root {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+}
+
+.main-content {
+  grid-column: 2/3;
+}
+
+@media (max-width: $small-screen-width) {
+  header {
+    grid-template-columns: $small-screen-page-margin 1fr $small-screen-page-margin;
+  }
+
+  main {
+    grid-template-columns: $small-screen-page-margin 1fr $small-screen-page-margin;
+  }
+}

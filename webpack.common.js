@@ -2,6 +2,7 @@ const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ReactRootPlugin = require('html-webpack-react-root-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
     entry: './js/index.jsx',
@@ -26,15 +27,15 @@ module.exports = {
                 }
             },
             {
-                test: /\.less$/,
+                test: /\.scss$/,
                 exclude: /node_modules/,
-                use: [{
-                    loader: "style-loader" // creates style nodes from JS strings
-                }, {
-                    loader: "css-loader" // translates CSS into CommonJS
-                }, {
-                    loader: "less-loader" // compiles Less to CSS
-                }]
+                use: ExtractTextPlugin.extract({
+                    use: [
+                        { loader: 'css-loader' },
+                        { loader: 'sass-loader' }
+                    ],
+                    fallback: 'style-loader'
+                })
             }
         ]
     },
@@ -44,6 +45,9 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({title: 'Plant monitor'}),
+        new ExtractTextPlugin({
+            filename: '[name].[contenthash].css'
+        }),
         new ReactRootPlugin()
     ]
 };

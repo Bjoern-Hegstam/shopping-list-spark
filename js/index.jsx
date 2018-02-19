@@ -8,6 +8,8 @@ import axios from 'axios';
 import axiosMiddleware from 'redux-axios-middleware';
 import App from "./App";
 
+import './styles';
+
 const client = axios.create({
     baseURL: '/api'
 });
