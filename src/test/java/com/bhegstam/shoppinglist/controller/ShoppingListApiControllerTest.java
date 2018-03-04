@@ -52,7 +52,7 @@ public class ShoppingListApiControllerTest {
 
         // then
         GetShoppingListsResponse response = (GetShoppingListsResponse) result.getResponsePayload();
-        assertThat(response.getShoppingLists(), containsInAnyOrder(ShoppingListBean.fromShoppingList(shoppingList)));
+        assertThat(response.getShoppingLists(), containsInAnyOrder(new ShoppingListInfo(shoppingList)));
     }
 
     @Test
@@ -69,5 +69,5 @@ public class ShoppingListApiControllerTest {
         assertThat(response.getId(), notNullValue());
     }
 
-    // TODO: Test remaining end points, change getShoppingLists to only return names and ids, not entire shopping lists, add endpoint to get specific shopping list
+    // TODO: Test remaining end points, add endpoint to get specific shopping list
 }

@@ -1,15 +1,13 @@
 package com.bhegstam.shoppinglist.controller;
 
 import com.bhegstam.shoppinglist.domain.ShoppingListId;
+import lombok.Getter;
 
-public class CreateShoppingListResponse {
-    private String id;
+@Getter
+class CreateShoppingListResponse {
+    private final String id;
 
-    public CreateShoppingListResponse(ShoppingListId id) {
+    CreateShoppingListResponse(ShoppingListId id) {
         this.id = id.toString();
-    }
-
-    public String getId() {
-        return id;
     }
 }
