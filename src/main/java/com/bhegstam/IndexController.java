@@ -8,7 +8,7 @@ import static com.bhegstam.webutil.webapp.ResultBuilder.result;
 import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
 
 
-class IndexController implements Controller {
+public class IndexController implements Controller {
 
     @Override
     public void configureRoutes(Service http) {

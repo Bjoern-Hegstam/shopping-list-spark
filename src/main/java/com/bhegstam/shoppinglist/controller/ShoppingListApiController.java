@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.bhegstam.util.ContentType.APPLICATION_JSON;
@@ -37,6 +38,13 @@ public class ShoppingListApiController implements Controller {
 
     @Override
     public void configureRoutes(Service http) {
+        http.get(
+                Path.Api.SHOPPING_LIST,
+                APPLICATION_JSON,
+                asSparkRoute(this::getShoppingLists),
+                new JsonResponseTransformer()
+        );
+
         http.post(
                 Path.Api.SHOPPING_LIST,
                 APPLICATION_JSON,
@@ -68,17 +76,27 @@ public class ShoppingListApiController implements Controller {
         );
     }
 
-    private Result postShoppingList(Request request) {
-        ShoppingListBean shoppingListBean = ShoppingListBean.fromJson(request.body());
+    Result getShoppingLists(Request request) {
+        List<ShoppingList> shoppingLists = shoppingListRepository.getShoppingLists();
 
-        ShoppingList shoppingList = shoppingListRepository.createShoppingList(shoppingListBean.getName());
+        return result()
+                .statusCode(HttpStatus.OK_200)
+                .type(APPLICATION_JSON)
+                .returnPayload(new GetShoppingListsResponse(shoppingLists));
+    }
+
+    Result postShoppingList(Request request) {
+        CreateShoppingListRequest shoppingListRequest = CreateShoppingListRequest.fromJson(request.body());
+
+        ShoppingList shoppingList = shoppingListRepository.createShoppingList(shoppingListRequest.getName());
+
         return result()
                 .statusCode(HttpStatus.CREATED_201)
                 .type(APPLICATION_JSON)
-                .returnPayload(ShoppingListBean.fromShoppingList(shoppingList));
+                .returnPayload(new CreateShoppingListResponse(shoppingList.getId()));
     }
 
-    private Result postShoppingListItem(Request request) {
+    Result postShoppingListItem(Request request) {
         ShoppingListId listId = ShoppingListId.fromString(request.params(SHOPPING_LIST_ID));
         ShoppingListItemBean itemBean = ShoppingListItemBean.fromJson(request.body());
         ItemTypeId itemTypeId = new ItemTypeId(itemBean.getItemType().getId());
@@ -97,7 +115,7 @@ public class ShoppingListApiController implements Controller {
                 .returnPayload(ShoppingListItemBean.fromShoppingListItem(listItem));
     }
 
-    private Result patchShoppingListItem(Request request) {
+    Result patchShoppingListItem(Request request) {
         ShoppingListId listId = ShoppingListId.fromString(request.params(SHOPPING_LIST_ID));
         ShoppingListItemId listItemId = ShoppingListItemId.fromString(request.params(SHOPPING_LIST_ITEM_ID));
         ShoppingListItemBean itemBean = ShoppingListItemBean.fromJson(request.body());
@@ -116,7 +134,7 @@ public class ShoppingListApiController implements Controller {
                 .returnPayload(new Object());
     }
 
-    private Result deleteShoppingListItem(Request request) {
+    Result deleteShoppingListItem(Request request) {
         ShoppingListId listId = ShoppingListId.fromString(request.params(SHOPPING_LIST_ID));
         ShoppingListItemId listItemId = ShoppingListItemId.fromString(request.params(SHOPPING_LIST_ITEM_ID));
 
@@ -131,7 +149,7 @@ public class ShoppingListApiController implements Controller {
                 .returnPayload(new Object());
     }
 
-    private Result emptyCart(Request request) {
+    Result emptyCart(Request request) {
         ShoppingListId listId = ShoppingListId.fromString(request.params(SHOPPING_LIST_ID));
 
         ShoppingList shoppingList = shoppingListRepository.get(listId);
