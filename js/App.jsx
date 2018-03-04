@@ -37,6 +37,8 @@ class App extends React.Component {
             return (
                 <Switch>
                     <Redirect exact path='/' to='/login'/>
+                    <Redirect exact path='/lists' to='/login'/>
+
                     <Route exact path='/login' component={LoginPage}/>
                     <Route exact path='/register' component={RegistrationPage}/>
                     <Route component={PageNotFound}/>
@@ -47,5 +49,5 @@ class App extends React.Component {
 }
 
 export default withRouter(connect(store => ({
-    user: store.user.user
+    user: store.user.currentUser
 }))(App));

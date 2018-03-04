@@ -40,7 +40,7 @@ public class LoginController implements Controller {
         JsonResponseTransformer jsonResponseTransformer = new JsonResponseTransformer();
 
         http.post(Path.Web.LOGIN, asSparkRoute(this::handleLoginPost), jsonResponseTransformer);
-        http.post(Path.Web.LOGOUT, asSparkRoute(this::handleLogoutPost));
+        http.post(Path.Web.LOGOUT, asSparkRoute(this::handleLogoutPost), jsonResponseTransformer);
     }
 
     Result handleLoginPost(Request request) {
@@ -89,6 +89,7 @@ public class LoginController implements Controller {
         request.session().unsetCurrentUser();
         return result()
                 .statusCode(HttpStatus.OK_200)
+                .type(APPLICATION_JSON)
                 .returnPayload(null);
     }
 }

@@ -7,11 +7,16 @@ export default function (state = {}, action) {
 
             return {
                 ...state,
-                user: {
-                    id,
+                currentUser: {
+                    id : Number(id),
                     username,
                     role
                 }
+            };
+        case types.LOGOUT_SUCCESS:
+            return {
+                ...state,
+                currentUser: undefined
             };
         default:
             return state;

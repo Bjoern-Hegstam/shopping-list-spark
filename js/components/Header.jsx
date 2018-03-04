@@ -1,17 +1,24 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {NavLink} from "react-router-dom";
 
 import './Header.scss';
 import {connect} from "react-redux";
 import {UserType} from "../propTypes";
+import {logout} from "../actions/UserActions";
 
 export class Header extends React.Component {
     static propTypes = {
-        user: UserType
+        user: UserType,
+        logout: PropTypes.func.isRequired
     };
 
     static defaultProps = {
         user: undefined
+    };
+
+    logoutCurrentUser = () => {
+        this.props.logout();
     };
 
     render() {
@@ -23,6 +30,7 @@ export class Header extends React.Component {
                         <nav>
                             <ul>
                                 <li><NavLink to="/lists">Lists</NavLink></li>
+                                <li><a href="#" onClick={this.logoutCurrentUser}>Logout</a></li>
                             </ul>
                         </nav>
                         :
@@ -39,6 +47,11 @@ export class Header extends React.Component {
     }
 }
 
-export default connect(store => ({
-    user: store.user.user
-}))(Header);
+export default connect(
+    store => ({
+        user: store.user.currentUser
+    }),
+    dispatch => ({
+        logout: () => dispatch(logout())
+    })
+)(Header);
