@@ -1,17 +1,17 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {Redirect, Route, Switch, withRouter} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import LoginPage from './components/LoginPage';
 import RegistrationPage from './components/RegistrationPage';
 import PageNotFound from './components/PageNotFound';
 import ShoppingListsView from './components/ShoppingListsView';
 import ShoppingListView from './components/ShoppingListView';
 import AdminArea from './components/AdminArea';
+import {UserType} from "./propTypes";
 
 class App extends React.Component {
     static propTypes = {
-        user: PropTypes.string
+        user: UserType
     };
 
     static defaultProps = {
@@ -19,7 +19,7 @@ class App extends React.Component {
     };
 
     render() {
-        if (this.props.user && this.props.user.id) {
+        if (this.props.user) {
             return (
                 <Switch>
                     <Redirect exact path='/' to='/lists'/>
@@ -47,5 +47,5 @@ class App extends React.Component {
 }
 
 export default withRouter(connect(store => ({
-    user: store.user
+    user: store.user.user
 }))(App));
