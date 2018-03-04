@@ -18,7 +18,17 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['env', 'react'],
+                        presets: [
+                            [
+                                'env',
+                                {
+                                    "targets": {
+                                        "browsers": ["last 2 Chrome versions", "last 2 Firefox versions"]
+                                    }
+                                }
+                            ],
+                            'react'
+                        ],
                         plugins: [
                             'transform-class-properties',
                             'transform-object-rest-spread'
@@ -44,7 +54,7 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(['dist']),
-        new HtmlWebpackPlugin({title: 'Plant monitor'}),
+        new HtmlWebpackPlugin({title: 'shopping-list-spark'}),
         new ExtractTextPlugin({
             filename: '[name].[contenthash].css'
         }),

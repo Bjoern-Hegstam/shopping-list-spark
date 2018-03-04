@@ -19,9 +19,12 @@ class App extends React.Component {
     };
 
     render() {
-        if (this.props.user) {
+        if (this.props.user && this.props.user.id) {
             return (
                 <Switch>
+                    <Redirect exact path='/' to='/lists'/>
+                    <Redirect exact path='/login' to='/lists'/>
+
                     <Route exact path='/lists' component={ShoppingListsView}/>
                     <Route path='/lists/:listId' component={ShoppingListView}/>
                     ( this.props.user.roles.contains('admin') &&
@@ -43,4 +46,6 @@ class App extends React.Component {
     }
 }
 
-export default withRouter(connect(store => ({}))(App));
+export default withRouter(connect(store => ({
+    user: store.user
+}))(App));

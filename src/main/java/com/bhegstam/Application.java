@@ -4,6 +4,7 @@ import com.bhegstam.configuration.ApplicationConfiguration;
 import com.bhegstam.configuration.ConfigurationModule;
 import com.bhegstam.itemtype.ItemTypeModule;
 import com.bhegstam.itemtype.controller.ItemTypeApiController;
+import com.bhegstam.login.LoginController;
 import com.bhegstam.shoppinglist.ShoppingListModule;
 import com.bhegstam.shoppinglist.controller.ShoppingListApiController;
 import com.bhegstam.user.UserModule;
@@ -39,12 +40,16 @@ public class Application extends ApplicationBase {
     public Application(
             ApplicationConfiguration configuration,
             IndexController indexController,
+            LoginController loginController,
             ItemTypeApiController itemTypeApiController,
             ShoppingListApiController shoppingListApiController,
             UserApiController userApiController
     ) {
         super(
-                List.of(indexController),
+                List.of(
+                        indexController,
+                        loginController
+                ),
                 asList(
                         itemTypeApiController,
                         shoppingListApiController,
@@ -63,5 +68,9 @@ public class Application extends ApplicationBase {
 
         http.staticFiles.location("/public");
         http.staticFiles.expireTime(600);
+
+        http.after((request, response) -> {
+            response.header("Content-Encoding", "gzip");
+        });
     }
 }

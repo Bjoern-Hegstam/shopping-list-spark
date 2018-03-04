@@ -1,20 +1,66 @@
 import React from 'react';
 import AppLayout from "./AppLayout";
+import PropTypes from 'prop-types';
 
 import './LoginPage.scss';
+import {connect} from "react-redux";
+import {login} from "../actions/UserActions";
 
-export default class LoginPage extends React.Component {
+export class LoginPage extends React.Component {
+    static propTypes = {
+        login: PropTypes.func.isRequired
+    };
+
+    state = {
+        username: '',
+        password: ''
+    };
+
+    onUsernameChange = (e) => {
+        e.preventDefault();
+        this.setState({username: e.target.value});
+    };
+
+    onPasswordChange = (e) => {
+        e.preventDefault();
+        this.setState({password: e.target.value});
+    };
+
+    onLoginSubmit = async (e) => {
+        e.preventDefault();
+
+        await this.props.login(this.state.username, this.state.password);
+        console.log('Logged in');
+    };
+
     render() {
         return (
             <AppLayout>
-                <form action="#" id="login-form">
-                    <input type="text" placeholder="Username"/>
-                    <input type="password" placeholder="Password"/>
+                <form id="login-form" onSubmit={this.onLoginSubmit}>
+                    <input
+                        type="text"
+                        placeholder="Username"
+                        value={this.state.username}
+                        onChange={this.onUsernameChange}
+                    />
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={this.state.password}
+                        onChange={this.onPasswordChange}
+                    />
                     <div>
-                        <button>Login</button>
+                        <button type="submit">Login</button>
                     </div>
                 </form>
             </AppLayout>
         )
     }
 }
+
+export default connect(
+    undefined,
+    (dispatch) => ({
+        login: (username, password) => dispatch(login(username, password))
+    })
+)(LoginPage);

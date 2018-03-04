@@ -3,15 +3,17 @@ package com.bhegstam.login;
 import com.bhegstam.user.InMemoryUserRepository;
 import com.bhegstam.user.domain.User;
 import com.bhegstam.user.domain.UserId;
-import com.bhegstam.util.Message;
+import com.bhegstam.util.JsonResponseTransformer;
 import com.bhegstam.util.Mocks;
-import com.bhegstam.util.Path;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
+import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static com.bhegstam.util.Matchers.isPresentAnd;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -26,39 +28,13 @@ public class LoginControllerTest {
     private LoginController loginController;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         userRepository = new InMemoryUserRepository();
         loginController = new LoginController(userRepository);
     }
 
     @Test
-    public void serveLoginPage_whenLoggedIn_shouldRedirectToIndex() {
-        // given
-        Request request = Mocks.mockRequest();
-        when(request.session().isUserLoggedIn()).thenReturn(true);
-
-        // when
-        Result result = loginController.serveLoginPage(request);
-
-        // then
-        assertEquals(Path.Web.INDEX, result.getRedirectPath());
-    }
-
-    @Test
-    public void serveLoginPage_whenNotLoggedIn_shouldRenderLogin() {
-        // given
-        Request request = Mocks.mockRequest();
-        when(request.session().isUserLoggedIn()).thenReturn(false);
-
-        // when
-        Result result = loginController.serveLoginPage(request);
-
-        // then
-        assertEquals(Path.Template.LOGIN, result.getRenderTemplatePath());
-    }
-
-    @Test
-    public void login_normalCase() {
+    public void login() {
         // given
         UserId userId = userRepository.create(new User(USERNAME, PASSWORD, EMAIL, true));
         User user = userRepository.get(userId);
@@ -69,12 +45,12 @@ public class LoginControllerTest {
         Result result = loginController.handleLoginPost(request);
 
         // then
-        assertEquals(Path.Web.INDEX, result.getRedirectPath());
+        assertThat(result.getStatusCode(), isPresentAnd(is(HttpStatus.OK_200)));
         assertUserLoggedIn(request, user);
     }
 
     @Test
-    public void login_whenUsernameNotRecognized() {
+    public void login_usernameNotRecognized() {
         // given
         userRepository.create(new User(USERNAME, PASSWORD, EMAIL, true));
 
@@ -84,13 +60,12 @@ public class LoginControllerTest {
         Result result = loginController.handleLoginPost(request);
 
         // then
-        assertEquals(Path.Template.LOGIN, result.getRenderTemplatePath());
-        verify(request.session()).setErrorMessage(Message.LOGIN_AUTH_FAILED);
+        assertThat(result.getStatusCode(), isPresentAnd(is(HttpStatus.UNAUTHORIZED_401)));
         assertUserNotLoggedIn(request);
     }
 
     @Test
-    public void login_whenPasswordInvalid() {
+    public void login_invalidPassword() {
         // given
         userRepository.create(new User(USERNAME, PASSWORD, EMAIL, true));
 
@@ -100,13 +75,12 @@ public class LoginControllerTest {
         Result result = loginController.handleLoginPost(request);
 
         // then
-        assertEquals(Path.Template.LOGIN, result.getRenderTemplatePath());
-        verify(request.session()).setErrorMessage(Message.LOGIN_AUTH_FAILED);
+        assertThat(result.getStatusCode(), isPresentAnd(is(HttpStatus.UNAUTHORIZED_401)));
         assertUserNotLoggedIn(request);
     }
 
     @Test
-    public void login_whenUserNotVerified_shouldShowErrorMessage() {
+    public void login_userNotVerified() {
         // given
         userRepository.create(new User(USERNAME, PASSWORD, EMAIL, false));
 
@@ -116,8 +90,7 @@ public class LoginControllerTest {
         Result result = loginController.handleLoginPost(request);
 
         // then
-        assertEquals(Path.Template.LOGIN, result.getRenderTemplatePath());
-        verify(request.session()).setErrorMessage(Message.LOGIN_USER_PENDING_VERIFICATION);
+        assertThat(result.getStatusCode(), isPresentAnd(is(HttpStatus.UNAUTHORIZED_401)));
         assertUserNotLoggedIn(request);
     }
 
@@ -130,13 +103,16 @@ public class LoginControllerTest {
 
         // then
         verify(request.session()).unsetCurrentUser();
-        assertEquals(Path.Web.LOGIN, result.getRedirectPath());
+        assertThat(result.getStatusCode(), isPresentAnd(is(HttpStatus.OK_200)));
     }
 
     private Request mockLoginRequest(String username, String password) {
         Request request = Mocks.mockRequest();
-        when(request.queryParams(LoginParameter.USERNAME)).thenReturn(username);
-        when(request.queryParams(LoginParameter.PASSWORD)).thenReturn(password);
+        try {
+            when(request.body()).thenReturn(new JsonResponseTransformer().render(new LoginDto(username, password)));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return request;
     }
 
