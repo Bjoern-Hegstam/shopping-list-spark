@@ -16,6 +16,9 @@
     "url": "https://github.com/Bjoern-Hegstam/shopping-list-spark/issues"
   },
   "homepage": "https://github.com/Bjoern-Hegstam/shopping-list-spark#readme",
+  "jest": {
+    "testPathIgnorePatterns": ["/node_modules/", "/target/"]
+  },
   "dependencies": {
     "axios": "0.17.1",
     "prop-types": "15.6.0",
