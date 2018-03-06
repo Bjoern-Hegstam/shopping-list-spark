@@ -17,23 +17,6 @@ module.exports = {
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
-                    options: {
-                        presets: [
-                            [
-                                'env',
-                                {
-                                    "targets": {
-                                        "browsers": ["last 2 Chrome versions", "last 2 Firefox versions"]
-                                    }
-                                }
-                            ],
-                            'react'
-                        ],
-                        plugins: [
-                            'transform-class-properties',
-                            'transform-object-rest-spread'
-                        ]
-                    }
                 }
             },
             {
