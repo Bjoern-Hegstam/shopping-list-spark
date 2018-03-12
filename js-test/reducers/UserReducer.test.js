@@ -4,7 +4,7 @@ import * as types from '../../js/actions/types';
 describe('UserReducer', function () {
     const initialState = {};
 
-    it('should return initial for unknown action type', function () {
+    it('should return initial state for unknown action type', function () {
         // given
         const state = undefined;
         const action = {type: 'unknown'};
