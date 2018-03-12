@@ -130,4 +130,26 @@ describe('ShoppingListReducer', () => {
             }
         })
     });
+
+    it('should set error on GET_SHOPPING_LISTS_FAIL', () => {
+        // given
+        const state = {
+            ...initialState,
+            fetching: true
+        };
+        const action = {
+            type: types.GET_SHOPPING_LISTS_FAIL,
+            error: 'Error while fetching'
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            fetching: false,
+            error: 'Error while fetching'
+        })
+    });
 });

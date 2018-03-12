@@ -32,6 +32,12 @@ export default function (state = initialState, action) {
                 }
             });
             return newState;
+        case types.GET_SHOPPING_LISTS_FAIL:
+            return {
+                ...state,
+                fetching: false,
+                error: action.error
+            };
         default:
             return state;
     }
