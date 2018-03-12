@@ -14,13 +14,11 @@ public class ShoppingListItemBean {
     private Integer quantity;
     private Boolean inCart;
 
-    public static ShoppingListItemBean fromShoppingListItem(ShoppingListItem item) {
-        ShoppingListItemBean bean = new ShoppingListItemBean();
-        bean.id = item.getId().getId().toString();
-        bean.itemType = ItemTypeBean.fromItemType(item.getItemType());
-        bean.quantity = item.getQuantity();
-        bean.inCart = item.isInCart();
-        return bean;
+    public ShoppingListItemBean(ShoppingListItem item) {
+        this.id = item.getId().getId().toString();
+        this.itemType = ItemTypeBean.fromItemType(item.getItemType());
+        this.quantity = item.getQuantity();
+        this.inCart = item.isInCart();
     }
 
     public static ShoppingListItemBean fromJson(String json) {

@@ -10,6 +10,8 @@ import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
 import com.google.inject.Inject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.Service;
 
@@ -21,6 +23,8 @@ import static com.bhegstam.webutil.webapp.ResultBuilder.result;
 import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
 
 public class ShoppingListApiController implements Controller {
+    private static final Logger LOGGER = LogManager.getLogger(ShoppingListApiController.class);
+
     private static final String SHOPPING_LIST_ID = "shoppingListId";
     private static final String SHOPPING_LIST_ITEM_ID = "shoppingListItemId";
 
@@ -49,6 +53,13 @@ public class ShoppingListApiController implements Controller {
                 Path.Api.SHOPPING_LIST,
                 APPLICATION_JSON,
                 asSparkRoute(this::postShoppingList),
+                new JsonResponseTransformer()
+        );
+
+        http.get(
+                Path.Api.SHOPPING_LIST + "/:" + SHOPPING_LIST_ID,
+                APPLICATION_JSON,
+                asSparkRoute(this::getShoppingList),
                 new JsonResponseTransformer()
         );
 
@@ -85,6 +96,25 @@ public class ShoppingListApiController implements Controller {
                 .returnPayload(new GetShoppingListsResponse(shoppingLists));
     }
 
+    Result getShoppingList(Request request) {
+        String id = request.queryParams(SHOPPING_LIST_ID);
+        ShoppingList shoppingList;
+        try {
+            shoppingList = shoppingListRepository.get(ShoppingListId.fromString(id));
+        } catch (IllegalArgumentException e) {
+            LOGGER.error("Could not find shopping list with id [{}]", id);
+            return result()
+                    .statusCode(HttpStatus.BAD_REQUEST_400)
+                    .type(APPLICATION_JSON)
+                    .returnPayload(null);
+        }
+
+        return result()
+                .statusCode(HttpStatus.OK_200)
+                .type(APPLICATION_JSON)
+                .returnPayload(new GetShoppingListResponse(shoppingList));
+    }
+
     Result postShoppingList(Request request) {
         CreateShoppingListRequest shoppingListRequest = CreateShoppingListRequest.fromJson(request.body());
 
@@ -112,7 +142,7 @@ public class ShoppingListApiController implements Controller {
         return result()
                 .statusCode(HttpStatus.CREATED_201)
                 .type(APPLICATION_JSON)
-                .returnPayload(ShoppingListItemBean.fromShoppingListItem(listItem));
+                .returnPayload(new ShoppingListItemBean(listItem));
     }
 
     Result patchShoppingListItem(Request request) {

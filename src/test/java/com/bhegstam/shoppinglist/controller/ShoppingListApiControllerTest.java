@@ -1,15 +1,23 @@
 package com.bhegstam.shoppinglist.controller;
 
 import com.bhegstam.itemtype.InMemoryItemTypeRepository;
+import com.bhegstam.itemtype.domain.ItemType;
 import com.bhegstam.itemtype.domain.ItemTypeRepository;
 import com.bhegstam.shoppinglist.InMemoryShoppingListRepository;
 import com.bhegstam.shoppinglist.domain.ShoppingList;
+import com.bhegstam.shoppinglist.domain.ShoppingListItem;
 import com.bhegstam.shoppinglist.domain.ShoppingListRepository;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
+import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ErrorCollector;
 
+import java.util.UUID;
+
+import static com.bhegstam.util.Matchers.isPresentAnd;
 import static com.bhegstam.util.Mocks.mockRequest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -18,6 +26,9 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 public class ShoppingListApiControllerTest {
+
+    @Rule
+    public ErrorCollector errorCollector = new ErrorCollector();
 
     private ShoppingListApiController controller;
     private ShoppingListRepository shoppingListRepository;
@@ -67,6 +78,42 @@ public class ShoppingListApiControllerTest {
         // then
         CreateShoppingListResponse response = (CreateShoppingListResponse) result.getResponsePayload();
         assertThat(response.getId(), notNullValue());
+    }
+
+    @Test
+    public void getShoppingList() {
+        // given
+        ItemType itemType = itemTypeRepository.createItemType("itemType");
+
+        ShoppingList shoppingList = shoppingListRepository.createShoppingList("Foo");
+        ShoppingListItem item = shoppingList.add(itemType);
+
+        shoppingListRepository.update(shoppingList);
+
+        Request request = mockRequest();
+        when(request.queryParams("shoppingListId")).thenReturn(shoppingList.getId().getId().toString());
+
+        // when
+        Result result = controller.getShoppingList(request);
+
+        // then
+        GetShoppingListResponse response = (GetShoppingListResponse) result.getResponsePayload();
+        errorCollector.checkThat(response.getId(), is(shoppingList.getId().getId().toString()));
+        errorCollector.checkThat(response.getName(), is("Foo"));
+        errorCollector.checkThat(response.getItems(), containsInAnyOrder(new ShoppingListItemBean(item)));
+    }
+
+    @Test
+    public void getShoppingList_unknownId() {
+        // given
+        Request request = mockRequest();
+        when(request.queryParams("shoppingListId")).thenReturn(UUID.randomUUID().toString());
+
+        // when
+        Result result = controller.getShoppingList(request);
+
+        // then
+        assertThat(result.getStatusCode(), isPresentAnd(is(HttpStatus.BAD_REQUEST_400)));
     }
 
     // TODO: Test remaining end points, add endpoint to get specific shopping list

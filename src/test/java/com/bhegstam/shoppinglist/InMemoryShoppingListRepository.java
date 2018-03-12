@@ -29,7 +29,11 @@ public class InMemoryShoppingListRepository implements ShoppingListRepository {
 
     @Override
     public ShoppingList get(ShoppingListId id) {
-        return lists.get(id);
+        if (lists.containsKey(id)) {
+            return lists.get(id);
+        }
+
+        throw new IllegalArgumentException();
     }
 
     @Override
