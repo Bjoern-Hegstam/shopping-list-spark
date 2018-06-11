@@ -11,14 +11,14 @@ export default function (state = initialState, action) {
         case types.GET_SHOPPING_LISTS:
             return {
                 ...state,
-                fetching: true,
+                fetchingLists: true,
                 error: null
             };
         case types.GET_SHOPPING_LISTS_SUCCESS:
             const {shoppingLists} = action.payload.data;
             const newState = {
                 ...state,
-                fetching: false
+                fetchingLists: false
             };
 
             shoppingLists.forEach(list => {
@@ -37,7 +37,7 @@ export default function (state = initialState, action) {
         case types.GET_SHOPPING_LISTS_FAIL:
             return {
                 ...state,
-                fetching: false,
+                fetchingLists: false,
                 error: action.error
             };
         case types.GET_SHOPPING_LIST:
