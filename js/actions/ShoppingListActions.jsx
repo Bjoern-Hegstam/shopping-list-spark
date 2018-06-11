@@ -11,3 +11,15 @@ export function getShoppingLists() {
         }
     };
 }
+
+export function getShoppingList(id) {
+    return {
+        type: types.GET_SHOPPING_LIST,
+        payload: {
+            request: {
+                method: 'get',
+                url: `shopping-list/${id}`
+            }
+        }
+    }
+}

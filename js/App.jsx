@@ -4,8 +4,8 @@ import {Redirect, Route, Switch, withRouter} from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import RegistrationPage from './components/RegistrationPage';
 import PageNotFound from './components/PageNotFound';
-import ShoppingListsView from './components/ShoppingListsView';
-import ShoppingListView from './components/ShoppingListView';
+import ShoppingListsPage from './components/ShoppingListsPage';
+import ShoppingListPage from './components/ShoppingListPage';
 import AdminArea from './components/AdminArea';
 import {UserType} from "./propTypes";
 
@@ -25,8 +25,8 @@ class App extends React.Component {
                     <Redirect exact path='/' to='/lists'/>
                     <Redirect exact path='/login' to='/lists'/>
 
-                    <Route exact path='/lists' component={ShoppingListsView}/>
-                    <Route path='/lists/:listId' component={ShoppingListView}/>
+                    <Route exact path='/lists' component={ShoppingListsPage}/>
+                    <Route path='/lists/:listId' component={ShoppingListPage}/>
                     ( this.props.user.roles.contains('admin') &&
                     <Route path='/admin' component={AdminArea}/>
                     )

@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import AppLayout from "./AppLayout";
 import {connect} from "react-redux";
 import {getShoppingLists} from "../actions/ShoppingListActions";
+import {ShoppingListType} from "../util/proptypes";
 
-export class ShoppingListsView extends React.Component {
+export class ShoppingListsPage extends React.Component {
     static propTypes = {
         getShoppingLists: PropTypes.func.isRequired,
-        shoppingLists: PropTypes.object,
+        shoppingLists: PropTypes.objectOf(ShoppingListType).isRequired,
         fetching: PropTypes.bool,
-        error: PropTypes.string
+        error: PropTypes.object
     };
 
     static defaultProps = {
@@ -29,6 +30,7 @@ export class ShoppingListsView extends React.Component {
     };
 
     render() {
+        // TODO: Finish rendering and add css
         return (
             <AppLayout>
                 <div>{this.renderLists()}</div>
@@ -44,4 +46,4 @@ export default connect(
     dispatch => ({
         getShoppingLists: () => dispatch(getShoppingLists())
     })
-)(ShoppingListsView);
+)(ShoppingListsPage);

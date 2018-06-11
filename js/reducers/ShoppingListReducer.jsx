@@ -2,7 +2,7 @@ import * as types from "../actions/types";
 
 const initialState = {
     shoppingLists: {},
-    fetching: false,
+    fetchingLists: false,
     error: null,
 };
 
@@ -27,7 +27,9 @@ export default function (state = initialState, action) {
                 } else {
                     newState.shoppingLists[list.id] = {
                         ...list,
-                        items: []
+                        items: [],
+                        fetching: false,
+                        error: null
                     };
                 }
             });
@@ -38,6 +40,9 @@ export default function (state = initialState, action) {
                 fetching: false,
                 error: action.error
             };
+        case types.GET_SHOPPING_LIST:
+            const listId = action;
+            // TODO: Get list id from action and mark as fetching in store
         default:
             return state;
     }
