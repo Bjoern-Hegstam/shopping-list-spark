@@ -27,7 +27,7 @@ public class ApplicationConfigurationTest {
                 "\n" +
                 "database:\n" +
                 "  url: TEST_URL\n" +
-                "  user: TEST_USER\n" +
+                "  username: TEST_USER\n" +
                 "  password: TEST_PASSWORD\n";
 
         // when
@@ -52,7 +52,7 @@ public class ApplicationConfigurationTest {
         try {
             return mapper.readValue(conf, ApplicationConfiguration.class);
         } catch (IOException e) {
-            fail();
+            fail(e.getMessage());
         }
         return null;
     }
