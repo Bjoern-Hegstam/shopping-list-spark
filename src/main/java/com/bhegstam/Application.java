@@ -4,6 +4,8 @@ import com.bhegstam.shoppinglist.application.ItemTypeApplication;
 import com.bhegstam.shoppinglist.application.ShoppingListApplication;
 import com.bhegstam.shoppinglist.application.UserApplication;
 import com.bhegstam.shoppinglist.configuration.ApplicationConfiguration;
+import com.bhegstam.shoppinglist.configuration.property.Database;
+import com.bhegstam.shoppinglist.configuration.property.Server;
 import com.bhegstam.shoppinglist.persistence.DatabaseMigrator;
 import com.bhegstam.shoppinglist.persistence.JdbiItemTypeRepository;
 import com.bhegstam.shoppinglist.persistence.JdbiShoppingListRepository;
@@ -14,14 +16,25 @@ import spark.Service;
 
 import java.util.List;
 
+import static com.bhegstam.shoppinglist.configuration.EnvironmentVariable.*;
 import static java.util.Arrays.asList;
 
 public class Application extends ApplicationBase {
+    private static final int DEFAULT_PORT = 4567;
 
     private final ApplicationConfiguration conf;
 
     public static void main(String[] args) {
-        new Application(new ApplicationConfiguration()).init();
+        ApplicationConfiguration conf = new ApplicationConfiguration(
+                new Server(System.getenv().containsKey(PORT) ? Integer.parseInt(System.getenv(PORT)) : DEFAULT_PORT),
+                new Database(
+                        System.getenv(JDBC_DATABASE_URL),
+                        System.getenv(JDBC_DATABASE_USERNAME),
+                        System.getenv(JDBC_DATABASE_PASSWORD)
+                )
+        );
+
+        new Application(conf).init();
     }
 
     public Application(ApplicationConfiguration conf) {

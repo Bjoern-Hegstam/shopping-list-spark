@@ -1,16 +1,12 @@
 package com.bhegstam.shoppinglist.configuration.property;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import static com.bhegstam.shoppinglist.configuration.EnvironmentVariable.PORT;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Server {
-    public static final int DEFAULT_PORT = 4567;
-
     private int port;
-
-    public Server() {
-        this.port = System.getenv().containsKey(PORT) ? Integer.parseInt(System.getenv(PORT)) : DEFAULT_PORT;
-    }
 }

@@ -10,8 +10,7 @@ addons:
 
 env:
   global:
-    - JDBC_DATABASE_URL=jdbc:postgresql://localhost/travis_ci_test
-    - JDBC_DATABASE_USERNAME=postgres
+    - CONF_FILENAME: travis-config.yml
 
 before_install:
  - psql -c 'create database travis_ci_test;' -U postgres

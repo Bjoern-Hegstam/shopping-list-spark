@@ -1,16 +1,21 @@
 package com.bhegstam.util;
 
-import com.bhegstam.shoppinglist.configuration.property.Database;
+import com.bhegstam.shoppinglist.configuration.ApplicationConfiguration;
+import com.bhegstam.shoppinglist.configuration.EnvironmentVariable;
 import com.bhegstam.shoppinglist.persistence.DatabaseMigrator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+import java.io.IOException;
+import java.util.Optional;
+
 public class TestDatabaseSetup implements TestRule {
 
-    private Jdbi jdbi;
+    private ApplicationConfiguration conf;
 
     @Override
     public Statement apply(Statement base, Description description) {
@@ -28,23 +33,33 @@ public class TestDatabaseSetup implements TestRule {
     }
 
     private void before() {
-        Database database = new Database(
-                "jdbc:h2:mem:testing;DB_CLOSE_DELAY=-1",
-                null,
-                null
-        );
-
-        jdbi = Jdbi.create(database.getUrl());
-        jdbi.installPlugin(new SqlObjectPlugin());
-
-        new DatabaseMigrator(database).migrateDatabase();
+        if (conf == null) {
+            conf = loadConfiguration();
+            new DatabaseMigrator(conf.getDatabase()).migrateDatabase();
+        }
     }
 
     private void after() {
-        jdbi.useHandle(handle -> handle.createUpdate("delete from application_user").execute());
+        conf.getJdbi().useHandle(handle -> handle.createUpdate("delete from application_user").execute());
     }
 
     public Jdbi getJdbi() {
-        return jdbi;
+        return conf.getJdbi();
+    }
+
+    private ApplicationConfiguration loadConfiguration() {
+        String filename = Optional
+                .ofNullable(System.getenv(EnvironmentVariable.CONF_FILENAME))
+                .orElse(EnvironmentVariable.DEFAULT_CONF_FILENAME);
+
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        try {
+            return mapper.readValue(
+                    this.getClass().getClassLoader().getResource(filename),
+                    ApplicationConfiguration.class
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
