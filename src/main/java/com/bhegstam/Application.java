@@ -1,14 +1,11 @@
 package com.bhegstam;
 
-import com.bhegstam.configuration.ApplicationConfiguration;
-import com.bhegstam.configuration.ConfigurationModule;
-import com.bhegstam.itemtype.ItemTypeModule;
-import com.bhegstam.itemtype.controller.ItemTypeApiController;
-import com.bhegstam.login.LoginController;
-import com.bhegstam.shoppinglist.ShoppingListModule;
-import com.bhegstam.shoppinglist.controller.ShoppingListApiController;
-import com.bhegstam.user.UserModule;
-import com.bhegstam.user.controller.UserApiController;
+import com.bhegstam.shoppinglist.configuration.ApplicationConfiguration;
+import com.bhegstam.shoppinglist.configuration.ConfigurationModule;
+import com.bhegstam.shoppinglist.persistence.ItemTypeModule;
+import com.bhegstam.shoppinglist.persistence.ShoppingListModule;
+import com.bhegstam.shoppinglist.persistence.UserModule;
+import com.bhegstam.shoppinglist.port.rest.*;
 import com.bhegstam.webutil.webapp.ApplicationBase;
 import com.google.inject.Guice;
 import com.google.inject.Inject;

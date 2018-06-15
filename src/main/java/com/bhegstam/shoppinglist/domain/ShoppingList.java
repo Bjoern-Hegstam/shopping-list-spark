@@ -1,8 +1,5 @@
 package com.bhegstam.shoppinglist.domain;
 
-import com.bhegstam.itemtype.domain.ItemType;
-import com.bhegstam.itemtype.domain.ItemTypeId;
-
 import java.util.*;
 
 import static com.bhegstam.webutil.CustomCollectors.onlyElement;

@@ -1,7 +1,6 @@
 package com.bhegstam.shoppinglist.domain;
 
-import com.bhegstam.itemtype.domain.ItemType;
-import com.bhegstam.util.db.PersistenceStatus;
+import com.bhegstam.shoppinglist.persistence.PersistenceStatus;
 
 public class ShoppingListItem {
     private final ShoppingListItemId id;

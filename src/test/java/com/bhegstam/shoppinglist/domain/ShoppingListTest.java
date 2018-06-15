@@ -1,8 +1,7 @@
 package com.bhegstam.shoppinglist.domain;
 
-import com.bhegstam.itemtype.InMemoryItemTypeRepository;
-import com.bhegstam.itemtype.domain.ItemType;
-import com.bhegstam.shoppinglist.InMemoryShoppingListRepository;
+import com.bhegstam.shoppinglist.persistence.InMemoryItemTypeRepository;
+import com.bhegstam.shoppinglist.persistence.InMemoryShoppingListRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

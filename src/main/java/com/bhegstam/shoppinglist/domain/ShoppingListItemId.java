@@ -1,7 +1,5 @@
 package com.bhegstam.shoppinglist.domain;
 
-import com.bhegstam.util.domain.Identifier;
-
 import java.util.UUID;
 
 public class ShoppingListItemId extends Identifier {
