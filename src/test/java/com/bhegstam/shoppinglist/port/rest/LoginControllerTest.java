@@ -1,5 +1,6 @@
 package com.bhegstam.shoppinglist.port.rest;
 
+import com.bhegstam.shoppinglist.application.UserApplication;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserId;
 import com.bhegstam.shoppinglist.persistence.InMemoryUserRepository;
@@ -30,7 +31,7 @@ public class LoginControllerTest {
     @Before
     public void setUp() {
         userRepository = new InMemoryUserRepository();
-        loginController = new LoginController(userRepository);
+        loginController = new LoginController(new UserApplication(userRepository));
     }
 
     @Test

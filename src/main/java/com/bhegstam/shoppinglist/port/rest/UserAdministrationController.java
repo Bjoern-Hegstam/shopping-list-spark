@@ -3,7 +3,6 @@ package com.bhegstam.shoppinglist.port.rest;
 import com.bhegstam.shoppinglist.domain.UserRepository;
 import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Result;
-import com.google.inject.Inject;
 import spark.Service;
 
 import java.util.HashMap;
@@ -17,7 +16,6 @@ import static java.util.stream.Collectors.toList;
 public class UserAdministrationController implements Controller {
     private final UserRepository userRepository;
 
-    @Inject
     public UserAdministrationController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

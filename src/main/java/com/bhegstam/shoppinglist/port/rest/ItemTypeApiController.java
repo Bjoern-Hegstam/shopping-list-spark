@@ -1,13 +1,12 @@
 package com.bhegstam.shoppinglist.port.rest;
 
+import com.bhegstam.shoppinglist.application.ItemTypeApplication;
 import com.bhegstam.shoppinglist.domain.ItemType;
 import com.bhegstam.shoppinglist.domain.ItemTypeId;
-import com.bhegstam.shoppinglist.domain.ItemTypeRepository;
 import com.bhegstam.webutil.JsonResponseTransformer;
 import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
-import com.google.inject.Inject;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.Service;
 
@@ -19,11 +18,10 @@ import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
 import static java.util.stream.Collectors.toList;
 
 public class ItemTypeApiController implements Controller {
-    private final ItemTypeRepository itemTypeRepository;
+    private final ItemTypeApplication itemTypeApplication;
 
-    @Inject
-    public ItemTypeApiController(ItemTypeRepository itemTypeRepository) {
-        this.itemTypeRepository = itemTypeRepository;
+    public ItemTypeApiController(ItemTypeApplication itemTypeApplication) {
+        this.itemTypeApplication = itemTypeApplication;
     }
 
     @Override
@@ -50,7 +48,7 @@ public class ItemTypeApiController implements Controller {
     private Result postItemType(Request request) {
         ItemTypeBean itemTypeBean = ItemTypeBean.fromJson(request.body());
 
-        ItemType itemType = itemTypeRepository.createItemType(itemTypeBean.getName());
+        ItemType itemType = itemTypeApplication.createItemType(itemTypeBean.getName());
         return result()
                 .statusCode(HttpStatus.CREATED_201)
                 .type(APPLICATION_JSON)
@@ -61,7 +59,7 @@ public class ItemTypeApiController implements Controller {
         String nameStart = request.queryParams("name");
         int limit = Integer.parseInt(request.queryParams("limit"));
 
-        List<ItemTypeBean> itemTypeBeans = itemTypeRepository
+        List<ItemTypeBean> itemTypeBeans = itemTypeApplication
                 .findItemTypes(nameStart, limit).stream()
                 .map(ItemTypeBean::fromItemType)
                 .collect(toList());
@@ -73,7 +71,7 @@ public class ItemTypeApiController implements Controller {
 
     private Result deleteItemType(Request request) {
         ItemTypeId itemTypeId = ItemTypeId.fromString(request.params("itemTypeId"));
-        itemTypeRepository.deleteItemType(itemTypeId);
+        itemTypeApplication.deleteItemType(itemTypeId);
         return result()
                 .statusCode(HttpStatus.NO_CONTENT_204)
                 .returnPayload(new Object());

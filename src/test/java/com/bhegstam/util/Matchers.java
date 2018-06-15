@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public class Matchers {
     public static <T> Matcher<Optional<T>> isPresentAnd(Matcher<T> matcher) {
-        return new TypeSafeMatcher<Optional<T>>() {
+        return new TypeSafeMatcher<>() {
             @Override
             public void describeTo(Description description) {
                 description.appendText("is present and ");
@@ -18,6 +18,20 @@ public class Matchers {
             @Override
             protected boolean matchesSafely(Optional<T> item) {
                 return item.map(matcher::matches).orElse(false);
+            }
+        };
+    }
+
+    public static <T> Matcher<Optional<T>> isPresent() {
+        return new TypeSafeMatcher<>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("is present");
+            }
+
+            @Override
+            protected boolean matchesSafely(Optional<T> item) {
+                return item.isPresent();
             }
         };
     }

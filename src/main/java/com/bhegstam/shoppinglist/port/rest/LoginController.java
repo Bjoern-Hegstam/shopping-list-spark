@@ -1,13 +1,12 @@
 package com.bhegstam.shoppinglist.port.rest;
 
+import com.bhegstam.shoppinglist.application.UserApplication;
 import com.bhegstam.shoppinglist.domain.User;
-import com.bhegstam.shoppinglist.domain.UserRepository;
 import com.bhegstam.webutil.JsonResponseTransformer;
 import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.http.HttpStatus;
@@ -25,11 +24,10 @@ public class LoginController implements Controller {
     private static final Logger LOGGER = LogManager.getLogger(LoginController.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private final UserRepository userRepository;
+    private final UserApplication userApplication;
 
-    @Inject
-    public LoginController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public LoginController(UserApplication userApplication) {
+        this.userApplication = userApplication;
     }
 
     @Override
@@ -54,7 +52,7 @@ public class LoginController implements Controller {
         String username = loginDto.getUsername();
         String password = loginDto.getPassword();
 
-        Optional<User> user = userRepository
+        Optional<User> user = userApplication
                 .findByUsername(username)
                 .filter(u -> u.hasPassword(password));
 

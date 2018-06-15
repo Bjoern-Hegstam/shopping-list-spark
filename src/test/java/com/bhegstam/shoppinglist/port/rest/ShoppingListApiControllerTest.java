@@ -1,5 +1,6 @@
 package com.bhegstam.shoppinglist.port.rest;
 
+import com.bhegstam.shoppinglist.application.ShoppingListApplication;
 import com.bhegstam.shoppinglist.domain.*;
 import com.bhegstam.shoppinglist.persistence.InMemoryItemTypeRepository;
 import com.bhegstam.shoppinglist.persistence.InMemoryShoppingListRepository;
@@ -34,7 +35,7 @@ public class ShoppingListApiControllerTest {
     public void setUp() {
         shoppingListRepository = new InMemoryShoppingListRepository();
         itemTypeRepository = new InMemoryItemTypeRepository();
-        controller = new ShoppingListApiController(shoppingListRepository, itemTypeRepository);
+        controller = new ShoppingListApiController(new ShoppingListApplication(shoppingListRepository, itemTypeRepository));
     }
 
     @Test

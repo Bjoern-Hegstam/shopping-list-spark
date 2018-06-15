@@ -5,7 +5,6 @@ import com.bhegstam.shoppinglist.domain.UserRegistration;
 import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
-import com.google.inject.Inject;
 import spark.Service;
 
 import static com.bhegstam.webutil.webapp.ResultBuilder.result;
@@ -14,7 +13,6 @@ import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
 public class UserRegistrationController implements Controller {
     private final UserRegistration userRegistration;
 
-    @Inject
     public UserRegistrationController(UserRegistration userRegistration) {
         this.userRegistration = userRegistration;
     }

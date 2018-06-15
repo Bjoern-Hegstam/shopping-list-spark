@@ -1,15 +1,15 @@
 package com.bhegstam;
 
+import com.bhegstam.shoppinglist.application.ItemTypeApplication;
+import com.bhegstam.shoppinglist.application.ShoppingListApplication;
+import com.bhegstam.shoppinglist.application.UserApplication;
 import com.bhegstam.shoppinglist.configuration.ApplicationConfiguration;
-import com.bhegstam.shoppinglist.configuration.ConfigurationModule;
-import com.bhegstam.shoppinglist.persistence.ItemTypeModule;
-import com.bhegstam.shoppinglist.persistence.ShoppingListModule;
-import com.bhegstam.shoppinglist.persistence.UserModule;
+import com.bhegstam.shoppinglist.persistence.DatabaseMigrator;
+import com.bhegstam.shoppinglist.persistence.JdbiItemTypeRepository;
+import com.bhegstam.shoppinglist.persistence.JdbiShoppingListRepository;
+import com.bhegstam.shoppinglist.persistence.JdbiUserRepository;
 import com.bhegstam.shoppinglist.port.rest.*;
 import com.bhegstam.webutil.webapp.ApplicationBase;
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 import spark.Service;
 
 import java.util.List;
@@ -18,56 +18,49 @@ import static java.util.Arrays.asList;
 
 public class Application extends ApplicationBase {
 
-    private final ApplicationConfiguration configuration;
+    private final ApplicationConfiguration conf;
 
     public static void main(String[] args) {
-        Injector injector = Guice.createInjector(
-                new ConfigurationModule(),
-                new ItemTypeModule(),
-                new ShoppingListModule(),
-                new UserModule()
-        );
-
-        injector
-             .getInstance(Application.class)
-             .init();
+        new Application(new ApplicationConfiguration()).init();
     }
 
-    @Inject
-    public Application(
-            ApplicationConfiguration configuration,
-            IndexController indexController,
-            LoginController loginController,
-            ItemTypeApiController itemTypeApiController,
-            ShoppingListApiController shoppingListApiController,
-            UserApiController userApiController
-    ) {
+    public Application(ApplicationConfiguration conf) {
         super(
                 List.of(
-                        indexController,
-                        loginController
+                        new IndexController(),
+                        new LoginController(
+                                new UserApplication(conf.getJdbi().onDemand(JdbiUserRepository.class))
+                        )
                 ),
                 asList(
-                        itemTypeApiController,
-                        shoppingListApiController,
-                        userApiController
+                        new ItemTypeApiController(
+                                new ItemTypeApplication(conf.getJdbi().onDemand(JdbiItemTypeRepository.class))
+                        ),
+                        new ShoppingListApiController(
+                                new ShoppingListApplication(
+                                        conf.getJdbi().onDemand(JdbiShoppingListRepository.class),
+                                        conf.getJdbi().onDemand(JdbiItemTypeRepository.class)
+                                )
+                        ),
+                        new UserApiController(new UserApplication(conf.getJdbi().onDemand(JdbiUserRepository.class)))
                 ),
                 true,
                 true
         );
 
-        this.configuration = configuration;
+        this.conf = conf;
+
+        new DatabaseMigrator(conf.getDatabase()).migrateDatabase();
     }
+
 
     @Override
     protected void configureServer(Service http) {
-        http.port(configuration.getServer().getPort());
+        http.port(conf.getServer().getPort());
 
         http.staticFiles.location("/public");
         http.staticFiles.expireTime(600);
 
-        http.after((request, response) -> {
-            response.header("Content-Encoding", "gzip");
-        });
+        http.after((request, response) -> response.header("Content-Encoding", "gzip"));
     }
 }

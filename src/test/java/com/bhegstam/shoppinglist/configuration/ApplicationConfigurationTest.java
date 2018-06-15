@@ -43,7 +43,7 @@ public class ApplicationConfigurationTest {
         Database database = value.getDatabase();
         assertNotNull(database);
         errorCollector.checkThat(database.getUrl(), is("TEST_URL"));
-        errorCollector.checkThat(database.getUser(), is("TEST_USER"));
+        errorCollector.checkThat(database.getUsername(), is("TEST_USER"));
         errorCollector.checkThat(database.getPassword(), is("TEST_PASSWORD"));
     }
 

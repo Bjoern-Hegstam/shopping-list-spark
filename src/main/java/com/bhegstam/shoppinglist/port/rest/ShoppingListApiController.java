@@ -1,18 +1,17 @@
 package com.bhegstam.shoppinglist.port.rest;
 
+import com.bhegstam.shoppinglist.application.ShoppingListApplication;
 import com.bhegstam.shoppinglist.domain.*;
 import com.bhegstam.webutil.JsonResponseTransformer;
 import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
-import com.google.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.bhegstam.shoppinglist.port.rest.ContentType.APPLICATION_JSON;
 import static com.bhegstam.webutil.webapp.ResultBuilder.result;
@@ -24,16 +23,10 @@ public class ShoppingListApiController implements Controller {
     private static final String SHOPPING_LIST_ID = "shoppingListId";
     private static final String SHOPPING_LIST_ITEM_ID = "shoppingListItemId";
 
-    private final ShoppingListRepository shoppingListRepository;
-    private final ItemTypeRepository itemTypeRepository;
+    private final ShoppingListApplication shoppingListApplication;
 
-    @Inject
-    public ShoppingListApiController(
-            ShoppingListRepository shoppingListRepository,
-            ItemTypeRepository itemTypeRepository
-    ) {
-        this.shoppingListRepository = shoppingListRepository;
-        this.itemTypeRepository = itemTypeRepository;
+    public ShoppingListApiController(ShoppingListApplication shoppingListApplication) {
+        this.shoppingListApplication = shoppingListApplication;
     }
 
     @Override
@@ -84,7 +77,7 @@ public class ShoppingListApiController implements Controller {
     }
 
     Result getShoppingLists(Request request) {
-        List<ShoppingList> shoppingLists = shoppingListRepository.getShoppingLists();
+        List<ShoppingList> shoppingLists = shoppingListApplication.getShoppingLists();
 
         return result()
                 .statusCode(HttpStatus.OK_200)
@@ -96,7 +89,7 @@ public class ShoppingListApiController implements Controller {
         String id = request.queryParams(SHOPPING_LIST_ID);
         ShoppingList shoppingList;
         try {
-            shoppingList = shoppingListRepository.get(ShoppingListId.fromString(id));
+            shoppingList = shoppingListApplication.get(ShoppingListId.fromString(id));
         } catch (IllegalArgumentException e) {
             LOGGER.error("Could not find shopping list with id [{}]", id);
             return result()
@@ -114,7 +107,7 @@ public class ShoppingListApiController implements Controller {
     Result postShoppingList(Request request) {
         CreateShoppingListRequest shoppingListRequest = CreateShoppingListRequest.fromJson(request.body());
 
-        ShoppingList shoppingList = shoppingListRepository.createShoppingList(shoppingListRequest.getName());
+        ShoppingList shoppingList = shoppingListApplication.createShoppingList(shoppingListRequest.getName());
 
         return result()
                 .statusCode(HttpStatus.CREATED_201)
@@ -122,18 +115,12 @@ public class ShoppingListApiController implements Controller {
                 .returnPayload(new CreateShoppingListResponse(shoppingList.getId()));
     }
 
-    Result postShoppingListItem(Request request) {
+    private Result postShoppingListItem(Request request) {
         ShoppingListId listId = ShoppingListId.fromString(request.params(SHOPPING_LIST_ID));
         ShoppingListItemBean itemBean = ShoppingListItemBean.fromJson(request.body());
         ItemTypeId itemTypeId = new ItemTypeId(itemBean.getItemType().getId());
 
-        ItemType itemType = itemTypeRepository.get(itemTypeId);
-
-        ShoppingList shoppingList = shoppingListRepository.get(listId);
-        ShoppingListItem listItem = shoppingList.add(itemType);
-        listItem.setQuantity(itemBean.getQuantity());
-
-        shoppingListRepository.update(shoppingList);
+        ShoppingListItem listItem = shoppingListApplication.addItem(listId, itemBean, itemTypeId);
 
         return result()
                 .statusCode(HttpStatus.CREATED_201)
@@ -141,48 +128,33 @@ public class ShoppingListApiController implements Controller {
                 .returnPayload(new ShoppingListItemBean(listItem));
     }
 
-    Result patchShoppingListItem(Request request) {
+    private Result patchShoppingListItem(Request request) {
         ShoppingListId listId = ShoppingListId.fromString(request.params(SHOPPING_LIST_ID));
         ShoppingListItemId listItemId = ShoppingListItemId.fromString(request.params(SHOPPING_LIST_ITEM_ID));
         ShoppingListItemBean itemBean = ShoppingListItemBean.fromJson(request.body());
 
-        ShoppingList shoppingList = shoppingListRepository.get(listId);
-
-        ShoppingListItem listItem = shoppingList.get(listItemId);
-
-        Optional.ofNullable(itemBean.getQuantity()).ifPresent(listItem::setQuantity);
-        Optional.ofNullable(itemBean.getInCart()).ifPresent(listItem::setInCart);
-
-        shoppingListRepository.update(shoppingList);
+        shoppingListApplication.updateItem(listId, listItemId, itemBean);
 
         return result()
                 .statusCode(HttpStatus.NO_CONTENT_204)
                 .returnPayload(new Object());
     }
 
-    Result deleteShoppingListItem(Request request) {
+    private Result deleteShoppingListItem(Request request) {
         ShoppingListId listId = ShoppingListId.fromString(request.params(SHOPPING_LIST_ID));
         ShoppingListItemId listItemId = ShoppingListItemId.fromString(request.params(SHOPPING_LIST_ITEM_ID));
 
-        ShoppingList shoppingList = shoppingListRepository.get(listId);
-
-        shoppingList.remove(listItemId);
-
-        shoppingListRepository.update(shoppingList);
+        shoppingListApplication.deleteItem(listId, listItemId);
 
         return result()
                 .statusCode(HttpStatus.NO_CONTENT_204)
                 .returnPayload(new Object());
     }
 
-    Result emptyCart(Request request) {
+    private Result emptyCart(Request request) {
         ShoppingListId listId = ShoppingListId.fromString(request.params(SHOPPING_LIST_ID));
 
-        ShoppingList shoppingList = shoppingListRepository.get(listId);
-
-        shoppingList.removeItemsInCart();
-
-        shoppingListRepository.update(shoppingList);
+        shoppingListApplication.emptyCart(listId);
 
         return result()
                 .statusCode(HttpStatus.NO_CONTENT_204)

@@ -24,6 +24,6 @@ public class Path {
     public static class Api {
         public static final String ITEM_TYPE = "/item-type";
         public static final String SHOPPING_LIST = "/shopping-list";
-        public static final String USER = "/user";
+        public static final String USER = "/username";
     }
 }

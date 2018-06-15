@@ -8,10 +8,13 @@ services:
 addons:
   postgresql: "9.6"
 
+env:
+  - JDBC_DATABASE_URL=jdbc:postgresql://localhost/travis_ci_test
+  - JDBC_DATABASE_USERNAME=postgres
+
 before_install:
  - psql -c 'create database travis_ci_test;' -U postgres
- - mvn flyway:migrate -Ddb.url=jdbc:postgresql://localhost/travis_ci_test -Ddb.user=postgres -Ddb.password=''
 
 install: true # Disable default install step. Maven runs install as part of the test life cycle anyway.
 
-script: mvn test -B -Ddb.url=jdbc:postgresql://localhost/travis_ci_test -Ddb.user=postgres -Ddb.password=''
+script: mvn test -B

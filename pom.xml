@@ -13,14 +13,9 @@
         <java.version>1.9</java.version>
 
         <less.version>1.2.1</less.version>
-        <jooq.version>3.10.4</jooq.version>
         <postgresql.version>42.2.1</postgresql.version>
         <flyway.version>5.0.1</flyway.version>
         <log4j.version>2.10.0</log4j.version>
-
-        <db.url>${env.JDBC_DATABASE_URL}</db.url>
-        <db.user>${env.JDBC_DATABASE_USERNAME}</db.user>
-        <db.password>${env.JDBC_DATABASE_PASSWORD}</db.password>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -34,6 +29,18 @@
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jdbi</groupId>
+                <artifactId>jdbi3-bom</artifactId>
+                <type>pom</type>
+                <version>3.3.0</version>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <pluginManagement>
@@ -154,49 +161,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Generate code from database. Used for persistence layer -->
-            <plugin>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen-maven</artifactId>
-                <version>${jooq.version}</version>
-                <executions>
-                    <execution>
-                        <id>generate-source-from-db</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.postgresql</groupId>
-                        <artifactId>postgresql</artifactId>
-                        <version>${postgresql.version}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <jdbc>
-                        <driver>org.postgresql.Driver</driver>
-                        <url>${db.url}</url>
-                        <user>${db.user}</user>
-                        <password>${db.password}</password>
-                    </jdbc>
-                    <generator>
-                        <database>
-                            <name>org.jooq.util.postgres.PostgresDatabase</name>
-                            <includes>.*</includes>
-                            <excludes/>
-                            <inputSchema>public</inputSchema>
-                        </database>
-                        <target>
-                            <packageName>com.bhe.jooq</packageName>
-                            <directory>target/generated-sources/jooq</directory>
-                        </target>
-                    </generator>
-                </configuration>
-            </plugin>
-
             <!-- Copy frontend dist to target -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -294,13 +258,6 @@
             <version>1.6</version>
         </dependency>
 
-        <!-- Dependency injection framework -->
-        <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <version>4.1.0</version>
-        </dependency>
-
         <!-- Used to serialize/deserialize java objects to/from yaml/json -->
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -328,7 +285,6 @@
             <version>${flyway.version}</version>
         </dependency>
 
-
         <!-- Database driver -->
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -338,19 +294,12 @@
 
         <!-- ORM -->
         <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq</artifactId>
-            <version>${jooq.version}</version>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-meta</artifactId>
-            <version>${jooq.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-codegen</artifactId>
-            <version>${jooq.version}</version>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-sqlobject</artifactId>
         </dependency>
 
         <!-- Logging -->
@@ -363,13 +312,6 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
-        </dependency>
-
-        <!-- Required by jooq -->
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <version>1.3.1</version>
         </dependency>
 
         <!-- Unit testing -->
@@ -392,6 +334,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Test database -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.197</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <reporting>
