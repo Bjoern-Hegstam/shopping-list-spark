@@ -9,8 +9,9 @@ addons:
   postgresql: "9.6"
 
 env:
-  - JDBC_DATABASE_URL=jdbc:postgresql://localhost/travis_ci_test
-  - JDBC_DATABASE_USERNAME=postgres
+  global:
+    - JDBC_DATABASE_URL=jdbc:postgresql://localhost/travis_ci_test
+    - JDBC_DATABASE_USERNAME=postgres
 
 before_install:
  - psql -c 'create database travis_ci_test;' -U postgres
