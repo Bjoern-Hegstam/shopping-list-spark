@@ -4,4 +4,4 @@ server:
 database:
   url: jdbc:h2:mem:testing;DB_CLOSE_DELAY=-1
   username: username
-  password: password
+  password: ''

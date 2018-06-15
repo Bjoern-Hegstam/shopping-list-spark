@@ -4,4 +4,4 @@ server:
 database:
   url: jdbc:postgresql://localhost/travis_ci_test
   username: postgres
-  password:
+  password: ''
