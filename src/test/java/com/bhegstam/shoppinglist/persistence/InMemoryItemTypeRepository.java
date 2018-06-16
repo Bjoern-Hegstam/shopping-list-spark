@@ -17,13 +17,8 @@ public class InMemoryItemTypeRepository implements ItemTypeRepository {
     }
 
     @Override
-    public ItemType createItemType(String name) {
-        ItemType itemType = new ItemType(
-                new ItemTypeId(),
-                name
-        );
+    public void createItemType(ItemType itemType) {
         itemTypes.put(itemType.getId(), itemType);
-        return itemType;
     }
 
     @Override

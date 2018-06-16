@@ -80,7 +80,8 @@ public class ShoppingListApiControllerTest {
     @Test
     public void getShoppingList() {
         // given
-        ItemType itemType = itemTypeRepository.createItemType("itemType");
+        ItemType itemType = new ItemType("itemType");
+        itemTypeRepository.createItemType(itemType);
 
         ShoppingList shoppingList = shoppingListRepository.createShoppingList("Foo");
         ShoppingListItem item = shoppingList.add(itemType);

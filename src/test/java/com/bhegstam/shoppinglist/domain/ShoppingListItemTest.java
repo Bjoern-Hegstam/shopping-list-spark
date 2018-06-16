@@ -1,6 +1,5 @@
 package com.bhegstam.shoppinglist.domain;
 
-import com.bhegstam.shoppinglist.persistence.InMemoryItemTypeRepository;
 import com.bhegstam.shoppinglist.persistence.PersistenceStatus;
 import org.junit.Before;
 import org.junit.Rule;
@@ -17,7 +16,7 @@ public class ShoppingListItemTest {
 
     @Before
     public void setUp() {
-        itemType = new InMemoryItemTypeRepository().createItemType("TEST_ITEM_TYPE");
+        itemType = new ItemType("TEST_ITEM_TYPE");
     }
 
     @Test

@@ -46,7 +46,8 @@ public class ShoppingListTest {
     public void addAndUpdateItemQuantity() {
         // given
         ShoppingList list = shoppingListRepository.createShoppingList("LIST");
-        ItemType itemType = itemTypeRepository.createItemType("ITEM_TYPE");
+        ItemType itemType = new ItemType("ITEM_TYPE");
+        itemTypeRepository.createItemType(itemType);
 
         // when item added for the first time
         ShoppingListItem listItem = list.add(itemType);
@@ -79,7 +80,8 @@ public class ShoppingListTest {
     public void accessByShoppingListItemId() {
         // given
         ShoppingList list = shoppingListRepository.createShoppingList("LIST");
-        ItemType itemType = itemTypeRepository.createItemType("ITEM_TYPE");
+        ItemType itemType = new ItemType("ITEM_TYPE");
+        itemTypeRepository.createItemType(itemType);
 
 
         // when
@@ -100,8 +102,11 @@ public class ShoppingListTest {
     public void cartManagement() {
         // given
         ShoppingList list = shoppingListRepository.createShoppingList("LIST");
-        ItemType itemTypeA = itemTypeRepository.createItemType("ITEM_TYPE_A");
-        ItemType itemTypeB = itemTypeRepository.createItemType("ITEM_TYPE_B");
+        ItemType itemTypeA = new ItemType("ITEM_TYPE_A");
+        itemTypeRepository.createItemType(itemTypeA);
+
+        ItemType itemTypeB = new ItemType("ITEM_TYPE_B");
+        itemTypeRepository.createItemType(itemTypeB);
 
         ShoppingListItem itemA = list.add(itemTypeA);
         list.add(itemTypeB);

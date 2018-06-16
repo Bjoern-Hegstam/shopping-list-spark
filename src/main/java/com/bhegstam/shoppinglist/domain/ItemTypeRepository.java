@@ -3,7 +3,7 @@ package com.bhegstam.shoppinglist.domain;
 import java.util.List;
 
 public interface ItemTypeRepository {
-    ItemType createItemType(String name);
+    void createItemType(ItemType itemType);
 
     ItemType get(ItemTypeId id);
 

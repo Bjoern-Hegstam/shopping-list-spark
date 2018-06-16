@@ -14,7 +14,9 @@ public class ItemTypeApplication {
     }
 
     public ItemType createItemType(String name) {
-        return itemTypeRepository.createItemType(name);
+        ItemType itemType = new ItemType(name);
+        itemTypeRepository.createItemType(itemType);
+        return itemType;
     }
 
     public List<ItemType> findItemTypes(String nameStart, int limit) {
