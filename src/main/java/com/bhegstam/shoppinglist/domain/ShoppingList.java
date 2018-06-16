@@ -5,14 +5,13 @@ import java.util.*;
 import static com.bhegstam.webutil.CustomCollectors.onlyElement;
 import static java.util.stream.Collectors.toList;
 
-public class ShoppingList {
+public class ShoppingList extends Entity<ShoppingListId> {
     private final String name;
-    private final ShoppingListId id;
     private final Map<ItemTypeId, ShoppingListItem> items;
     private final Set<ShoppingListItemId> removedItems;
 
     public ShoppingList(ShoppingListId id, String name) {
-        this.id = id;
+        super(id);
         this.name = name;
         items = new HashMap<>();
         removedItems = new HashSet<>();
@@ -20,10 +19,6 @@ public class ShoppingList {
 
     public String getName() {
         return name;
-    }
-
-    public ShoppingListId getId() {
-        return id;
     }
 
     public ShoppingListItem add(ItemType itemType) {

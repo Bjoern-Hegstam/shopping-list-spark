@@ -2,8 +2,7 @@ package com.bhegstam.shoppinglist.domain;
 
 import com.bhegstam.shoppinglist.persistence.PersistenceStatus;
 
-public class ShoppingListItem {
-    private final ShoppingListItemId id;
+public class ShoppingListItem extends Entity<ShoppingListItemId> {
     private final ItemType itemType;
     private int quantity;
     private boolean inCart;
@@ -26,15 +25,11 @@ public class ShoppingListItem {
             boolean inCart,
             PersistenceStatus persistenceStatus
     ) {
-        this.id = id;
+        super(id);
         this.itemType = itemType;
         this.quantity = quantity;
         this.inCart = inCart;
         this.persistenceStatus = persistenceStatus;
-    }
-
-    public ShoppingListItemId getId() {
-        return id;
     }
 
     public ItemType getItemType() {
