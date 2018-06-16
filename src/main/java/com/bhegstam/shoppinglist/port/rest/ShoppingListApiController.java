@@ -90,7 +90,7 @@ public class ShoppingListApiController implements Controller {
         ShoppingList shoppingList;
         try {
             shoppingList = shoppingListApplication.get(ShoppingListId.fromString(id));
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NullPointerException e) {
             LOGGER.error("Could not find shopping list with id [{}]", id);
             return result()
                     .statusCode(HttpStatus.BAD_REQUEST_400)

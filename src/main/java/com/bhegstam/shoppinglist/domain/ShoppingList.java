@@ -8,7 +8,7 @@ import static com.bhegstam.webutil.CustomCollectors.onlyElement;
 import static java.util.stream.Collectors.toList;
 
 public class ShoppingList extends Entity<ShoppingListId> {
-    private final String name;
+    private String name;
     private final Map<ItemTypeId, ShoppingListItem> items;
     private final Set<ShoppingListItemId> removedItems;
     private PersistenceStatus persistenceStatus;
@@ -27,6 +27,14 @@ public class ShoppingList extends Entity<ShoppingListId> {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+
+        if (persistenceStatus != PersistenceStatus.INSERT_REQUIRED) {
+            persistenceStatus = PersistenceStatus.UPDATED_REQUIRED;
+        }
     }
 
     public PersistenceStatus getPersistenceStatus() {

@@ -53,6 +53,21 @@ public class JdbiShoppingListRepositoryTest {
     }
 
     @Test
+    public void persist_updateNameOfList() {
+        // given
+        ShoppingList shoppingList = new ShoppingList("Foo");
+        shoppingListRepository.persist(shoppingList);
+
+        // when
+        shoppingList.setName("Bar");
+        shoppingListRepository.persist(shoppingList);
+
+        // then
+        ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
+        assertThat(persistedList.getName(), is("Bar"));
+    }
+
+    @Test
     public void persist_itemsAddedBeforePersist() {
         // create new list with items
         ShoppingList shoppingList = new ShoppingList("Foo");

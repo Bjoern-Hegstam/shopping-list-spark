@@ -3,13 +3,16 @@ package com.bhegstam.shoppinglist.port.rest;
 import com.bhegstam.shoppinglist.application.UserApplication;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserId;
-import com.bhegstam.shoppinglist.persistence.InMemoryUserRepository;
+import com.bhegstam.shoppinglist.domain.UserRepository;
+import com.bhegstam.shoppinglist.persistence.JdbiUserRepository;
 import com.bhegstam.util.Mocks;
+import com.bhegstam.util.TestDatabaseSetup;
 import com.bhegstam.webutil.JsonResponseTransformer;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import static com.bhegstam.util.Matchers.isPresentAnd;
@@ -25,12 +28,15 @@ public class LoginControllerTest {
     private static final String WRONG_USERNAME = "Peter";
     private static final String WRONG_PASSWORD = "abc";
 
-    private InMemoryUserRepository userRepository;
+    @Rule
+    public TestDatabaseSetup testDatabaseSetup = new TestDatabaseSetup();
+
+    private UserRepository userRepository;
     private LoginController loginController;
 
     @Before
     public void setUp() {
-        userRepository = new InMemoryUserRepository();
+        userRepository = testDatabaseSetup.getJdbi().onDemand(JdbiUserRepository.class);
         loginController = new LoginController(new UserApplication(userRepository));
     }
 

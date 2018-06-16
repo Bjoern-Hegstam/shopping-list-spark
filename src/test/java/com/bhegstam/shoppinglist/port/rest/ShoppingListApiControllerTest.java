@@ -2,8 +2,9 @@ package com.bhegstam.shoppinglist.port.rest;
 
 import com.bhegstam.shoppinglist.application.ShoppingListApplication;
 import com.bhegstam.shoppinglist.domain.*;
-import com.bhegstam.shoppinglist.persistence.InMemoryItemTypeRepository;
-import com.bhegstam.shoppinglist.persistence.InMemoryShoppingListRepository;
+import com.bhegstam.shoppinglist.persistence.JdbiItemTypeRepository;
+import com.bhegstam.shoppinglist.persistence.JdbiShoppingListRepository;
+import com.bhegstam.util.TestDatabaseSetup;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
 import org.eclipse.jetty.http.HttpStatus;
@@ -25,6 +26,9 @@ import static org.mockito.Mockito.when;
 public class ShoppingListApiControllerTest {
 
     @Rule
+    public TestDatabaseSetup testDatabaseSetup = new TestDatabaseSetup();
+
+    @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
 
     private ShoppingListApiController controller;
@@ -33,8 +37,8 @@ public class ShoppingListApiControllerTest {
 
     @Before
     public void setUp() {
-        shoppingListRepository = new InMemoryShoppingListRepository();
-        itemTypeRepository = new InMemoryItemTypeRepository();
+        shoppingListRepository = testDatabaseSetup.getJdbi().onDemand(JdbiShoppingListRepository.class);
+        itemTypeRepository = testDatabaseSetup.getJdbi().onDemand(JdbiItemTypeRepository.class);
         controller = new ShoppingListApiController(new ShoppingListApplication(shoppingListRepository, itemTypeRepository));
     }
 

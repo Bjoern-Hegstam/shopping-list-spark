@@ -1,7 +1,9 @@
 package com.bhegstam.shoppinglist.domain;
 
-import com.bhegstam.shoppinglist.persistence.InMemoryUserRepository;
+import com.bhegstam.shoppinglist.persistence.JdbiUserRepository;
+import com.bhegstam.util.TestDatabaseSetup;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -16,13 +18,16 @@ public class UserRegistrationTest {
     private static final String INVALID_USERNANE = "";
     private static final String INVALID_EMAIL = "";
 
-    private InMemoryUserRepository userRepository;
+    @Rule
+    public TestDatabaseSetup testDatabaseSetup = new TestDatabaseSetup();
+
+    private UserRepository userRepository;
     private UserRegistration userRegistration;
     private User existingUser;
 
     @Before
-    public void setUp() throws Exception {
-        userRepository = new InMemoryUserRepository();
+    public void setUp() {
+        userRepository = testDatabaseSetup.getJdbi().onDemand(JdbiUserRepository.class);
         userRegistration = new UserRegistration(userRepository);
 
         existingUser = new User(
