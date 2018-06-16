@@ -37,6 +37,11 @@ public class JdbiShoppingListRepositoryTest {
         itemTypeRepository.createItemType(itemType2);
     }
 
+    @Test(expected = ShoppingListNotFoundException.class)
+    public void get_listNotFound() {
+        shoppingListRepository.get(ShoppingListId.fromString("a1f0b13b-41a2-4a47-96d5-10e4c2f7de67"));
+    }
+
     @Test
     public void persist_emptyList() {
         // given

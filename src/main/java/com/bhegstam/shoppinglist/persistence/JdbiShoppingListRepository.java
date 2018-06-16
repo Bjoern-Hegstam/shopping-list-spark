@@ -60,6 +60,10 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
     @Transaction
     default ShoppingList get(ShoppingListId listId) {
         ShoppingList shoppingList = getShoppingList(listId);
+        if (shoppingList == null) {
+            throw new ShoppingListNotFoundException(listId);
+        }
+
         shoppingList.setItems(getItems(listId));
         return shoppingList;
     }
