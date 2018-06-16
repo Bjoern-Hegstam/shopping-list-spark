@@ -3,11 +3,9 @@ package com.bhegstam.shoppinglist.domain;
 import java.util.List;
 
 public interface ShoppingListRepository {
-    ShoppingList createShoppingList(String name);
+    void persist(ShoppingList shoppingList);
 
     ShoppingList get(ShoppingListId id);
 
     List<ShoppingList> getShoppingLists();
-
-    void update(ShoppingList shoppingList);
 }

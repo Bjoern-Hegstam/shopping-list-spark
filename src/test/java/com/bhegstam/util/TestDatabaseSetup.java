@@ -42,6 +42,8 @@ public class TestDatabaseSetup implements TestRule {
     private void after() {
         conf.getJdbi().useHandle(handle -> {
             handle.createUpdate("delete from application_user").execute();
+            handle.createUpdate("delete from shopping_list_item").execute();
+            handle.createUpdate("delete from shopping_list").execute();
             handle.createUpdate("delete from item_type").execute();
         });
     }

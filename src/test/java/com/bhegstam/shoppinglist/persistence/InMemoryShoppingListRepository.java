@@ -17,14 +17,8 @@ public class InMemoryShoppingListRepository implements ShoppingListRepository {
     }
 
     @Override
-    public ShoppingList createShoppingList(String name) {
-        ShoppingList shoppingList = new ShoppingList(
-                new ShoppingListId(),
-                name
-        );
+    public void persist(ShoppingList shoppingList) {
         lists.put(shoppingList.getId(), shoppingList);
-
-        return shoppingList;
     }
 
     @Override
@@ -39,10 +33,5 @@ public class InMemoryShoppingListRepository implements ShoppingListRepository {
     @Override
     public List<ShoppingList> getShoppingLists() {
         return new ArrayList<>(lists.values());
-    }
-
-    @Override
-    public void update(ShoppingList shoppingList) {
-        lists.put(shoppingList.getId(), shoppingList);
     }
 }

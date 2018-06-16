@@ -24,7 +24,9 @@ public class ShoppingListApplication {
     }
 
     public ShoppingList createShoppingList(String name) {
-        return shoppingListRepository.createShoppingList(name);
+        ShoppingList shoppingList = new ShoppingList(name);
+        shoppingListRepository.persist(shoppingList);
+        return shoppingList;
     }
 
     public ShoppingListItem addItem(ShoppingListId listId, ShoppingListItemBean itemBean, ItemTypeId itemTypeId) {
@@ -34,7 +36,7 @@ public class ShoppingListApplication {
         ShoppingListItem listItem = shoppingList.add(itemType);
         listItem.setQuantity(itemBean.getQuantity());
 
-        shoppingListRepository.update(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         return listItem;
     }
@@ -47,18 +49,18 @@ public class ShoppingListApplication {
         Optional.ofNullable(itemBean.getQuantity()).ifPresent(listItem::setQuantity);
         Optional.ofNullable(itemBean.getInCart()).ifPresent(listItem::setInCart);
 
-        shoppingListRepository.update(shoppingList);
+        shoppingListRepository.persist(shoppingList);
     }
 
     public void deleteItem(ShoppingListId listId, ShoppingListItemId listItemId) {
         ShoppingList shoppingList = shoppingListRepository.get(listId);
         shoppingList.remove(listItemId);
-        shoppingListRepository.update(shoppingList);
+        shoppingListRepository.persist(shoppingList);
     }
 
     public void emptyCart(ShoppingListId listId) {
         ShoppingList shoppingList = shoppingListRepository.get(listId);
         shoppingList.removeItemsInCart();
-        shoppingListRepository.update(shoppingList);
+        shoppingListRepository.persist(shoppingList);
     }
 }

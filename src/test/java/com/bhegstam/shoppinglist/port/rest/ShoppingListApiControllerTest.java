@@ -53,7 +53,9 @@ public class ShoppingListApiControllerTest {
     @Test
     public void getShoppingLists_existsLists() {
         // given
-        ShoppingList shoppingList = shoppingListRepository.createShoppingList("Test list");
+        ShoppingList shoppingList = new ShoppingList("Test list");
+
+        shoppingListRepository.persist(shoppingList);
 
         // when
         Result result = controller.getShoppingLists(mockRequest());
@@ -83,10 +85,11 @@ public class ShoppingListApiControllerTest {
         ItemType itemType = new ItemType("itemType");
         itemTypeRepository.createItemType(itemType);
 
-        ShoppingList shoppingList = shoppingListRepository.createShoppingList("Foo");
+        ShoppingList shoppingList = new ShoppingList("Foo");
+        shoppingListRepository.persist(shoppingList);
         ShoppingListItem item = shoppingList.add(itemType);
 
-        shoppingListRepository.update(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         Request request = mockRequest();
         when(request.queryParams("shoppingListId")).thenReturn(shoppingList.getId().getId().toString());

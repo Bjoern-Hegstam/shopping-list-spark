@@ -1,5 +1,7 @@
 package com.bhegstam.shoppinglist.domain;
 
+import com.bhegstam.shoppinglist.persistence.PersistenceStatus;
+
 import java.util.*;
 
 import static com.bhegstam.webutil.CustomCollectors.onlyElement;
@@ -9,16 +11,26 @@ public class ShoppingList extends Entity<ShoppingListId> {
     private final String name;
     private final Map<ItemTypeId, ShoppingListItem> items;
     private final Set<ShoppingListItemId> removedItems;
+    private PersistenceStatus persistenceStatus;
 
-    public ShoppingList(ShoppingListId id, String name) {
+    public ShoppingList(String name) {
+        this(new ShoppingListId(), name, PersistenceStatus.INSERT_REQUIRED);
+    }
+
+    public ShoppingList(ShoppingListId id, String name, PersistenceStatus persistenceStatus) {
         super(id);
         this.name = name;
         items = new HashMap<>();
         removedItems = new HashSet<>();
+        this.persistenceStatus = persistenceStatus;
     }
 
     public String getName() {
         return name;
+    }
+
+    public PersistenceStatus getPersistenceStatus() {
+        return persistenceStatus;
     }
 
     public ShoppingListItem add(ItemType itemType) {
@@ -80,5 +92,9 @@ public class ShoppingList extends Entity<ShoppingListId> {
         this.items.clear();
         this.removedItems.clear();
         items.forEach(item -> this.items.put(item.getItemType().getId(), item));
+    }
+
+    public void setPersistenceStatus(PersistenceStatus persistenceStatus) {
+        this.persistenceStatus = persistenceStatus;
     }
 }

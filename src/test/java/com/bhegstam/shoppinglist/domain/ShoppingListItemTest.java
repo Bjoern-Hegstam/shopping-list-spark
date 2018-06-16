@@ -38,7 +38,7 @@ public class ShoppingListItemTest {
     public void setQuantity_shouldMarkItemAsUpdated() {
         // given
         ShoppingListItem item = new ShoppingListItem(itemType);
-        item.setPersistenceStatus(PersistenceStatus.NOT_CHANGED);
+        item.setPersistenceStatus(PersistenceStatus.PERSISTED);
 
         // when
         item.setQuantity(item.getQuantity() + 1);
@@ -51,7 +51,7 @@ public class ShoppingListItemTest {
     public void setInCart_shouldMarkItemAsUpdated() {
         // given
         ShoppingListItem item = new ShoppingListItem(itemType);
-        item.setPersistenceStatus(PersistenceStatus.NOT_CHANGED);
+        item.setPersistenceStatus(PersistenceStatus.PERSISTED);
 
         // when
         item.setInCart(!item.isInCart());

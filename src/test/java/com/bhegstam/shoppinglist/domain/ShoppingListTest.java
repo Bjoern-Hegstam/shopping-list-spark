@@ -27,9 +27,10 @@ public class ShoppingListTest {
     public void createNewShoppingList() {
         // given
         String listName = "TEST_LIST";
+        ShoppingList shoppingList = new ShoppingList(listName);
 
         // when created
-        ShoppingList shoppingList = shoppingListRepository.createShoppingList(listName);
+        shoppingListRepository.persist(shoppingList);
 
         // then
         errorCollector.checkThat(shoppingList.getName(), is(listName));
@@ -45,7 +46,9 @@ public class ShoppingListTest {
     @Test
     public void addAndUpdateItemQuantity() {
         // given
-        ShoppingList list = shoppingListRepository.createShoppingList("LIST");
+        ShoppingList list = new ShoppingList("LIST");
+
+        shoppingListRepository.persist(list);
         ItemType itemType = new ItemType("ITEM_TYPE");
         itemTypeRepository.createItemType(itemType);
 
@@ -79,7 +82,9 @@ public class ShoppingListTest {
     @Test
     public void accessByShoppingListItemId() {
         // given
-        ShoppingList list = shoppingListRepository.createShoppingList("LIST");
+        ShoppingList list = new ShoppingList("LIST");
+        shoppingListRepository.persist(list);
+
         ItemType itemType = new ItemType("ITEM_TYPE");
         itemTypeRepository.createItemType(itemType);
 
@@ -101,7 +106,9 @@ public class ShoppingListTest {
     @Test
     public void cartManagement() {
         // given
-        ShoppingList list = shoppingListRepository.createShoppingList("LIST");
+        ShoppingList list = new ShoppingList("LIST");
+        shoppingListRepository.persist(list);
+
         ItemType itemTypeA = new ItemType("ITEM_TYPE_A");
         itemTypeRepository.createItemType(itemTypeA);
 
