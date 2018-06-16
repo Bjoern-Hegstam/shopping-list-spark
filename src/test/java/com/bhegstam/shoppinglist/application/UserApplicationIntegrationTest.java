@@ -1,21 +1,22 @@
 package com.bhegstam.shoppinglist.application;
 
+import com.bhegstam.shoppinglist.domain.Role;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserId;
 import com.bhegstam.shoppinglist.persistence.JdbiUserRepository;
+import com.bhegstam.shoppinglist.port.rest.UserBean;
 import com.bhegstam.util.TestDatabaseSetup;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ErrorCollector;
 
-import java.util.Optional;
-
-import static com.bhegstam.util.Matchers.isPresent;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
 
 public class UserApplicationIntegrationTest {
+    @Rule
+    public ErrorCollector errorCollector = new ErrorCollector();
+
     private UserApplication userApplication;
     private UserId userId;
 
@@ -29,30 +30,49 @@ public class UserApplicationIntegrationTest {
     }
 
     @Test
-    public void getById() {
+    public void updateUser_emptyBean() {
+        // given
+        UserBean userBean = new UserBean();
+
         // when
+        userApplication.updateUser(userId, userBean);
+
+        // then
         User user = userApplication.getUser(userId);
 
-        // then
-        assertThat(user.getId(), is(userId));
-        assertThat(user.getUsername(), is("Foo"));
+        errorCollector.checkThat(user.getRole(), is(Role.USER));
+        errorCollector.checkThat(user.isVerified(), is(false));
     }
 
     @Test
-    public void findByUsername_unknownUser() {
+    public void updateUser_setVerified() {
+        // given
+        UserBean userBean = new UserBean();
+        userBean.setVerified(true);
+
         // when
-        Optional<User> user = userApplication.findByUsername("unknown");
+        userApplication.updateUser(userId, userBean);
 
         // then
-        assertThat(user, not(isPresent()));
+        User user = userApplication.getUser(userId);
+
+        errorCollector.checkThat(user.getRole(), is(Role.USER));
+        errorCollector.checkThat(user.isVerified(), is(true));
     }
 
     @Test
-    public void findByUsername() {
+    public void updateUser_makeAdmin() {
+        // given
+        UserBean userBean = new UserBean();
+        userBean.setRole(Role.ADMIN);
+
         // when
-        User user = userApplication.findByUsername("Foo").get();
+        userApplication.updateUser(userId, userBean);
 
         // then
-        assertThat(user.getId(), is(userId));
+        User user = userApplication.getUser(userId);
+
+        errorCollector.checkThat(user.getRole(), is(Role.ADMIN));
+        errorCollector.checkThat(user.isVerified(), is(false));
     }
 }

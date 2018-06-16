@@ -62,7 +62,7 @@ public interface JdbiUserRepository extends UserRepository {
 
     @Override
     @SqlQuery("select * from application_user where email = :email")
-    Optional<User> findByEmail(String email);
+    Optional<User> findByEmail(@Bind("email") String email);
 
     @Override
     @SqlQuery("select * from application_user")
@@ -79,6 +79,12 @@ public interface JdbiUserRepository extends UserRepository {
         );
     }
 
-    @SqlUpdate("update application_user set username = :username, email = :email, verified = :verified, role = :role) where id = :id")
-    void updateUser(int id, String username, String email, boolean verified, String role);
+    @SqlUpdate("update application_user set username = :username, email = :email, verified = :verified, role = :role where id = :id")
+    void updateUser(
+            @Bind("id") int id,
+            @Bind("username") String username,
+            @Bind("email") String email,
+            @Bind("verified") boolean verified,
+            @Bind("role") String role
+    );
 }
