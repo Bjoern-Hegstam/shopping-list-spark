@@ -96,7 +96,7 @@ public class ShoppingListApiControllerTest {
         shoppingListRepository.persist(shoppingList);
 
         Request request = mockRequest();
-        when(request.queryParams("shoppingListId")).thenReturn(shoppingList.getId().getId().toString());
+        when(request.params("shoppingListId")).thenReturn(shoppingList.getId().getId().toString());
 
         // when
         Result result = controller.getShoppingList(request);
@@ -112,7 +112,7 @@ public class ShoppingListApiControllerTest {
     public void getShoppingList_unknownId() {
         // given
         Request request = mockRequest();
-        when(request.queryParams("shoppingListId")).thenReturn(UUID.randomUUID().toString());
+        when(request.params("shoppingListId")).thenReturn(UUID.randomUUID().toString());
 
         // when
         Result result = controller.getShoppingList(request);
