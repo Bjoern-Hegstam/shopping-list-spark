@@ -86,7 +86,7 @@ public class ShoppingListApiController implements Controller {
     }
 
     Result getShoppingList(Request request) {
-        String id = request.queryParams(SHOPPING_LIST_ID);
+        String id = request.params(SHOPPING_LIST_ID);
         ShoppingList shoppingList;
         try {
             shoppingList = shoppingListApplication.get(ShoppingListId.fromString(id));

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AppLayout from "./AppLayout";
 import {connect} from "react-redux";
-import {ShoppingListType} from "../util/proptypes";
+import {ShoppingListType} from "../propTypes";
 import {getShoppingList} from "../actions/ShoppingListActions";
 
 export class ShoppingListPage extends React.Component {
@@ -14,19 +14,12 @@ export class ShoppingListPage extends React.Component {
         match: PropTypes.object.isRequired
     };
 
-    defaultProps = {
+    static defaultProps = {
         shoppingList: undefined
     };
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            listId: match.params.listId
-        }
-    }
-
     componentDidMount() {
-        this.props.getShoppingList(this.state.listId);
+        this.props.getShoppingList(this.props.match.params.listId);
     }
 
     render() {
@@ -40,20 +33,24 @@ export class ShoppingListPage extends React.Component {
 
         return (
             <AppLayout>
-                <div>{shoppingList}</div>
+                <div>{shoppingList.name}</div>
             </AppLayout>
         );
     }
 }
 
 export default connect(
-    store => {
-        const {listId} = this.state;
+    (store, ownProps) => {
+        if (!ownProps.match) {
+            return {};
+        }
+
+        const {listId} = ownProps.match.params;
         const {shoppingLists} = store.shoppingList;
 
-        return ({
+        return {
             shoppingList: listId ? shoppingLists[listId] : undefined
-        });
+        };
     },
     dispatch => ({
         getShoppingList: id => dispatch(getShoppingList(id))

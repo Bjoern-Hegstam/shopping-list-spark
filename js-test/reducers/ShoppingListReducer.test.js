@@ -97,7 +97,7 @@ describe('ShoppingListReducer', () => {
                 17: {
                     id: 17,
                     name: 'Foo',
-                    item: [
+                    items: [
                         'item'
                     ]
                 }
@@ -127,9 +127,9 @@ describe('ShoppingListReducer', () => {
                 17: {
                     id: 17,
                     name: 'Bar',
-                    item: [
-                        'item'
-                    ]
+                    items: [],
+                    fetching: false,
+                    error: null
                 }
             }
         })
@@ -154,6 +154,205 @@ describe('ShoppingListReducer', () => {
             ...initialState,
             fetchingLists: false,
             error: 'Error while fetching'
+        })
+    });
+
+    it('should create new list when GET_SHOPPING_LIST received and list not fetched before', () => {
+        const listId = "90a7dcb5-4777-4ba2-95ce-b5694b3e9314";
+
+        const state = {
+            ...initialState
+        };
+        const action = {
+            type: types.GET_SHOPPING_LIST,
+            queryInfo: {
+                listId
+            }
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            shoppingLists: {
+                [listId]: {
+                    id: listId,
+                    name: '',
+                    items: [],
+                    fetching: true,
+                    error: null
+                }
+            }
+        })
+    });
+
+    it('should set fetching flag and reset error on GET_SHOPPING_LIST', () => {
+        const listId = "90a7dcb5-4777-4ba2-95ce-b5694b3e9314";
+
+        const state = {
+            ...initialState,
+            shoppingLists: {
+                [listId]: {
+                    id: listId,
+                    name: 'Foo',
+                    items: [{
+                        id: '2045b9a4-46b1-49a5-af68-2a6544490416',
+                        itemType: {
+                            id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
+                            name: 'Apples'
+                        },
+                        quantity: 5,
+                        inCart: false
+                    }],
+                    fetching: false,
+                    error: "Error"
+                }
+            }
+        };
+        const action = {
+            type: types.GET_SHOPPING_LIST,
+            queryInfo: {
+                listId
+            }
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            shoppingLists: {
+                [listId]: {
+                    id: listId,
+                    name: 'Foo',
+                    items: [{
+                        id: '2045b9a4-46b1-49a5-af68-2a6544490416',
+                        itemType: {
+                            id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
+                            name: 'Apples'
+                        },
+                        quantity: 5,
+                        inCart: false
+                    }],
+                    fetching: true,
+                    error: null
+                }
+            }
+        })
+    });
+
+    it('should handle GET_SHOPPING_LIST_SUCCESS', () => {
+        const listId = "90a7dcb5-4777-4ba2-95ce-b5694b3e9314";
+
+        const state = {
+            ...initialState
+        };
+        const action = {
+            type: types.GET_SHOPPING_LIST_SUCCESS,
+            payload: {
+                data: {
+                    id: listId,
+                    name: 'Foo',
+                    items: [{
+                        id: '2045b9a4-46b1-49a5-af68-2a6544490416',
+                        itemType: {
+                            id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
+                            name: 'Apples'
+                        },
+                        quantity: 5,
+                        inCart: false
+                    }]
+                }
+            }
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            shoppingLists: {
+                [listId]: {
+                    id: listId,
+                    name: 'Foo',
+                    items: [{
+                        id: '2045b9a4-46b1-49a5-af68-2a6544490416',
+                        itemType: {
+                            id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
+                            name: 'Apples'
+                        },
+                        quantity: 5,
+                        inCart: false
+                    }],
+                    fetching: false,
+                    error: null
+                }
+            }
+        })
+    });
+
+    it('should handle GET_SHOPPING_LIST_FAIL', () => {
+        const listId = "90a7dcb5-4777-4ba2-95ce-b5694b3e9314";
+
+        const state = {
+            ...initialState,
+            shoppingLists: {
+                [listId]: {
+                    id: listId,
+                    name: 'Foo',
+                    items: [{
+                        id: '2045b9a4-46b1-49a5-af68-2a6544490416',
+                        itemType: {
+                            id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
+                            name: 'Apples'
+                        },
+                        quantity: 5,
+                        inCart: false
+                    }],
+                    fetching: true,
+                    error: null
+                }
+            }
+        };
+        const action = {
+            type: types.GET_SHOPPING_LIST_FAIL,
+            error: "Error",
+            meta: {
+                previousAction: {
+                    queryInfo: {
+                        listId
+                    }
+                }
+            }
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            shoppingLists: {
+                [listId]: {
+                    id: listId,
+                    name: 'Foo',
+                    items: [{
+                        id: '2045b9a4-46b1-49a5-af68-2a6544490416',
+                        itemType: {
+                            id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
+                            name: 'Apples'
+                        },
+                        quantity: 5,
+                        inCart: false
+                    }],
+                    fetching: false,
+                    error: "Error"
+                }
+            }
         })
     });
 });

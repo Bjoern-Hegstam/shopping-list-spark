@@ -7,6 +7,8 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
+    let newState, listId;
+
     switch (action.type) {
         case types.GET_SHOPPING_LISTS:
             return {
@@ -16,22 +18,19 @@ export default function (state = initialState, action) {
             };
         case types.GET_SHOPPING_LISTS_SUCCESS:
             const {shoppingLists} = action.payload.data;
-            const newState = {
-                ...state,
-                fetchingLists: false
+            newState = {
+                shoppingLists: {},
+                fetchingLists: false,
+                error: null
             };
 
             shoppingLists.forEach(list => {
-                if (list.id in newState.shoppingLists) {
-                    newState.shoppingLists[list.id].name = list.name;
-                } else {
-                    newState.shoppingLists[list.id] = {
-                        ...list,
-                        items: [],
-                        fetching: false,
-                        error: null
-                    };
-                }
+                newState.shoppingLists[list.id] = {
+                    ...list,
+                    items: [],
+                    fetching: false,
+                    error: null
+                };
             });
             return newState;
         case types.GET_SHOPPING_LISTS_FAIL:
@@ -41,8 +40,56 @@ export default function (state = initialState, action) {
                 error: action.error
             };
         case types.GET_SHOPPING_LIST:
-            const listId = action;
-            // TODO: Get list id from action and mark as fetching in store
+            listId = action.queryInfo.listId;
+
+            newState = {
+                ...state,
+                fetchingLists: false,
+                error: null
+            };
+
+            newState.shoppingLists[listId] = {
+                id: listId,
+                name: '',
+                items: [],
+                ...state.shoppingLists[listId],
+                fetching: true,
+                error: null
+            };
+            return newState;
+        case types.GET_SHOPPING_LIST_SUCCESS:
+            listId = action.payload.data.id;
+            const {name, items} = action.payload.data;
+
+            newState = {
+                ...state,
+                fetchingLists: false,
+                error: null
+            };
+
+            newState.shoppingLists[listId] = {
+                id: listId,
+                name,
+                items,
+                fetching: false,
+                error: null
+            };
+            return newState;
+        case types.GET_SHOPPING_LIST_FAIL:
+            listId = action.meta.previousAction.queryInfo.listId;
+
+            newState = {
+                ...state,
+                fetchingLists: false,
+                error: null
+            };
+
+            newState.shoppingLists[listId] = {
+                ...state.shoppingLists[listId],
+                fetching: false,
+                error: action.error
+            };
+            return newState;
         default:
             return state;
     }

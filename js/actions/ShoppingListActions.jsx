@@ -15,6 +15,9 @@ export function getShoppingLists() {
 export function getShoppingList(id) {
     return {
         type: types.GET_SHOPPING_LIST,
+        queryInfo: {
+            listId: id
+        },
         payload: {
             request: {
                 method: 'get',

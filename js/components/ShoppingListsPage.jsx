@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import AppLayout from "./AppLayout";
 import {connect} from "react-redux";
 import {getShoppingLists} from "../actions/ShoppingListActions";
-import {ShoppingListType} from "../util/proptypes";
+import {ShoppingListType} from "../propTypes";
+import {Link} from "react-router-dom";
 
 export class ShoppingListsPage extends React.Component {
     static propTypes = {
@@ -26,14 +27,20 @@ export class ShoppingListsPage extends React.Component {
     renderLists = () => {
         return Object
             .values(this.props.shoppingLists)
-            .map(shoppingList => (<div key={shoppingList.id}>{shoppingList.name}</div>));
+            .map(shoppingList => (
+                    <div className="col-sm-4" key={shoppingList.id}>
+                        <Link className="btn btn-link btn-block" to={`/lists/${shoppingList.id}/`}>
+                            <h2>{shoppingList.name}</h2>
+                        </Link>
+                    </div>
+                )
+            );
     };
 
     render() {
-        // TODO: Finish rendering and add css
         return (
             <AppLayout>
-                <div>{this.renderLists()}</div>
+                <div className="container">{this.renderLists()}</div>
             </AppLayout>
         )
     }
