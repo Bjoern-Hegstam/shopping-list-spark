@@ -28,10 +28,8 @@ export class ShoppingListsPage extends React.Component {
         return Object
             .values(this.props.shoppingLists)
             .map(shoppingList => (
-                    <div className="col-sm-4" key={shoppingList.id}>
-                        <Link className="btn btn-link btn-block" to={`/lists/${shoppingList.id}/`}>
-                            <h2>{shoppingList.name}</h2>
-                        </Link>
+                    <div className="shopping-lists--shopping-list" key={shoppingList.id}>
+                        <Link to={`/lists/${shoppingList.id}/`}>{shoppingList.name}</Link>
                     </div>
                 )
             );
@@ -40,7 +38,7 @@ export class ShoppingListsPage extends React.Component {
     render() {
         return (
             <AppLayout>
-                <div className="container">{this.renderLists()}</div>
+                <div className="shopping-lists">{this.renderLists()}</div>
             </AppLayout>
         )
     }
