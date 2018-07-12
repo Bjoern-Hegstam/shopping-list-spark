@@ -1,0 +1,18 @@
+database:
+  url: ${JDBC_DATABASE_URL}
+  user: ${JDBC_DATABASE_USERNAME}
+  password: ${JDBC_DATABASE_PASSWORD}
+
+server:
+  type: simple
+  applicationContextPath: /api/*
+  connector: http
+  port: 4567
+
+logging:
+  level: INFO
+  loggers:
+    com.bhegstam.shoppinglist.port.rest.login.LoginResource: DEBUG
+  appenders:
+    - type: console
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"

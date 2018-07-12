@@ -14,7 +14,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-public class ApplicationConfigurationTest {
+public class ShoppingListShoppingListApplicationConfigurationTest {
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
 
@@ -31,7 +31,7 @@ public class ApplicationConfigurationTest {
                 "  password: TEST_PASSWORD\n";
 
         // when
-        ApplicationConfiguration value = load(conf);
+        ShoppingListApplicationConfiguration value = load(conf);
 
         // then
         assertNotNull(value);
@@ -40,17 +40,17 @@ public class ApplicationConfigurationTest {
         assertNotNull(server);
         errorCollector.checkThat(server.getPort(), is(4567));
 
-        Database database = value.getDatabase();
+        Database database = value.getDataSourceFactory();
         assertNotNull(database);
         errorCollector.checkThat(database.getUrl(), is("TEST_URL"));
         errorCollector.checkThat(database.getUsername(), is("TEST_USER"));
         errorCollector.checkThat(database.getPassword(), is("TEST_PASSWORD"));
     }
 
-    private ApplicationConfiguration load(String conf) {
+    private ShoppingListApplicationConfiguration load(String conf) {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         try {
-            return mapper.readValue(conf, ApplicationConfiguration.class);
+            return mapper.readValue(conf, ShoppingListApplicationConfiguration.class);
         } catch (IOException e) {
             fail(e.getMessage());
         }

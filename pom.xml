@@ -12,6 +12,7 @@
     <properties>
         <java.version>1.9</java.version>
 
+        <dropwizard.version>1.3.5</dropwizard.version>
         <less.version>1.2.1</less.version>
         <postgresql.version>42.2.1</postgresql.version>
         <flyway.version>5.0.1</flyway.version>
@@ -33,16 +34,42 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.jdbi</groupId>
-                <artifactId>jdbi3-bom</artifactId>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-bom</artifactId>
+                <version>${dropwizard.version}</version>
                 <type>pom</type>
-                <version>3.3.0</version>
                 <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-assets</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-auth</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-jdbi</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.dropwizard.modules</groupId>
+            <artifactId>dropwizard-flyway</artifactId>
+            <version>1.3.0-4</version>
+        </dependency>
+
         <dependency>
             <groupId>com.github.Bjoern-Hegstam</groupId>
             <artifactId>web-util</artifactId>

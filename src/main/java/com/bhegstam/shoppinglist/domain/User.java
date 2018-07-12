@@ -3,9 +3,10 @@ package com.bhegstam.shoppinglist.domain;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.security.Principal;
 import java.util.Objects;
 
-public class User implements com.bhegstam.webutil.webapp.User {
+public class User implements Principal {
     private final UserId id;
     private final String username;
     private final String email;
@@ -113,5 +114,10 @@ public class User implements com.bhegstam.webutil.webapp.User {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    @Override
+    public String getName() {
+        return username;
     }
 }

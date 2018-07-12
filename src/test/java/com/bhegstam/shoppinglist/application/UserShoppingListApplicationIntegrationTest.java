@@ -13,7 +13,7 @@ import org.junit.rules.ErrorCollector;
 
 import static org.hamcrest.Matchers.is;
 
-public class UserApplicationIntegrationTest {
+public class UserShoppingListApplicationIntegrationTest {
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
 
