@@ -16,7 +16,6 @@ import java.util.Optional;
 
 @RegisterRowMapper(UserMapper.class)
 public interface JdbiUserRepository extends UserRepository {
-    @Override
     default UserId create(User user) {
         int id = createUser(
                 user.getUsername(),
@@ -52,23 +51,18 @@ public interface JdbiUserRepository extends UserRepository {
     );
 
 
-    @Override
     @SqlQuery("select * from application_user where id = :userId.id")
     User get(@BindBean("userId") UserId userId);
 
-    @Override
     @SqlQuery("select * from application_user where username = :username")
     Optional<User> findByUsername(@Bind("username") String username);
 
-    @Override
     @SqlQuery("select * from application_user where email = :email")
     Optional<User> findByEmail(@Bind("email") String email);
 
-    @Override
     @SqlQuery("select * from application_user")
     List<User> getUsers();
 
-    @Override
     default void update(User user) {
         updateUser(
                 user.getId().getId(),

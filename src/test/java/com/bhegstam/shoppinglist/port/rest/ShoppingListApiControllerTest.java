@@ -2,8 +2,6 @@ package com.bhegstam.shoppinglist.port.rest;
 
 import com.bhegstam.shoppinglist.application.ShoppingListApplication;
 import com.bhegstam.shoppinglist.domain.*;
-import com.bhegstam.shoppinglist.persistence.JdbiItemTypeRepository;
-import com.bhegstam.shoppinglist.persistence.JdbiShoppingListRepository;
 import com.bhegstam.util.TestDatabaseSetup;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
@@ -37,8 +35,8 @@ public class ShoppingListApiControllerTest {
 
     @Before
     public void setUp() {
-        shoppingListRepository = testDatabaseSetup.getJdbi().onDemand(JdbiShoppingListRepository.class);
-        itemTypeRepository = testDatabaseSetup.getJdbi().onDemand(JdbiItemTypeRepository.class);
+        shoppingListRepository = testDatabaseSetup.getRepositoryFactory().createShoppingListRepository();
+        itemTypeRepository = testDatabaseSetup.getRepositoryFactory().createItemTypeRepository();
         controller = new ShoppingListApiController(new ShoppingListApplication(shoppingListRepository, itemTypeRepository));
     }
 

@@ -26,9 +26,9 @@ public class JdbiShoppingListRepositoryTest {
 
     @Before
     public void setUp() {
-        shoppingListRepository = testDatabaseSetup.getJdbi().onDemand(JdbiShoppingListRepository.class);
+        shoppingListRepository = testDatabaseSetup.getRepositoryFactory().createShoppingListRepository();
 
-        ItemTypeRepository itemTypeRepository = testDatabaseSetup.getJdbi().onDemand(JdbiItemTypeRepository.class);
+        ItemTypeRepository itemTypeRepository = testDatabaseSetup.getRepositoryFactory().createItemTypeRepository();
 
         itemType1 = new ItemType("itemType1");
         itemTypeRepository.createItemType(itemType1);

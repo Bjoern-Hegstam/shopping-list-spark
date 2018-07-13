@@ -1,31 +1,35 @@
 package com.bhegstam;
 
 import com.bhegstam.shoppinglist.application.UserApplication;
+import com.bhegstam.shoppinglist.configuration.DbMigrationBundle;
 import com.bhegstam.shoppinglist.configuration.ShoppingListApplicationConfiguration;
 import com.bhegstam.shoppinglist.configuration.auth.BasicAuthenticator;
-import com.bhegstam.shoppinglist.configuration.auth.RoleAuthorizer;
+import com.bhegstam.shoppinglist.configuration.auth.JwtTokenAuthenticator;
+import com.bhegstam.shoppinglist.configuration.auth.UserRoleAuthorizer;
 import com.bhegstam.shoppinglist.domain.ItemTypeRepository;
 import com.bhegstam.shoppinglist.domain.ShoppingListRepository;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserRepository;
-import com.bhegstam.shoppinglist.persistence.JdbiItemTypeRepository;
-import com.bhegstam.shoppinglist.persistence.JdbiShoppingListRepository;
-import com.bhegstam.shoppinglist.persistence.JdbiUserRepository;
+import com.bhegstam.shoppinglist.persistence.RepositoryFactory;
 import com.bhegstam.shoppinglist.port.rest.login.LoginResource;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.AuthFilter;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
+import io.dropwizard.auth.chained.ChainedAuthFilter;
+import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
-import io.dropwizard.db.PooledDataSourceFactory;
-import io.dropwizard.flyway.FlywayBundle;
-import io.dropwizard.jdbi.DBIFactory;
+import io.dropwizard.jackson.Jackson;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
-import org.skife.jdbi.v2.DBI;
+
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public class ShoppingListApplication extends Application<ShoppingListApplicationConfiguration> {
     public static void main(String[] args) throws Exception {
@@ -39,38 +43,41 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
 
     @Override
     public void initialize(Bootstrap<ShoppingListApplicationConfiguration> bootstrap) {
+        bootstrap.setObjectMapper(Jackson.newObjectMapper());
         bootstrap.setConfigurationSourceProvider(
                 new SubstitutingSourceProvider(
                         bootstrap.getConfigurationSourceProvider(),
                         new EnvironmentVariableSubstitutor(false)
                 )
         );
-
-        bootstrap.addBundle(new FlywayBundle<ShoppingListApplicationConfiguration>() {
-            @Override
-            public PooledDataSourceFactory getDataSourceFactory(ShoppingListApplicationConfiguration config) {
-                return config.getDataSourceFactory();
-            }
-        });
+        bootstrap.addBundle(new DbMigrationBundle());
         bootstrap.addBundle(new AssetsBundle("/public")); // TODO: Ensure gzipped
     }
 
     @Override
     public void run(ShoppingListApplicationConfiguration config, Environment environment) {
-        DBIFactory factory = new DBIFactory();
-        DBI jdbi = factory.build(environment, config.getDataSourceFactory(), "postgresql");
+        RepositoryFactory repositoryFactory = new RepositoryFactory(environment, config.getDataSourceFactory());
 
-        UserRepository userRepository = jdbi.onDemand(JdbiUserRepository.class);
-        ItemTypeRepository itemTypeRepository = jdbi.onDemand(JdbiItemTypeRepository.class);
-        ShoppingListRepository shoppingListRepository = jdbi.onDemand(JdbiShoppingListRepository.class);
+        UserRepository userRepository = repositoryFactory.createUserRepository();
+        ItemTypeRepository itemTypeRepository = repositoryFactory.createItemTypeRepository();
+        ShoppingListRepository shoppingListRepository = repositoryFactory.createShoppingListRepository();
 
-        environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
+        UserRoleAuthorizer userRoleAuthorizer = new UserRoleAuthorizer();
+
+        BasicCredentialAuthFilter<User> basicAuthFilter = new BasicCredentialAuthFilter.Builder<User>()
                 .setAuthenticator(new BasicAuthenticator(new UserApplication(userRepository)))
-                .setAuthorizer(new RoleAuthorizer())
+                .setAuthorizer(userRoleAuthorizer)
                 .setPrefix("Basic")
-                .setRealm("SUPER SECRET STUFF") // TODO: Change
-                .buildAuthFilter()));
-        // TODO: Add JwtTokenAuthenticator for prefix Bearer
+                .buildAuthFilter();
+
+        OAuthCredentialAuthFilter<User> tokenAuthFilter = new OAuthCredentialAuthFilter.Builder<User>()
+                .setAuthenticator(new JwtTokenAuthenticator())
+                .setAuthorizer(userRoleAuthorizer)
+                .setPrefix("Bearer")
+                .buildAuthFilter();
+
+        List<AuthFilter> authFilters = asList(tokenAuthFilter, basicAuthFilter);
+        environment.jersey().register(new AuthDynamicFeature(new ChainedAuthFilter(authFilters)));
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
         environment.jersey().register(RolesAllowedDynamicFeature.class);
         // TODO: Link to example https://github.com/dropwizard/dropwizard/blob/master/dropwizard-example/src/main/java/com/example/helloworld/HelloWorldApplication.java
@@ -78,7 +85,7 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
         environment.jersey().register(new LoginResource());
     }
 
-//    public ShoppingListApplication(ShoppingListApplicationConfiguration conf) {
+    //    public ShoppingListApplication(ShoppingListApplicationConfiguration conf) {
 //        super(
 //                List.of(
 //                        new IndexController(),

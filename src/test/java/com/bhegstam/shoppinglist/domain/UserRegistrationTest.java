@@ -1,6 +1,5 @@
 package com.bhegstam.shoppinglist.domain;
 
-import com.bhegstam.shoppinglist.persistence.JdbiUserRepository;
 import com.bhegstam.util.TestDatabaseSetup;
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,7 +26,7 @@ public class UserRegistrationTest {
 
     @Before
     public void setUp() {
-        userRepository = testDatabaseSetup.getJdbi().onDemand(JdbiUserRepository.class);
+        userRepository = testDatabaseSetup.getRepositoryFactory().createUserRepository();
         userRegistration = new UserRegistration(userRepository);
 
         existingUser = new User(

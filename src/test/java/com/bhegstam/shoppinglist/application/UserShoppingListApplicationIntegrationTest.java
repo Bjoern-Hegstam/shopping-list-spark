@@ -3,7 +3,6 @@ package com.bhegstam.shoppinglist.application;
 import com.bhegstam.shoppinglist.domain.Role;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserId;
-import com.bhegstam.shoppinglist.persistence.JdbiUserRepository;
 import com.bhegstam.shoppinglist.port.rest.UserBean;
 import com.bhegstam.util.TestDatabaseSetup;
 import org.junit.Before;
@@ -25,7 +24,7 @@ public class UserShoppingListApplicationIntegrationTest {
 
     @Before
     public void setUp() {
-        userApplication = new UserApplication(testDatabaseSetup.getJdbi().onDemand(JdbiUserRepository.class));
+        userApplication = new UserApplication(testDatabaseSetup.getRepositoryFactory().createUserRepository());
         userId = userApplication.addUser("Foo", "Bar", "foo@bar.com");
     }
 

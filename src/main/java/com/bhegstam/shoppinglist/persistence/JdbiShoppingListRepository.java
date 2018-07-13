@@ -13,7 +13,6 @@ import java.util.List;
 @RegisterRowMapper(ShoppingListMapper.class)
 @RegisterRowMapper(ShoppingListItemMapper.class)
 public interface JdbiShoppingListRepository extends ShoppingListRepository {
-    @Override
     @Transaction
     default void persist(ShoppingList shoppingList) {
         if (shoppingList.getPersistenceStatus() == PersistenceStatus.INSERT_REQUIRED) {
@@ -56,7 +55,6 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
     @SqlUpdate("delete from shopping_list_item where id = :itemId.id and shopping_list_id = :listId.id")
     void deleteItem(@BindBean("listId") ShoppingListId listId, @BindBean("itemId") ShoppingListItemId itemId);
 
-    @Override
     @Transaction
     default ShoppingList get(ShoppingListId listId) {
         ShoppingList shoppingList = getShoppingList(listId);
@@ -74,7 +72,6 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
     @SqlQuery("select i.id i_id, i.quantity i_quantity, i.in_cart i_in_cart, it.id it_id, it.name it_name from shopping_list_item i join item_type it on it.id = i.item_type_id where i.shopping_list_id = :listId.id order by it.name")
     List<ShoppingListItem> getItems(@BindBean("listId") ShoppingListId listId);
 
-    @Override
     @Transaction
     default List<ShoppingList> getShoppingLists() {
         List<ShoppingList> lists = getShoppingLists_internal();

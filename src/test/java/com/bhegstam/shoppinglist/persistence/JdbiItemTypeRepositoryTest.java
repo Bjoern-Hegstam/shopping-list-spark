@@ -26,7 +26,7 @@ public class JdbiItemTypeRepositoryTest {
 
     @Before
     public void setUp() {
-        itemTypeRepository = testDatabaseSetup.getJdbi().onDemand(JdbiItemTypeRepository.class);
+        itemTypeRepository = testDatabaseSetup.getRepositoryFactory().createItemTypeRepository();
     }
 
     @Test

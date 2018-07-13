@@ -32,7 +32,7 @@ public class JdbiUserRepositoryTest {
 
     @Before
     public void setUp() {
-        userRepository = testDatabaseSetup.getJdbi().onDemand(JdbiUserRepository.class);
+        userRepository = testDatabaseSetup.getRepositoryFactory().createUserRepository();
 
         unpersistedUser = new User("Foo", "bar", "foo@bar.com");
         userId = userRepository.create(unpersistedUser);

@@ -1,21 +1,41 @@
 package com.bhegstam.util;
 
+import com.bhegstam.shoppinglist.configuration.DbMigrationBundle;
 import com.bhegstam.shoppinglist.configuration.EnvironmentVariable;
 import com.bhegstam.shoppinglist.configuration.ShoppingListApplicationConfiguration;
-import com.bhegstam.shoppinglist.persistence.DatabaseMigrator;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.bhegstam.shoppinglist.persistence.RepositoryFactory;
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import org.jdbi.v3.core.Jdbi;
+import io.dropwizard.configuration.FileConfigurationSourceProvider;
+import io.dropwizard.configuration.YamlConfigurationFactory;
+import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.db.ManagedDataSource;
+import io.dropwizard.jackson.Jackson;
+import io.dropwizard.setup.Environment;
+import io.dropwizard.testing.ResourceHelpers;
+import io.dropwizard.validation.BaseValidator;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class TestDatabaseSetup implements TestRule {
+    private final RepositoryFactory repositoryFactory;
+    private final ManagedDataSource dataSource;
 
-    private ShoppingListApplicationConfiguration conf;
+    public TestDatabaseSetup() {
+        ShoppingListApplicationConfiguration config = loadConfiguration();
+        Environment environment = new Environment("test-env", Jackson.newObjectMapper(), null, new MetricRegistry(), null);
+
+        new DbMigrationBundle().run(config, environment);
+
+        DataSourceFactory dataSourceFactory = config.getDataSourceFactory();
+        repositoryFactory = new RepositoryFactory(environment, dataSourceFactory);
+        dataSource = dataSourceFactory.build(new MetricRegistry(), "cleanup");
+    }
 
     @Override
     public Statement apply(Statement base, Description description) {
@@ -23,7 +43,6 @@ public class TestDatabaseSetup implements TestRule {
             @Override
             public void evaluate() throws Throwable {
                 try {
-                    before();
                     base.evaluate();
                 } finally {
                     after();
@@ -32,24 +51,19 @@ public class TestDatabaseSetup implements TestRule {
         };
     }
 
-    private void before() {
-        if (conf == null) {
-            conf = loadConfiguration();
-            new DatabaseMigrator(conf.getDataSourceFactory()).migrateDatabase();
+    private void after() {
+        try (Connection conn = dataSource.getConnection()) {
+            conn.prepareStatement("delete from application_user").execute();
+            conn.prepareStatement("delete from shopping_list_item").execute();
+            conn.prepareStatement("delete from shopping_list").execute();
+            conn.prepareStatement("delete from item_type").execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void after() {
-        conf.getJdbi().useHandle(handle -> {
-            handle.createUpdate("delete from application_user").execute();
-            handle.createUpdate("delete from shopping_list_item").execute();
-            handle.createUpdate("delete from shopping_list").execute();
-            handle.createUpdate("delete from item_type").execute();
-        });
-    }
-
-    public Jdbi getJdbi() {
-        return conf.getJdbi();
+    public RepositoryFactory getRepositoryFactory() {
+        return repositoryFactory;
     }
 
     private ShoppingListApplicationConfiguration loadConfiguration() {
@@ -57,13 +71,14 @@ public class TestDatabaseSetup implements TestRule {
                 .ofNullable(System.getenv(EnvironmentVariable.CONF_FILENAME))
                 .orElse(EnvironmentVariable.DEFAULT_CONF_FILENAME);
 
-        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         try {
-            return mapper.readValue(
-                    this.getClass().getClassLoader().getResource(filename),
-                    ShoppingListApplicationConfiguration.class
-            );
-        } catch (IOException e) {
+            return new YamlConfigurationFactory<>(
+                    ShoppingListApplicationConfiguration.class,
+                    BaseValidator.newValidator(),
+                    Jackson.newObjectMapper(new YAMLFactory()),
+                    ""
+            ).build(new FileConfigurationSourceProvider(), ResourceHelpers.resourceFilePath(filename));
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
