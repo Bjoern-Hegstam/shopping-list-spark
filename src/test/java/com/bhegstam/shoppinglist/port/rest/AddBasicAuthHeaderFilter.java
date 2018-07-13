@@ -8,9 +8,9 @@ import javax.ws.rs.core.HttpHeaders;
 import java.io.UnsupportedEncodingException;
 
 public class AddBasicAuthHeaderFilter implements ClientRequestFilter {
-    private String encodedToken;
+    private final String encodedToken;
 
-    public AddBasicAuthHeaderFilter(String username, String password) {
+    AddBasicAuthHeaderFilter(String username, String password) {
         String token = username + ":" + password;
         try {
             encodedToken = Base64.encodeAsString(token.getBytes("UTF-8"));

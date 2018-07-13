@@ -57,4 +57,12 @@ public class AuthResource {
             return Response.serverError().build();
         }
     }
+
+    @Path("ping")
+    @RolesAllowed({USER, ADMIN})
+    @GET
+    public Response ping(@Auth User user) {
+        LOGGER.debug("Response to ping from user {}", user.getId());
+        return Response.ok().build();
+    }
 }

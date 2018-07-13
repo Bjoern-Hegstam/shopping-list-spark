@@ -2,6 +2,8 @@ package com.bhegstam.shoppinglist.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
 @EqualsAndHashCode
 public class UserId {
@@ -22,6 +24,6 @@ public class UserId {
 
     @Override
     public String toString() {
-        return Integer.toString(id);
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }

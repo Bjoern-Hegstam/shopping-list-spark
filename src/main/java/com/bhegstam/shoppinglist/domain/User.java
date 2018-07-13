@@ -16,11 +16,7 @@ public class User implements Principal {
     private Role role;
 
     public User(String username, String password, String email) {
-        this(username, password, email, false);
-    }
-
-    public User(String username, String password, String email, boolean verified) {
-        this(username, password, email, verified, Role.USER);
+        this(username, password, email, false, Role.USER);
     }
 
     public User(String username, String password, String email, boolean verified, Role role) {

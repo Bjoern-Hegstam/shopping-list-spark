@@ -90,7 +90,7 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
 
         JwtAuthFilter<User> tokenAuthFilter = new JwtAuthFilter.Builder<User>()
                 .setJwtConsumer(consumer)
-                .setAuthenticator(new JwtTokenAuthenticator())
+                .setAuthenticator(new JwtTokenAuthenticator(new UserApplication(userRepository)))
                 .setAuthorizer(userRoleAuthorizer)
                 .setPrefix("Bearer")
                 .buildAuthFilter();

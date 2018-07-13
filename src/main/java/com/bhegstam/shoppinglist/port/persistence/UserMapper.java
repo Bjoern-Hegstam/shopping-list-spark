@@ -19,7 +19,7 @@ public class UserMapper implements RowMapper<User> {
                 rs.getString("hashed_password"),
                 rs.getString("salt"),
                 rs.getBoolean("verified"),
-                rs.getString("role").equals("ADMIN") ? Role.ADMIN : Role.USER
+                rs.getString("role").equals(Role.RoleName.ADMIN) ? Role.ADMIN : Role.USER
         );
     }
 }

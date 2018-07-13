@@ -1,7 +1,7 @@
 package com.bhegstam.shoppinglist.port.rest.login;
 
 import com.bhegstam.shoppinglist.configuration.ShoppingListApplicationConfiguration;
-import com.bhegstam.shoppinglist.port.rest.AddBasicAuthHeaderFilter;
+import com.bhegstam.shoppinglist.port.rest.TestClientFactory;
 import com.bhegstam.shoppinglist.util.DropwizardAppRuleFactory;
 import com.bhegstam.shoppinglist.util.TestData;
 import com.bhegstam.shoppinglist.util.TestDatabaseSetup;
@@ -13,8 +13,6 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
@@ -37,25 +35,29 @@ public class AuthIntegrationTest {
     }
 
     @Test
-    public void getTokenForExistingUser() throws IOException {
-        Response response = createClient(TestData.ADMIN.getUsername(), TestData.ADMIN_PASSWORD)
+    public void getTokenForExistingAdmin() throws IOException {
+        // Generate new token
+        Response getTokenResponse = TestClientFactory
+                .createClient(TestData.ADMIN.getUsername(), TestData.ADMIN_PASSWORD)
                 .target(serviceUrl)
                 .path("token")
                 .request()
                 .get();
 
-        assertThat(response.getStatus(), is(OK.getStatusCode()));
+        assertThat(getTokenResponse.getStatus(), is(OK.getStatusCode()));
 
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode responseJson = objectMapper.readTree(response.readEntity(String.class));
-        assertThat(responseJson.findValue("token").asText(), notNullValue());
+        JsonNode responseJson = objectMapper.readTree(getTokenResponse.readEntity(String.class));
+        String token = responseJson.findValue("token").asText();
+        assertThat(token, notNullValue());
 
-
-    }
-
-    private Client createClient(String username, String password) {
-        Client client = ClientBuilder.newClient();
-        client.register(new AddBasicAuthHeaderFilter(username, password));
-        return client;
+        // Test it against authenticated ping
+        Response pingResponse = TestClientFactory
+                .createClient(token)
+                .target(serviceUrl)
+                .path("ping")
+                .request()
+                .get();
+        assertThat(pingResponse.getStatus(), is(OK.getStatusCode()));
     }
 }
