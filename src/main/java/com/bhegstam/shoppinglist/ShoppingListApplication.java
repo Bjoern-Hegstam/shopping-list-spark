@@ -11,7 +11,7 @@ import com.bhegstam.shoppinglist.domain.ShoppingListRepository;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserRepository;
 import com.bhegstam.shoppinglist.port.persistence.RepositoryFactory;
-import com.bhegstam.shoppinglist.port.rest.login.LoginResource;
+import com.bhegstam.shoppinglist.port.rest.login.AuthResource;
 import com.github.toastshaman.dropwizard.auth.jwt.JwtAuthFilter;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
@@ -67,7 +67,7 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
 
         configureAuth(config, environment, userRepository);
 
-        environment.jersey().register(new LoginResource(config.getJwtTokenSecret()));
+        environment.jersey().register(new AuthResource(config.getJwtTokenSecret()));
     }
 
     private void configureAuth(ShoppingListApplicationConfiguration config, Environment environment, UserRepository userRepository) {

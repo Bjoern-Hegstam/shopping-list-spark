@@ -21,20 +21,20 @@ import static com.bhegstam.shoppinglist.domain.Role.RoleName.USER;
 import static org.jose4j.jws.AlgorithmIdentifiers.HMAC_SHA256;
 
 
-@Path("api")
+@Path("auth")
 @Produces(MediaType.APPLICATION_JSON)
-public class LoginResource {
-    private static final Logger LOGGER = LogManager.getLogger(LoginResource.class);
+public class AuthResource {
+    private static final Logger LOGGER = LogManager.getLogger(AuthResource.class);
     private final byte[] tokenSecret;
 
-    public LoginResource(byte[] tokenSecret) {
+    public AuthResource(byte[] tokenSecret) {
         this.tokenSecret = tokenSecret;
     }
 
-    @Path("login")
+    @Path("token")
     @RolesAllowed({USER, ADMIN})
     @GET
-    public Response login(@Auth User user) {
+    public Response generateToken(@Auth User user) {
         LOGGER.debug("Generating token for user {}", user.getId());
 
         JwtClaims claims = new JwtClaims();
@@ -50,7 +50,7 @@ public class LoginResource {
         try {
             return Response
                     .ok()
-                    .entity(new LoginResponse(jws.getCompactSerialization()))
+                    .entity(new TokenResponse(jws.getCompactSerialization()))
                     .build();
         } catch (JoseException e) {
             LOGGER.error("Error when returning token for user " + user.getUsername(), e);

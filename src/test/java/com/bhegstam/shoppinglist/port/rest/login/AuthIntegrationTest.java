@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-public class LoginIntegrationTest {
+public class AuthIntegrationTest {
     @ClassRule
     public static final DropwizardAppRule<ShoppingListApplicationConfiguration> service = DropwizardAppRuleFactory.forIntegrationTest();
 
@@ -33,14 +33,14 @@ public class LoginIntegrationTest {
 
     @Before
     public void setUp() {
-        serviceUrl = "http://localhost:" + service.getLocalPort() + "/application/api/";
+        serviceUrl = "http://localhost:" + service.getLocalPort() + "/api/auth/";
     }
 
     @Test
-    public void login_existingUser() throws IOException {
+    public void getTokenForExistingUser() throws IOException {
         Response response = createClient(TestData.ADMIN.getUsername(), TestData.ADMIN_PASSWORD)
                 .target(serviceUrl)
-                .path("login")
+                .path("token")
                 .request()
                 .get();
 
@@ -49,6 +49,8 @@ public class LoginIntegrationTest {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode responseJson = objectMapper.readTree(response.readEntity(String.class));
         assertThat(responseJson.findValue("token").asText(), notNullValue());
+
+
     }
 
     private Client createClient(String username, String password) {
