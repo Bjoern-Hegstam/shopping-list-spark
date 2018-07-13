@@ -1,4 +1,4 @@
-package com.bhegstam.util;
+package com.bhegstam.shoppinglist.util;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;

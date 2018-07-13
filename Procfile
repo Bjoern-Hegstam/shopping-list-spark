@@ -1,1 +1,1 @@
-web: java -cp target/classes/:target/dependency/* com.bhegstam.ShoppingListApplication
+web: java -cp target/classes/:target/dependency/* com.bhegstam.shoppinglist.ShoppingListApplication

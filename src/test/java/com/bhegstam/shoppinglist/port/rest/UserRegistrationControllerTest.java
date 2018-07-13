@@ -1,7 +1,7 @@
 package com.bhegstam.shoppinglist.port.rest;
 
 import com.bhegstam.shoppinglist.domain.UserRegistration;
-import com.bhegstam.util.Mocks;
+import com.bhegstam.shoppinglist.util.Mocks;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
 import org.junit.Before;

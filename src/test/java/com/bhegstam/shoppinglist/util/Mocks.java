@@ -1,4 +1,4 @@
-package com.bhegstam.util;
+package com.bhegstam.shoppinglist.util;
 
 
 import com.bhegstam.webutil.webapp.Request;

@@ -1,7 +1,7 @@
 package com.bhegstam.shoppinglist.port.persistence;
 
 import com.bhegstam.shoppinglist.domain.*;
-import com.bhegstam.util.TestDatabaseSetup;
+import com.bhegstam.shoppinglist.util.TestDatabaseSetup;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -9,7 +9,7 @@ import org.junit.rules.ErrorCollector;
 
 import java.util.List;
 
-import static com.bhegstam.util.Matchers.isEmpty;
+import static com.bhegstam.shoppinglist.util.Matchers.isEmpty;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 

@@ -1,6 +1,6 @@
 package com.bhegstam.shoppinglist.domain;
 
-import com.bhegstam.util.TestDatabaseSetup;
+import com.bhegstam.shoppinglist.util.TestDatabaseSetup;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

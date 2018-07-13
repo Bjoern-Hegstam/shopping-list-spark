@@ -4,7 +4,7 @@ import com.bhegstam.shoppinglist.domain.Role;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserId;
 import com.bhegstam.shoppinglist.domain.UserRepository;
-import com.bhegstam.util.TestDatabaseSetup;
+import com.bhegstam.shoppinglist.util.TestDatabaseSetup;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import org.junit.rules.ErrorCollector;
 import java.util.List;
 import java.util.Optional;
 
-import static com.bhegstam.util.Matchers.isPresent;
+import static com.bhegstam.shoppinglist.util.Matchers.isPresent;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 

@@ -1,4 +1,4 @@
-package com.bhegstam;
+package com.bhegstam.shoppinglist;
 
 import com.bhegstam.shoppinglist.application.UserApplication;
 import com.bhegstam.shoppinglist.configuration.DbMigrationBundle;
@@ -80,33 +80,16 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
         environment.jersey().register(new AuthDynamicFeature(new ChainedAuthFilter(authFilters)));
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
         environment.jersey().register(RolesAllowedDynamicFeature.class);
-        // TODO: Link to example https://github.com/dropwizard/dropwizard/blob/master/dropwizard-example/src/main/java/com/example/helloworld/HelloWorldApplication.java
 
         environment.jersey().register(new LoginResource());
     }
 
-    //    public ShoppingListApplication(ShoppingListApplicationConfiguration conf) {
-//        super(
-//                List.of(
-//                        new IndexController(),
-//                        new LoginResource(
-//                                new UserApplication(conf.getJdbi().onDemand(JdbiUserRepository.class))
-//                        )
-//                ),
-//                asList(
-//                        new ItemTypeApiController(
-//                                new ItemTypeApplication(conf.getJdbi().onDemand(JdbiItemTypeRepository.class))
-//                        ),
+//                        new ItemTypeApiController( new ItemTypeApplication(itemTypeRepository) ),
 //                        new ShoppingListApiController(
 //                                new com.bhegstam.shoppinglist.application.ShoppingListApplication(
-//                                        conf.getJdbi().onDemand(JdbiShoppingListRepository.class),
-//                                        conf.getJdbi().onDemand(JdbiItemTypeRepository.class)
+//                                        shoppingListRepository,
+//                                        itemTypeRepository
 //                                )
 //                        ),
-//                        new UserApiController(new UserApplication(conf.getJdbi().onDemand(JdbiUserRepository.class)))
-//                ),
-//                true,
-//                true
-//        );
-//    }
+//                        new UserApiController(new UserApplication(userRepository))
 }

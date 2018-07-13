@@ -2,7 +2,7 @@ package com.bhegstam.shoppinglist.port.rest;
 
 import com.bhegstam.shoppinglist.application.ShoppingListApplication;
 import com.bhegstam.shoppinglist.domain.*;
-import com.bhegstam.util.TestDatabaseSetup;
+import com.bhegstam.shoppinglist.util.TestDatabaseSetup;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
 import org.eclipse.jetty.http.HttpStatus;
@@ -13,8 +13,8 @@ import org.junit.rules.ErrorCollector;
 
 import java.util.UUID;
 
-import static com.bhegstam.util.Matchers.isPresentAnd;
-import static com.bhegstam.util.Mocks.mockRequest;
+import static com.bhegstam.shoppinglist.util.Matchers.isPresentAnd;
+import static com.bhegstam.shoppinglist.util.Mocks.mockRequest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.containsInAnyOrder;
