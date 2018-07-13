@@ -1,3 +1,5 @@
+jwtTokenSecret: ${JWT_TOKEN_SECRET}
+
 database:
   url: ${JDBC_DATABASE_URL}
   user: ${JDBC_DATABASE_USERNAME}

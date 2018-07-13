@@ -12,6 +12,7 @@ import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserRepository;
 import com.bhegstam.shoppinglist.port.persistence.RepositoryFactory;
 import com.bhegstam.shoppinglist.port.rest.login.LoginResource;
+import com.github.toastshaman.dropwizard.auth.jwt.JwtAuthFilter;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.auth.AuthDynamicFeature;
@@ -19,13 +20,15 @@ import io.dropwizard.auth.AuthFilter;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.auth.chained.ChainedAuthFilter;
-import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+import org.jose4j.jwt.consumer.JwtConsumer;
+import org.jose4j.jwt.consumer.JwtConsumerBuilder;
+import org.jose4j.keys.HmacKey;
 
 import java.util.List;
 
@@ -62,6 +65,12 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
         ItemTypeRepository itemTypeRepository = repositoryFactory.createItemTypeRepository();
         ShoppingListRepository shoppingListRepository = repositoryFactory.createShoppingListRepository();
 
+        configureAuth(config, environment, userRepository);
+
+        environment.jersey().register(new LoginResource(config.getJwtTokenSecret()));
+    }
+
+    private void configureAuth(ShoppingListApplicationConfiguration config, Environment environment, UserRepository userRepository) {
         UserRoleAuthorizer userRoleAuthorizer = new UserRoleAuthorizer();
 
         BasicCredentialAuthFilter<User> basicAuthFilter = new BasicCredentialAuthFilter.Builder<User>()
@@ -70,7 +79,17 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
                 .setPrefix("Basic")
                 .buildAuthFilter();
 
-        OAuthCredentialAuthFilter<User> tokenAuthFilter = new OAuthCredentialAuthFilter.Builder<User>()
+        final JwtConsumer consumer = new JwtConsumerBuilder()
+                .setAllowedClockSkewInSeconds(30)
+                .setRequireExpirationTime()
+                .setRequireSubject()
+                .setRequireIssuedAt()
+                .setVerificationKey(new HmacKey(config.getJwtTokenSecret()))
+                .setRelaxVerificationKeyValidation()
+                .build();
+
+        JwtAuthFilter<User> tokenAuthFilter = new JwtAuthFilter.Builder<User>()
+                .setJwtConsumer(consumer)
                 .setAuthenticator(new JwtTokenAuthenticator())
                 .setAuthorizer(userRoleAuthorizer)
                 .setPrefix("Bearer")
@@ -80,8 +99,6 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
         environment.jersey().register(new AuthDynamicFeature(new ChainedAuthFilter(authFilters)));
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
         environment.jersey().register(RolesAllowedDynamicFeature.class);
-
-        environment.jersey().register(new LoginResource());
     }
 
 //                        new ItemTypeApiController( new ItemTypeApplication(itemTypeRepository) ),

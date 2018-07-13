@@ -5,6 +5,8 @@ import com.bhegstam.shoppinglist.port.rest.AddBasicAuthHeaderFilter;
 import com.bhegstam.shoppinglist.util.DropwizardAppRuleFactory;
 import com.bhegstam.shoppinglist.util.TestData;
 import com.bhegstam.shoppinglist.util.TestDatabaseSetup;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -14,9 +16,11 @@ import org.junit.Test;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 
 import static javax.ws.rs.core.Response.Status.OK;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 public class LoginIntegrationTest {
@@ -29,12 +33,11 @@ public class LoginIntegrationTest {
 
     @Before
     public void setUp() {
-
         serviceUrl = "http://localhost:" + service.getLocalPort() + "/application/api/";
     }
 
     @Test
-    public void login_existingUser() {
+    public void login_existingUser() throws IOException {
         Response response = createClient(TestData.ADMIN.getUsername(), TestData.ADMIN_PASSWORD)
                 .target(serviceUrl)
                 .path("login")
@@ -42,6 +45,10 @@ public class LoginIntegrationTest {
                 .get();
 
         assertThat(response.getStatus(), is(OK.getStatusCode()));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode responseJson = objectMapper.readTree(response.readEntity(String.class));
+        assertThat(responseJson.findValue("token").asText(), notNullValue());
     }
 
     private Client createClient(String username, String password) {

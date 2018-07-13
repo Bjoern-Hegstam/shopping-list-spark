@@ -1,3 +1,5 @@
+jwtTokenSecret: 67DF81F4C5DEC43CDDBEB2972576E345FAEJV425
+
 dataSourceFactory:
   driverClass: org.h2.Driver
   url: jdbc:h2:mem:testing;DB_CLOSE_DELAY=-1
