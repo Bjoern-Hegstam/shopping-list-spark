@@ -1,6 +1,6 @@
 package com.bhegstam.shoppinglist.port.rest;
 
-import com.bhegstam.shoppinglist.port.rest.login.AddBearerTokenHeaderFilter;
+import com.bhegstam.shoppinglist.port.rest.auth.AddBearerTokenHeaderFilter;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;

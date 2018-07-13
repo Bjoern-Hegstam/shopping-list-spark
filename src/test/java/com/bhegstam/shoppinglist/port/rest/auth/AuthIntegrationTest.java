@@ -1,4 +1,4 @@
-package com.bhegstam.shoppinglist.port.rest.login;
+package com.bhegstam.shoppinglist.port.rest.auth;
 
 import com.bhegstam.shoppinglist.configuration.ShoppingListApplicationConfiguration;
 import com.bhegstam.shoppinglist.port.rest.TestClientFactory;
@@ -31,7 +31,7 @@ public class AuthIntegrationTest {
 
     @Before
     public void setUp() {
-        serviceUrl = "http://localhost:" + service.getLocalPort() + "/api/auth/";
+        serviceUrl = "http://localhost:" + service.getLocalPort() + "/api/";
     }
 
     @Test
@@ -40,9 +40,9 @@ public class AuthIntegrationTest {
         Response getTokenResponse = TestClientFactory
                 .createClient(TestData.ADMIN.getUsername(), TestData.ADMIN_PASSWORD)
                 .target(serviceUrl)
-                .path("token")
+                .path("auth")
                 .request()
-                .get();
+                .post(null);
 
         assertThat(getTokenResponse.getStatus(), is(OK.getStatusCode()));
 
@@ -55,7 +55,7 @@ public class AuthIntegrationTest {
         Response pingResponse = TestClientFactory
                 .createClient(token)
                 .target(serviceUrl)
-                .path("ping")
+                .path("auth/ping")
                 .request()
                 .get();
         assertThat(pingResponse.getStatus(), is(OK.getStatusCode()));

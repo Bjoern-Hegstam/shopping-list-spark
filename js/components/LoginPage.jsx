@@ -26,11 +26,10 @@ export class LoginPage extends React.Component {
         this.setState({password: e.target.value});
     };
 
-    onLoginSubmit = async (e) => {
+    onLoginSubmit = (e) => {
         e.preventDefault();
 
-        await this.props.login(this.state.username, this.state.password);
-        console.log('Logged in');
+        this.props.login(this.state.username, this.state.password);
     };
 
     render() {

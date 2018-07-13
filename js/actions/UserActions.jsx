@@ -6,11 +6,9 @@ export function login(username, password) {
         payload: {
             request: {
                 method: 'post',
-                baseURL: '/',
-                url: 'login',
-                data: {
-                    username,
-                    password
+                url: 'auth',
+                headers: {
+                    Authorization: 'Basic ' + btoa(username + ':' + password)
                 }
             }
         }
@@ -19,13 +17,6 @@ export function login(username, password) {
 
 export function logout() {
     return {
-        type: types.LOGOUT,
-        payload: {
-            request: {
-                method: 'post',
-                baseURL: '/',
-                url: 'logout'
-            }
-        }
+        type: types.LOGOUT
     };
 }

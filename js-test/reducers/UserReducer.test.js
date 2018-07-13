@@ -22,9 +22,12 @@ describe('UserReducer', function () {
             type: types.LOGIN_SUCCESS,
             payload: {
                 data: {
-                    id: '17',
-                    username: 'Foo',
-                    role: 'ADMIN'
+                    token: 'token-1',
+                    user: {
+                        id: '17',
+                        username: 'Foo',
+                        role: 'ADMIN'
+                    }
                 }
             }
         };
@@ -35,6 +38,7 @@ describe('UserReducer', function () {
         // then
         expect(newState).toEqual({
             ...initialState,
+            token: 'token-1',
             currentUser: {
                 id: 17,
                 username: 'Foo',
@@ -43,16 +47,17 @@ describe('UserReducer', function () {
         })
     });
 
-    it('should clear current user on LOGOUT_SUCCESS', function () {
+    it('should clear current user and token on LOGOUT', function () {
         // given
         const state = {
+            token: 'token-1',
             currentUser: {
                 id: 17
             }
         };
 
         const action = {
-            type: types.LOGOUT_SUCCESS
+            type: types.LOGOUT
         };
 
         // when
@@ -61,6 +66,7 @@ describe('UserReducer', function () {
         // then
         expect(newState).toEqual({
             ...initialState,
+            token: undefined,
             currentUser: undefined
         })
     });

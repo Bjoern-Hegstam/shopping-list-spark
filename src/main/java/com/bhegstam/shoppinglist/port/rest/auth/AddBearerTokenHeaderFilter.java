@@ -1,4 +1,4 @@
-package com.bhegstam.shoppinglist.port.rest.login;
+package com.bhegstam.shoppinglist.port.rest.auth;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;

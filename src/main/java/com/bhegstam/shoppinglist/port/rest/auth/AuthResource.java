@@ -1,4 +1,4 @@
-package com.bhegstam.shoppinglist.port.rest.login;
+package com.bhegstam.shoppinglist.port.rest.auth;
 
 import com.bhegstam.shoppinglist.domain.User;
 import io.dropwizard.auth.Auth;
@@ -11,6 +11,7 @@ import org.jose4j.lang.JoseException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -31,10 +32,10 @@ public class AuthResource {
         this.tokenSecret = tokenSecret;
     }
 
-    @Path("token")
+    @Path("/")
     @RolesAllowed({USER, ADMIN})
-    @GET
-    public Response generateToken(@Auth User user) {
+    @POST
+    public Response generateTokenAndGetUser(@Auth User user) {
         LOGGER.debug("Generating token for user {}", user.getId());
 
         JwtClaims claims = new JwtClaims();
@@ -50,7 +51,7 @@ public class AuthResource {
         try {
             return Response
                     .ok()
-                    .entity(new TokenResponse(jws.getCompactSerialization()))
+                    .entity(new AuthResponse(jws.getCompactSerialization(), user))
                     .build();
         } catch (JoseException e) {
             LOGGER.error("Error when returning token for user " + user.getUsername(), e);
