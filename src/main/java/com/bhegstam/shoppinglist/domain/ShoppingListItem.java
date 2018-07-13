@@ -1,6 +1,6 @@
 package com.bhegstam.shoppinglist.domain;
 
-import com.bhegstam.shoppinglist.persistence.PersistenceStatus;
+import com.bhegstam.shoppinglist.port.persistence.PersistenceStatus;
 
 public class ShoppingListItem extends Entity<ShoppingListItemId> {
     private final ItemType itemType;

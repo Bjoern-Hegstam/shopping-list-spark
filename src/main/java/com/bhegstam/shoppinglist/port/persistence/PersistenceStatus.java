@@ -1,4 +1,4 @@
-package com.bhegstam.shoppinglist.persistence;
+package com.bhegstam.shoppinglist.port.persistence;
 
 public enum PersistenceStatus {
     INSERT_REQUIRED,

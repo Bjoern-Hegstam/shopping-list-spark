@@ -1,4 +1,4 @@
-package com.bhegstam.shoppinglist.persistence;
+package com.bhegstam.shoppinglist.port.persistence;
 
 import com.bhegstam.shoppinglist.domain.*;
 import com.bhegstam.util.TestDatabaseSetup;

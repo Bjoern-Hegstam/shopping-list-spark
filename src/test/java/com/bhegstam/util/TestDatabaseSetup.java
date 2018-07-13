@@ -1,9 +1,8 @@
 package com.bhegstam.util;
 
 import com.bhegstam.shoppinglist.configuration.DbMigrationBundle;
-import com.bhegstam.shoppinglist.configuration.EnvironmentVariable;
 import com.bhegstam.shoppinglist.configuration.ShoppingListApplicationConfiguration;
-import com.bhegstam.shoppinglist.persistence.RepositoryFactory;
+import com.bhegstam.shoppinglist.port.persistence.RepositoryFactory;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.dropwizard.configuration.FileConfigurationSourceProvider;
@@ -20,9 +19,10 @@ import org.junit.runners.model.Statement;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Optional;
 
 public class TestDatabaseSetup implements TestRule {
+    private static final String TEST_CONFIG_FILENAME = "test-config.yml";
+
     private final RepositoryFactory repositoryFactory;
     private final ManagedDataSource dataSource;
 
@@ -67,17 +67,13 @@ public class TestDatabaseSetup implements TestRule {
     }
 
     private ShoppingListApplicationConfiguration loadConfiguration() {
-        String filename = Optional
-                .ofNullable(System.getenv(EnvironmentVariable.CONF_FILENAME))
-                .orElse(EnvironmentVariable.DEFAULT_CONF_FILENAME);
-
         try {
             return new YamlConfigurationFactory<>(
                     ShoppingListApplicationConfiguration.class,
                     BaseValidator.newValidator(),
                     Jackson.newObjectMapper(new YAMLFactory()),
                     ""
-            ).build(new FileConfigurationSourceProvider(), ResourceHelpers.resourceFilePath(filename));
+            ).build(new FileConfigurationSourceProvider(), ResourceHelpers.resourceFilePath(TEST_CONFIG_FILENAME));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

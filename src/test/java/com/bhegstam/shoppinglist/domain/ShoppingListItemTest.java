@@ -1,6 +1,6 @@
 package com.bhegstam.shoppinglist.domain;
 
-import com.bhegstam.shoppinglist.persistence.PersistenceStatus;
+import com.bhegstam.shoppinglist.port.persistence.PersistenceStatus;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

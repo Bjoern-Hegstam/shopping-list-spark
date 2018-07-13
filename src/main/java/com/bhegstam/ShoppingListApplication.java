@@ -10,7 +10,7 @@ import com.bhegstam.shoppinglist.domain.ItemTypeRepository;
 import com.bhegstam.shoppinglist.domain.ShoppingListRepository;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserRepository;
-import com.bhegstam.shoppinglist.persistence.RepositoryFactory;
+import com.bhegstam.shoppinglist.port.persistence.RepositoryFactory;
 import com.bhegstam.shoppinglist.port.rest.login.LoginResource;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
