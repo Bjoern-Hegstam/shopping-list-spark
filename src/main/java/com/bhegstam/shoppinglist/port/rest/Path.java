@@ -13,8 +13,6 @@ public class Path {
     }
 
     public static class Template {
-        public static final String INDEX = "/public/index.html";
-
         public static final String ADMIN_ITEM_TYPES = "/velocity/admin/item_types.vm";
         public static final String ADMIN_USERS = "velocity/admin/users.vm";
         public static final String LOGIN = "/velocity/login/login.vm";
