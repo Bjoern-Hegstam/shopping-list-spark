@@ -4,3 +4,18 @@ dataSourceFactory:
   validationQuery: "SELECT 1"
   validationQueryTimeout: 3s
 
+server:
+  type: simple
+  applicationContextPath: /application
+  adminContextPath: /admin
+  connector:
+    type: http
+    port: 4567
+
+logging:
+  level: INFO
+  loggers:
+    com.bhegstam.shoppinglist.port.rest.login.LoginResource: DEBUG
+  appenders:
+    - type: console
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"

@@ -5,7 +5,8 @@ database:
 
 server:
   type: simple
-  applicationContextPath: /api/*
+  applicationContextPath: /application
+  adminContextPath: /admin
   connector: http
   port: 4567
 

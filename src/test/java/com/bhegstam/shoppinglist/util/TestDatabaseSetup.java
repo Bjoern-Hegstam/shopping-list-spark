@@ -2,6 +2,7 @@ package com.bhegstam.shoppinglist.util;
 
 import com.bhegstam.shoppinglist.configuration.DbMigrationBundle;
 import com.bhegstam.shoppinglist.configuration.ShoppingListApplicationConfiguration;
+import com.bhegstam.shoppinglist.domain.UserRepository;
 import com.bhegstam.shoppinglist.port.persistence.RepositoryFactory;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -19,15 +20,30 @@ import org.junit.runners.model.Statement;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public class TestDatabaseSetup implements TestRule {
-    private static final String TEST_CONFIG_FILENAME = "test-config.yml";
+    private static final List<String> CLEANUP_SQL_STATEMENTS = asList(
+            "delete from application_user",
+            "delete from shopping_list_item",
+            "delete from shopping_list",
+            "delete from item_type"
+    );
 
     private final RepositoryFactory repositoryFactory;
     private final ManagedDataSource dataSource;
 
     public TestDatabaseSetup() {
-        ShoppingListApplicationConfiguration config = loadConfiguration();
+        this(null);
+    }
+
+    public TestDatabaseSetup(ShoppingListApplicationConfiguration config) {
+        if (config == null) {
+            config = loadConfiguration();
+        }
+
         Environment environment = new Environment("test-env", Jackson.newObjectMapper(), null, new MetricRegistry(), null);
 
         new DbMigrationBundle().run(config, environment);
@@ -42,6 +58,7 @@ public class TestDatabaseSetup implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
+                before();
                 try {
                     base.evaluate();
                 } finally {
@@ -51,15 +68,29 @@ public class TestDatabaseSetup implements TestRule {
         };
     }
 
-    private void after() {
+    private void before() {
+        emptyDb();
+        insertUsers();
+    }
+
+    private void emptyDb() {
         try (Connection conn = dataSource.getConnection()) {
-            conn.prepareStatement("delete from application_user").execute();
-            conn.prepareStatement("delete from shopping_list_item").execute();
-            conn.prepareStatement("delete from shopping_list").execute();
-            conn.prepareStatement("delete from item_type").execute();
+            for (String statement : CLEANUP_SQL_STATEMENTS) {
+                conn.prepareStatement(statement).execute();
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void insertUsers() {
+        UserRepository userRepository = repositoryFactory.createUserRepository();
+        userRepository.create(TestData.ADMIN);
+        userRepository.create(TestData.USER);
+        userRepository.create(TestData.UNVERIFIED_USER);
+    }
+
+    private void after() {
     }
 
     public RepositoryFactory getRepositoryFactory() {
@@ -73,7 +104,7 @@ public class TestDatabaseSetup implements TestRule {
                     BaseValidator.newValidator(),
                     Jackson.newObjectMapper(new YAMLFactory()),
                     ""
-            ).build(new FileConfigurationSourceProvider(), ResourceHelpers.resourceFilePath(TEST_CONFIG_FILENAME));
+            ).build(new FileConfigurationSourceProvider(), ResourceHelpers.resourceFilePath(TestData.TEST_CONFIG_FILENAME));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
