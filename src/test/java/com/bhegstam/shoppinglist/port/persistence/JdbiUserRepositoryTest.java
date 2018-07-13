@@ -108,15 +108,17 @@ public class JdbiUserRepositoryTest {
         List<User> users = userRepository.getUsers();
 
         // then
-        assertThat(users.size(), is(2));
-
+        int numValidated = 0;
         for (User user : users) {
             if (user.getId().equals(userId)) {
                 validateUser(user, userId, this.unpersistedUser);
-            } else {
+                numValidated++;
+            } else if (user.getId().equals(adminId)) {
                 validateUser(user, adminId, this.unpersistedAdmin);
+                numValidated++;
             }
         }
+        assertThat(numValidated, is(2));
     }
 
     private void validateUser(User user, UserId expectedId, User expectedUser) {
