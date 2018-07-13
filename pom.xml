@@ -16,7 +16,6 @@
         <less.version>1.2.1</less.version>
         <postgresql.version>42.2.1</postgresql.version>
         <flyway.version>5.0.1</flyway.version>
-        <log4j.version>2.10.0</log4j.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -150,18 +149,6 @@
         <dependency>
             <groupId>org.jdbi</groupId>
             <artifactId>jdbi3-sqlobject</artifactId>
-        </dependency>
-
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
         </dependency>
 
         <!-- Java EE runtime requirements not included in Java SE by default since jdk 9 -->

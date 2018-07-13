@@ -6,9 +6,9 @@ import com.bhegstam.webutil.JsonResponseTransformer;
 import com.bhegstam.webutil.webapp.Controller;
 import com.bhegstam.webutil.webapp.Request;
 import com.bhegstam.webutil.webapp.Result;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.Service;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import static com.bhegstam.webutil.webapp.ResultBuilder.result;
 import static com.bhegstam.webutil.webapp.SparkWrappers.asSparkRoute;
 
 public class ShoppingListApiController implements Controller {
-    private static final Logger LOGGER = LogManager.getLogger(ShoppingListApiController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingListApiController.class);
 
     private static final String SHOPPING_LIST_ID = "shoppingListId";
     private static final String SHOPPING_LIST_ITEM_ID = "shoppingListItemId";

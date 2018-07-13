@@ -4,13 +4,13 @@ import com.bhegstam.shoppinglist.application.UserApplication;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.port.rest.Message;
 import io.dropwizard.auth.basic.BasicCredentials;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
 public class BasicAuthenticator implements io.dropwizard.auth.Authenticator<BasicCredentials, User> {
-    private static final Logger LOGGER = LogManager.getLogger(BasicAuthenticator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BasicAuthenticator.class);
 
     private final UserApplication userApplication;
 

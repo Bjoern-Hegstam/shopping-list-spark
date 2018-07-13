@@ -2,12 +2,12 @@ package com.bhegstam.shoppinglist.port.rest.auth;
 
 import com.bhegstam.shoppinglist.domain.User;
 import io.dropwizard.auth.Auth;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.keys.HmacKey;
 import org.jose4j.lang.JoseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
@@ -25,7 +25,7 @@ import static org.jose4j.jws.AlgorithmIdentifiers.HMAC_SHA256;
 @Path("auth")
 @Produces(MediaType.APPLICATION_JSON)
 public class AuthResource {
-    private static final Logger LOGGER = LogManager.getLogger(AuthResource.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthResource.class);
     private final byte[] tokenSecret;
 
     public AuthResource(byte[] tokenSecret) {
