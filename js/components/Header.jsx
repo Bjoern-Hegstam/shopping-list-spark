@@ -49,7 +49,7 @@ export class Header extends React.Component {
 
 export default connect(
     store => ({
-        user: store.user.currentUser
+        user: store.auth.currentUser
     }),
     dispatch => ({
         logout: () => dispatch(logout())

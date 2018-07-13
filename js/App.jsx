@@ -49,5 +49,5 @@ class App extends React.Component {
 }
 
 export default withRouter(connect(store => ({
-    user: store.user.currentUser
+    user: store.auth.currentUser
 }))(App));
