@@ -41,7 +41,6 @@ public class ShoppingListIntegrationTest {
 
     private final JsonMapper jsonMapper = new JsonMapper();
     private ShoppingListRepository shoppingListRepository;
-    private ItemTypeRepository itemTypeRepository;
     private WebTarget webTarget;
     private ShoppingList shoppingList;
     private ItemType itemType;
@@ -55,12 +54,14 @@ public class ShoppingListIntegrationTest {
         api = new ShoppingListApi(token, serviceUrl);
 
         shoppingListRepository = testDatabaseSetup.getRepositoryFactory().createShoppingListRepository();
-        itemTypeRepository = testDatabaseSetup.getRepositoryFactory().createItemTypeRepository();
 
         shoppingList = new ShoppingList(LIST_NAME);
 
         itemType = new ItemType(ITEM_TYPE_NAME);
-        itemTypeRepository.add(itemType);
+        testDatabaseSetup
+                .getRepositoryFactory()
+                .createItemTypeRepository()
+                .add(itemType);
     }
 
     @Test
