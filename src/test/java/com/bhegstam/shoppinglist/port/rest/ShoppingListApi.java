@@ -13,6 +13,13 @@ class ShoppingListApi {
                 .target(serviceUrl);
     }
 
+    Response addShoppingList(String json) {
+        webTarget
+                .path("shopping-list")
+                .request()
+                .post(Entity.json(json));
+    }
+
     Response getShoppingList(String listId) {
         return webTarget
                 .path("shopping-list")

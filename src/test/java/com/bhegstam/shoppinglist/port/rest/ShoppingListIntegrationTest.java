@@ -13,10 +13,7 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ErrorCollector;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
 import static javax.ws.rs.core.Response.Status.*;
@@ -36,12 +33,8 @@ public class ShoppingListIntegrationTest {
     @Rule
     public TestDatabaseSetup testDatabaseSetup = new TestDatabaseSetup();
 
-    @Rule
-    public ErrorCollector errorCollector = new ErrorCollector();
-
     private final JsonMapper jsonMapper = new JsonMapper();
     private ShoppingListRepository shoppingListRepository;
-    private WebTarget webTarget;
     private ShoppingList shoppingList;
     private ItemType itemType;
     private ShoppingListApi api;
@@ -50,7 +43,6 @@ public class ShoppingListIntegrationTest {
     public void setUp() throws JoseException {
         String serviceUrl = "http://localhost:" + service.getLocalPort() + "/api/";
         String token = TokenGenerator.generate(TestData.ADMIN, service.getConfiguration().getJwtTokenSecret());
-        webTarget = TestClientFactory.createClient(token).target(serviceUrl);
         api = new ShoppingListApi(token, serviceUrl);
 
         shoppingListRepository = testDatabaseSetup.getRepositoryFactory().createShoppingListRepository();
@@ -98,10 +90,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void createAndGetShoppingList() {
         // Create
-        Response createResponse = webTarget
-                .path("shopping-list")
-                .request()
-                .post(Entity.json("{ \"name\": \"Test list\" }"));
+        Response createResponse = api.addShoppingList("{ \"name\": \"Test list\" }");
         ResponseTestUtil.assertResponseStatus(createResponse, CREATED);
 
         JsonNode createResponseJson = jsonMapper.read(createResponse);
