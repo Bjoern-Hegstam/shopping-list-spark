@@ -5,3 +5,6 @@ target
 
 node_modules
 dist
+
+# Pulbic asests copied to resources during build as required by Dropwizard AssetsBundle
+src/main/resources/public
