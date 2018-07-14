@@ -1,6 +1,5 @@
 package com.bhegstam.shoppinglist.domain;
 
-import java.util.Objects;
 import java.util.Optional;
 
 public class UserRegistration {
@@ -18,9 +17,8 @@ public class UserRegistration {
                 .filter(User::hasValidEmail)
                 .filter(this::usernameNotInUse)
                 .filter(this::emailNotInUse)
-                .map(userRepository::create)
-                .map(Objects::nonNull)
-                .orElse(false);
+                .map(userRepository::add)
+                .isPresent();
     }
 
     private boolean usernameNotInUse(User user) {

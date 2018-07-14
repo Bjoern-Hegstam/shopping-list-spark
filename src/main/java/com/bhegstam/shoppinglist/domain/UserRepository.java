@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
-    UserId create(User user);
+    UserId add(User user);
 
     User get(UserId userId);
 

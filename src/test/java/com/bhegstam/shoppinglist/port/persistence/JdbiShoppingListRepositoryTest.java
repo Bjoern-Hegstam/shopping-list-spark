@@ -31,10 +31,10 @@ public class JdbiShoppingListRepositoryTest {
         ItemTypeRepository itemTypeRepository = testDatabaseSetup.getRepositoryFactory().createItemTypeRepository();
 
         itemType1 = new ItemType("itemType1");
-        itemTypeRepository.createItemType(itemType1);
+        itemTypeRepository.add(itemType1);
 
         itemType2 = new ItemType("itemType2");
-        itemTypeRepository.createItemType(itemType2);
+        itemTypeRepository.add(itemType2);
     }
 
     @Test(expected = ShoppingListNotFoundException.class)
@@ -48,7 +48,7 @@ public class JdbiShoppingListRepositoryTest {
         ShoppingList shoppingList = new ShoppingList("Foo");
 
         // when
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.add(shoppingList);
 
         // then
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
@@ -61,11 +61,11 @@ public class JdbiShoppingListRepositoryTest {
     public void persist_updateNameOfList() {
         // given
         ShoppingList shoppingList = new ShoppingList("Foo");
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.add(shoppingList);
 
         // when
         shoppingList.setName("Bar");
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.add(shoppingList);
 
         // then
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
@@ -83,7 +83,7 @@ public class JdbiShoppingListRepositoryTest {
         item2.setInCart(true);
 
         // when
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.add(shoppingList);
 
         // then items should be persisted
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
@@ -107,11 +107,11 @@ public class JdbiShoppingListRepositoryTest {
     public void persist_addItemsToPersistedList() {
         // given
         ShoppingList shoppingList = new ShoppingList("Foo");
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.add(shoppingList);
 
         // when
         ShoppingListItem item1 = shoppingList.add(itemType1);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.add(shoppingList);
 
         // then
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
@@ -123,11 +123,11 @@ public class JdbiShoppingListRepositoryTest {
         // given
         ShoppingList shoppingList = new ShoppingList("Foo");
         ShoppingListItem item1 = shoppingList.add(itemType1);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.add(shoppingList);
 
         // when
         item1.setQuantity(5);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.add(shoppingList);
 
         // then
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
@@ -143,11 +143,11 @@ public class JdbiShoppingListRepositoryTest {
         ShoppingListItem item1 = shoppingList.add(itemType1);
         ShoppingListItem item2 = shoppingList.add(itemType2);
 
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.add(shoppingList);
 
         // when
         shoppingList.remove(item1.getId());
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.add(shoppingList);
 
         // then
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
@@ -168,10 +168,10 @@ public class JdbiShoppingListRepositoryTest {
         // given
         ShoppingList shoppingList1 = new ShoppingList("Foo");
         ShoppingListItem item1 = shoppingList1.add(itemType1);
-        shoppingListRepository.persist(shoppingList1);
+        shoppingListRepository.add(shoppingList1);
 
         ShoppingList shoppingList2 = new ShoppingList("Bar");
-        shoppingListRepository.persist(shoppingList2);
+        shoppingListRepository.add(shoppingList2);
 
         // when
         List<ShoppingList> lists = shoppingListRepository.getShoppingLists();

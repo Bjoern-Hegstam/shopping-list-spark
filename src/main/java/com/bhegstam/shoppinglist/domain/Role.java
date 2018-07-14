@@ -8,4 +8,16 @@ public enum Role {
         public static final String USER = "USER";
         public static final String ADMIN = "ADMIN";
     }
+
+    public static Role fromString(String role) {
+        if ("USER".equals(role)) {
+            return USER;
+        }
+
+        if ("ADMIN".equals(role)) {
+            return ADMIN;
+        }
+
+        return null;
+    }
 }

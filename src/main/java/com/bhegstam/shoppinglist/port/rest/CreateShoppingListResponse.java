@@ -8,6 +8,6 @@ class CreateShoppingListResponse {
     private final String id;
 
     CreateShoppingListResponse(ShoppingListId id) {
-        this.id = id.toString();
+        this.id = id.getId();
     }
 }

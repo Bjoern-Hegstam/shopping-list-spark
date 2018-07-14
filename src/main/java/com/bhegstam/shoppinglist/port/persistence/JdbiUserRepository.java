@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RegisterRowMapper(UserMapper.class)
 public interface JdbiUserRepository extends UserRepository {
-    default UserId create(User user) {
+    default UserId add(User user) {
         int id = createUser(
                 user.getUsername(),
                 user.getEmail(),

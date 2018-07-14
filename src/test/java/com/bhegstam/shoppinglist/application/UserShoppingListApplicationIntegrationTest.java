@@ -34,7 +34,7 @@ public class UserShoppingListApplicationIntegrationTest {
         UserBean userBean = new UserBean();
 
         // when
-        userApplication.updateUser(userId, userBean);
+        userApplication.updateUser(userId, userBean.getRole(), userBean.getVerified());
 
         // then
         User user = userApplication.getUser(userId);
@@ -50,7 +50,7 @@ public class UserShoppingListApplicationIntegrationTest {
         userBean.setVerified(true);
 
         // when
-        userApplication.updateUser(userId, userBean);
+        userApplication.updateUser(userId, userBean.getRole(), userBean.getVerified());
 
         // then
         User user = userApplication.getUser(userId);
@@ -66,7 +66,7 @@ public class UserShoppingListApplicationIntegrationTest {
         userBean.setRole(Role.ADMIN);
 
         // when
-        userApplication.updateUser(userId, userBean);
+        userApplication.updateUser(userId, userBean.getRole(), userBean.getVerified());
 
         // then
         User user = userApplication.getUser(userId);

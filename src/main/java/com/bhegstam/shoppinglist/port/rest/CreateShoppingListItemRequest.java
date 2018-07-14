@@ -7,14 +7,23 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
-public class CreateShoppingListRequest {
+public class CreateShoppingListItemRequest {
     @NotEmpty
-    private final String name;
+    private final String itemTypeId;
+
+    @NotNull
+    private final Integer quantity;
 
     @JsonCreator
-    public CreateShoppingListRequest(@JsonProperty(value = "name", required = true) String name) {
-        this.name = name;
+    public CreateShoppingListItemRequest(
+            @JsonProperty("itemTypeId") String itemTypeId,
+            @JsonProperty("quantity") Integer quantity
+    ) {
+        this.itemTypeId = itemTypeId;
+        this.quantity = quantity;
     }
 
     @Override

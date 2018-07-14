@@ -1,10 +1,11 @@
 package com.bhegstam.shoppinglist.application;
 
+import com.bhegstam.shoppinglist.domain.Role;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserId;
 import com.bhegstam.shoppinglist.domain.UserRepository;
-import com.bhegstam.shoppinglist.port.rest.UserBean;
 
+import java.util.List;
 import java.util.Optional;
 
 public class UserApplication {
@@ -15,7 +16,7 @@ public class UserApplication {
     }
 
     public UserId addUser(String username, String password, String email) {
-        return userRepository.create(new User(username, password, email));
+        return userRepository.add(new User(username, password, email));
     }
 
     public User getUser(UserId userId) {
@@ -26,13 +27,17 @@ public class UserApplication {
         return userRepository.findByUsername(username);
     }
 
-    public User updateUser(UserId userId, UserBean userBean) {
+    public User updateUser(UserId userId, Role role, Boolean verified) {
         User user = userRepository.get(userId);
-        Optional.ofNullable(userBean.getRole()).ifPresent(user::setRole);
-        Optional.ofNullable(userBean.getVerified()).ifPresent(user::setVerified);
+        Optional.ofNullable(role).ifPresent(user::setRole);
+        Optional.ofNullable(verified).ifPresent(user::setVerified);
 
         userRepository.update(user);
 
         return user;
+    }
+
+    public List<User> getUsers() {
+        return userRepository.getUsers();
     }
 }

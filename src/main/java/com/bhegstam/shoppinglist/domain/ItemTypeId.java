@@ -1,17 +1,15 @@
 package com.bhegstam.shoppinglist.domain;
 
-import java.util.UUID;
-
 public class ItemTypeId extends Identifier {
     public ItemTypeId() {
         super();
     }
 
-    public ItemTypeId(UUID id) {
+    public ItemTypeId(String id) {
         super(id);
     }
 
-    public static ItemTypeId fromString(String s) {
-        return new ItemTypeId(UUID.fromString(s));
+    public static ItemTypeId parse(String id) {
+        return new ItemTypeId(id);
     }
 }

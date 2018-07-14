@@ -14,7 +14,7 @@ import java.util.List;
 @RegisterRowMapper(ShoppingListItemMapper.class)
 public interface JdbiShoppingListRepository extends ShoppingListRepository {
     @Transaction
-    default void persist(ShoppingList shoppingList) {
+    default void add(ShoppingList shoppingList) {
         if (shoppingList.getPersistenceStatus() == PersistenceStatus.INSERT_REQUIRED) {
             createShoppingList(shoppingList.getId(), shoppingList.getName());
             shoppingList.setPersistenceStatus(PersistenceStatus.PERSISTED);

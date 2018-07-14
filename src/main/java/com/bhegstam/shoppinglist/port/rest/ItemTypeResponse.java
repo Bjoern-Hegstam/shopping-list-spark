@@ -1,20 +1,20 @@
 package com.bhegstam.shoppinglist.port.rest;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.bhegstam.shoppinglist.domain.ItemType;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import org.hibernate.validator.constraints.NotEmpty;
 
-@Getter
-public class CreateShoppingListRequest {
-    @NotEmpty
+public class ItemTypeResponse {
+    @JsonProperty
+    private final String id;
+
+    @JsonProperty
     private final String name;
 
-    @JsonCreator
-    public CreateShoppingListRequest(@JsonProperty(value = "name", required = true) String name) {
-        this.name = name;
+    public ItemTypeResponse(ItemType itemType) {
+        id = itemType.getId().getId();
+        name = itemType.getName();
     }
 
     @Override

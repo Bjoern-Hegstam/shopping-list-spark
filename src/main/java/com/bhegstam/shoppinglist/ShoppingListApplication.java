@@ -1,5 +1,6 @@
 package com.bhegstam.shoppinglist;
 
+import com.bhegstam.shoppinglist.application.ItemTypeApplication;
 import com.bhegstam.shoppinglist.application.UserApplication;
 import com.bhegstam.shoppinglist.configuration.DbMigrationBundle;
 import com.bhegstam.shoppinglist.configuration.ShoppingListApplicationConfiguration;
@@ -11,6 +12,9 @@ import com.bhegstam.shoppinglist.domain.ShoppingListRepository;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserRepository;
 import com.bhegstam.shoppinglist.port.persistence.RepositoryFactory;
+import com.bhegstam.shoppinglist.port.rest.ItemTypeResource;
+import com.bhegstam.shoppinglist.port.rest.ShoppingListResource;
+import com.bhegstam.shoppinglist.port.rest.UserResource;
 import com.bhegstam.shoppinglist.port.rest.auth.AuthResource;
 import com.github.toastshaman.dropwizard.auth.jwt.JwtAuthFilter;
 import io.dropwizard.Application;
@@ -68,6 +72,14 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
         configureAuth(config, environment, userRepository);
 
         environment.jersey().register(new AuthResource(config.getJwtTokenSecret()));
+        environment.jersey().register(new ItemTypeResource(new ItemTypeApplication(itemTypeRepository)));
+        environment.jersey().register(new ShoppingListResource(
+                new com.bhegstam.shoppinglist.application.ShoppingListApplication(
+                        shoppingListRepository,
+                        itemTypeRepository
+                )
+        ));
+        environment.jersey().register(new UserResource(new UserApplication(userRepository)));
     }
 
     private void configureAuth(ShoppingListApplicationConfiguration config, Environment environment, UserRepository userRepository) {
@@ -100,13 +112,4 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
         environment.jersey().register(RolesAllowedDynamicFeature.class);
     }
-
-//                        new ItemTypeApiController( new ItemTypeApplication(itemTypeRepository) ),
-//                        new ShoppingListApiController(
-//                                new com.bhegstam.shoppinglist.application.ShoppingListApplication(
-//                                        shoppingListRepository,
-//                                        itemTypeRepository
-//                                )
-//                        ),
-//                        new UserApiController(new UserApplication(userRepository))
 }

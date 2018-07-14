@@ -35,10 +35,10 @@ public class JdbiUserRepositoryTest {
         userRepository = testDatabaseSetup.getRepositoryFactory().createUserRepository();
 
         unpersistedUser = new User("Foo", "bar", "foo@bar.com");
-        userId = userRepository.create(unpersistedUser);
+        userId = userRepository.add(unpersistedUser);
 
         unpersistedAdmin = new User("FooAdmin", "bar", "foo@admin.com", true, Role.ADMIN);
-        adminId = userRepository.create(unpersistedAdmin);
+        adminId = userRepository.add(unpersistedAdmin);
     }
 
     @Test

@@ -14,10 +14,19 @@ import java.util.List;
 @RegisterRowMapper(ItemTypeMapper.class)
 public interface JdbiItemTypeRepository extends ItemTypeRepository {
     @SqlUpdate("insert into item_type(id, name) values (:itemType.id.id, :itemType.name)")
-    void createItemType(@BindBean("itemType") ItemType itemType);
+    void add(@BindBean("itemType") ItemType itemType);
+
+    default ItemType get(ItemTypeId id) {
+        ItemType itemType = getItemType(id);
+        if (itemType == null) {
+            throw new ItemTypeNotFoundException(id);
+        }
+
+        return itemType;
+    }
 
     @SqlQuery("select * from item_type where id = :itemTypeId.id")
-    ItemType get(@BindBean("itemTypeId") ItemTypeId id);
+    ItemType getItemType(@BindBean("itemTypeId") ItemTypeId id);
 
     @SqlQuery("select * from item_type where name like ':nameStart%' order by name limit :limit")
     List<ItemType> findItemTypes(@Bind("nameStart") String nameStart, @Bind("limit") int limit);

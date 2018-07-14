@@ -1,6 +1,7 @@
 package com.bhegstam.shoppinglist.port.persistence;
 
 import com.bhegstam.shoppinglist.domain.ItemType;
+import com.bhegstam.shoppinglist.domain.ItemTypeId;
 import com.bhegstam.shoppinglist.domain.ItemTypeRepository;
 import com.bhegstam.shoppinglist.util.TestDatabaseSetup;
 import org.junit.Before;
@@ -34,7 +35,7 @@ public class JdbiItemTypeRepositoryTest {
         ItemType itemType = new ItemType("Foo");
 
         // persist
-        itemTypeRepository.createItemType(itemType);
+        itemTypeRepository.add(itemType);
         assertThat(itemType.getId(), notNullValue());
         assertThat(itemType.getName(), is("Foo"));
 
@@ -42,6 +43,12 @@ public class JdbiItemTypeRepositoryTest {
         ItemType persistedItemType = itemTypeRepository.get(itemType.getId());
         assertThat(persistedItemType.getId(), notNullValue());
         assertThat(persistedItemType.getName(), is("Foo"));
+    }
+
+    @Test(expected = ItemTypeNotFoundException.class)
+    public void getItemType_itemTypeNotFound() {
+        itemTypeRepository.get(ItemTypeId.parse("3bef76e6-2756-4352-b564-d172a9aa93f8"));
+
     }
 
     @Test
@@ -53,10 +60,10 @@ public class JdbiItemTypeRepositoryTest {
     public void getItemTypes() {
         // given
         ItemType itemType1 = new ItemType("Foo");
-        itemTypeRepository.createItemType(itemType1);
+        itemTypeRepository.add(itemType1);
 
         ItemType itemType2 = new ItemType("Bar");
-        itemTypeRepository.createItemType(itemType2);
+        itemTypeRepository.add(itemType2);
 
         // when
         List<ItemType> itemTypes = itemTypeRepository.getItemTypes();
@@ -69,7 +76,7 @@ public class JdbiItemTypeRepositoryTest {
     public void deleteItemType() {
         // given
         ItemType itemType1 = new ItemType("Foo");
-        itemTypeRepository.createItemType(itemType1);
+        itemTypeRepository.add(itemType1);
 
         // when
         itemTypeRepository.deleteItemType(itemType1.getId());
@@ -86,13 +93,13 @@ public class JdbiItemTypeRepositoryTest {
 
         // Prep db
         ItemType itemType1 = new ItemType("Foo");
-        itemTypeRepository.createItemType(itemType1);
+        itemTypeRepository.add(itemType1);
 
         ItemType itemType2 = new ItemType("Far");
-        itemTypeRepository.createItemType(itemType2);
+        itemTypeRepository.add(itemType2);
 
         ItemType itemType3 = new ItemType("Baz");
-        itemTypeRepository.createItemType(itemType3);
+        itemTypeRepository.add(itemType3);
 
         errorCollector.checkThat(itemTypeRepository.findItemTypes("", 0), isEmpty());
         errorCollector.checkThat(itemTypeRepository.findItemTypes("", 5), containsInAnyOrder(itemType3, itemType2, itemType1));

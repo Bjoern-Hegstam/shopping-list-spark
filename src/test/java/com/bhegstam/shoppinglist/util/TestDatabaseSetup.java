@@ -85,9 +85,9 @@ public class TestDatabaseSetup implements TestRule {
 
     private void insertUsers() {
         UserRepository userRepository = repositoryFactory.createUserRepository();
-        userRepository.create(TestData.ADMIN);
-        userRepository.create(TestData.USER);
-        userRepository.create(TestData.UNVERIFIED_USER);
+        userRepository.add(TestData.ADMIN);
+        userRepository.add(TestData.USER);
+        userRepository.add(TestData.UNVERIFIED_USER);
     }
 
     private void after() {

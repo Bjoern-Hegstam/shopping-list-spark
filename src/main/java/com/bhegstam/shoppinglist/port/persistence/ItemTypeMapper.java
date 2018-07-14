@@ -12,7 +12,7 @@ public class ItemTypeMapper implements RowMapper<ItemType> {
     @Override
     public ItemType map(ResultSet rs, StatementContext ctx) throws SQLException {
         return new ItemType(
-                ItemTypeId.fromString(rs.getString("id")),
+                ItemTypeId.parse(rs.getString("id")),
                 rs.getString("name")
         );
     }

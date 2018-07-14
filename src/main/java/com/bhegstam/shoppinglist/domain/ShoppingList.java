@@ -4,7 +4,7 @@ import com.bhegstam.shoppinglist.port.persistence.PersistenceStatus;
 
 import java.util.*;
 
-import static com.bhegstam.webutil.CustomCollectors.onlyElement;
+import static com.bhegstam.webutil.CustomCollectors.onlyOptionalElement;
 import static java.util.stream.Collectors.toList;
 
 public class ShoppingList extends Entity<ShoppingListId> {
@@ -17,7 +17,11 @@ public class ShoppingList extends Entity<ShoppingListId> {
         this(new ShoppingListId(), name, PersistenceStatus.INSERT_REQUIRED);
     }
 
-    public ShoppingList(ShoppingListId id, String name, PersistenceStatus persistenceStatus) {
+    public static ShoppingList fromDb(String id, String name) {
+        return new ShoppingList(ShoppingListId.fromString(id), name, PersistenceStatus.PERSISTED);
+    }
+
+    private ShoppingList(ShoppingListId id, String name, PersistenceStatus persistenceStatus) {
         super(id);
         this.name = name;
         items = new HashMap<>();
@@ -59,7 +63,8 @@ public class ShoppingList extends Entity<ShoppingListId> {
         return items
                 .values().stream()
                 .filter(item -> item.getId().equals(itemId))
-                .collect(onlyElement());
+                .collect(onlyOptionalElement())
+                .orElseThrow(() -> new ShoppingListItemNotFoundException(itemId));
     }
 
     public void remove(ItemTypeId itemTypeId) {
@@ -72,7 +77,8 @@ public class ShoppingList extends Entity<ShoppingListId> {
                 .entrySet().stream()
                 .filter(e -> e.getValue().getId().equals(listItemId))
                 .map(Map.Entry::getKey)
-                .collect(onlyElement());
+                .collect(onlyOptionalElement())
+                .orElseThrow(() -> new ShoppingListItemNotFoundException(listItemId));
 
         ShoppingListItem item = items.remove(itemTypeId);
         removedItems.add(item.getId());

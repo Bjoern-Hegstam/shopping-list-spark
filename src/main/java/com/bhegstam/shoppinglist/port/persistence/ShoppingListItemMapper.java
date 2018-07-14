@@ -16,7 +16,7 @@ public class ShoppingListItemMapper implements RowMapper<ShoppingListItem> {
         return new ShoppingListItem(
                 ShoppingListItemId.fromString(rs.getString("i_id")),
                 new ItemType(
-                        ItemTypeId.fromString(rs.getString("it_id")),
+                        ItemTypeId.parse(rs.getString("it_id")),
                         rs.getString("it_name")
                 ),
                 rs.getInt("i_quantity"),

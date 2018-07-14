@@ -71,7 +71,7 @@ public class UserRegistrationTest {
     @Test
     public void register_whenUsernameAlreadyTaken() {
         // given
-        userRepository.create(existingUser);
+        userRepository.add(existingUser);
         User user = new User(
                 existingUser.getUsername(),
                 PASSWORD,
@@ -104,7 +104,7 @@ public class UserRegistrationTest {
     @Test
     public void register_whenEmailAlreadyInUse() {
         // given
-        userRepository.create(existingUser);
+        userRepository.add(existingUser);
         User user = new User(
                 UNUSED_USERNAME,
                 PASSWORD,

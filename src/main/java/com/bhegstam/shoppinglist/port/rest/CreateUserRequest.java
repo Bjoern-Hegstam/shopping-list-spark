@@ -1,6 +1,5 @@
 package com.bhegstam.shoppinglist.port.rest;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -8,13 +7,24 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Getter
-public class CreateShoppingListRequest {
+class CreateUserRequest {
     @NotEmpty
-    private final String name;
+    private final String username;
 
-    @JsonCreator
-    public CreateShoppingListRequest(@JsonProperty(value = "name", required = true) String name) {
-        this.name = name;
+    @NotEmpty
+    private final String password;
+
+    @NotEmpty
+    private final String email;
+
+    public CreateUserRequest(
+            @JsonProperty("username") String username,
+            @JsonProperty("password") String password,
+            @JsonProperty("email") String email
+    ) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
     }
 
     @Override

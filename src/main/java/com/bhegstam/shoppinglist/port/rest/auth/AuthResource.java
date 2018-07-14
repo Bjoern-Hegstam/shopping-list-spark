@@ -1,10 +1,8 @@
 package com.bhegstam.shoppinglist.port.rest.auth;
 
 import com.bhegstam.shoppinglist.domain.User;
+import com.bhegstam.shoppinglist.port.rest.TokenGenerator;
 import io.dropwizard.auth.Auth;
-import org.jose4j.jws.JsonWebSignature;
-import org.jose4j.jwt.JwtClaims;
-import org.jose4j.keys.HmacKey;
 import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +17,6 @@ import javax.ws.rs.core.Response;
 
 import static com.bhegstam.shoppinglist.domain.Role.RoleName.ADMIN;
 import static com.bhegstam.shoppinglist.domain.Role.RoleName.USER;
-import static org.jose4j.jws.AlgorithmIdentifiers.HMAC_SHA256;
 
 
 @Path("auth")
@@ -32,31 +29,22 @@ public class AuthResource {
         this.tokenSecret = tokenSecret;
     }
 
-    @Path("/")
     @RolesAllowed({USER, ADMIN})
     @POST
     public Response generateTokenAndGetUser(@Auth User user) {
         LOGGER.debug("Generating token for user {}", user.getId());
 
-        JwtClaims claims = new JwtClaims();
-        claims.setSubject(user.getUsername());
-        claims.setExpirationTimeMinutesInTheFuture(60);
-        claims.setIssuedAtToNow();
-
-        JsonWebSignature jws = new JsonWebSignature();
-        jws.setPayload(claims.toJson());
-        jws.setAlgorithmHeaderValue(HMAC_SHA256);
-        jws.setKey(new HmacKey(tokenSecret));
-
+        String token;
         try {
-            return Response
-                    .ok()
-                    .entity(new AuthResponse(jws.getCompactSerialization(), user))
-                    .build();
+            token = TokenGenerator.generate(user, tokenSecret);
         } catch (JoseException e) {
             LOGGER.error("Error when returning token for user " + user.getUsername(), e);
             return Response.serverError().build();
         }
+        return Response
+                .ok()
+                .entity(new AuthResponse(token, user))
+                .build();
     }
 
     @Path("ping")

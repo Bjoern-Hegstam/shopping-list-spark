@@ -8,17 +8,18 @@ import java.util.UUID;
 
 @EqualsAndHashCode
 public abstract class Identifier {
-    private final UUID id;
+    private final String id;
 
     public Identifier() {
-        id = UUID.randomUUID();
+        id = UUID.randomUUID().toString();
     }
 
-    public Identifier(UUID id) {
+    public Identifier(String id) {
+        UUID.fromString(id); // Ensure that id is UUID
         this.id = id;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
