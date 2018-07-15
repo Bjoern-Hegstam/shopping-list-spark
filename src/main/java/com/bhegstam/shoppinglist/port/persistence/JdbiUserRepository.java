@@ -7,7 +7,6 @@ import com.bhegstam.shoppinglist.domain.UserRepository;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
-import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -16,8 +15,9 @@ import java.util.Optional;
 
 @RegisterRowMapper(UserMapper.class)
 public interface JdbiUserRepository extends UserRepository {
-    default UserId add(User user) {
-        int id = createUser(
+    default void add(User user) {
+        createUser(
+                user.getId(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getHashedPassword(),
@@ -25,7 +25,6 @@ public interface JdbiUserRepository extends UserRepository {
                 user.isVerified(),
                 mapUserRole(user.getRole())
         );
-        return UserId.from(id);
     }
 
     default String mapUserRole(Role role) {
@@ -39,9 +38,9 @@ public interface JdbiUserRepository extends UserRepository {
         }
     }
 
-    @SqlUpdate("insert into application_user(username, email, hashed_password, salt, verified, role) values (:username, :email, :hashedPassword, :salt, :verified, :role)")
-    @GetGeneratedKeys
-    int createUser(
+    @SqlUpdate("insert into application_user(id, username, email, hashed_password, salt, verified, role) values (:userId.id, :username, :email, :hashedPassword, :salt, :verified, :role)")
+    void createUser(
+            @BindBean("userId") UserId userId,
             @Bind("username") String username,
             @Bind("email") String email,
             @Bind("hashedPassword") String hashedPassword,
@@ -75,7 +74,7 @@ public interface JdbiUserRepository extends UserRepository {
 
     @SqlUpdate("update application_user set username = :username, email = :email, verified = :verified, role = :role where id = :id")
     void updateUser(
-            @Bind("id") int id,
+            @Bind("id") String id,
             @Bind("username") String username,
             @Bind("email") String email,
             @Bind("verified") boolean verified,

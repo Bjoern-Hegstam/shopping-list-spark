@@ -25,7 +25,7 @@ public interface JdbiItemTypeRepository extends ItemTypeRepository {
         return itemType;
     }
 
-    @SqlQuery("select * from item_type where id = :itemTypeId.id")
+    @SqlQuery("select * from item_type where id::text = :itemTypeId.id")
     ItemType getItemType(@BindBean("itemTypeId") ItemTypeId id);
 
     @SqlQuery("select * from item_type where name like ':nameStart%' order by name limit :limit")

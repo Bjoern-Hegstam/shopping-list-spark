@@ -16,7 +16,9 @@ public class UserApplication {
     }
 
     public UserId addUser(String username, String password, String email) {
-        return userRepository.add(new User(username, password, email));
+        User user = new User(username, password, email);
+        userRepository.add(user);
+        return user.getId();
     }
 
     public User getUser(UserId userId) {

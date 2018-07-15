@@ -20,7 +20,7 @@ public class User implements Principal {
     }
 
     public User(String username, String password, String email, boolean verified, Role role) {
-        this.id = null;
+        this.id = new UserId();
         this.username = Objects.requireNonNull(username);
         this.email = Objects.requireNonNull(email);
         this.verified = verified;

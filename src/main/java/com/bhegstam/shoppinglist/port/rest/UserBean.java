@@ -17,7 +17,7 @@ public class UserBean {
 
     public static UserBean fromUser(User user) {
         UserBean bean = new UserBean();
-        bean.id = Integer.toString(user.getId().getId());
+        bean.id = user.getId().getId();
         bean.username = user.getUsername();
         bean.email = user.getEmail();
         bean.verified = user.isVerified();

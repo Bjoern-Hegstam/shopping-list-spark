@@ -11,14 +11,19 @@ public class UserRegistration {
     }
 
     public boolean register(User user) {
-        return Optional
+        boolean userReqistrationAllowed = Optional
                 .of(user)
                 .filter(User::hasValidUsername)
                 .filter(User::hasValidEmail)
                 .filter(this::usernameNotInUse)
                 .filter(this::emailNotInUse)
-                .map(userRepository::add)
                 .isPresent();
+
+        if (userReqistrationAllowed) {
+            userRepository.add(user);
+        }
+
+        return userReqistrationAllowed;
     }
 
     private boolean usernameNotInUse(User user) {

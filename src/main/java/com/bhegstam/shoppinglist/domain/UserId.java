@@ -1,25 +1,18 @@
 package com.bhegstam.shoppinglist.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-@EqualsAndHashCode
-public class UserId {
-    @Getter
-    private final int id;
-
-    private UserId(int id) {
-        this.id = id;
+public class UserId extends Identifier {
+    public UserId() {
     }
 
-    public static UserId from(int id) {
-        return new UserId(id);
+    private UserId(String id) {
+        super(id);
     }
 
     public static UserId from(String id) {
-        return UserId.from(Integer.parseInt(id));
+        return new UserId(id);
     }
 
     @Override

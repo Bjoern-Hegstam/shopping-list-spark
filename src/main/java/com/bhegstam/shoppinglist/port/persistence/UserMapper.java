@@ -13,7 +13,7 @@ public class UserMapper implements RowMapper<User> {
     @Override
     public User map(ResultSet rs, StatementContext ctx) throws SQLException {
         return new User(
-                UserId.from(rs.getInt("id")),
+                UserId.from(rs.getString("id")),
                 rs.getString("username"),
                 rs.getString("email"),
                 rs.getString("hashed_password"),

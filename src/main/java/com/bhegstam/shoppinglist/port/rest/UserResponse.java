@@ -8,7 +8,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 class UserResponse {
     @JsonProperty
-    private final int id;
+    private final String id;
 
     @JsonProperty
     private final String username;
