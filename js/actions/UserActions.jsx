@@ -7,8 +7,9 @@ export function login(username, password) {
             request: {
                 method: 'post',
                 url: 'auth',
-                headers: {
-                    Authorization: 'Basic ' + btoa(username + ':' + password)
+                auth: {
+                    username,
+                    password
                 }
             }
         }

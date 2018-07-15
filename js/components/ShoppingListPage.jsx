@@ -7,6 +7,7 @@ import {getShoppingList} from "../actions/ShoppingListActions";
 
 export class ShoppingListPage extends React.Component {
     static propTypes = {
+        token: PropTypes.string.isRequired,
         shoppingList: ShoppingListType,
 
         getShoppingList: PropTypes.func.isRequired,
@@ -19,7 +20,10 @@ export class ShoppingListPage extends React.Component {
     };
 
     componentDidMount() {
-        this.props.getShoppingList(this.props.match.params.listId);
+        this.props.getShoppingList({
+            token: this.props.token,
+            id: this.props.match.params.listId
+        });
     }
 
     render() {
@@ -49,10 +53,11 @@ export default connect(
         const {shoppingLists} = store.shoppingList;
 
         return {
+            token: store.auth.token,
             shoppingList: listId ? shoppingLists[listId] : undefined
         };
     },
     dispatch => ({
-        getShoppingList: id => dispatch(getShoppingList(id))
+        getShoppingList: args => dispatch(getShoppingList(args))
     })
 )(ShoppingListPage);

@@ -8,8 +8,10 @@ import {Link} from "react-router-dom";
 
 export class ShoppingListsPage extends React.Component {
     static propTypes = {
-        getShoppingLists: PropTypes.func.isRequired,
+        token: PropTypes.string.isRequired,
         shoppingLists: PropTypes.objectOf(ShoppingListType).isRequired,
+
+        getShoppingLists: PropTypes.func.isRequired,
         fetching: PropTypes.bool,
         error: PropTypes.object
     };
@@ -21,7 +23,7 @@ export class ShoppingListsPage extends React.Component {
     };
 
     componentDidMount() {
-        this.props.getShoppingLists();
+        this.props.getShoppingLists(this.props.token);
     }
 
     renderLists = () => {
@@ -46,9 +48,10 @@ export class ShoppingListsPage extends React.Component {
 
 export default connect(
     store => ({
-        ...store.shoppingList
+        ...store.shoppingList,
+        token: store.auth.token
     }),
     dispatch => ({
-        getShoppingLists: () => dispatch(getShoppingLists())
+        getShoppingLists: arg => dispatch(getShoppingLists(arg))
     })
 )(ShoppingListsPage);
