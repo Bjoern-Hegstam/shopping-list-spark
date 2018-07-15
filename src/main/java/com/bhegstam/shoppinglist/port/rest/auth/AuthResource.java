@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 
 import static com.bhegstam.shoppinglist.domain.Role.RoleName.ADMIN;
 import static com.bhegstam.shoppinglist.domain.Role.RoleName.USER;
+import static javax.ws.rs.core.Response.Status.OK;
 
 
 @Path("auth")
@@ -32,17 +33,17 @@ public class AuthResource {
     @RolesAllowed({USER, ADMIN})
     @POST
     public Response generateTokenAndGetUser(@Auth User user) {
-        LOGGER.debug("Generating token for user {}", user.getId());
+        LOGGER.debug("Received request to generate token for user [{}]", user.getId());
 
         String token;
         try {
             token = TokenGenerator.generate(user, tokenSecret);
         } catch (JoseException e) {
-            LOGGER.error("Error when returning token for user " + user.getUsername(), e);
+            LOGGER.error("Error when returning token for user [" + user.getUsername() + "]", e);
             return Response.serverError().build();
         }
         return Response
-                .ok()
+                .status(OK)
                 .entity(new AuthResponse(token, user))
                 .build();
     }
@@ -51,7 +52,9 @@ public class AuthResource {
     @RolesAllowed({USER, ADMIN})
     @GET
     public Response ping(@Auth User user) {
-        LOGGER.debug("Response to ping from user {}", user.getId());
-        return Response.ok().build();
+        LOGGER.info("Received ping from user [{}]", user.getId());
+        return Response
+                .status(OK)
+                .build();
     }
 }

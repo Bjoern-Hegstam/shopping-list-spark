@@ -2,7 +2,6 @@ package com.bhegstam.shoppinglist.configuration.auth;
 
 import com.bhegstam.shoppinglist.application.UserApplication;
 import com.bhegstam.shoppinglist.domain.User;
-import com.bhegstam.shoppinglist.port.rest.Message;
 import io.dropwizard.auth.basic.BasicCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +27,12 @@ public class BasicAuthenticator implements io.dropwizard.auth.Authenticator<Basi
                 .filter(u -> u.hasPassword(password));
 
         if (!user.isPresent()) {
-            LOGGER.error(Message.LOGIN_AUTH_FAILED);
+            LOGGER.error("Error while authenticating. User [{}] does not exist", credentials.getUsername());
             return Optional.empty();
         }
 
         if (!user.get().isVerified()) {
-            LOGGER.error(Message.LOGIN_USER_PENDING_VERIFICATION);
+            LOGGER.warn("User [{}] pending verification", user.get().getId());
             return Optional.empty();
         }
 

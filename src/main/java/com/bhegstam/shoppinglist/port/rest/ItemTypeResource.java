@@ -5,9 +5,8 @@ import com.bhegstam.shoppinglist.domain.ItemType;
 import com.bhegstam.shoppinglist.domain.ItemTypeId;
 import com.bhegstam.shoppinglist.domain.User;
 import io.dropwizard.auth.Auth;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.eclipse.jetty.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
@@ -23,7 +22,7 @@ import static javax.ws.rs.core.Response.Status.*;
 @Path("item-type")
 @Produces(MediaType.APPLICATION_JSON)
 public class ItemTypeResource {
-    private static final Logger LOGGER = LogManager.getLogger(ItemTypeResource.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingListResource.class);
 
     private final ItemTypeApplication itemTypeApplication;
 
@@ -34,17 +33,26 @@ public class ItemTypeResource {
     @RolesAllowed({USER, ADMIN})
     @POST
     public Response postItemType(@Auth User user, @Valid CreateItemTypeRequest request) {
+        LOGGER.info("Received request [{}] to create item type for user [{}]", request, user.getId());
+
         ItemType itemType = itemTypeApplication.createItemType(request.getName());
 
+        Response.Status status = CREATED;
+        ItemTypeResponse body = new ItemTypeResponse(itemType);
+
+        logResponse(status, body);
+
         return Response
-                .status(CREATED)
-                .entity(new ItemTypeResponse(itemType))
+                .status(status)
+                .entity(body)
                 .build();
     }
 
     @RolesAllowed({USER, ADMIN})
     @GET
     public Response getItemTypes(@Auth User user, @QueryParam("name") String nameStart, @QueryParam("limit") Integer limit) {
+        LOGGER.info("Received request to get item types [nameStart: [{}], limit: [{}]] for user [{}]", nameStart, limit, user.getId());
+
         List<ItemType> itemTypes;
         if (nameStart == null && limit == null) {
             itemTypes = itemTypeApplication.getItemTypes();
@@ -52,9 +60,14 @@ public class ItemTypeResource {
             itemTypes = itemTypeApplication.findItemTypes(nameStart, limit);
         }
 
+        Response.Status status = OK;
+        ItemTypesResponse body = new ItemTypesResponse(itemTypes);
+
+        logResponse(status, body);
+
         return Response
-                .status(OK)
-                .entity(new ItemTypesResponse(itemTypes))
+                .status(status)
+                .entity(body)
                 .build();
     }
 
@@ -62,6 +75,8 @@ public class ItemTypeResource {
     @RolesAllowed({USER, ADMIN})
     @DELETE
     public Response deleteItemType(@Auth User user, @PathParam("item_type_id") String itemTypeIdString) {
+        LOGGER.info("Received request to delete item type [{}] for user [{}]", itemTypeIdString, user.getId());
+
         ItemTypeId itemTypeId;
         try {
             itemTypeId = ItemTypeId.parse(itemTypeIdString);
@@ -74,8 +89,16 @@ public class ItemTypeResource {
 
         itemTypeApplication.deleteItemType(itemTypeId);
 
+        Response.Status status = NO_CONTENT;
+
+        logResponse(status, null);
+
         return Response
-                .status(HttpStatus.NO_CONTENT_204)
+                .status(status)
                 .build();
+    }
+
+    private void logResponse(Response.Status status, Object body) {
+        LOGGER.info("Responding to request with status [{}] and body [{}]", status, body);
     }
 }

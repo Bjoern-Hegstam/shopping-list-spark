@@ -6,6 +6,8 @@ import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserId;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.PATCH;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
@@ -21,6 +23,8 @@ import static javax.ws.rs.core.Response.Status.OK;
 @Path("user")
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
+
     private final UserApplication userApplication;
 
     public UserResource(UserApplication userApplication) {
@@ -30,26 +34,40 @@ public class UserResource {
     @RolesAllowed(ADMIN)
     @POST
     public Response createUser(@Auth User user, @Valid CreateUserRequest request) {
+        LOGGER.info("Received request to create user [{}] by user [{}]", request.getUsername(), user.getId());
+
         UserId userId = userApplication.addUser(
                 request.getUsername(),
                 request.getPassword(),
                 request.getEmail()
         );
 
+        Response.Status status = CREATED;
+        UserCreatedResponse body = new UserCreatedResponse(userId);
+
+        logResponse(status, body);
+
         return Response
-                .status(CREATED)
-                .entity(new UserCreatedResponse(userId))
+                .status(status)
+                .entity(body)
                 .build();
     }
 
     @RolesAllowed(ADMIN)
     @GET
     public Response getUsers(@Auth User user) {
+        LOGGER.info("Received request to get users for user [{}]", user.getId());
+
         List<User> users = userApplication.getUsers();
 
+        Response.Status status = OK;
+        GetUsersResponse body = new GetUsersResponse(users);
+
+        logResponse(status, body);
+
         return Response
-                .status(OK)
-                .entity(new GetUsersResponse(users))
+                .status(status)
+                .entity(body)
                 .build();
     }
 
@@ -57,13 +75,24 @@ public class UserResource {
     @RolesAllowed(ADMIN)
     @PATCH // TODO: Replace with PUT
     public Response patchUser(@Auth User user, @PathParam("userId") String userIdString, @Valid UpdateUserRequest request) {
+        LOGGER.info("Received request [{}] to update user [{}] for user [{}]", request, userIdString, user);
+
         UserId userId = UserId.from(userIdString);
 
         User updateUser = userApplication.updateUser(userId, Role.fromString(request.getRole()), request.getVerified());
 
+        Response.Status status = OK;
+        UserResponse body = new UserResponse(updateUser);
+
+        logResponse(status, body);
+
         return Response
-                .status(OK)
-                .entity(new UserResponse(updateUser))
+                .status(status)
+                .entity(body)
                 .build();
+    }
+
+    private void logResponse(Response.Status status, Object body) {
+        LOGGER.info("Responding to request with status [{}] and body [{}]", status, body);
     }
 }
