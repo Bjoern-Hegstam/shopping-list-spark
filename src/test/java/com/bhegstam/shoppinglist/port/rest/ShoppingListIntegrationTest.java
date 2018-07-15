@@ -90,7 +90,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void createAndGetShoppingList() {
         // Create
-        Response createResponse = api.addShoppingList("{ \"name\": \"Test list\" }");
+        Response createResponse = api.postShoppingList("{ \"name\": \"Test list\" }");
         ResponseTestUtil.assertResponseStatus(createResponse, CREATED);
 
         JsonNode createResponseJson = jsonMapper.read(createResponse);
@@ -132,7 +132,7 @@ public class ShoppingListIntegrationTest {
         ShoppingListId listId = shoppingList.getId();
 
         // Add item to list
-        Response addItemResponse = api.addShoppingListItem(listId.getId(), "{ \"itemTypeId\": \"" + itemType.getId().getId() + "\", \"quantity\": 3 }");
+        Response addItemResponse = api.postShoppingListItem(listId.getId(), "{ \"itemTypeId\": \"" + itemType.getId().getId() + "\", \"quantity\": 3 }");
 
         ResponseTestUtil.assertResponseStatus(addItemResponse, CREATED);
 
@@ -160,7 +160,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_invalidListId() {
         // when
-        Response response = api.addShoppingListItem(INVALID_ID, "{ \"itemTypeId\": \"" + itemType.getId().getId() + "\", \"quantity\": 1 }");
+        Response response = api.postShoppingListItem(INVALID_ID, "{ \"itemTypeId\": \"" + itemType.getId().getId() + "\", \"quantity\": 1 }");
 
         // then
         ResponseTestUtil.assertResponseStatus(response, BAD_REQUEST);
@@ -169,7 +169,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_unknownListId() {
         // when
-        Response response = api.addShoppingListItem("26490c45-3ef2-422b-bf28-de14c04fce61", "{ \"itemTypeId\": \"" + itemType.getId().getId() + "\", \"quantity\": 1 }");
+        Response response = api.postShoppingListItem("26490c45-3ef2-422b-bf28-de14c04fce61", "{ \"itemTypeId\": \"" + itemType.getId().getId() + "\", \"quantity\": 1 }");
 
         // then
         ResponseTestUtil.assertResponseStatus(response, BAD_REQUEST);
@@ -181,7 +181,7 @@ public class ShoppingListIntegrationTest {
         shoppingListRepository.add(shoppingList);
 
         // when
-        Response response = api.addShoppingListItem(shoppingList.getId().getId(), "{ \"itemTypeId\": \"" + INVALID_ID + "\", \"quantity\": 3 }");
+        Response response = api.postShoppingListItem(shoppingList.getId().getId(), "{ \"itemTypeId\": \"" + INVALID_ID + "\", \"quantity\": 3 }");
 
         // then
         ResponseTestUtil.assertResponseStatus(response, BAD_REQUEST);
@@ -193,7 +193,7 @@ public class ShoppingListIntegrationTest {
         shoppingListRepository.add(shoppingList);
 
         // when
-        Response response = api.addShoppingListItem(shoppingList.getId().getId(), "{ \"itemTypeId\": \"d432242b-94f8-4d6a-b930-d3603485d470\", \"quantity\": 3 }");
+        Response response = api.postShoppingListItem(shoppingList.getId().getId(), "{ \"itemTypeId\": \"d432242b-94f8-4d6a-b930-d3603485d470\", \"quantity\": 3 }");
 
         // then
         ResponseTestUtil.assertResponseStatus(response, BAD_REQUEST);
@@ -205,7 +205,7 @@ public class ShoppingListIntegrationTest {
         shoppingListRepository.add(shoppingList);
 
         // when
-        Response response = api.addShoppingListItem(shoppingList.getId().getId(), "{ \"quantity\": 3 }");
+        Response response = api.postShoppingListItem(shoppingList.getId().getId(), "{ \"quantity\": 3 }");
 
         // then
         ResponseTestUtil.assertResponseStatus(response, ResponseTestUtil.UNPROCESSABLE_ENTITY);
@@ -217,7 +217,7 @@ public class ShoppingListIntegrationTest {
         shoppingListRepository.add(shoppingList);
 
         // when
-        Response response = api.addShoppingListItem(shoppingList.getId().getId(), "{ \"itemTypeId\": \"" + itemType.getId().getId() + "\" }");
+        Response response = api.postShoppingListItem(shoppingList.getId().getId(), "{ \"itemTypeId\": \"" + itemType.getId().getId() + "\" }");
 
         // then
         ResponseTestUtil.assertResponseStatus(response, ResponseTestUtil.UNPROCESSABLE_ENTITY);
@@ -231,7 +231,7 @@ public class ShoppingListIntegrationTest {
         ShoppingListId listId = shoppingList.getId();
 
         // when
-        Response updateItemResponse = api.updateShoppingListItem(listId.getId(), listItem.getId().getId(), "{ \"quantity\": 3, \"inCart\": \"true\"}");
+        Response updateItemResponse = api.putShoppingListItem(listId.getId(), listItem.getId().getId(), "{ \"quantity\": 3, \"inCart\": \"true\"}");
         ResponseTestUtil.assertResponseStatus(updateItemResponse, NO_CONTENT);
 
         // then
@@ -258,7 +258,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void updateItem_invalidListId() {
         // when
-        Response response = api.updateShoppingListItem(INVALID_ID, "ff428927-8618-4f3d-b1a8-a38a82c42c38", "{}");
+        Response response = api.putShoppingListItem(INVALID_ID, "ff428927-8618-4f3d-b1a8-a38a82c42c38", "{}");
 
         // then
         ResponseTestUtil.assertResponseStatus(response, BAD_REQUEST);
@@ -267,7 +267,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void updateItem_unknownListId() {
         // when
-        Response response = api.updateShoppingListItem("26490c45-3ef2-422b-bf28-de14c04fce61", "ff428927-8618-4f3d-b1a8-a38a82c42c38", "{}");
+        Response response = api.putShoppingListItem("26490c45-3ef2-422b-bf28-de14c04fce61", "ff428927-8618-4f3d-b1a8-a38a82c42c38", "{}");
 
         // then
         ResponseTestUtil.assertResponseStatus(response, BAD_REQUEST);
@@ -276,7 +276,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void updateItem_invalidListItemId() {
         // when
-        Response response = api.updateShoppingListItem("26490c45-3ef2-422b-bf28-de14c04fce61", INVALID_ID, "{}");
+        Response response = api.putShoppingListItem("26490c45-3ef2-422b-bf28-de14c04fce61", INVALID_ID, "{}");
 
         // then
         ResponseTestUtil.assertResponseStatus(response, BAD_REQUEST);
@@ -285,7 +285,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void updateItem_unknownListItemId() {
         // when
-        Response response = api.updateShoppingListItem(shoppingList.getId().getId(), "ff428927-8618-4f3d-b1a8-a38a82c42c38", "{}");
+        Response response = api.putShoppingListItem(shoppingList.getId().getId(), "ff428927-8618-4f3d-b1a8-a38a82c42c38", "{}");
 
         // then
         ResponseTestUtil.assertResponseStatus(response, BAD_REQUEST);
@@ -352,7 +352,7 @@ public class ShoppingListIntegrationTest {
         shoppingListRepository.add(shoppingList);
 
         // when
-        Response response = api.emptyShoppingListCart(shoppingList.getId().getId());
+        Response response = api.deleteShoppingListCart(shoppingList.getId().getId());
 
         // then
         ResponseTestUtil.assertResponseStatus(response, NO_CONTENT);
@@ -361,7 +361,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void emptyCart_invalidListId() {
         // when
-        Response response = api.emptyShoppingListCart(INVALID_ID);
+        Response response = api.deleteShoppingListCart(INVALID_ID);
 
         // then
         ResponseTestUtil.assertResponseStatus(response, BAD_REQUEST);
@@ -370,7 +370,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void emptyCart_unknownListId() {
         // when
-        Response response = api.emptyShoppingListCart("26490c45-3ef2-422b-bf28-de14c04fce61");
+        Response response = api.deleteShoppingListCart("26490c45-3ef2-422b-bf28-de14c04fce61");
 
         // then
         ResponseTestUtil.assertResponseStatus(response, BAD_REQUEST);

@@ -13,8 +13,8 @@ class ShoppingListApi {
                 .target(serviceUrl);
     }
 
-    Response addShoppingList(String json) {
-        webTarget
+    Response postShoppingList(String json) {
+        return webTarget
                 .path("shopping-list")
                 .request()
                 .post(Entity.json(json));
@@ -35,7 +35,7 @@ class ShoppingListApi {
                 .get();
     }
 
-    Response addShoppingListItem(String listId, String json) {
+    Response postShoppingListItem(String listId, String json) {
         return webTarget
                 .path("shopping-list")
                 .path(listId)
@@ -44,7 +44,7 @@ class ShoppingListApi {
                 .post(Entity.json(json));
     }
 
-    Response updateShoppingListItem(String listId, String listItemId, String json) {
+    Response putShoppingListItem(String listId, String listItemId, String json) {
         return webTarget
                 .path("shopping-list")
                 .path(listId)
@@ -64,7 +64,7 @@ class ShoppingListApi {
                 .delete();
     }
 
-    Response emptyShoppingListCart(String listId) {
+    Response deleteShoppingListCart(String listId) {
         return webTarget
                 .path("shopping-list")
                 .path(listId)
