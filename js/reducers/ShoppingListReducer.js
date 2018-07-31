@@ -17,7 +17,7 @@ export default function (state = initialState, action) {
         }
         case types.GET_SHOPPING_LISTS_SUCCESS: {
             const {shoppingLists} = action.payload.data;
-            let newState = {
+            const newState = {
                 shoppingLists: {},
                 fetchingShoppingLists: false,
                 errorGetShoppingLists: null
@@ -41,9 +41,9 @@ export default function (state = initialState, action) {
             };
         }
         case types.GET_SHOPPING_LIST: {
-            let {listId} = action.queryInfo;
+            const {listId} = action.queryInfo;
 
-            let newState = {...state};
+            const newState = {...state};
 
             newState.shoppingLists[listId] = {
                 id: listId,
@@ -56,10 +56,10 @@ export default function (state = initialState, action) {
             return newState;
         }
         case types.GET_SHOPPING_LIST_SUCCESS: {
-            let listId = action.payload.data.id;
+            const listId = action.payload.data.id;
             const {name, items} = action.payload.data;
 
-            let newState = {...state};
+            const newState = {...state};
 
             newState.shoppingLists[listId] = {
                 id: listId,
@@ -71,9 +71,9 @@ export default function (state = initialState, action) {
             return newState;
         }
         case types.GET_SHOPPING_LIST_FAIL: {
-            let {listId} = action.meta.previousAction.queryInfo;
+            const {listId} = action.meta.previousAction.queryInfo;
 
-            let newState = {...state};
+            const newState = {...state};
 
             newState.shoppingLists[listId] = {
                 ...state.shoppingLists[listId],
