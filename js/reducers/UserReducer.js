@@ -9,7 +9,7 @@ export default function (state = {}, action) {
                 ...state,
                 token,
                 currentUser: {
-                    id : Number(user.id),
+                    id : user.id,
                     username: user.username,
                     role: user.role
                 }
