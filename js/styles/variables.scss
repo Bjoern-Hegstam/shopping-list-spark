@@ -4,3 +4,6 @@ $app-layout-grid-template-columns: minmax($app-layout-min-side-margin, 1fr) minm
 
 $small-screen-width: $app-layout-min-width + 2 * $app-layout-min-side-margin;
 $small-screen-app-layout-grid-template-columns: $app-layout-min-side-margin 2fr $app-layout-min-side-margin;
+
+$border-color: #e7e7e7;
+$background-color: #f8f8f8;

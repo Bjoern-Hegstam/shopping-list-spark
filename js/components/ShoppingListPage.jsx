@@ -6,6 +6,8 @@ import {ItemTypeType, ShoppingListType} from "../propTypes";
 import {getShoppingList} from "../actions/ShoppingListActions";
 import {getItemTypes} from "../actions/ItemTypeActions";
 
+import './ShoppingListPage.scss'
+
 export class ShoppingListPage extends React.Component {
     static propTypes = {
         token: PropTypes.string.isRequired,
@@ -68,10 +70,14 @@ export class ShoppingListPage extends React.Component {
 
                     return (
                         <div key={item.id} className={itemClassName}>
-                            <span className='shopping-list-item__name'>{item.itemType.name}</span>
-                            <span className='shopping-list-item__quantity'>{item.quantity}</span>
-                            <div className='shopping-list-item__inc-button'>+</div>
-                            <div className='shopping-list-item__dec-button'>-</div>
+                            <div className='shopping-list-item__info'>
+                                <span className='shopping-list-item__quantity'>{item.quantity}</span>
+                                <span className='shopping-list-item__name'>{item.itemType.name}</span>
+                            </div>
+                            <div className='shopping-list-item__buttons'>
+                                <div className='shopping-list-item__inc-button'><span>+</span></div>
+                                <div className='shopping-list-item__dec-button'><span>-</span></div>
+                            </div>
                         </div>
                     )
                 })}
