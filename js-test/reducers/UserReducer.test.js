@@ -24,7 +24,7 @@ describe('UserReducer', function () {
                 data: {
                     token: 'token-1',
                     user: {
-                        id: '17',
+                        id: 'd6c08dd9-d430-4d2c-b471-c469e79c4797',
                         username: 'Foo',
                         role: 'ADMIN'
                     }
@@ -40,7 +40,7 @@ describe('UserReducer', function () {
             ...initialState,
             token: 'token-1',
             currentUser: {
-                id: 17,
+                id: 'd6c08dd9-d430-4d2c-b471-c469e79c4797',
                 username: 'Foo',
                 role: 'ADMIN'
             }
@@ -52,7 +52,7 @@ describe('UserReducer', function () {
         const state = {
             token: 'token-1',
             currentUser: {
-                id: 17
+                id: 'd6c08dd9-d430-4d2c-b471-c469e79c4797'
             }
         };
 
