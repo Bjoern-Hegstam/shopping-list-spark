@@ -41,6 +41,7 @@ export class ShoppingListsPage extends React.Component {
         return (
             <AppLayout>
                 <div className="shopping-lists">{this.renderLists()}</div>
+                {/* TODO: Add button to create new list */}
             </AppLayout>
         )
     }

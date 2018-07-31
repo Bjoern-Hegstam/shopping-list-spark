@@ -4,8 +4,8 @@ import * as types from "../../js/actions/types";
 describe('ShoppingListReducer', () => {
     const initialState = {
         shoppingLists: {},
-        fetchingLists: false,
-        error: null
+        fetchingShoppingLists: false,
+        errorGetShoppingLists: null
     };
 
     it('should return initial state for unknown action type', () => {
@@ -23,7 +23,7 @@ describe('ShoppingListReducer', () => {
     it('should set fetching flag and reset error on action GET_SHOPPING_LISTS', () => {
         const state = {
             ...initialState,
-            error: 'Error'
+            errorGetShoppingLists: 'Error'
         };
         const action = {type: types.GET_SHOPPING_LISTS};
 
@@ -33,8 +33,8 @@ describe('ShoppingListReducer', () => {
         // then
         expect(newState).toEqual({
             ...initialState,
-            fetchingLists: true,
-            error: null
+            fetchingShoppingLists: true,
+            errorGetShoppingLists: null
         })
     });
 
@@ -42,7 +42,7 @@ describe('ShoppingListReducer', () => {
         // given
         const state = {
                 ...initialState,
-            fetchingLists: true
+            fetchingShoppingLists: true
         };
         const action = {
             type: types.GET_SHOPPING_LISTS_SUCCESS,
@@ -68,7 +68,7 @@ describe('ShoppingListReducer', () => {
         // then
         expect(newState).toEqual({
             ...initialState,
-            fetchingLists: false,
+            fetchingShoppingLists: false,
             shoppingLists: {
                 17: {
                     id: 17,
@@ -92,7 +92,7 @@ describe('ShoppingListReducer', () => {
         // given
         const state = {
             ...initialState,
-            fetchingLists: true,
+            fetchingShoppingLists: true,
             shoppingLists: {
                 17: {
                     id: 17,
@@ -121,8 +121,8 @@ describe('ShoppingListReducer', () => {
         // then
         expect(newState).toEqual({
             ...initialState,
-            fetchingLists: false,
-            error: null,
+            fetchingShoppingLists: false,
+            errorGetShoppingLists: null,
             shoppingLists: {
                 17: {
                     id: 17,
@@ -139,7 +139,7 @@ describe('ShoppingListReducer', () => {
         // given
         const state = {
             ...initialState,
-            fetchingLists: true
+            fetchingShoppingLists: true
         };
         const action = {
             type: types.GET_SHOPPING_LISTS_FAIL,
@@ -152,8 +152,8 @@ describe('ShoppingListReducer', () => {
         // then
         expect(newState).toEqual({
             ...initialState,
-            fetchingLists: false,
-            error: 'Error while fetching'
+            fetchingShoppingLists: false,
+            errorGetShoppingLists: 'Error while fetching'
         })
     });
 

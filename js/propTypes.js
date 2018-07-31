@@ -19,3 +19,8 @@ export const ShoppingListType = PropTypes.shape({
         inCart: PropTypes.bool.isRequired
     })).isRequired
 });
+
+export const ItemTypeType = PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired
+});
