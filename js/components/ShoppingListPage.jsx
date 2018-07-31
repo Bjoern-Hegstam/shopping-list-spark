@@ -43,12 +43,41 @@ export class ShoppingListPage extends React.Component {
 
         return (
             <AppLayout>
-                <div>{shoppingList.name}</div>
-                {/* TODO: Fill in shopping list layout */}
+                <div className='shopping-list'>
+                    <div className='shopping-list__header'>
+                        <span className='shopping-list__header__name'>{shoppingList.name}</span>
+                        <div className='shopping-list__header__empty-cart-button'>Empty Cart</div>
+                    </div>
+                    <div className='shopping-list__body'>
+                        {this.renderItems()}
+                    </div>
+                </div>
                 {/* TODO: Create custom component for adding new item (button, interactive narrowing of options based on input, on enter auto-select first option)  */}
             </AppLayout>
         );
     }
+
+    renderItems = () => {
+        return (
+            <React.Fragment>
+                {this.props.shoppingList.items.map(item => {
+                    let itemClassName = 'shopping-list-item';
+                    if (item.inCart) {
+                        itemClassName += ' shopping-list-item--in-cart';
+                    }
+
+                    return (
+                        <div key={item.id} className={itemClassName}>
+                            <span className='shopping-list-item__name'>{item.itemType.name}</span>
+                            <span className='shopping-list-item__quantity'>{item.quantity}</span>
+                            <div className='shopping-list-item__inc-button'>+</div>
+                            <div className='shopping-list-item__dec-button'>-</div>
+                        </div>
+                    )
+                })}
+            </React.Fragment>
+        )
+    };
 }
 
 export default connect(
