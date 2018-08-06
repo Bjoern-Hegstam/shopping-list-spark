@@ -32,3 +32,71 @@ export function getShoppingList({token, id}) {
         }
     }
 }
+
+export function addShoppingListItem({token, listId, itemTypeId, quantity}) {
+    return {
+        type: types.ADD_SHOPPING_LIST_ITEM,
+        payload: {
+            request: {
+                method: 'post',
+                url: `shopping-list/${listId}`,
+                headers: {
+                    authorization: `Bearer ${token}`
+                },
+                data: {
+                    itemTypeId,
+                    quantity
+                }
+            }
+        }
+    }
+}
+
+export function updateShoppingListItem({token, listId, itemId, quantity, inCart}) {
+    return {
+        type: types.UPDATE_SHOPPING_LIST_ITEM,
+        payload: {
+            request: {
+                method: 'put',
+                url: `shopping-list/${listId}/item/${itemId}`,
+                headers: {
+                    authorization: `Bearer ${token}`
+                },
+                data: {
+                    quantity,
+                    inCart
+                }
+            }
+        }
+    }
+}
+
+export function deleteShoppingListItem({token, listId, itemId}) {
+    return {
+        type: types.DELETE_SHOPPING_LIST_ITEM,
+        payload: {
+            request: {
+                method: 'delete',
+                url: `shopping-list/${listId}/item/${itemId}`,
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            }
+        }
+    }
+}
+
+export function emptyCart({token, listId}) {
+    return {
+        type: types.DELETE_SHOPPING_LIST_ITEM,
+        payload: {
+            request: {
+                method: 'delete',
+                url: `shopping-list/${listId}/cart`,
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            }
+        }
+    }
+}

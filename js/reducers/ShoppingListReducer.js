@@ -2,8 +2,21 @@ import * as types from "../actions/types";
 
 const initialState = {
     shoppingLists: {},
+
     fetchingShoppingLists: false,
-    errorGetShoppingLists: null
+    errorGetShoppingLists: null,
+
+    addingShoppingListItem: false,
+    errorAddShoppingListItem: null,
+
+    updatingShoppingListItem: false,
+    errorUpdateShoppingListItem: null,
+
+    deletingShoppingListItem: false,
+    errorDeleteShoppingListItem: null,
+
+    emptyingCart: false,
+    errorEmptyCart: null
 };
 
 export default function (state = initialState, action) {
@@ -18,6 +31,7 @@ export default function (state = initialState, action) {
         case types.GET_SHOPPING_LISTS_SUCCESS: {
             const {shoppingLists} = action.payload.data;
             const newState = {
+                ...state,
                 shoppingLists: {},
                 fetchingShoppingLists: false,
                 errorGetShoppingLists: null
@@ -82,6 +96,90 @@ export default function (state = initialState, action) {
             };
             return newState;
         }
+        case types.ADD_SHOPPING_LIST_ITEM: {
+            return {
+                ...state,
+                addingShoppingListItem: true,
+                errorAddShoppingListItem: null
+            }
+        }
+        case types.ADD_SHOPPING_LIST_ITEM_SUCCESS: {
+            return {
+                ...state,
+                addingShoppingListItem: false,
+            }
+        }
+        case types.ADD_SHOPPING_LIST_ITEM_FAIL: {
+            return {
+                ...state,
+                addingShoppingListItem: false,
+                errorAddShoppingListItem: action.error
+            }
+        }
+
+        case types.UPDATE_SHOPPING_LIST_ITEM: {
+            return {
+                ...state,
+                updatingShoppingListItem: true,
+                errorUpdateShoppingListItem: null
+            }
+        }
+        case types.UPDATE_SHOPPING_LIST_ITEM_SUCCESS: {
+            return {
+                ...state,
+                updatingShoppingListItem: false,
+            }
+        }
+        case types.UPDATE_SHOPPING_LIST_ITEM_FAIL: {
+            return {
+                ...state,
+                updatingShoppingListItem: false,
+                errorUpdateShoppingListItem: action.error
+            }
+        }
+
+        case types.DELETE_SHOPPING_LIST_ITEM: {
+            return {
+                ...state,
+                deletingShoppingListItem: true,
+                errorDeleteShoppingListItem: null
+            }
+        }
+        case types.DELETE_SHOPPING_LIST_ITEM_SUCCESS: {
+            return {
+                ...state,
+                deletingShoppingListItem: false,
+            }
+        }
+        case types.DELETE_SHOPPING_LIST_ITEM_FAIL: {
+            return {
+                ...state,
+                deletingShoppingListItem: false,
+                errorDeleteShoppingListItem: action.error
+            }
+        }
+
+        case types.EMPTY_CART: {
+            return {
+                ...state,
+                emptyingCart: true,
+                errorEmptyCart: null
+            }
+        }
+        case types.EMPTY_CART_SUCCESS: {
+            return {
+                ...state,
+                emptyingCart: false,
+            }
+        }
+        case types.EMPTY_CART_FAIL: {
+            return {
+                ...state,
+                emptyingCart: false,
+                errorEmptyCart: action.error
+            }
+        }
+
         default:
             return state;
     }

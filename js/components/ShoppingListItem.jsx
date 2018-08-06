@@ -11,21 +11,21 @@ export default class ShoppingListItem extends React.Component {
 
     handleClick = () => {
         const {onToggleInCart, item} = this.props;
-        onToggleInCart(item.id, !item.inCart);
+        onToggleInCart(item, !item.inCart);
     };
 
     handleIncrementClick = (e) => {
         e.stopPropagation();
 
         const {onUpdateQuantity, item} = this.props;
-        onUpdateQuantity(item.id, item.quantity + 1);
+        onUpdateQuantity(item, item.quantity + 1);
     };
 
     handleDecrementClick = (e) => {
         e.stopPropagation();
 
         const {onUpdateQuantity, item} = this.props;
-        onUpdateQuantity(item.id, item.quantity - 1);
+        onUpdateQuantity(item, item.quantity - 1);
     };
 
     render() {

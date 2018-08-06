@@ -4,8 +4,21 @@ import * as types from "../../js/actions/types";
 describe('ShoppingListReducer', () => {
     const initialState = {
         shoppingLists: {},
+
         fetchingShoppingLists: false,
-        errorGetShoppingLists: null
+        errorGetShoppingLists: null,
+
+        addingShoppingListItem: false,
+        errorAddShoppingListItem: null,
+
+        updatingShoppingListItem: false,
+        errorUpdateShoppingListItem: null,
+
+        deletingShoppingListItem: false,
+        errorDeleteShoppingListItem: null,
+
+        emptyingCart: false,
+        errorEmptyCart: null
     };
 
     it('should return initial state for unknown action type', () => {
@@ -353,6 +366,238 @@ describe('ShoppingListReducer', () => {
                     error: "Error"
                 }
             }
+        })
+    });
+
+    it('should set fetching flag and reset error on ADD_SHOPPING_LIST_ITEM', () => {
+        const state = {
+            ...initialState,
+            errorAddShoppingListItem: 'Error'
+        };
+        const action = {
+            type: types.ADD_SHOPPING_LIST_ITEM,
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            addingShoppingListItem: true,
+            errorAddShoppingListItem: null
+        })
+    });
+
+    it('should handle ADD_SHOPPING_LIST_ITEM_SUCCESS', () => {
+        const state = {
+            ...initialState
+        };
+        const action = {
+            type: types.ADD_SHOPPING_LIST_ITEM_SUCCESS,
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            addingShoppingListItem: false,
+        })
+    });
+
+    it('should handle ADD_SHOPPING_LIST_ITEM_FAIL', () => {
+        const state = {
+            ...initialState,
+        };
+        const action = {
+            type: types.ADD_SHOPPING_LIST_ITEM_FAIL,
+            error: "Error"
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            addingShoppingListItem: false,
+            errorAddShoppingListItem: 'Error'
+        })
+    });
+
+    it('should set fetching flag and reset error on UPDATE_SHOPPING_LIST_ITEM', () => {
+        const state = {
+            ...initialState,
+            errorUpdateShoppingListItem: 'Error'
+        };
+        const action = {
+            type: types.UPDATE_SHOPPING_LIST_ITEM,
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            updatingShoppingListItem: true,
+            errorUpdateShoppingListItem: null
+        })
+    });
+
+    it('should handle UPDATE_SHOPPING_LIST_ITEM_SUCCESS', () => {
+        const state = {
+            ...initialState
+        };
+        const action = {
+            type: types.UPDATE_SHOPPING_LIST_ITEM_SUCCESS,
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            updatingShoppingListItem: false,
+        })
+    });
+
+    it('should handle UPDATE_SHOPPING_LIST_ITEM_FAIL', () => {
+        const state = {
+            ...initialState,
+        };
+        const action = {
+            type: types.UPDATE_SHOPPING_LIST_ITEM_FAIL,
+            error: "Error"
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            updatingShoppingListItem: false,
+            errorUpdateShoppingListItem: 'Error'
+        })
+    });
+
+    it('should set fetching flag and reset error on DELETE_SHOPPING_LIST_ITEM', () => {
+        const state = {
+            ...initialState,
+            errorDeleteShoppingListItem: 'Error'
+        };
+        const action = {
+            type: types.DELETE_SHOPPING_LIST_ITEM,
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            deletingShoppingListItem: true,
+            errorDeleteShoppingListItem: null
+        })
+    });
+
+    it('should handle DELETE_SHOPPING_LIST_ITEM_SUCCESS', () => {
+        const state = {
+            ...initialState
+        };
+        const action = {
+            type: types.DELETE_SHOPPING_LIST_ITEM_SUCCESS,
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            deletingShoppingListItem: false,
+        })
+    });
+
+    it('should handle DELETE_SHOPPING_LIST_ITEM_FAIL', () => {
+        const state = {
+            ...initialState,
+        };
+        const action = {
+            type: types.DELETE_SHOPPING_LIST_ITEM_FAIL,
+            error: "Error"
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            deletingShoppingListItem: false,
+            errorDeleteShoppingListItem: 'Error'
+        })
+    });
+
+    it('should set fetching flag and reset error on EMPTY_CART', () => {
+        const state = {
+            ...initialState,
+            errorEmptyCart: 'Error'
+        };
+        const action = {
+            type: types.EMPTY_CART,
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            emptyingCart: true,
+            errorEmptyCart: null
+        })
+    });
+
+    it('should handle EMPTY_CART_SUCCESS', () => {
+        const state = {
+            ...initialState
+        };
+        const action = {
+            type: types.EMPTY_CART_SUCCESS,
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            emptyingCart: false,
+        })
+    });
+
+    it('should handle EMPTY_CART_FAIL', () => {
+        const state = {
+            ...initialState,
+        };
+        const action = {
+            type: types.EMPTY_CART_FAIL,
+            error: "Error"
+        };
+
+        // when
+        const newState = reducer(state, action);
+
+        // then
+        expect(newState).toEqual({
+            ...initialState,
+            emptyingCart: false,
+            errorEmptyCart: 'Error'
         })
     });
 });
