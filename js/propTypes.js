@@ -6,21 +6,20 @@ export const UserType = PropTypes.shape({
     role: PropTypes.oneOf(['USER', 'ADMIN'])
 });
 
-export const ShoppingListType = PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    items: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        itemType: PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired
-        }).isRequired,
-        quantity: PropTypes.number.isRequired,
-        inCart: PropTypes.bool.isRequired
-    })).isRequired
-});
-
 export const ItemTypeType = PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired
+});
+
+export const ShoppingListItemType = PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    itemType: ItemTypeType.isRequired,
+    quantity: PropTypes.number.isRequired,
+    inCart: PropTypes.bool.isRequired
+});
+
+export const ShoppingListType = PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    items: PropTypes.arrayOf(ShoppingListItemType).isRequired
 });

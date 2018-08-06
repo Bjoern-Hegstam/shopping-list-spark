@@ -7,6 +7,7 @@ import {getShoppingList} from "../actions/ShoppingListActions";
 import {getItemTypes} from "../actions/ItemTypeActions";
 
 import './ShoppingListPage.scss'
+import ShoppingList from "./ShoppingList";
 
 export class ShoppingListPage extends React.Component {
     static propTypes = {
@@ -34,6 +35,18 @@ export class ShoppingListPage extends React.Component {
         this.props.getItemTypes(this.props.token);
     }
 
+    handleToggleItemInCart = (itemId, newInCart) => {
+        console.log(`Change item ${itemId} to inCart: <${newInCart}>`);
+    };
+
+    handleUpdateItemQuantity = (itemId, newQuantity) => {
+        console.log(`Change item ${itemId} to quantity: <${newQuantity}>`);
+    };
+
+    handleEmptyCart = () => {
+        console.log(`Empty cart of shopping list ${this.props.shoppingList.id}`);
+    };
+
     render() {
         const {shoppingList} = this.props;
 
@@ -45,45 +58,15 @@ export class ShoppingListPage extends React.Component {
 
         return (
             <AppLayout>
-                <div className='shopping-list'>
-                    <div className='shopping-list__header'>
-                        <span className='shopping-list__header__name'>{shoppingList.name}</span>
-                        <div className='shopping-list__header__empty-cart-button'>Empty Cart</div>
-                    </div>
-                    <div className='shopping-list__body'>
-                        {this.renderItems()}
-                    </div>
-                </div>
-                {/* TODO: Create custom component for adding new item (button, interactive narrowing of options based on input, on enter auto-select first option)  */}
+                <ShoppingList
+                    shoppingList={shoppingList}
+                    onToggleItemInCart={this.handleToggleItemInCart}
+                    onUpdateItemQuantity={this.handleUpdateItemQuantity}
+                    onEmptyCart={this.handleEmptyCart}
+                />
             </AppLayout>
         );
     }
-
-    renderItems = () => {
-        return (
-            <React.Fragment>
-                {this.props.shoppingList.items.map(item => {
-                    let itemClassName = 'shopping-list-item';
-                    if (item.inCart) {
-                        itemClassName += ' shopping-list-item--in-cart';
-                    }
-
-                    return (
-                        <div key={item.id} className={itemClassName}>
-                            <div className='shopping-list-item__info'>
-                                <span className='shopping-list-item__quantity'>{item.quantity}</span>
-                                <span className='shopping-list-item__name'>{item.itemType.name}</span>
-                            </div>
-                            <div className='shopping-list-item__buttons'>
-                                <div className='shopping-list-item__inc-button'><span>+</span></div>
-                                <div className='shopping-list-item__dec-button'><span>-</span></div>
-                            </div>
-                        </div>
-                    )
-                })}
-            </React.Fragment>
-        )
-    };
 }
 
 export default connect(
