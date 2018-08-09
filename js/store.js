@@ -21,6 +21,7 @@ function saveState(store) {
 
 export default () => {
     const persistedState = loadState();
+    console.log(window && window.location && window.location.hostname);
 
     let store = createStore(
         reducers,
@@ -28,7 +29,7 @@ export default () => {
         applyMiddleware(
             axiosMiddleware(
                 axios.create({
-                    baseURL: '/api',
+                    baseURL: `${BASE_URL}/api`,
                     responseType: 'json',
                     withCredentials: true
                 })
