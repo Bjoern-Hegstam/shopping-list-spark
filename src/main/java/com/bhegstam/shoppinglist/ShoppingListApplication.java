@@ -85,7 +85,7 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
         ));
         environment.jersey().register(new UserResource(new UserApplication(userRepository)));
 
-//        configureCors(environment); TODO: Is this needed?
+        configureCors(environment);
     }
 
     private void configureCors(Environment environment) {
@@ -94,7 +94,7 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
 
         // Configure CORS parameters
         cors.setInitParameter("allowedOrigins", "*");
-        cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
+        cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Authorization,Origin");
         cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE,HEAD");
 
         // Add URL mapping

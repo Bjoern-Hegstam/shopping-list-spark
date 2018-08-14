@@ -30,8 +30,7 @@ export default () => {
             axiosMiddleware(
                 axios.create({
                     baseURL: `${BASE_URL}/api`,
-                    responseType: 'json',
-                    withCredentials: true
+                    responseType: 'json'
                 })
             )
         )
