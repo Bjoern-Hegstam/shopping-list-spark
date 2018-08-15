@@ -10,7 +10,8 @@ dataSourceFactory:
 
 server:
   type: simple
-  applicationContextPath: /api
+  applicationContextPath: /
+  rootPath: /api/*
   adminContextPath: /admin
   connector:
     type: http
