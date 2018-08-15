@@ -104,7 +104,7 @@ public class TestDatabaseSetup implements TestRule {
                     BaseValidator.newValidator(),
                     Jackson.newObjectMapper(new YAMLFactory()),
                     ""
-            ).build(new FileConfigurationSourceProvider(), ResourceHelpers.resourceFilePath(TestData.TEST_CONFIG_FILENAME));
+            ).build(new FileConfigurationSourceProvider(), ResourceHelpers.resourceFilePath(TestData.getTestConfigFilename()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

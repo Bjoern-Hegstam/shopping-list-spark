@@ -9,7 +9,7 @@ public class DropwizardAppRuleFactory {
     public static DropwizardAppRule<ShoppingListApplicationConfiguration> forIntegrationTest() {
         return new DropwizardAppRule<>(
                 ShoppingListApplication.class,
-                ResourceHelpers.resourceFilePath(TestData.TEST_CONFIG_FILENAME)
+                ResourceHelpers.resourceFilePath(TestData.getTestConfigFilename())
         );
     }
 }
