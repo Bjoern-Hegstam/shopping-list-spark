@@ -15,7 +15,7 @@ server:
   adminContextPath: /admin
   connector:
     type: http
-    port: 4567
+    port: ${PORT}
 
 logging:
   level: INFO

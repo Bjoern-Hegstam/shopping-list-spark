@@ -2,9 +2,13 @@
 *.iml
 
 target
+dependency-reduced-pom.xml
 
 node_modules
 dist
 
 # Pulbic asests copied to resources during build as required by Dropwizard AssetsBundle
 src/main/resources/public
+
+# Heroku environment variables for running app locally
+.env
