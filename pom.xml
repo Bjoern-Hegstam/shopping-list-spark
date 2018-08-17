@@ -279,7 +279,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${basedir}/src/main/resources/public</outputDirectory>
+                            <outputDirectory>${basedir}/target/classes/public</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>dist/</directory>
