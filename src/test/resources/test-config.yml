@@ -13,7 +13,7 @@ server:
   adminContextPath: /admin
   connector:
     type: http
-    port: 4567
+    port: 4566
 
 logging:
   level: INFO

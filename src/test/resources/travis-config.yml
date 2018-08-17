@@ -7,6 +7,8 @@ dataSourceFactory:
   password: ''
   validationQuery: "SELECT 1"
   validationQueryTimeout: 3s
+  minSize: 8
+  maxSize: 32
 
 server:
   type: simple
