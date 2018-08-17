@@ -14,7 +14,6 @@ env:
 
 before_install:
  - psql -c 'create database travis_ci_test;' -U postgres
- - sudo cat /etc/postgresql/9.6/main/postgresql.conf
 
 install: true # Disable default install step. Maven runs install as part of the test life cycle anyway.
 
