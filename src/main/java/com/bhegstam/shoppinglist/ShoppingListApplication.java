@@ -62,7 +62,7 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
                 )
         );
         bootstrap.addBundle(new DbMigrationBundle());
-        bootstrap.addBundle(new AssetsBundle("/public", "/", "index.html")); // TODO: Ensure gzipped
+        bootstrap.addBundle(new AssetsBundle("/public", "/app", "index.html")); // TODO: Ensure gzipped
     }
 
     @Override
