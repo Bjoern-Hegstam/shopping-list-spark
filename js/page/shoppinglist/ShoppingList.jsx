@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ShoppingListType} from "../propTypes";
+import {ShoppingListType} from "../../propTypes";
 import ShoppingListItem from "./ShoppingListItem";
 
 export default class ShoppingList extends React.Component {

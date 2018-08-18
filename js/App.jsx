@@ -1,11 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {Redirect, Route, Switch, withRouter} from 'react-router-dom';
-import LoginPage from './components/LoginPage';
-import RegistrationPage from './components/RegistrationPage';
+import LoginPage from './page/login/LoginPage';
+import RegistrationPage from './page/registration/RegistrationPage';
 import PageNotFound from './components/PageNotFound';
-import ShoppingListsPage from './components/ShoppingListsPage';
-import ShoppingListPage from './components/ShoppingListPage';
+import ShoppingListsPage from './page/shoppinglists/ShoppingListsPage';
+import ShoppingListPage from './page/shoppinglist/ShoppingListPage';
 import AdminArea from './components/AdminArea';
 import {UserType} from "./propTypes";
 

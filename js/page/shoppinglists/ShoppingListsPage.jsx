@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AppLayout from "./AppLayout";
+import AppLayout from "../../components/AppLayout";
 import {connect} from "react-redux";
-import {getShoppingLists} from "../actions/ShoppingListActions";
-import {ShoppingListType} from "../propTypes";
+import {getShoppingLists} from "../../actions/ShoppingListActions";
+import {ShoppingListType} from "../../propTypes";
 import {Link} from "react-router-dom";
 
 export class ShoppingListsPage extends React.Component {

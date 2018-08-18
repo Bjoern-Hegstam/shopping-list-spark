@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AppLayout from "./AppLayout";
+import AppLayout from "../../components/AppLayout";
 import {connect} from "react-redux";
-import {ItemTypeType, ShoppingListType} from "../propTypes";
+import {ItemTypeType, ShoppingListType} from "../../propTypes";
 import {
     addShoppingListItem,
     deleteShoppingListItem,
     emptyCart,
     getShoppingList,
     updateShoppingListItem
-} from "../actions/ShoppingListActions";
-import {getItemTypes} from "../actions/ItemTypeActions";
+} from "../../actions/ShoppingListActions";
+import {getItemTypes} from "../../actions/ItemTypeActions";
 
 import './ShoppingListPage.scss'
 import ShoppingList from "./ShoppingList";
