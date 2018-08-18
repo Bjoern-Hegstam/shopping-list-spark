@@ -6,7 +6,6 @@ import RegistrationPage from './page/registration/RegistrationPage';
 import PageNotFound from './components/PageNotFound';
 import ShoppingListsPage from './page/shoppinglists/ShoppingListsPage';
 import ShoppingListPage from './page/shoppinglist/ShoppingListPage';
-import AdminArea from './components/AdminArea';
 import {UserType} from "./propTypes";
 
 class App extends React.Component {
@@ -27,9 +26,6 @@ class App extends React.Component {
 
                     <Route exact path='/lists' component={ShoppingListsPage}/>
                     <Route path='/lists/:listId' component={ShoppingListPage}/>
-                    ( this.props.user.roles.contains('admin') &&
-                    <Route path='/admin' component={AdminArea}/>
-                    )
                     <Route component={PageNotFound}/>
                 </Switch>
             )
