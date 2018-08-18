@@ -1,0 +1,13 @@
+@import '../../styles/variables';
+
+.shopping-list-link {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid $border-color;
+  margin-top: 50px;
+}
+
+.shopping-list-link--name {
+  font-size: 24pt;
+  margin: 10px 0;
+}

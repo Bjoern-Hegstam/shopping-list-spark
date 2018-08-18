@@ -4,7 +4,8 @@ import AppLayout from "../../components/AppLayout";
 import {connect} from "react-redux";
 import {getShoppingLists} from "../../actions/ShoppingListActions";
 import {ShoppingListType} from "../../propTypes";
-import {Link} from "react-router-dom";
+import {ShoppingListLink} from "./ShoppingListLink";
+import {withRouter} from "react-router-dom";
 
 export class ShoppingListsPage extends React.Component {
     static propTypes = {
@@ -13,7 +14,11 @@ export class ShoppingListsPage extends React.Component {
 
         getShoppingLists: PropTypes.func.isRequired,
         fetching: PropTypes.bool,
-        error: PropTypes.object
+        error: PropTypes.object,
+
+        history: PropTypes.shape({
+            push: PropTypes.func.isRequired
+        }).isRequired
     };
 
     static defaultProps = {
@@ -26,13 +31,20 @@ export class ShoppingListsPage extends React.Component {
         this.props.getShoppingLists(this.props.token);
     }
 
+    handleLinkClicked = (listId) => {
+        this.props.history.push(`/lists/${listId}/`);
+    };
+
     renderLists = () => {
         return Object
             .values(this.props.shoppingLists)
             .map(shoppingList => (
-                    <div className="shopping-lists--shopping-list" key={shoppingList.id}>
-                        <Link to={`/lists/${shoppingList.id}/`}>{shoppingList.name}</Link>
-                    </div>
+                <ShoppingListLink
+                    key={shoppingList.id}
+                    id={shoppingList.id}
+                    name={shoppingList.name}
+                    onClick={this.handleLinkClicked}
+                />
                 )
             );
     };
@@ -47,7 +59,7 @@ export class ShoppingListsPage extends React.Component {
     }
 }
 
-export default connect(
+export default withRouter(connect(
     store => ({
         ...store.shoppingList,
         token: store.auth.token
@@ -55,4 +67,4 @@ export default connect(
     dispatch => ({
         getShoppingLists: arg => dispatch(getShoppingLists(arg))
     })
-)(ShoppingListsPage);
+)(ShoppingListsPage));
