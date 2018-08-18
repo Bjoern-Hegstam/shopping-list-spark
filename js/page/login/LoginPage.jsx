@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import './LoginPage.scss';
 import {connect} from "react-redux";
-import {login} from "../actions/UserActions";
+import {login} from "../../actions/UserActions";
 
 export class LoginPage extends React.Component {
     static propTypes = {
