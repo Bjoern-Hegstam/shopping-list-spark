@@ -1,32 +1,5 @@
 @import '../../styles/variables';
 
-.shopping-list {
-  border: 1px solid $border-color;
-  margin-top: 50px;
-}
-
-.shopping-list__header {
-  background: $background-color;
-  display: flex;
-  justify-content: space-between;
-}
-
-.shopping-list__header__name {
-  font-size: 18pt;
-  line-height: 70px;
-  padding-left: 10px;
-}
-
-.shopping-list__header__empty-cart-button {
-  background: #d83232;
-  color: white;
-  font-weight: bolder;
-  margin: 10px;
-  padding: 15px;
-
-//  TODO: Add onHover and onClick css (will need to create button component and implement support)
-}
-
 .shopping-list-item {
   border-bottom: 1px solid $border-color;
   display: flex;

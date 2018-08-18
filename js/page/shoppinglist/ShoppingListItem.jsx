@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {ShoppingListItemType} from "../../propTypes";
+import './ShoppingListItem.scss';
 
 export default class ShoppingListItem extends React.Component {
     static propTypes = {

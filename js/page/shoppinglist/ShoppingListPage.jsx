@@ -12,7 +12,6 @@ import {
 } from "../../actions/ShoppingListActions";
 import {getItemTypes} from "../../actions/ItemTypeActions";
 
-import './ShoppingListPage.scss'
 import ShoppingList from "./ShoppingList";
 
 export class ShoppingListPage extends React.Component {
