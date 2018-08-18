@@ -33,6 +33,24 @@ export function getShoppingList({token, id}) {
     }
 }
 
+export function addShoppingList({token, name}) {
+    return {
+        type: types.ADD_SHOPPING_LIST,
+        payload: {
+            request: {
+                method: 'post',
+                url: `shopping-list`,
+                headers: {
+                    authorization: `Bearer ${token}`
+                },
+                data: {
+                    name
+                }
+            }
+        }
+    }
+}
+
 export function addShoppingListItem({token, listId, itemTypeId, quantity}) {
     return {
         type: types.ADD_SHOPPING_LIST_ITEM,

@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AppLayout from "../../components/AppLayout";
-import {connect} from "react-redux";
-import {getShoppingLists} from "../../actions/ShoppingListActions";
-import {ShoppingListType} from "../../propTypes";
-import {ShoppingListLink} from "./ShoppingListLink";
-import {withRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { addShoppingList, getShoppingLists } from "../../actions/ShoppingListActions";
+import { ShoppingListType } from "../../propTypes";
+import { ShoppingListLink } from "./ShoppingListLink";
+import { withRouter } from "react-router-dom";
+import './ShoppingListPage.scss';
 
 export class ShoppingListsPage extends React.Component {
     static propTypes = {
@@ -13,26 +14,50 @@ export class ShoppingListsPage extends React.Component {
         shoppingLists: PropTypes.objectOf(ShoppingListType).isRequired,
 
         getShoppingLists: PropTypes.func.isRequired,
-        fetching: PropTypes.bool,
-        error: PropTypes.object,
+        fetchingShoppingLists: PropTypes.bool.isRequired,
+        errorGetShoppingLists: PropTypes.object,
 
-        history: PropTypes.shape({
-            push: PropTypes.func.isRequired
-        }).isRequired
+        addShoppingList: PropTypes.func.isRequired,
+        addingShoppingList: PropTypes.bool.isRequired,
+        errorAddShoppingList: PropTypes.object,
+
+        history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired
     };
 
     static defaultProps = {
         shoppingLists: {},
-        fetching: false,
-        error: null
+        errorGetShoppingList: null,
+        errorAddShoppingList: null
+    };
+
+    state = {
+        newListName: ''
     };
 
     componentDidMount() {
         this.props.getShoppingLists(this.props.token);
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.addingShoppingList && !this.props.addingShoppingList) {
+            this.props.getShoppingLists(this.props.token);
+        }
+    }
+
     handleLinkClicked = (listId) => {
         this.props.history.push(`/lists/${listId}/`);
+    };
+
+    onNewListNameChange = (e) => {
+        this.setState({ newListName: e.target.value });
+    };
+
+    addNewList = () => {
+        const { token } = this.props;
+        const { newListName } = this.state;
+
+        this.setState({ newListName: '' });
+        this.props.addShoppingList({ token, name: newListName });
     };
 
     renderLists = () => {
@@ -52,8 +77,18 @@ export class ShoppingListsPage extends React.Component {
     render() {
         return (
             <AppLayout>
-                <div className="shopping-lists">{this.renderLists()}</div>
-                {/* TODO: Add button to create new list */}
+                <div className="shopping-list-links">
+                    {this.renderLists()}
+                </div>
+                <div className="add-new-shopping-list">
+                    <form onSubmit={this.addNewList}>
+                        <label>New list: </label>
+                        <input
+                            value={this.state.newListName}
+                            onChange={this.onNewListNameChange}
+                        />
+                    </form>
+                </div>
             </AppLayout>
         )
     }
@@ -65,6 +100,7 @@ export default withRouter(connect(
         token: store.auth.token
     }),
     dispatch => ({
-        getShoppingLists: arg => dispatch(getShoppingLists(arg))
+        getShoppingLists: arg => dispatch(getShoppingLists(arg)),
+        addShoppingList: arg => dispatch(addShoppingList(arg))
     })
 )(ShoppingListsPage));

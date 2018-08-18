@@ -6,6 +6,9 @@ const initialState = {
     fetchingShoppingLists: false,
     errorGetShoppingLists: null,
 
+    addingShoppingList: false,
+    errorAddShoppingList: null,
+
     addingShoppingListItem: false,
     errorAddShoppingListItem: null,
 
@@ -96,6 +99,28 @@ export default function (state = initialState, action) {
             };
             return newState;
         }
+
+        case types.ADD_SHOPPING_LIST: {
+            return {
+                ...state,
+                addingShoppingList: true,
+                errorAddShoppingList: null
+            }
+        }
+        case types.ADD_SHOPPING_LIST_SUCCESS: {
+            return {
+                ...state,
+                addingShoppingList: false,
+            }
+        }
+        case types.ADD_SHOPPING_LIST_FAIL: {
+            return {
+                ...state,
+                addingShoppingList: false,
+                errorAddShoppingList: action.error
+            }
+        }
+
         case types.ADD_SHOPPING_LIST_ITEM: {
             return {
                 ...state,
