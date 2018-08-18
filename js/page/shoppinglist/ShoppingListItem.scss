@@ -2,13 +2,16 @@
 
 .shopping-list-item {
   border-bottom: 1px solid $border-color;
-  display: flex;
   font-size: 14pt;
-  justify-content: space-between;
-}
+  height: 50px;
 
-.shopping-list-item__info {
-  line-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &--in-cart {
+    background-color: $item-selected-color;
+  }
 }
 
 .shopping-list-item__quantity {
@@ -22,22 +25,31 @@
 .shopping-list-item__buttons {
   color: white;
   display: flex;
+  justify-content: space-between;
+
+  height: 75%;
+  width: 10%;
+
+  margin-right: 10px;
+}
+
+%button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 28pt;
+
+  width: 45%;
 }
 
 .shopping-list-item__inc-button {
+  @extend %button;
   background: green;
-  display: flex;
-  justify-content: center;
-  margin: 5px;
-  padding: 10px;
-  width: 40px;
 }
 
 .shopping-list-item__dec-button {
+  @extend %button;
   background: red;
-  display: flex;
-  justify-content: center;
-  margin: 5px;
-  padding: 10px;
-  width: 40px;
+  padding-bottom: 5%; // Required to center minus vertically
 }
