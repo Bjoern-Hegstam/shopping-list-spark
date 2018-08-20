@@ -52,7 +52,7 @@ public class JdbiShoppingListRepositoryTest {
         ShoppingList shoppingList = new ShoppingList("Foo");
 
         // when
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // then
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
@@ -65,11 +65,11 @@ public class JdbiShoppingListRepositoryTest {
     public void persist_updateNameOfList() {
         // given
         ShoppingList shoppingList = new ShoppingList("Foo");
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // when
         shoppingList.setName("Bar");
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // then
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
@@ -87,7 +87,7 @@ public class JdbiShoppingListRepositoryTest {
         item2.setInCart(true);
 
         // when
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // then items should be persisted
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
@@ -111,11 +111,11 @@ public class JdbiShoppingListRepositoryTest {
     public void persist_addItemsToPersistedList() {
         // given
         ShoppingList shoppingList = new ShoppingList("Foo");
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // when
         ShoppingListItem item1 = shoppingList.add(itemType1);
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // then
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
@@ -127,11 +127,11 @@ public class JdbiShoppingListRepositoryTest {
         // given
         ShoppingList shoppingList = new ShoppingList("Foo");
         ShoppingListItem item1 = shoppingList.add(itemType1);
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // when
         item1.setQuantity(5);
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // then
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
@@ -147,11 +147,11 @@ public class JdbiShoppingListRepositoryTest {
         ShoppingListItem item1 = shoppingList.add(itemType1);
         ShoppingListItem item2 = shoppingList.add(itemType2);
 
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // when
         shoppingList.remove(item1.getId());
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // then
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
@@ -172,10 +172,10 @@ public class JdbiShoppingListRepositoryTest {
         // given
         ShoppingList shoppingList1 = new ShoppingList("Foo");
         ShoppingListItem item1 = shoppingList1.add(itemType1);
-        shoppingListRepository.add(shoppingList1);
+        shoppingListRepository.persist(shoppingList1);
 
         ShoppingList shoppingList2 = new ShoppingList("Bar");
-        shoppingListRepository.add(shoppingList2);
+        shoppingListRepository.persist(shoppingList2);
 
         // when
         List<ShoppingList> lists = shoppingListRepository.getShoppingLists();
@@ -190,8 +190,8 @@ public class JdbiShoppingListRepositoryTest {
         // given
         ShoppingList shoppingList1 = new ShoppingList("Foo");
         ShoppingList shoppingList2 = new ShoppingList("Bar");
-        shoppingListRepository.add(shoppingList1);
-        shoppingListRepository.add(shoppingList2);
+        shoppingListRepository.persist(shoppingList1);
+        shoppingListRepository.persist(shoppingList2);
 
         // when
         shoppingListRepository.delete(shoppingList1.getId());
@@ -210,7 +210,7 @@ public class JdbiShoppingListRepositoryTest {
         // given
         ShoppingList shoppingList = new ShoppingList("Foo");
         shoppingList.add(itemType1);
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // then
         expectedException.expect(ShoppingListDeleteNotAllowedException.class);

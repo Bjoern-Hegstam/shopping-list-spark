@@ -73,7 +73,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void getShoppingLists_existsLists() {
         // given
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // when
         Response response = api.getShoppingLists();
@@ -133,8 +133,8 @@ public class ShoppingListIntegrationTest {
         // given
         ShoppingList list1 = new ShoppingList("name");
         ShoppingList list2 = new ShoppingList("name");
-        shoppingListRepository.add(list1);
-        shoppingListRepository.add(list2);
+        shoppingListRepository.persist(list1);
+        shoppingListRepository.persist(list2);
 
         // when
         Response response = api.deleteShoppingList(list1.getId().getId());
@@ -148,7 +148,7 @@ public class ShoppingListIntegrationTest {
     public void deleteShoppingListWithItems() {
         // given
         shoppingList.add(itemType);
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // when
         Response response = api.deleteShoppingList(shoppingList.getId().getId());
@@ -178,7 +178,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItemToEmptyShoppingList() {
         // given
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
         ShoppingListId listId = shoppingList.getId();
 
         // Add item to list
@@ -228,7 +228,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_invalidItemTypeId() {
         // given
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // when
         Response response = api.postShoppingListItem(shoppingList.getId().getId(), "{ \"itemTypeId\": \"" + INVALID_ID + "\", \"quantity\": 3 }");
@@ -240,7 +240,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_unknownItemTypeId() {
         // given
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // when
         Response response = api.postShoppingListItem(shoppingList.getId().getId(), "{ \"itemTypeId\": \"d432242b-94f8-4d6a-b930-d3603485d470\", \"quantity\": 3 }");
@@ -252,7 +252,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_missingItemTypeId() {
         // given
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // when
         Response response = api.postShoppingListItem(shoppingList.getId().getId(), "{ \"quantity\": 3 }");
@@ -264,7 +264,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_missingQuantityId() {
         // given
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // when
         Response response = api.postShoppingListItem(shoppingList.getId().getId(), "{ \"itemTypeId\": \"" + itemType.getId().getId() + "\" }");
@@ -277,7 +277,7 @@ public class ShoppingListIntegrationTest {
     public void updateItem() {
         // given
         ShoppingListItem listItem = shoppingList.add(itemType);
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
         ShoppingListId listId = shoppingList.getId();
 
         // when
@@ -345,7 +345,7 @@ public class ShoppingListIntegrationTest {
     public void deleteItem() {
         // given
         ShoppingListItem listItem = shoppingList.add(itemType);
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // when
         Response response = api.deleteShoppingListItem(shoppingList.getId().getId(), listItem.getId().getId());
@@ -387,7 +387,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteItem_unknownListItemId() {
         // given
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // when
         Response response = api.deleteShoppingListItem(shoppingList.getId().getId(), "ff428927-8618-4f3d-b1a8-a38a82c42c38");
@@ -399,7 +399,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void emptyCart() {
         // given
-        shoppingListRepository.add(shoppingList);
+        shoppingListRepository.persist(shoppingList);
 
         // when
         Response response = api.deleteShoppingListCart(shoppingList.getId().getId());
