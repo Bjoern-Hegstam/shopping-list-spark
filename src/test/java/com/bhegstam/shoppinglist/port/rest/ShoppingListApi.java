@@ -35,6 +35,14 @@ class ShoppingListApi {
                 .get();
     }
 
+    Response deleteShoppingList(String listId) {
+        return webTarget
+                .path("shopping-list")
+                .path(listId)
+                .request()
+                .delete();
+    }
+
     Response postShoppingListItem(String listId, String json) {
         return webTarget
                 .path("shopping-list")

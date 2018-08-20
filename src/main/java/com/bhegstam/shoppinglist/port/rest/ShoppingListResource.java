@@ -84,7 +84,7 @@ public class ShoppingListResource {
         }
 
         try {
-            ShoppingList shoppingList = shoppingListApplication.get(listId);
+            ShoppingList shoppingList = shoppingListApplication.getShoppingList(listId);
 
             Response.Status status = OK;
             GetShoppingListResponse body = new GetShoppingListResponse(shoppingList);
@@ -97,6 +97,40 @@ public class ShoppingListResource {
                     .build();
         } catch (ShoppingListNotFoundException e) {
             LOGGER.error("Error while getting shopping list with id [" + shoppingListIdString + "]", e);
+            return Response
+                    .status(BAD_REQUEST)
+                    .build();
+        }
+    }
+
+    @Path("/{shoppingListId}")
+    @RolesAllowed({USER, ADMIN})
+    @DELETE
+    public Response deleteShoppingList(@Auth User user, @PathParam(SHOPPING_LIST_ID) String shoppingListIdString) {
+        LOGGER.info("Received request to delete shopping list with id [{}] for user [{}]", shoppingListIdString, user.getId());
+
+        ShoppingListId listId;
+        try {
+            listId = ShoppingListId.fromString(shoppingListIdString);
+        } catch (IllegalArgumentException e) {
+            LOGGER.error("Error while getting shopping list with id [" + shoppingListIdString + "]", e);
+            return Response
+                    .status(BAD_REQUEST)
+                    .build();
+        }
+
+        try {
+            shoppingListApplication.deleteShoppingList(listId);
+
+            Response.Status status = NO_CONTENT;
+
+            logResponse(status, null);
+
+            return Response
+                    .status(status)
+                    .build();
+        } catch (ShoppingListDeleteNotAllowedException e) {
+            LOGGER.error("Error while deleting shopping list with id [" + shoppingListIdString + "]");
             return Response
                     .status(BAD_REQUEST)
                     .build();

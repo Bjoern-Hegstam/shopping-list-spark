@@ -57,9 +57,17 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
 
     @Transaction
     default ShoppingList get(ShoppingListId listId) {
+        ShoppingList shoppingList = find(listId);
+        if (shoppingList != null) {
+            return shoppingList;
+        }
+        throw new ShoppingListNotFoundException(listId);
+    }
+
+    default ShoppingList find(ShoppingListId listId) {
         ShoppingList shoppingList = getShoppingList(listId);
         if (shoppingList == null) {
-            throw new ShoppingListNotFoundException(listId);
+            return null;
         }
 
         shoppingList.setItems(getItems(listId));
@@ -81,4 +89,21 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
 
     @SqlQuery("select * from shopping_list order by name")
     List<ShoppingList> getShoppingLists_internal();
+
+    @Transaction
+    default void delete(ShoppingListId listId) {
+        ShoppingList shoppingList = find(listId);
+        if (shoppingList == null) {
+            return;
+        }
+
+        if (shoppingList.getItems().isEmpty()) {
+            deleteShoppingList(listId);
+        } else {
+            throw new ShoppingListDeleteNotAllowedException(listId);
+        }
+    }
+
+    @SqlUpdate("delete from shopping_list where id = :listId.id")
+    void deleteShoppingList(@BindBean("listId") ShoppingListId listId);
 }

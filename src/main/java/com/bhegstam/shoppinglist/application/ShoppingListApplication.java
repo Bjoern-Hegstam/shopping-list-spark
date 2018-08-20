@@ -17,7 +17,7 @@ public class ShoppingListApplication {
         return shoppingListRepository.getShoppingLists();
     }
 
-    public ShoppingList get(ShoppingListId shoppingListId) {
+    public ShoppingList getShoppingList(ShoppingListId shoppingListId) {
         return shoppingListRepository.get(shoppingListId);
     }
 
@@ -25,6 +25,10 @@ public class ShoppingListApplication {
         ShoppingList shoppingList = new ShoppingList(name);
         shoppingListRepository.add(shoppingList);
         return shoppingList;
+    }
+
+    public void deleteShoppingList(ShoppingListId listId) {
+        shoppingListRepository.delete(listId);
     }
 
     public ShoppingListItem addItem(ShoppingListId listId, ItemTypeId itemTypeId, Integer quantity) {

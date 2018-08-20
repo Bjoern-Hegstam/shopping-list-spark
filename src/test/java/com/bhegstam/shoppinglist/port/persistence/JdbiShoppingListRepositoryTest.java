@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
+import org.junit.rules.ExpectedException;
 
 import java.util.List;
 
@@ -19,6 +20,9 @@ public class JdbiShoppingListRepositoryTest {
 
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     private ShoppingListRepository shoppingListRepository;
     private ItemType itemType1;
@@ -179,5 +183,39 @@ public class JdbiShoppingListRepositoryTest {
         // then
         assertThat(lists, contains(shoppingList2, shoppingList1));
         assertThat(lists.get(1).getItems(), contains(item1));
+    }
+
+    @Test
+    public void delete() {
+        // given
+        ShoppingList shoppingList1 = new ShoppingList("Foo");
+        ShoppingList shoppingList2 = new ShoppingList("Bar");
+        shoppingListRepository.add(shoppingList1);
+        shoppingListRepository.add(shoppingList2);
+
+        // when
+        shoppingListRepository.delete(shoppingList1.getId());
+
+        // then
+        assertThat(shoppingListRepository.getShoppingLists(), contains(shoppingList2));
+    }
+
+    @Test
+    public void delete_listDoesNotExist() {
+        shoppingListRepository.delete(new ShoppingListId());
+    }
+
+    @Test
+    public void delete_listHasItems() {
+        // given
+        ShoppingList shoppingList = new ShoppingList("Foo");
+        shoppingList.add(itemType1);
+        shoppingListRepository.add(shoppingList);
+
+        // then
+        expectedException.expect(ShoppingListDeleteNotAllowedException.class);
+
+        // when
+        shoppingListRepository.delete(shoppingList.getId());
     }
 }
