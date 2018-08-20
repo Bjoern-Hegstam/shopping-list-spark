@@ -51,6 +51,39 @@ export function addShoppingList({token, name}) {
     }
 }
 
+export function updateShoppingList({ token, listId, name }) {
+    return {
+        type: types.UPDATE_SHOPPING_LIST,
+        payload: {
+            request: {
+                method: 'put',
+                url: `shopping-list/${listId}`,
+                headers: {
+                    authorization: `Bearer ${token}`
+                },
+                data: {
+                    name
+                }
+            }
+        }
+    }
+}
+
+export function deleteShoppingList({ token, listId }) {
+    return {
+        type: types.DELETE_SHOPPING_LIST,
+        payload: {
+            request: {
+                method: 'delete',
+                url: `shopping-list/${listId}`,
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            }
+        }
+    }
+}
+
 export function addShoppingListItem({token, listId, itemTypeId, quantity}) {
     return {
         type: types.ADD_SHOPPING_LIST_ITEM,

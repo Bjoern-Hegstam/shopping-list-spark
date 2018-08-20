@@ -10,4 +10,8 @@
 .shopping-list-link--name {
   font-size: 24pt;
   margin: 10px 0;
+
+  &:hover {
+    cursor: pointer;
+  }
 }

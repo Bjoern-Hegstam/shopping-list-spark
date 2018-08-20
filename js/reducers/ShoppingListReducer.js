@@ -9,6 +9,12 @@ const initialState = {
     addingShoppingList: false,
     errorAddShoppingList: null,
 
+    updatingShoppingList: false,
+    errorUpdateShoppingList: null,
+
+    deletingShoppingList: false,
+    errorDeleteShoppingList: null,
+
     addingShoppingListItem: false,
     errorAddShoppingListItem: null,
 
@@ -57,6 +63,7 @@ export default function (state = initialState, action) {
                 errorGetShoppingLists: action.error
             };
         }
+
         case types.GET_SHOPPING_LIST: {
             const {listId} = action.queryInfo;
 
@@ -118,6 +125,48 @@ export default function (state = initialState, action) {
                 ...state,
                 addingShoppingList: false,
                 errorAddShoppingList: action.error
+            }
+        }
+
+        case types.UPDATE_SHOPPING_LIST: {
+            return {
+                ...state,
+                updatingShoppingList: true,
+                errorUpdateShoppingList: null
+            }
+        }
+        case types.UPDATE_SHOPPING_LIST_SUCCESS: {
+            return {
+                ...state,
+                updatingShoppingList: false,
+            }
+        }
+        case types.UPDATE_SHOPPING_LIST_FAIL: {
+            return {
+                ...state,
+                updatingShoppingList: false,
+                errorUpdateShoppingList: action.error
+            }
+        }
+
+        case types.DELETE_SHOPPING_LIST: {
+            return {
+                ...state,
+                deletingShoppingList: true,
+                errorDeleteShoppingList: null
+            }
+        }
+        case types.DELETE_SHOPPING_LIST_SUCCESS: {
+            return {
+                ...state,
+                deletingShoppingList: false,
+            }
+        }
+        case types.DELETE_SHOPPING_LIST_FAIL: {
+            return {
+                ...state,
+                deletingShoppingList: false,
+                errorDeleteShoppingList: action.error
             }
         }
 

@@ -11,6 +11,12 @@ describe('ShoppingListReducer', () => {
         addingShoppingList: false,
         errorAddShoppingList: null,
 
+        updatingShoppingList: false,
+        errorUpdateShoppingList: null,
+
+        deletingShoppingList: false,
+        errorDeleteShoppingList: null,
+
         addingShoppingListItem: false,
         errorAddShoppingListItem: null,
 
@@ -432,6 +438,126 @@ describe('ShoppingListReducer', () => {
                 ...initialState,
                 addingShoppingList: false,
                 errorAddShoppingList: 'Error'
+            })
+        });
+    });
+
+    describe('UPDATE_SHOPPING_LIST', () => {
+        it('should set fetching flag and reset error on UPDATE_SHOPPING_LIST', () => {
+            const state = {
+                ...initialState,
+                errorUpdateShoppingList: 'Error'
+            };
+            const action = {
+                type: types.UPDATE_SHOPPING_LIST,
+            };
+
+            // when
+            const newState = reducer(state, action);
+
+            // then
+            expect(newState).toEqual({
+                ...initialState,
+                updatingShoppingList: true,
+                errorUpdateShoppingList: null
+            })
+        });
+
+        it('should handle UPDATE_SHOPPING_LIST_SUCCESS', () => {
+            const state = {
+                ...initialState
+            };
+            const action = {
+                type: types.UPDATE_SHOPPING_LIST_SUCCESS,
+            };
+
+            // when
+            const newState = reducer(state, action);
+
+            // then
+            expect(newState).toEqual({
+                ...initialState,
+                updatingShoppingList: false,
+            })
+        });
+
+        it('should handle UPDATE_SHOPPING_LIST_FAIL', () => {
+            const state = {
+                ...initialState,
+            };
+            const action = {
+                type: types.UPDATE_SHOPPING_LIST_FAIL,
+                error: "Error"
+            };
+
+            // when
+            const newState = reducer(state, action);
+
+            // then
+            expect(newState).toEqual({
+                ...initialState,
+                updatingShoppingList: false,
+                errorUpdateShoppingList: 'Error'
+            })
+        });
+    });
+
+    describe('DELETE_SHOPPING_LIST', () => {
+        it('should set fetching flag and reset error on DELETE_SHOPPING_LIST', () => {
+            const state = {
+                ...initialState,
+                errorDeleteShoppingList: 'Error'
+            };
+            const action = {
+                type: types.DELETE_SHOPPING_LIST,
+            };
+
+            // when
+            const newState = reducer(state, action);
+
+            // then
+            expect(newState).toEqual({
+                ...initialState,
+                deletingShoppingList: true,
+                errorDeleteShoppingList: null
+            })
+        });
+
+        it('should handle DELETE_SHOPPING_LIST_SUCCESS', () => {
+            const state = {
+                ...initialState
+            };
+            const action = {
+                type: types.DELETE_SHOPPING_LIST_SUCCESS,
+            };
+
+            // when
+            const newState = reducer(state, action);
+
+            // then
+            expect(newState).toEqual({
+                ...initialState,
+                deletingShoppingList: false,
+            })
+        });
+
+        it('should handle DELETE_SHOPPING_LIST_FAIL', () => {
+            const state = {
+                ...initialState,
+            };
+            const action = {
+                type: types.DELETE_SHOPPING_LIST_FAIL,
+                error: "Error"
+            };
+
+            // when
+            const newState = reducer(state, action);
+
+            // then
+            expect(newState).toEqual({
+                ...initialState,
+                deletingShoppingList: false,
+                errorDeleteShoppingList: 'Error'
             })
         });
     });

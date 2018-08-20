@@ -1,4 +1,5 @@
 @import '../../styles/variables';
+@import '../../styles/classes';
 
 .shopping-list-item {
   border-bottom: 1px solid $border-color;
@@ -34,12 +35,9 @@
 }
 
 %button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @extend %base-button;
 
   font-size: 28pt;
-
   width: 45%;
 }
 
