@@ -105,6 +105,40 @@ public class ShoppingListResource {
 
     @Path("/{shoppingListId}")
     @RolesAllowed({USER, ADMIN})
+    @PUT
+    public Response updateShoppingList(@Auth User user, @PathParam(SHOPPING_LIST_ID) String shoppingListIdString, @Valid UpdateShoppingListRequest request) {
+        LOGGER.info("Received request [{}] to update shopping list with id [{}] for user [{}]", request, shoppingListIdString, user.getId());
+
+        ShoppingListId listId;
+        try {
+            listId = ShoppingListId.fromString(shoppingListIdString);
+        } catch (IllegalArgumentException e) {
+            LOGGER.error("Error while updating shopping list with id [" + shoppingListIdString + "]", e);
+            return Response
+                    .status(BAD_REQUEST)
+                    .build();
+        }
+
+        try {
+            shoppingListApplication.updateShoppingList(listId, request.getName());
+
+            Response.Status status = NO_CONTENT;
+
+            logResponse(status, null);
+
+            return Response
+                    .status(status)
+                    .build();
+        } catch (ShoppingListNotFoundException e) {
+            LOGGER.error("Error while getting shopping list with id [" + shoppingListIdString + "]", e);
+            return Response
+                    .status(BAD_REQUEST)
+                    .build();
+        }
+    }
+
+    @Path("/{shoppingListId}")
+    @RolesAllowed({USER, ADMIN})
     @DELETE
     public Response deleteShoppingList(@Auth User user, @PathParam(SHOPPING_LIST_ID) String shoppingListIdString) {
         LOGGER.info("Received request to delete shopping list with id [{}] for user [{}]", shoppingListIdString, user.getId());
@@ -113,7 +147,7 @@ public class ShoppingListResource {
         try {
             listId = ShoppingListId.fromString(shoppingListIdString);
         } catch (IllegalArgumentException e) {
-            LOGGER.error("Error while getting shopping list with id [" + shoppingListIdString + "]", e);
+            LOGGER.error("Error while deleting shopping list with id [" + shoppingListIdString + "]", e);
             return Response
                     .status(BAD_REQUEST)
                     .build();

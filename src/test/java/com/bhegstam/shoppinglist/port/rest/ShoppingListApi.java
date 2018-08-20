@@ -35,6 +35,14 @@ class ShoppingListApi {
                 .get();
     }
 
+    Response updateShoppingList(String listId, String json) {
+        return webTarget
+                .path("shopping-list")
+                .path(listId)
+                .request()
+                .put(Entity.json(json));
+    }
+
     Response deleteShoppingList(String listId) {
         return webTarget
                 .path("shopping-list")

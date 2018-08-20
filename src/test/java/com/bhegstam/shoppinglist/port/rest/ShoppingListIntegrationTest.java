@@ -129,6 +129,40 @@ public class ShoppingListIntegrationTest {
     }
 
     @Test
+    public void updateShoppingList() {
+        // given
+        shoppingList.add(itemType);
+        shoppingListRepository.persist(shoppingList);
+
+        // when
+        Response response = api.updateShoppingList(shoppingList.getId().getId(), "{ \"name\": \"Bar\" }");
+
+        // then
+        assertResponseStatus(response, NO_CONTENT);
+        ShoppingList persistedList = shoppingListRepository.get(this.shoppingList.getId());
+        assertThat(persistedList.getName(), is("Bar"));
+        assertThat(persistedList.getItems().size(), is(1));
+    }
+
+    @Test
+    public void updateShoppingList_invalidId() {
+        // when
+        Response response = api.updateShoppingList(INVALID_ID, "{ \"name\": \"Bar\" }");
+
+        // then
+        assertResponseStatus(response, BAD_REQUEST);
+    }
+
+    @Test
+    public void updateShoppingList_unknownId() {
+        // when
+        Response response = api.updateShoppingList("6b837531-7773-4a20-ad17-93d018a65a47", "{ \"name\": \"Bar\" }");
+
+        // then
+        assertResponseStatus(response, BAD_REQUEST);
+    }
+
+    @Test
     public void deleteShoppingList() {
         // given
         ShoppingList list1 = new ShoppingList("name");

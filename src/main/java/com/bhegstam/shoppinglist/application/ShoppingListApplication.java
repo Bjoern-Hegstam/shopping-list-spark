@@ -27,6 +27,12 @@ public class ShoppingListApplication {
         return shoppingList;
     }
 
+    public void updateShoppingList(ShoppingListId listId, String name) {
+        ShoppingList shoppingList = shoppingListRepository.get(listId);
+        shoppingList.setName(name);
+        shoppingListRepository.persist(shoppingList);
+    }
+
     public void deleteShoppingList(ShoppingListId listId) {
         shoppingListRepository.delete(listId);
     }
