@@ -2,7 +2,7 @@
 
 .shopping-list-item {
   border-bottom: 1px solid $border-color;
-  font-size: 14pt;
+  font-size: 1.5rem;
   height: 50px;
 
   display: flex;
@@ -36,7 +36,7 @@
 %button {
   @extend %base-button;
 
-  font-size: 28pt;
+  font-size: 2rem;
   width: 45%;
 }
 
