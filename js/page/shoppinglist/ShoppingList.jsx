@@ -54,26 +54,32 @@ export default class ShoppingList extends React.Component {
         const { shoppingList, isEditing, onToggleItemInCart, onUpdateItemQuantity, onEmptyCart, onDelete } = this.props;
         const { name } = this.state;
 
+        const hasItemsInCart = shoppingList.items.length > 0;
+
         return (
             <div className='shopping-list'>
-                {!isEditing && (
-                    <div className='shopping-list__header'>
-                        <span className='shopping-list__header__name' onClick={this.handleStartEdit}>{shoppingList.name}</span>
-                        <div className='shopping-list__header__empty-cart-button' onClick={onEmptyCart}>Empty Cart</div>
-                    </div>
-                )}
-                {isEditing && (
-                    <div className='shopping-list__header--edit'>
+                <div className='shopping-list__header'>
+                    {!isEditing && (
+                        <span className='shopping-list__header__name'
+                              onClick={this.handleStartEdit}>{shoppingList.name}</span>
+                    )}
+                    {isEditing && (
                         <input
                             ref={this.inputRef}
                             className='shopping-list__header__name-input'
                             value={name}
                             onChange={this.handleNameChange}
                             onKeyDown={this.handleNameInputKeyDown}
+                            onBlur={this.props.onCancelEdit}
                         />
+                    )}
+                    {hasItemsInCart && (
+                        <div className='shopping-list__header__empty-cart-button' onClick={onEmptyCart}>Empty Cart</div>
+                    )}
+                    {!hasItemsInCart && (
                         <div className="shopping-list__header__delete-button" onClick={onDelete}>Delete</div>
-                    </div>
-                )}
+                    )}
+                </div>
                 <div className='shopping-list__body'>
                     {shoppingList.items.map(item => <ShoppingListItem
                         key={item.id}
