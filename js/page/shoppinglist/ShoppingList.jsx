@@ -74,10 +74,10 @@ export default class ShoppingList extends React.Component {
                         />
                     )}
                     {hasItemsInCart && (
-                        <div className='shopping-list__header__empty-cart-button' onClick={onEmptyCart}>Empty Cart</div>
+                        <button className='shopping-list__header__empty-cart-button' onClick={onEmptyCart}>Empty Cart</button>
                     )}
                     {!hasItemsInCart && (
-                        <div className="shopping-list__header__delete-button" onClick={onDelete}>Delete</div>
+                        <button className="shopping-list__header__delete-button" onClick={onDelete}>Delete</button>
                     )}
                 </div>
                 <div className='shopping-list__body'>

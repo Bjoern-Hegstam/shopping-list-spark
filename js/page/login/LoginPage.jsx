@@ -3,8 +3,8 @@ import AppLayout from "../../components/AppLayout";
 import PropTypes from 'prop-types';
 
 import './LoginPage.scss';
-import {connect} from "react-redux";
-import {login} from "../../actions/UserActions";
+import { connect } from "react-redux";
+import { login } from "../../actions/UserActions";
 
 export class LoginPage extends React.Component {
     static propTypes = {
@@ -35,7 +35,7 @@ export class LoginPage extends React.Component {
     render() {
         return (
             <AppLayout>
-                <form id="login-form" onSubmit={this.onLoginSubmit}>
+                <form className="login-form" onSubmit={this.onLoginSubmit}>
                     <input
                         type="text"
                         placeholder="Username"

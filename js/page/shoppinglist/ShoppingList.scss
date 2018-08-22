@@ -1,5 +1,4 @@
-@import '../../styles/variables';
-@import '../../styles/classes';
+@import '../../styles/general';
 
 .shopping-list {
   border: 1px solid $border-color;
@@ -15,15 +14,6 @@
   }
 }
 
-%button {
-  @extend %base-button;
-
-  color: white;
-  font-weight: bolder;
-  margin: 10px;
-  padding: 15px;
-}
-
 .shopping-list__header__name {
   display: flex;
   align-items: center;
@@ -32,8 +22,8 @@
 }
 
 .shopping-list__header__empty-cart-button {
-  @extend %button;
-  background: $danger-color;
+  @extend %button-danger;
+  margin: 10px;
 }
 
 .shopping-list__header__name-input {
@@ -42,6 +32,6 @@
 }
 
 .shopping-list__header__delete-button {
-  @extend %button;
-  background: $danger-color;
+  @extend %button-danger;
+  margin: 10px;
 }
