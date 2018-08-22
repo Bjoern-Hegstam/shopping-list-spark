@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import './Header.scss';
-import {connect} from "react-redux";
-import {UserType} from "../propTypes";
-import {logout} from "../actions/UserActions";
+import { connect } from "react-redux";
+import { UserType } from "../propTypes";
+import { logout } from "../actions/UserActions";
 
 export class Header extends React.Component {
     static propTypes = {
@@ -25,7 +25,7 @@ export class Header extends React.Component {
         return (
             <header>
                 <div className="header-content">
-                    <span>shopping-list-spark</span>
+                    <span className="header__name">shopping-list-spark</span>
                     {this.props.user ?
                         <nav>
                             <ul>

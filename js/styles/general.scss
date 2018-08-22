@@ -1,5 +1,5 @@
 $app-layout-min-side-margin: 10px;
-$app-layout-min-width: 1200px;
+$app-layout-min-width: 1500px;
 $app-layout-grid-template-columns: minmax($app-layout-min-side-margin, 1fr) minmax($app-layout-min-width, 2fr) minmax($app-layout-min-side-margin, 1fr);
 
 $small-screen-width: $app-layout-min-width + 2 * $app-layout-min-side-margin;
@@ -11,6 +11,16 @@ $item-selected-color: #97ec8d;
 
 $button-color-primary: #337ab7;
 $button-color-danger: #d83232;
+
+html {
+  font-size: 100%;
+}
+
+@media (max-width: $small-screen-width) {
+  html {
+    font-size: 300%;
+  }
+}
 
 %base-button {
   display: flex;

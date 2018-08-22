@@ -64,12 +64,12 @@ export class ShoppingListsPage extends React.Component {
         return Object
             .values(this.props.shoppingLists)
             .map(shoppingList => (
-                <ShoppingListLink
-                    key={shoppingList.id}
-                    id={shoppingList.id}
-                    name={shoppingList.name}
-                    onClick={this.handleLinkClicked}
-                />
+                    <ShoppingListLink
+                        key={shoppingList.id}
+                        id={shoppingList.id}
+                        name={shoppingList.name}
+                        onClick={this.handleLinkClicked}
+                    />
                 )
             );
     };
@@ -81,9 +81,14 @@ export class ShoppingListsPage extends React.Component {
                     {this.renderLists()}
                 </div>
                 <div className="add-new-shopping-list">
-                    <form onSubmit={this.addNewList}>
-                        <label>New list: </label>
+                    <form
+                        className="add-new-shopping-list__form"
+                        onSubmit={this.addNewList}
+                    >
                         <input
+                            id="add-new-shopping-list__name__input"
+                            className="add-new-shopping-list__name__input"
+                            placeholder="New list name..."
                             value={this.state.newListName}
                             onChange={this.onNewListNameChange}
                         />

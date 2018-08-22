@@ -1,6 +1,15 @@
-.add-new-shopping-list {
+.add-new-shopping-list__form {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 50px;
+  height: 3rem;
+}
+
+.add-new-shopping-list__name__input {
+  grid-column: 2;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+  height: 1.3rem;
+  width: 60%;
+  text-align: center;
 }
