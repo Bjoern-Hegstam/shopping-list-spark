@@ -31,10 +31,9 @@ public class UserResource {
         this.userApplication = userApplication;
     }
 
-    @RolesAllowed(ADMIN)
     @POST
-    public Response createUser(@Auth User user, @Valid CreateUserRequest request) {
-        LOGGER.info("Received request to create user [{}] by user [{}]", request.getUsername(), user.getId());
+    public Response createUser(@Valid CreateUserRequest request) {
+        LOGGER.info("Received request to create user [{}] by user [{}]", request.getUsername());
 
         UserId userId = userApplication.addUser(
                 request.getUsername(),

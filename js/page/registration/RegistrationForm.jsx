@@ -1,18 +1,30 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import { connect } from "react-redux";
+import { registerUser } from "../../actions/UserActions";
 
 import './RegistrationForm.scss';
 
-export default class RegistrationForm extends React.Component {
+export class RegistrationForm extends React.Component {
     static propTypes = {
-        onSubmit: PropTypes.func.isRequired,
+        registerUser: PropTypes.func.isRequired,
+        registeringUser: PropTypes.bool.isRequired,
+        errorRegisterUser: PropTypes.object.isRequired,
     };
 
-    state = {
+    initialState = {
         username: '',
         password: '',
-        email: ''
+        email: '',
     };
+
+    state = { ...this.initialState };
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.registeringUser && !this.props.registeringUser && !this.props.errorRegisterUser) {
+            this.setState({ ...this.initialState });
+        }
+    }
 
     handleUsernameChanged = (e) => {
         this.setState({ username: e.target.value });
@@ -26,15 +38,26 @@ export default class RegistrationForm extends React.Component {
         this.setState({ email: e.target.value });
     };
 
-    handleSubmit = () => {
-        this.props.onSubmit({ ...this.state });
+    onSubmit = () => {
+        const { username, password, email } = this.state;
+        if (this.isFormValid()) {
+            this.props.registerUser({ username, password, email });
+        }
     };
+
+    isFormValid() {
+        const { username, password, email } = this.state;
+
+        return username.trim() !== ''
+            && password.trim() !== ''
+            && email.trim() !== '';
+    }
 
     render() {
         const { username, password, email } = this.state;
 
         return (
-            <form className="registration-form" onSubmit={this.handleSubmit}>
+            <form className="registration-form" onSubmit={this.onSubmit}>
                 <input
                     type="text"
                     placeholder="Username"
@@ -57,9 +80,26 @@ export default class RegistrationForm extends React.Component {
                 />
 
                 <div>
-                    <button type="submit">Register</button>
+                    <button type="submit" disabled={!this.isFormValid()}>Register</button>
                 </div>
             </form>
         );
     }
 }
+
+function mapStateToProps(store) {
+    const { registerUser, errorRegisterUser } = store.auth;
+
+    return {
+        registerUser,
+        errorRegisterUser,
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        registerUser: args => dispatch(registerUser(args))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegistrationForm);

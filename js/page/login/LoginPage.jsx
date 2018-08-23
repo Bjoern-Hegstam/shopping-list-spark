@@ -28,8 +28,8 @@ export class LoginPage extends React.Component {
 
     onLoginSubmit = (e) => {
         e.preventDefault();
-
-        this.props.login(this.state.username, this.state.password);
+        const { username, password } = this.state;
+        this.props.login({ username, password });
     };
 
     render() {
@@ -60,6 +60,6 @@ export class LoginPage extends React.Component {
 export default connect(
     undefined,
     (dispatch) => ({
-        login: (username, password) => dispatch(login(username, password))
+        login: args => dispatch(login(args))
     })
 )(LoginPage);
