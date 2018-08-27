@@ -90,7 +90,7 @@ export function addShoppingListItem({token, listId, itemTypeId, quantity}) {
         payload: {
             request: {
                 method: 'post',
-                url: `shopping-list/${listId}`,
+                url: `shopping-list/${listId}/item`,
                 headers: {
                     authorization: `Bearer ${token}`
                 },

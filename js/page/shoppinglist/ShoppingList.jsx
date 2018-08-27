@@ -1,16 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ShoppingListType } from "../../propTypes";
+import { ItemTypeType, ShoppingListType } from "../../propTypes";
 import ShoppingListItem from "./ShoppingListItem";
 import './ShoppingList.scss';
+import AddShoppingListItemInput from "./AddShoppingListItemInput";
 
 export default class ShoppingList extends React.Component {
     static propTypes = {
         shoppingList: ShoppingListType.isRequired,
+        itemTypes: PropTypes.arrayOf(ItemTypeType).isRequired,
         isEditing: PropTypes.bool.isRequired,
 
         onStartEdit: PropTypes.func.isRequired,
         onCancelEdit: PropTypes.func.isRequired,
+        onAddItem: PropTypes.func.isRequired,
         onToggleItemInCart: PropTypes.func.isRequired,
         onUpdateItemQuantity: PropTypes.func.isRequired,
         onEmptyCart: PropTypes.func.isRequired,
@@ -51,7 +54,16 @@ export default class ShoppingList extends React.Component {
     };
 
     render() {
-        const { shoppingList, isEditing, onToggleItemInCart, onUpdateItemQuantity, onEmptyCart, onDelete } = this.props;
+        const {
+            shoppingList,
+            itemTypes,
+            isEditing,
+            onAddItem,
+            onToggleItemInCart,
+            onUpdateItemQuantity,
+            onEmptyCart,
+            onDelete
+        } = this.props;
         const { name } = this.state;
 
         const hasItemsInCart = shoppingList.items.length > 0;
@@ -88,6 +100,7 @@ export default class ShoppingList extends React.Component {
                         onUpdateQuantity={onUpdateItemQuantity}
                     />)}
                 </div>
+                <AddShoppingListItemInput itemTypes={itemTypes} onAddItem={onAddItem} />
             </div>
         );
     }

@@ -12,7 +12,7 @@ import {
     updateShoppingList,
     updateShoppingListItem
 } from "../../actions/ShoppingListActions";
-import { getItemTypes } from "../../actions/ItemTypeActions";
+import { addItemType, getItemTypes } from "../../actions/ItemTypeActions";
 
 import ShoppingList from "./ShoppingList";
 
@@ -28,6 +28,10 @@ export class ShoppingListPage extends React.Component {
         getShoppingList: PropTypes.func.isRequired,
         fetchingShoppingList: PropTypes.bool.isRequired,
         errorGetShoppingList: PropTypes.object,
+
+        addItemType: PropTypes.func.isRequired,
+        addingItemType: PropTypes.bool.isRequired,
+        errorAddItemType: PropTypes.object,
 
         getItemTypes: PropTypes.func.isRequired,
 
@@ -58,7 +62,14 @@ export class ShoppingListPage extends React.Component {
 
     static defaultProps = {
         shoppingList: undefined,
-        itemTypes: []
+        itemTypes: [],
+
+        errorAddItemType: null,
+        errorUpdateShoppingList: null,
+        errorDeleteShoppingList: null,
+        errorAddShoppingListItem: null,
+        errorUpdateShoppingListItem: null,
+        errorDeleteShoppingListItem: null,
     };
 
     state = {
@@ -116,6 +127,38 @@ export class ShoppingListPage extends React.Component {
         this.props.updateShoppingList({ token, listId: shoppingList.id, name: newName });
     };
 
+    handleAddItem = async ({ id, name }) => {
+        const { token, shoppingList } = this.props;
+
+        let itemTypeId;
+        if (!id) {
+            const response = await this.props.addItemType({ token, name });
+            this.props.getItemTypes(token);
+            itemTypeId = response.payload.data.id;
+        } else {
+            itemTypeId = id;
+        }
+
+        const itemInList = shoppingList.items.find(item => item.itemType.id === itemTypeId);
+
+        if (!itemInList) {
+            this.props.addShoppingListItem({
+                token,
+                listId: shoppingList.id,
+                itemTypeId,
+                quantity: 1,
+            });
+        } else {
+            this.props.updateShoppingListItem({
+                token,
+                listId: shoppingList.id,
+                itemId: itemInList.id,
+                quantity: itemInList.quantity + 1,
+                inCart: itemInList.inCart,
+            });
+        }
+    };
+
     handleToggleItemInCart = (item, newInCart) => {
         const { token, shoppingList } = this.props;
 
@@ -157,7 +200,7 @@ export class ShoppingListPage extends React.Component {
     };
 
     render() {
-        const { shoppingList } = this.props;
+        const { shoppingList, itemTypes } = this.props;
         const { isEditing } = this.state;
 
         if (!shoppingList) {
@@ -170,9 +213,11 @@ export class ShoppingListPage extends React.Component {
             <AppLayout>
                 <ShoppingList
                     shoppingList={shoppingList}
+                    itemTypes={itemTypes}
                     isEditing={isEditing}
                     onStartEdit={this.handleStartEdit}
                     onCancelEdit={this.handleCancelEdit}
+                    onAddItem={this.handleAddItem}
                     onToggleItemInCart={this.handleToggleItemInCart}
                     onUpdateItemQuantity={this.handleUpdateItemQuantity}
                     onEmptyCart={this.handleEmptyCart}
@@ -192,7 +237,6 @@ export default connect(
 
         const { listId } = ownProps.match.params;
         const { shoppingLists } = store.shoppingList;
-        const { itemTypes } = store.itemType;
 
         const shoppingList = listId ? shoppingLists[listId] : undefined;
         return {
@@ -201,13 +245,14 @@ export default connect(
             shoppingList,
             fetchingShoppingList: shoppingList ? shoppingList.fetching : false,
             errorGetShoppingList: shoppingList ? shoppingList.error: null,
-            itemTypes
+            ...store.itemType
         };
     },
     dispatch => ({
         getShoppingList: args => dispatch(getShoppingList(args)),
         updateShoppingList: args => dispatch(updateShoppingList(args)),
         deleteShoppingList: args => dispatch(deleteShoppingList(args)),
+        addItemType: args => dispatch(addItemType(args)),
         getItemTypes: args => dispatch(getItemTypes(args)),
         addShoppingListItem: args => dispatch(addShoppingListItem(args)),
         updateShoppingListItem: args => dispatch(updateShoppingListItem(args)),

@@ -8,6 +8,10 @@ export const LOGIN_FAIL = 'LOGIN_FAIL';
 
 export const LOGOUT = 'LOGOUT';
 
+export const ADD_ITEM_TYPE = 'ADD_ITEM_TYPE';
+export const ADD_ITEM_TYPE_SUCCESS = 'ADD_ITEM_TYPE_SUCCESS';
+export const ADD_ITEM_TYPE_FAIL = 'ADD_ITEM_TYPE_FAIL';
+
 export const GET_ITEM_TYPES = 'GET_ITEM_TYPES';
 export const GET_ITEM_TYPES_SUCCESS = 'GET_ITEM_TYPES_SUCCESS';
 export const GET_ITEM_TYPES_FAIL = 'GET_ITEM_TYPES_FAIL';
