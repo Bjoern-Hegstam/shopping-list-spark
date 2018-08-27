@@ -52,6 +52,7 @@ export default class AddShoppingListItemInput extends React.Component {
                     className="shopping-list__add-item__input"
                     list="shopping-list__add-item__datalist"
                     value={nameInput}
+                    placeholder="Add item"
                     onChange={this.handleAddItemInputChange}
                 />
                 <datalist id="shopping-list__add-item__datalist">
