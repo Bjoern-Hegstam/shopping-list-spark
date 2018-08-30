@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AppLayout from "../../components/AppLayout";
-import { connect } from "react-redux";
-import { ItemTypeType, ShoppingListType } from "../../propTypes";
+import { connect } from 'react-redux';
+import AppLayout from '../../components/AppLayout';
+import { ItemTypeType, ShoppingListType } from '../../propTypes';
 import {
     addShoppingListItem,
     deleteShoppingList,
@@ -10,11 +10,11 @@ import {
     emptyCart,
     getShoppingList,
     updateShoppingList,
-    updateShoppingListItem
-} from "../../actions/ShoppingListActions";
-import { addItemType, getItemTypes } from "../../actions/ItemTypeActions";
+    updateShoppingListItem,
+} from '../../actions/ShoppingListActions';
+import { addItemType, getItemTypes } from '../../actions/ItemTypeActions';
 
-import ShoppingList from "./ShoppingList";
+import ShoppingList from './ShoppingList';
 
 export class ShoppingListPage extends React.Component {
     static propTypes = {
@@ -57,7 +57,7 @@ export class ShoppingListPage extends React.Component {
 
         emptyCart: PropTypes.func.isRequired,
         emptyingCart: PropTypes.bool.isRequired,
-        errorEmptyCart: PropTypes.object
+        errorEmptyCart: PropTypes.object,
     };
 
     static defaultProps = {
@@ -73,13 +73,13 @@ export class ShoppingListPage extends React.Component {
     };
 
     state = {
-        isEditing: false
+        isEditing: false,
     };
 
     componentDidMount() {
         this.props.getShoppingList({
             token: this.props.token,
-            id: this.props.match.params.listId
+            id: this.props.match.params.listId,
         });
 
         this.props.getItemTypes(this.props.token);
@@ -105,7 +105,7 @@ export class ShoppingListPage extends React.Component {
 
         const shoppingListFetched = prevProps.fetchingShoppingList && !this.props.fetchingShoppingList;
         if (shoppingListFetched && this.state.isEditing) {
-            this.setState({ isEditing: false })
+            this.setState({ isEditing: false });
         }
 
         const shoppingListDeleted = prevProps.deletingShoppingList && !this.props.deletingShoppingList;
@@ -167,7 +167,7 @@ export class ShoppingListPage extends React.Component {
             listId: shoppingList.id,
             itemId: item.id,
             quantity: item.quantity,
-            inCart: newInCart
+            inCart: newInCart,
         });
     };
 
@@ -180,7 +180,7 @@ export class ShoppingListPage extends React.Component {
                 listId: shoppingList.id,
                 itemId: item.id,
                 quantity: newQuantity,
-                inCart: item.inCart
+                inCart: item.inCart,
             });
         } else {
             this.props.deleteShoppingListItem({ token, listId: shoppingList.id, itemId: item.id });
@@ -206,7 +206,7 @@ export class ShoppingListPage extends React.Component {
         if (!shoppingList) {
             return (
                 <AppLayout>Loading...</AppLayout>
-            )
+            );
         }
 
         return (
@@ -244,8 +244,8 @@ export default connect(
             ...store.shoppingList,
             shoppingList,
             fetchingShoppingList: shoppingList ? shoppingList.fetching : false,
-            errorGetShoppingList: shoppingList ? shoppingList.error: null,
-            ...store.itemType
+            errorGetShoppingList: shoppingList ? shoppingList.error : null,
+            ...store.itemType,
         };
     },
     dispatch => ({
@@ -258,5 +258,5 @@ export default connect(
         updateShoppingListItem: args => dispatch(updateShoppingListItem(args)),
         deleteShoppingListItem: args => dispatch(deleteShoppingListItem(args)),
         emptyCart: args => dispatch(emptyCart(args)),
-    })
+    }),
 )(ShoppingListPage);

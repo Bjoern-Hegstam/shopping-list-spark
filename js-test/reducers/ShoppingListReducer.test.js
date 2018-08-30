@@ -1,5 +1,5 @@
-import reducer from "../../js/reducers/ShoppingListReducer";
-import * as types from "../../js/actions/types";
+import reducer from '../../js/reducers/ShoppingListReducer';
+import * as types from '../../js/actions/types';
 
 describe('ShoppingListReducer', () => {
     const initialState = {
@@ -27,28 +27,28 @@ describe('ShoppingListReducer', () => {
         errorDeleteShoppingListItem: null,
 
         emptyingCart: false,
-        errorEmptyCart: null
+        errorEmptyCart: null,
     };
 
     it('should return initial state for unknown action type', () => {
         // given
         const state = undefined;
-        const action = {type: 'unknown'};
+        const action = { type: 'unknown' };
 
         // when
         const newState = reducer(state, action);
 
         // then
-        expect(newState).toEqual(initialState)
+        expect(newState).toEqual(initialState);
     });
 
     describe('GET_SHOPPING_LISTS', () => {
         it('should set fetching flag and reset error on action GET_SHOPPING_LISTS', () => {
             const state = {
                 ...initialState,
-                errorGetShoppingLists: 'Error'
+                errorGetShoppingLists: 'Error',
             };
-            const action = {type: types.GET_SHOPPING_LISTS};
+            const action = { type: types.GET_SHOPPING_LISTS };
 
             // when
             const newState = reducer(state, action);
@@ -57,15 +57,15 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 fetchingShoppingLists: true,
-                errorGetShoppingLists: null
-            })
+                errorGetShoppingLists: null,
+            });
         });
 
         it('GET_SHOPPING_LISTS_SUCCESS when fetching lists first time', () => {
             // given
             const state = {
                 ...initialState,
-                fetchingShoppingLists: true
+                fetchingShoppingLists: true,
             };
             const action = {
                 type: types.GET_SHOPPING_LISTS_SUCCESS,
@@ -79,10 +79,10 @@ describe('ShoppingListReducer', () => {
                             {
                                 id: 18,
                                 name: 'Bar',
-                            }
-                        ]
-                    }
-                }
+                            },
+                        ],
+                    },
+                },
             };
 
             // when
@@ -98,17 +98,17 @@ describe('ShoppingListReducer', () => {
                         name: 'Foo',
                         items: [],
                         fetching: false,
-                        error: null
+                        error: null,
                     },
                     18: {
                         id: 18,
                         name: 'Bar',
                         items: [],
                         fetching: false,
-                        error: null
-                    }
-                }
-            })
+                        error: null,
+                    },
+                },
+            });
         });
 
         it('GET_SHOPPING_LISTS_SUCCESS updates previously fetched list', () => {
@@ -121,10 +121,10 @@ describe('ShoppingListReducer', () => {
                         id: 17,
                         name: 'Foo',
                         items: [
-                            'item'
-                        ]
-                    }
-                }
+                            'item',
+                        ],
+                    },
+                },
             };
             const action = {
                 type: types.GET_SHOPPING_LISTS_SUCCESS,
@@ -133,9 +133,9 @@ describe('ShoppingListReducer', () => {
                         shoppingLists: [{
                             id: 17,
                             name: 'Bar',
-                        }]
-                    }
-                }
+                        }],
+                    },
+                },
             };
 
             // when
@@ -152,21 +152,21 @@ describe('ShoppingListReducer', () => {
                         name: 'Bar',
                         items: [],
                         fetching: false,
-                        error: null
-                    }
-                }
-            })
+                        error: null,
+                    },
+                },
+            });
         });
 
         it('should set error on GET_SHOPPING_LISTS_FAIL', () => {
             // given
             const state = {
                 ...initialState,
-                fetchingShoppingLists: true
+                fetchingShoppingLists: true,
             };
             const action = {
                 type: types.GET_SHOPPING_LISTS_FAIL,
-                error: 'Error while fetching'
+                error: 'Error while fetching',
             };
 
             // when
@@ -176,23 +176,23 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 fetchingShoppingLists: false,
-                errorGetShoppingLists: 'Error while fetching'
-            })
+                errorGetShoppingLists: 'Error while fetching',
+            });
         });
     });
 
     describe('GET_SHOPPING_LIST', () => {
         it('should create new list when GET_SHOPPING_LIST received and list not fetched before', () => {
-            const listId = "90a7dcb5-4777-4ba2-95ce-b5694b3e9314";
+            const listId = '90a7dcb5-4777-4ba2-95ce-b5694b3e9314';
 
             const state = {
-                ...initialState
+                ...initialState,
             };
             const action = {
                 type: types.GET_SHOPPING_LIST,
                 queryInfo: {
-                    listId
-                }
+                    listId,
+                },
             };
 
             // when
@@ -207,14 +207,14 @@ describe('ShoppingListReducer', () => {
                         name: '',
                         items: [],
                         fetching: true,
-                        error: null
-                    }
-                }
-            })
+                        error: null,
+                    },
+                },
+            });
         });
 
         it('should set fetching flag and reset error on GET_SHOPPING_LIST', () => {
-            const listId = "90a7dcb5-4777-4ba2-95ce-b5694b3e9314";
+            const listId = '90a7dcb5-4777-4ba2-95ce-b5694b3e9314';
 
             const state = {
                 ...initialState,
@@ -226,21 +226,21 @@ describe('ShoppingListReducer', () => {
                             id: '2045b9a4-46b1-49a5-af68-2a6544490416',
                             itemType: {
                                 id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
-                                name: 'Apples'
+                                name: 'Apples',
                             },
                             quantity: 5,
-                            inCart: false
+                            inCart: false,
                         }],
                         fetching: false,
-                        error: "Error"
-                    }
-                }
+                        error: 'Error',
+                    },
+                },
             };
             const action = {
                 type: types.GET_SHOPPING_LIST,
                 queryInfo: {
-                    listId
-                }
+                    listId,
+                },
             };
 
             // when
@@ -257,23 +257,23 @@ describe('ShoppingListReducer', () => {
                             id: '2045b9a4-46b1-49a5-af68-2a6544490416',
                             itemType: {
                                 id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
-                                name: 'Apples'
+                                name: 'Apples',
                             },
                             quantity: 5,
-                            inCart: false
+                            inCart: false,
                         }],
                         fetching: true,
-                        error: null
-                    }
-                }
-            })
+                        error: null,
+                    },
+                },
+            });
         });
 
         it('should handle GET_SHOPPING_LIST_SUCCESS', () => {
-            const listId = "90a7dcb5-4777-4ba2-95ce-b5694b3e9314";
+            const listId = '90a7dcb5-4777-4ba2-95ce-b5694b3e9314';
 
             const state = {
-                ...initialState
+                ...initialState,
             };
             const action = {
                 type: types.GET_SHOPPING_LIST_SUCCESS,
@@ -285,13 +285,13 @@ describe('ShoppingListReducer', () => {
                             id: '2045b9a4-46b1-49a5-af68-2a6544490416',
                             itemType: {
                                 id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
-                                name: 'Apples'
+                                name: 'Apples',
                             },
                             quantity: 5,
-                            inCart: false
-                        }]
-                    }
-                }
+                            inCart: false,
+                        }],
+                    },
+                },
             };
 
             // when
@@ -308,20 +308,20 @@ describe('ShoppingListReducer', () => {
                             id: '2045b9a4-46b1-49a5-af68-2a6544490416',
                             itemType: {
                                 id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
-                                name: 'Apples'
+                                name: 'Apples',
                             },
                             quantity: 5,
-                            inCart: false
+                            inCart: false,
                         }],
                         fetching: false,
-                        error: null
-                    }
-                }
-            })
+                        error: null,
+                    },
+                },
+            });
         });
 
         it('should handle GET_SHOPPING_LIST_FAIL', () => {
-            const listId = "90a7dcb5-4777-4ba2-95ce-b5694b3e9314";
+            const listId = '90a7dcb5-4777-4ba2-95ce-b5694b3e9314';
 
             const state = {
                 ...initialState,
@@ -333,26 +333,26 @@ describe('ShoppingListReducer', () => {
                             id: '2045b9a4-46b1-49a5-af68-2a6544490416',
                             itemType: {
                                 id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
-                                name: 'Apples'
+                                name: 'Apples',
                             },
                             quantity: 5,
-                            inCart: false
+                            inCart: false,
                         }],
                         fetching: true,
-                        error: null
-                    }
-                }
+                        error: null,
+                    },
+                },
             };
             const action = {
                 type: types.GET_SHOPPING_LIST_FAIL,
-                error: "Error",
+                error: 'Error',
                 meta: {
                     previousAction: {
                         queryInfo: {
-                            listId
-                        }
-                    }
-                }
+                            listId,
+                        },
+                    },
+                },
             };
 
             // when
@@ -369,16 +369,16 @@ describe('ShoppingListReducer', () => {
                             id: '2045b9a4-46b1-49a5-af68-2a6544490416',
                             itemType: {
                                 id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
-                                name: 'Apples'
+                                name: 'Apples',
                             },
                             quantity: 5,
-                            inCart: false
+                            inCart: false,
                         }],
                         fetching: false,
-                        error: "Error"
-                    }
-                }
-            })
+                        error: 'Error',
+                    },
+                },
+            });
         });
     });
 
@@ -386,7 +386,7 @@ describe('ShoppingListReducer', () => {
         it('should set fetching flag and reset error on ADD_SHOPPING_LIST', () => {
             const state = {
                 ...initialState,
-                errorAddShoppingList: 'Error'
+                errorAddShoppingList: 'Error',
             };
             const action = {
                 type: types.ADD_SHOPPING_LIST,
@@ -399,13 +399,13 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 addingShoppingList: true,
-                errorAddShoppingList: null
-            })
+                errorAddShoppingList: null,
+            });
         });
 
         it('should handle ADD_SHOPPING_LIST_SUCCESS', () => {
             const state = {
-                ...initialState
+                ...initialState,
             };
             const action = {
                 type: types.ADD_SHOPPING_LIST_SUCCESS,
@@ -418,7 +418,7 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 addingShoppingList: false,
-            })
+            });
         });
 
         it('should handle ADD_SHOPPING_LIST_FAIL', () => {
@@ -427,7 +427,7 @@ describe('ShoppingListReducer', () => {
             };
             const action = {
                 type: types.ADD_SHOPPING_LIST_FAIL,
-                error: "Error"
+                error: 'Error',
             };
 
             // when
@@ -437,8 +437,8 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 addingShoppingList: false,
-                errorAddShoppingList: 'Error'
-            })
+                errorAddShoppingList: 'Error',
+            });
         });
     });
 
@@ -446,7 +446,7 @@ describe('ShoppingListReducer', () => {
         it('should set fetching flag and reset error on UPDATE_SHOPPING_LIST', () => {
             const state = {
                 ...initialState,
-                errorUpdateShoppingList: 'Error'
+                errorUpdateShoppingList: 'Error',
             };
             const action = {
                 type: types.UPDATE_SHOPPING_LIST,
@@ -459,13 +459,13 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 updatingShoppingList: true,
-                errorUpdateShoppingList: null
-            })
+                errorUpdateShoppingList: null,
+            });
         });
 
         it('should handle UPDATE_SHOPPING_LIST_SUCCESS', () => {
             const state = {
-                ...initialState
+                ...initialState,
             };
             const action = {
                 type: types.UPDATE_SHOPPING_LIST_SUCCESS,
@@ -478,7 +478,7 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 updatingShoppingList: false,
-            })
+            });
         });
 
         it('should handle UPDATE_SHOPPING_LIST_FAIL', () => {
@@ -487,7 +487,7 @@ describe('ShoppingListReducer', () => {
             };
             const action = {
                 type: types.UPDATE_SHOPPING_LIST_FAIL,
-                error: "Error"
+                error: 'Error',
             };
 
             // when
@@ -497,8 +497,8 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 updatingShoppingList: false,
-                errorUpdateShoppingList: 'Error'
-            })
+                errorUpdateShoppingList: 'Error',
+            });
         });
     });
 
@@ -506,7 +506,7 @@ describe('ShoppingListReducer', () => {
         it('should set fetching flag and reset error on DELETE_SHOPPING_LIST', () => {
             const state = {
                 ...initialState,
-                errorDeleteShoppingList: 'Error'
+                errorDeleteShoppingList: 'Error',
             };
             const action = {
                 type: types.DELETE_SHOPPING_LIST,
@@ -519,13 +519,13 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 deletingShoppingList: true,
-                errorDeleteShoppingList: null
-            })
+                errorDeleteShoppingList: null,
+            });
         });
 
         it('should handle DELETE_SHOPPING_LIST_SUCCESS', () => {
             const state = {
-                ...initialState
+                ...initialState,
             };
             const action = {
                 type: types.DELETE_SHOPPING_LIST_SUCCESS,
@@ -538,7 +538,7 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 deletingShoppingList: false,
-            })
+            });
         });
 
         it('should handle DELETE_SHOPPING_LIST_FAIL', () => {
@@ -547,7 +547,7 @@ describe('ShoppingListReducer', () => {
             };
             const action = {
                 type: types.DELETE_SHOPPING_LIST_FAIL,
-                error: "Error"
+                error: 'Error',
             };
 
             // when
@@ -557,8 +557,8 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 deletingShoppingList: false,
-                errorDeleteShoppingList: 'Error'
-            })
+                errorDeleteShoppingList: 'Error',
+            });
         });
     });
 
@@ -566,7 +566,7 @@ describe('ShoppingListReducer', () => {
         it('should set fetching flag and reset error on ADD_SHOPPING_LIST_ITEM', () => {
             const state = {
                 ...initialState,
-                errorAddShoppingListItem: 'Error'
+                errorAddShoppingListItem: 'Error',
             };
             const action = {
                 type: types.ADD_SHOPPING_LIST_ITEM,
@@ -579,13 +579,13 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 addingShoppingListItem: true,
-                errorAddShoppingListItem: null
-            })
+                errorAddShoppingListItem: null,
+            });
         });
 
         it('should handle ADD_SHOPPING_LIST_ITEM_SUCCESS', () => {
             const state = {
-                ...initialState
+                ...initialState,
             };
             const action = {
                 type: types.ADD_SHOPPING_LIST_ITEM_SUCCESS,
@@ -598,7 +598,7 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 addingShoppingListItem: false,
-            })
+            });
         });
 
         it('should handle ADD_SHOPPING_LIST_ITEM_FAIL', () => {
@@ -607,7 +607,7 @@ describe('ShoppingListReducer', () => {
             };
             const action = {
                 type: types.ADD_SHOPPING_LIST_ITEM_FAIL,
-                error: "Error"
+                error: 'Error',
             };
 
             // when
@@ -617,8 +617,8 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 addingShoppingListItem: false,
-                errorAddShoppingListItem: 'Error'
-            })
+                errorAddShoppingListItem: 'Error',
+            });
         });
     });
 
@@ -626,7 +626,7 @@ describe('ShoppingListReducer', () => {
         it('should set fetching flag and reset error on UPDATE_SHOPPING_LIST_ITEM', () => {
             const state = {
                 ...initialState,
-                errorUpdateShoppingListItem: 'Error'
+                errorUpdateShoppingListItem: 'Error',
             };
             const action = {
                 type: types.UPDATE_SHOPPING_LIST_ITEM,
@@ -639,13 +639,13 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 updatingShoppingListItem: true,
-                errorUpdateShoppingListItem: null
-            })
+                errorUpdateShoppingListItem: null,
+            });
         });
 
         it('should handle UPDATE_SHOPPING_LIST_ITEM_SUCCESS', () => {
             const state = {
-                ...initialState
+                ...initialState,
             };
             const action = {
                 type: types.UPDATE_SHOPPING_LIST_ITEM_SUCCESS,
@@ -658,7 +658,7 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 updatingShoppingListItem: false,
-            })
+            });
         });
 
         it('should handle UPDATE_SHOPPING_LIST_ITEM_FAIL', () => {
@@ -667,7 +667,7 @@ describe('ShoppingListReducer', () => {
             };
             const action = {
                 type: types.UPDATE_SHOPPING_LIST_ITEM_FAIL,
-                error: "Error"
+                error: 'Error',
             };
 
             // when
@@ -677,8 +677,8 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 updatingShoppingListItem: false,
-                errorUpdateShoppingListItem: 'Error'
-            })
+                errorUpdateShoppingListItem: 'Error',
+            });
         });
     });
 
@@ -686,7 +686,7 @@ describe('ShoppingListReducer', () => {
         it('should set fetching flag and reset error on DELETE_SHOPPING_LIST_ITEM', () => {
             const state = {
                 ...initialState,
-                errorDeleteShoppingListItem: 'Error'
+                errorDeleteShoppingListItem: 'Error',
             };
             const action = {
                 type: types.DELETE_SHOPPING_LIST_ITEM,
@@ -699,13 +699,13 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 deletingShoppingListItem: true,
-                errorDeleteShoppingListItem: null
-            })
+                errorDeleteShoppingListItem: null,
+            });
         });
 
         it('should handle DELETE_SHOPPING_LIST_ITEM_SUCCESS', () => {
             const state = {
-                ...initialState
+                ...initialState,
             };
             const action = {
                 type: types.DELETE_SHOPPING_LIST_ITEM_SUCCESS,
@@ -718,7 +718,7 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 deletingShoppingListItem: false,
-            })
+            });
         });
 
         it('should handle DELETE_SHOPPING_LIST_ITEM_FAIL', () => {
@@ -727,7 +727,7 @@ describe('ShoppingListReducer', () => {
             };
             const action = {
                 type: types.DELETE_SHOPPING_LIST_ITEM_FAIL,
-                error: "Error"
+                error: 'Error',
             };
 
             // when
@@ -737,8 +737,8 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 deletingShoppingListItem: false,
-                errorDeleteShoppingListItem: 'Error'
-            })
+                errorDeleteShoppingListItem: 'Error',
+            });
         });
     });
 
@@ -746,7 +746,7 @@ describe('ShoppingListReducer', () => {
         it('should set fetching flag and reset error on EMPTY_CART', () => {
             const state = {
                 ...initialState,
-                errorEmptyCart: 'Error'
+                errorEmptyCart: 'Error',
             };
             const action = {
                 type: types.EMPTY_CART,
@@ -759,13 +759,13 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 emptyingCart: true,
-                errorEmptyCart: null
-            })
+                errorEmptyCart: null,
+            });
         });
 
         it('should handle EMPTY_CART_SUCCESS', () => {
             const state = {
-                ...initialState
+                ...initialState,
             };
             const action = {
                 type: types.EMPTY_CART_SUCCESS,
@@ -778,7 +778,7 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 emptyingCart: false,
-            })
+            });
         });
 
         it('should handle EMPTY_CART_FAIL', () => {
@@ -787,7 +787,7 @@ describe('ShoppingListReducer', () => {
             };
             const action = {
                 type: types.EMPTY_CART_FAIL,
-                error: "Error"
+                error: 'Error',
             };
 
             // when
@@ -797,8 +797,8 @@ describe('ShoppingListReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 emptyingCart: false,
-                errorEmptyCart: 'Error'
-            })
+                errorEmptyCart: 'Error',
+            });
         });
     });
 });

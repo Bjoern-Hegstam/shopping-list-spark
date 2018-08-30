@@ -1,32 +1,32 @@
 import reducer from '../../js/reducers/UserReducer';
 import * as types from '../../js/actions/types';
 
-describe('UserReducer', function () {
+describe('UserReducer', () => {
     const initialState = {
         registeringUser: false,
         errorRegisterUser: null,
 
         loggingIn: false,
-        errorLogin: null
+        errorLogin: null,
     };
 
-    it('should return initial state for unknown action type', function () {
+    it('should return initial state for unknown action type', () => {
         // given
         const state = { ...initialState };
-        const action = {type: 'unknown'};
+        const action = { type: 'unknown' };
 
         // when
         const newState = reducer(state, action);
 
         // then
-        expect(newState).toEqual(initialState)
+        expect(newState).toEqual(initialState);
     });
 
     describe('REGISTER_USER', () => {
         it('should set registeringUser flag and reset error on action REGISTER_USER', () => {
             const state = {
                 ...initialState,
-                errorRegisterUser: 'Error'
+                errorRegisterUser: 'Error',
             };
             const action = { type: types.REGISTER_USER };
 
@@ -37,15 +37,15 @@ describe('UserReducer', function () {
             expect(newState).toEqual({
                 ...initialState,
                 registeringUser: true,
-                errorRegisterUser: null
-            })
+                errorRegisterUser: null,
+            });
         });
 
-        it('should set registeringUser flag to false on REGISTER_USER_SUCCESS', function () {
+        it('should set registeringUser flag to false on REGISTER_USER_SUCCESS', () => {
             // given
             const state = {
                 ...initialState,
-                registeringUser: true
+                registeringUser: true,
             };
             const action = {
                 type: types.REGISTER_USER_SUCCESS,
@@ -55,10 +55,10 @@ describe('UserReducer', function () {
                         user: {
                             id: 'd6c08dd9-d430-4d2c-b471-c469e79c4797',
                             username: 'Foo',
-                            role: 'ADMIN'
-                        }
-                    }
-                }
+                            role: 'ADMIN',
+                        },
+                    },
+                },
             };
 
             // when
@@ -69,18 +69,18 @@ describe('UserReducer', function () {
                 ...initialState,
                 registeringUser: false,
                 errorRegisterUser: null,
-            })
+            });
         });
 
         it('should set error on REGISTER_USER_FAIL', () => {
             // given
             const state = {
                 ...initialState,
-                registeringUser: true
+                registeringUser: true,
             };
             const action = {
                 type: types.REGISTER_USER_FAIL,
-                error: 'Error while registering'
+                error: 'Error while registering',
             };
 
             // when
@@ -90,8 +90,8 @@ describe('UserReducer', function () {
             expect(newState).toEqual({
                 ...initialState,
                 registeringUser: false,
-                errorRegisterUser: 'Error while registering'
-            })
+                errorRegisterUser: 'Error while registering',
+            });
         });
     });
 
@@ -99,7 +99,7 @@ describe('UserReducer', function () {
         it('should set loggingIn flag and reset error on action LOGIN', () => {
             const state = {
                 ...initialState,
-                errorLogin: 'Error'
+                errorLogin: 'Error',
             };
             const action = { type: types.LOGIN };
 
@@ -110,15 +110,15 @@ describe('UserReducer', function () {
             expect(newState).toEqual({
                 ...initialState,
                 loggingIn: true,
-                errorLogin: null
-            })
+                errorLogin: null,
+            });
         });
 
-        it('should store current user on LOGIN_SUCCESS', function () {
+        it('should store current user on LOGIN_SUCCESS', () => {
             // given
             const state = {
                 ...initialState,
-                loggingIn: true
+                loggingIn: true,
             };
             const action = {
                 type: types.LOGIN_SUCCESS,
@@ -128,10 +128,10 @@ describe('UserReducer', function () {
                         user: {
                             id: 'd6c08dd9-d430-4d2c-b471-c469e79c4797',
                             username: 'Foo',
-                            role: 'ADMIN'
-                        }
-                    }
-                }
+                            role: 'ADMIN',
+                        },
+                    },
+                },
             };
 
             // when
@@ -146,20 +146,20 @@ describe('UserReducer', function () {
                 currentUser: {
                     id: 'd6c08dd9-d430-4d2c-b471-c469e79c4797',
                     username: 'Foo',
-                    role: 'ADMIN'
-                }
-            })
+                    role: 'ADMIN',
+                },
+            });
         });
 
         it('should set error on LOGIN_FAIL', () => {
             // given
             const state = {
                 ...initialState,
-                loggingIn: true
+                loggingIn: true,
             };
             const action = {
                 type: types.LOGIN_FAIL,
-                error: 'Error while logging in'
+                error: 'Error while logging in',
             };
 
             // when
@@ -169,24 +169,24 @@ describe('UserReducer', function () {
             expect(newState).toEqual({
                 ...initialState,
                 loggingIn: false,
-                errorLogin: 'Error while logging in'
-            })
+                errorLogin: 'Error while logging in',
+            });
         });
     });
 
     describe('LOGOUT', () => {
-        it('should clear current user and token on LOGOUT', function () {
+        it('should clear current user and token on LOGOUT', () => {
             // given
             const state = {
                 ...initialState,
                 token: 'token-1',
                 currentUser: {
-                    id: 'd6c08dd9-d430-4d2c-b471-c469e79c4797'
-                }
+                    id: 'd6c08dd9-d430-4d2c-b471-c469e79c4797',
+                },
             };
 
             const action = {
-                type: types.LOGOUT
+                type: types.LOGOUT,
             };
 
             // when
@@ -196,8 +196,8 @@ describe('UserReducer', function () {
             expect(newState).toEqual({
                 ...initialState,
                 token: undefined,
-                currentUser: undefined
-            })
+                currentUser: undefined,
+            });
         });
     });
 });

@@ -1,9 +1,7 @@
-import React from "react";
+import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from "react-redux";
-import { registerUser } from "../../actions/UserActions";
-
-import './RegistrationForm.scss';
+import { connect } from 'react-redux';
+import { registerUser } from '../../actions/UserActions';
 
 export class RegistrationForm extends React.Component {
     static propTypes = {
@@ -93,13 +91,13 @@ function mapStateToProps(store) {
     return {
         registerUser,
         errorRegisterUser,
-    }
+    };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        registerUser: args => dispatch(registerUser(args))
-    }
+        registerUser: args => dispatch(registerUser(args)),
+    };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegistrationForm);

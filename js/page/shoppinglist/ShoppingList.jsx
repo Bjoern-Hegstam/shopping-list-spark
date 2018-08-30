@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ItemTypeType, ShoppingListType } from "../../propTypes";
-import ShoppingListItem from "./ShoppingListItem";
-import './ShoppingList.scss';
-import AddShoppingListItemInput from "./AddShoppingListItemInput";
+import { ItemTypeType, ShoppingListType } from '../../propTypes';
+import ShoppingListItem from './ShoppingListItem';
+import AddShoppingListItemInput from './AddShoppingListItemInput';
 
 export default class ShoppingList extends React.Component {
     static propTypes = {
@@ -18,13 +17,13 @@ export default class ShoppingList extends React.Component {
         onUpdateItemQuantity: PropTypes.func.isRequired,
         onEmptyCart: PropTypes.func.isRequired,
         onChangeName: PropTypes.func.isRequired,
-        onDelete: PropTypes.func.isRequired
+        onDelete: PropTypes.func.isRequired,
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            name: ""
+            name: '',
         };
         this.inputRef = React.createRef();
     }
@@ -62,23 +61,27 @@ export default class ShoppingList extends React.Component {
             onToggleItemInCart,
             onUpdateItemQuantity,
             onEmptyCart,
-            onDelete
+            onDelete,
         } = this.props;
         const { name } = this.state;
 
         const hasItemsInCart = shoppingList.items.length > 0;
 
         return (
-            <div className='shopping-list'>
-                <div className='shopping-list__header'>
+            <div className="shopping-list">
+                <div className="shopping-list__header">
                     {!isEditing && (
-                        <span className='shopping-list__header__name'
-                              onClick={this.handleStartEdit}>{shoppingList.name}</span>
+                        <span
+                            className="shopping-list__header__name"
+                            onClick={this.handleStartEdit}
+                        >
+                            {shoppingList.name}
+                        </span>
                     )}
                     {isEditing && (
                         <input
                             ref={this.inputRef}
-                            className='shopping-list__header__name-input'
+                            className="shopping-list__header__name-input"
                             value={name}
                             onChange={this.handleNameChange}
                             onKeyDown={this.handleNameInputKeyDown}
@@ -86,19 +89,21 @@ export default class ShoppingList extends React.Component {
                         />
                     )}
                     {hasItemsInCart && (
-                        <button className='shopping-list__header__empty-cart-button' onClick={onEmptyCart}>Empty Cart</button>
+                        <button type="button" className="shopping-list__header__empty-cart-button" onClick={onEmptyCart}>Empty Cart</button>
                     )}
                     {!hasItemsInCart && (
-                        <button className="shopping-list__header__delete-button" onClick={onDelete}>Delete</button>
+                        <button type="button" className="shopping-list__header__delete-button" onClick={onDelete}>Delete</button>
                     )}
                 </div>
-                <div className='shopping-list__body'>
-                    {shoppingList.items.map(item => <ShoppingListItem
-                        key={item.id}
-                        item={item}
-                        onToggleInCart={onToggleItemInCart}
-                        onUpdateQuantity={onUpdateItemQuantity}
-                    />)}
+                <div className="shopping-list__body">
+                    {shoppingList.items.map(item => (
+                        <ShoppingListItem
+                            key={item.id}
+                            item={item}
+                            onToggleInCart={onToggleItemInCart}
+                            onUpdateQuantity={onUpdateItemQuantity}
+                        />
+                    ))}
                 </div>
                 <AddShoppingListItemInput itemTypes={itemTypes} onAddItem={onAddItem} />
             </div>

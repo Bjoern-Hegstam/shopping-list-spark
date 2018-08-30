@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './ShoppingListLink.scss';
 
 export class ShoppingListLink extends React.PureComponent {
     static propTypes = {

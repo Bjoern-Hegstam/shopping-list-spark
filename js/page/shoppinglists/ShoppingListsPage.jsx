@@ -1,17 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AppLayout from "../../components/AppLayout";
-import { connect } from "react-redux";
-import { addShoppingList, getShoppingLists } from "../../actions/ShoppingListActions";
-import { ShoppingListType } from "../../propTypes";
-import { ShoppingListLink } from "./ShoppingListLink";
-import { withRouter } from "react-router-dom";
-import './ShoppingListPage.scss';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import AppLayout from '../../components/AppLayout';
+import { addShoppingList, getShoppingLists } from '../../actions/ShoppingListActions';
+import { ShoppingListType } from '../../propTypes';
+import { ShoppingListLink } from './ShoppingListLink';
 
 export class ShoppingListsPage extends React.Component {
     static propTypes = {
         token: PropTypes.string.isRequired,
-        shoppingLists: PropTypes.objectOf(ShoppingListType).isRequired,
+        shoppingLists: PropTypes.objectOf(ShoppingListType),
 
         getShoppingLists: PropTypes.func.isRequired,
         fetchingShoppingLists: PropTypes.bool.isRequired,
@@ -21,17 +20,17 @@ export class ShoppingListsPage extends React.Component {
         addingShoppingList: PropTypes.bool.isRequired,
         errorAddShoppingList: PropTypes.object,
 
-        history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired
+        history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
     };
 
     static defaultProps = {
         shoppingLists: {},
-        errorGetShoppingList: null,
-        errorAddShoppingList: null
+        errorGetShoppingLists: null,
+        errorAddShoppingList: null,
     };
 
     state = {
-        newListName: ''
+        newListName: '',
     };
 
     componentDidMount() {
@@ -60,19 +59,16 @@ export class ShoppingListsPage extends React.Component {
         this.props.addShoppingList({ token, name: newListName });
     };
 
-    renderLists = () => {
-        return Object
-            .values(this.props.shoppingLists)
-            .map(shoppingList => (
-                    <ShoppingListLink
-                        key={shoppingList.id}
-                        id={shoppingList.id}
-                        name={shoppingList.name}
-                        onClick={this.handleLinkClicked}
-                    />
-                )
-            );
-    };
+    renderLists = () => Object
+        .values(this.props.shoppingLists)
+        .map(shoppingList => (
+            <ShoppingListLink
+                key={shoppingList.id}
+                id={shoppingList.id}
+                name={shoppingList.name}
+                onClick={this.handleLinkClicked}
+            />
+        ));
 
     render() {
         return (
@@ -95,17 +91,17 @@ export class ShoppingListsPage extends React.Component {
                     </form>
                 </div>
             </AppLayout>
-        )
+        );
     }
 }
 
 export default withRouter(connect(
     store => ({
         ...store.shoppingList,
-        token: store.auth.token
+        token: store.auth.token,
     }),
     dispatch => ({
         getShoppingLists: arg => dispatch(getShoppingLists(arg)),
-        addShoppingList: arg => dispatch(addShoppingList(arg))
-    })
+        addShoppingList: arg => dispatch(addShoppingList(arg)),
+    }),
 )(ShoppingListsPage));

@@ -1,13 +1,11 @@
 import React from 'react';
-import AppLayout from "../../components/AppLayout";
-import RegistrationForm from "./RegistrationForm";
+import AppLayout from '../../components/AppLayout';
+import RegistrationForm from './RegistrationForm';
 
-export default class RegistrationPage extends React.Component {
-    render() {
-        return (
-            <AppLayout>
-                <RegistrationForm />
-            </AppLayout>
-        );
-    }
+export default function RegistrationPage() {
+    return (
+        <AppLayout>
+            <RegistrationForm />
+        </AppLayout>
+    );
 }

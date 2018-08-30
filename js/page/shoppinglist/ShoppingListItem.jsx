@@ -1,36 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ShoppingListItemType} from "../../propTypes";
-import './ShoppingListItem.scss';
+import { ShoppingListItemType } from '../../propTypes';
 
 export default class ShoppingListItem extends React.Component {
     static propTypes = {
         item: ShoppingListItemType.isRequired,
-        onToggleInCart: PropTypes.func,
-        onUpdateQuantity: PropTypes.func,
+        onToggleInCart: PropTypes.func.isRequired,
+        onUpdateQuantity: PropTypes.func.isRequired,
     };
 
     handleClick = () => {
-        const {onToggleInCart, item} = this.props;
+        const { onToggleInCart, item } = this.props;
         onToggleInCart(item, !item.inCart);
     };
 
     handleIncrementClick = (e) => {
         e.stopPropagation();
 
-        const {onUpdateQuantity, item} = this.props;
+        const { onUpdateQuantity, item } = this.props;
         onUpdateQuantity(item, item.quantity + 1);
     };
 
     handleDecrementClick = (e) => {
         e.stopPropagation();
 
-        const {onUpdateQuantity, item} = this.props;
+        const { onUpdateQuantity, item } = this.props;
         onUpdateQuantity(item, item.quantity - 1);
     };
 
     render() {
-        const {item} = this.props;
+        const { item } = this.props;
 
         let itemClassName = 'shopping-list-item';
         if (item.inCart) {
@@ -39,15 +38,15 @@ export default class ShoppingListItem extends React.Component {
 
         return (
             <div className={itemClassName} onClick={this.handleClick}>
-                <div className='shopping-list-item__info'>
-                    <span className='shopping-list-item__quantity'>{item.quantity}</span>
-                    <span className='shopping-list-item__name'>{item.itemType.name}</span>
+                <div className="shopping-list-item__info">
+                    <span className="shopping-list-item__quantity">{item.quantity}</span>
+                    <span className="shopping-list-item__name">{item.itemType.name}</span>
                 </div>
-                <div className='shopping-list-item__buttons'>
-                    <div className='shopping-list-item__inc-button' onClick={this.handleIncrementClick}>
+                <div className="shopping-list-item__buttons">
+                    <div className="shopping-list-item__inc-button" onClick={this.handleIncrementClick}>
                         <span>+</span>
                     </div>
-                    <div className='shopping-list-item__dec-button' onClick={this.handleDecrementClick}>
+                    <div className="shopping-list-item__dec-button" onClick={this.handleDecrementClick}>
                         <span>-</span>
                     </div>
                 </div>

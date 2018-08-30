@@ -1,5 +1,5 @@
-import reducer from "../../js/reducers/ItemTypeReducer";
-import * as types from "../../js/actions/types";
+import reducer from '../../js/reducers/ItemTypeReducer';
+import * as types from '../../js/actions/types';
 
 describe('ItemTypeReducer', () => {
     const initialState = {
@@ -9,26 +9,26 @@ describe('ItemTypeReducer', () => {
         errorAddItemType: null,
 
         fetchingItemTypes: false,
-        errorGetItemTypes: null
+        errorGetItemTypes: null,
     };
 
     it('should return initial state for unknown action type', () => {
         // given
         const state = undefined;
-        const action = {type: 'unknown'};
+        const action = { type: 'unknown' };
 
         // when
         const newState = reducer(state, action);
 
         // then
-        expect(newState).toEqual(initialState)
+        expect(newState).toEqual(initialState);
     });
 
     describe('ADD_ITEM_TYPE', () => {
         it('should set fetching flag and reset error on action ADD_ITEM_TYPE', () => {
             const state = {
                 ...initialState,
-                errorAddItemType: 'Error'
+                errorAddItemType: 'Error',
             };
             const action = { type: types.ADD_ITEM_TYPE };
 
@@ -39,23 +39,23 @@ describe('ItemTypeReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 addingItemType: true,
-                errorAddItemType: null
-            })
+                errorAddItemType: null,
+            });
         });
 
         it('ADD_ITEM_TYPE_SUCCESS', () => {
             // given
             const state = {
                 ...initialState,
-                addingItemType: true
+                addingItemType: true,
             };
             const action = {
                 type: types.ADD_ITEM_TYPE_SUCCESS,
                 payload: {
                     data: {
                         id: 17,
-                    }
-                }
+                    },
+                },
             };
 
             // when
@@ -65,18 +65,18 @@ describe('ItemTypeReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 addingItemType: false,
-            })
+            });
         });
 
         it('should set error on ADD_ITEM_TYPE_FAIL', () => {
             // given
             const state = {
                 ...initialState,
-                addingItemType: true
+                addingItemType: true,
             };
             const action = {
                 type: types.ADD_ITEM_TYPE_FAIL,
-                error: 'Error while adding'
+                error: 'Error while adding',
             };
 
             // when
@@ -86,8 +86,8 @@ describe('ItemTypeReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 addingItemType: false,
-                errorAddItemType: 'Error while adding'
-            })
+                errorAddItemType: 'Error while adding',
+            });
         });
     });
 
@@ -95,7 +95,7 @@ describe('ItemTypeReducer', () => {
         it('should set fetching flag and reset error on action GET_ITEM_TYPES', () => {
             const state = {
                 ...initialState,
-                errorGetItemTypes: 'Error'
+                errorGetItemTypes: 'Error',
             };
             const action = { type: types.GET_ITEM_TYPES };
 
@@ -106,15 +106,15 @@ describe('ItemTypeReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 fetchingItemTypes: true,
-                errorGetItemTypes: null
-            })
+                errorGetItemTypes: null,
+            });
         });
 
         it('GET_ITEM_TYPES_SUCCESS', () => {
             // given
             const state = {
                 ...initialState,
-                fetchingItemTypes: true
+                fetchingItemTypes: true,
             };
             const action = {
                 type: types.GET_ITEM_TYPES_SUCCESS,
@@ -128,10 +128,10 @@ describe('ItemTypeReducer', () => {
                             {
                                 id: 18,
                                 name: 'Bar',
-                            }
-                        ]
-                    }
-                }
+                            },
+                        ],
+                    },
+                },
             };
 
             // when
@@ -149,20 +149,20 @@ describe('ItemTypeReducer', () => {
                     {
                         id: 18,
                         name: 'Bar',
-                    }
-                ]
-            })
+                    },
+                ],
+            });
         });
 
         it('should set error on GET_ITEM_TYPES_FAIL', () => {
             // given
             const state = {
                 ...initialState,
-                fetchingItemTypes: true
+                fetchingItemTypes: true,
             };
             const action = {
                 type: types.GET_ITEM_TYPES_FAIL,
-                error: 'Error while fetching'
+                error: 'Error while fetching',
             };
 
             // when
@@ -172,8 +172,8 @@ describe('ItemTypeReducer', () => {
             expect(newState).toEqual({
                 ...initialState,
                 fetchingItemTypes: false,
-                errorGetItemTypes: 'Error while fetching'
-            })
+                errorGetItemTypes: 'Error while fetching',
+            });
         });
     });
 });

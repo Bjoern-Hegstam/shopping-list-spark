@@ -1,29 +1,28 @@
 import React from 'react';
-import AppLayout from "../../components/AppLayout";
 import PropTypes from 'prop-types';
 
-import './LoginPage.scss';
-import { connect } from "react-redux";
-import { login } from "../../actions/UserActions";
+import { connect } from 'react-redux';
+import AppLayout from '../../components/AppLayout';
+import { login } from '../../actions/UserActions';
 
 export class LoginPage extends React.Component {
     static propTypes = {
-        login: PropTypes.func.isRequired
+        login: PropTypes.func.isRequired,
     };
 
     state = {
         username: '',
-        password: ''
+        password: '',
     };
 
     onUsernameChange = (e) => {
         e.preventDefault();
-        this.setState({username: e.target.value});
+        this.setState({ username: e.target.value });
     };
 
     onPasswordChange = (e) => {
         e.preventDefault();
-        this.setState({password: e.target.value});
+        this.setState({ password: e.target.value });
     };
 
     onLoginSubmit = (e) => {
@@ -53,13 +52,13 @@ export class LoginPage extends React.Component {
                     </div>
                 </form>
             </AppLayout>
-        )
+        );
     }
 }
 
 export default connect(
     undefined,
-    (dispatch) => ({
-        login: args => dispatch(login(args))
-    })
+    dispatch => ({
+        login: args => dispatch(login(args)),
+    }),
 )(LoginPage);

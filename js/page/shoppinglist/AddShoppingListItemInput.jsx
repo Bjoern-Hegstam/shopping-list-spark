@@ -1,8 +1,6 @@
-import React from "react";
+import React from 'react';
 import PropTypes from 'prop-types';
-import { ItemTypeType } from "../../propTypes";
-
-import './AddShoppingListItemInput.scss';
+import { ItemTypeType } from '../../propTypes';
 
 export default class AddShoppingListItemInput extends React.Component {
     static propTypes = {
@@ -12,24 +10,20 @@ export default class AddShoppingListItemInput extends React.Component {
 
     state = {
         nameInput: '',
-        listedItemTypes: [],
     };
 
     handleAddItemInputChange = (e) => {
         const nameInput = e.target.value;
         this.setState({
             nameInput,
-            listItemTypes: this.getItemTypeSublist(nameInput)
         });
     };
 
-    getItemTypeSublist = (name) => {
-        return this
-            .props
-            .itemTypes
-            .filter(itemType => itemType.name.toLowerCase().includes(name.toLowerCase()))
-            .slice(0, 5);
-    };
+    getItemTypeSublist = name => this
+        .props
+        .itemTypes
+        .filter(itemType => itemType.name.toLowerCase().includes(name.toLowerCase()))
+        .slice(0, 5);
 
     handleSubmit = () => {
         const { itemTypes, onAddItem } = this.props;
