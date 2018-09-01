@@ -12,13 +12,13 @@
     background-color: $item-selected-color;
   }
 
-  & .shopping-list-item-enter {
-    opacity: 0.1;
+  &-enter {
+    background-color: #777777;
   }
 
-  & .shopping-list-item-enter-active {
-    opacity: 1;
-    transition: opacity 200ms ease-in;
+  &-enter-active {
+    background-color: white;
+    transition: background-color 500ms ease-in;
   }
 }
 

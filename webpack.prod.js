@@ -9,13 +9,13 @@ module.exports = merge(common, {
     optimization: {
         minimizer: [
             new UglifyJSPlugin({
-                sourceMap: true
-            })
-        ]
+                sourceMap: true,
+            }),
+        ],
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('production')
-        })
-    ]
+            'process.env.NODE_ENV': JSON.stringify('production'),
+        }),
+    ],
 });

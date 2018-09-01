@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { ItemTypeType, ShoppingListType } from '../../propTypes';
 import ShoppingListItem from './ShoppingListItem';
 import AddShoppingListItemInput from './AddShoppingListItemInput';
@@ -63,7 +64,7 @@ export default class ShoppingList extends React.Component {
             onEmptyCart,
             onDelete,
         } = this.props;
-        const { name } = this.state;
+        const { name, mounted } = this.state;
 
         const hasItemsInCart = shoppingList.items.some(item => item.inCart);
 
@@ -108,14 +109,23 @@ export default class ShoppingList extends React.Component {
                     )}
                 </div>
                 <div className="shopping-list__body">
-                    {shoppingList.items.map(item => (
-                        <ShoppingListItem
-                            key={item.id}
-                            item={item}
-                            onToggleInCart={onToggleItemInCart}
-                            onUpdateQuantity={onUpdateItemQuantity}
-                        />
-                    ))}
+                    <TransitionGroup>
+                        {shoppingList.items.map(item => (
+                            <CSSTransition
+                                key={item.id}
+                                classNames="shopping-list-item"
+                                timeout={{ enter: 500 }}
+                                exit={false}
+                            >
+                                <ShoppingListItem
+                                    key={item.id}
+                                    item={item}
+                                    onToggleInCart={onToggleItemInCart}
+                                    onUpdateQuantity={onUpdateItemQuantity}
+                                />
+                            </CSSTransition>
+                        ))}
+                    </TransitionGroup>
                 </div>
                 <AddShoppingListItemInput itemTypes={itemTypes} onAddItem={onAddItem} />
             </div>
