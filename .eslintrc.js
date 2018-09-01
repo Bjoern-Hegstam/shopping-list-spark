@@ -5,6 +5,7 @@ module.exports = {
         "jest": true,
     },
     "rules": {
+        "max-len": [1, 120],
         "indent": ["error", 4],
         "react/jsx-indent": [2, 4],
         "react/jsx-indent-props": [2, 4],
