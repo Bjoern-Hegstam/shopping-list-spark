@@ -10,10 +10,10 @@ export function registerUser({ username, password, email }) {
                 data: {
                     username,
                     password,
-                    email
-                }
-            }
-        }
+                    email,
+                },
+            },
+        },
     };
 }
 
@@ -26,15 +26,15 @@ export function login({ username, password }) {
                 url: 'auth',
                 auth: {
                     username,
-                    password
-                }
-            }
-        }
+                    password,
+                },
+            },
+        },
     };
 }
 
 export function logout() {
     return {
-        type: types.LOGOUT
+        type: types.LOGOUT,
     };
 }

@@ -8,47 +8,47 @@ export function getShoppingLists(token) {
                 method: 'get',
                 url: 'shopping-list',
                 headers: {
-                    authorization: `Bearer ${token}`
-                }
-            }
-        }
+                    authorization: `Bearer ${token}`,
+                },
+            },
+        },
     };
 }
 
-export function getShoppingList({token, id}) {
+export function getShoppingList({ token, id }) {
     return {
         type: types.GET_SHOPPING_LIST,
         queryInfo: {
-            listId: id
+            listId: id,
         },
         payload: {
             request: {
                 method: 'get',
                 url: `shopping-list/${id}`,
                 headers: {
-                    authorization: `Bearer ${token}`
-                }
-            }
-        }
-    }
+                    authorization: `Bearer ${token}`,
+                },
+            },
+        },
+    };
 }
 
-export function addShoppingList({token, name}) {
+export function addShoppingList({ token, name }) {
     return {
         type: types.ADD_SHOPPING_LIST,
         payload: {
             request: {
                 method: 'post',
-                url: `shopping-list`,
+                url: 'shopping-list',
                 headers: {
-                    authorization: `Bearer ${token}`
+                    authorization: `Bearer ${token}`,
                 },
                 data: {
-                    name
-                }
-            }
-        }
-    }
+                    name,
+                },
+            },
+        },
+    };
 }
 
 export function updateShoppingList({ token, listId, name }) {
@@ -59,14 +59,14 @@ export function updateShoppingList({ token, listId, name }) {
                 method: 'put',
                 url: `shopping-list/${listId}`,
                 headers: {
-                    authorization: `Bearer ${token}`
+                    authorization: `Bearer ${token}`,
                 },
                 data: {
-                    name
-                }
-            }
-        }
-    }
+                    name,
+                },
+            },
+        },
+    };
 }
 
 export function deleteShoppingList({ token, listId }) {
@@ -77,14 +77,16 @@ export function deleteShoppingList({ token, listId }) {
                 method: 'delete',
                 url: `shopping-list/${listId}`,
                 headers: {
-                    authorization: `Bearer ${token}`
-                }
-            }
-        }
-    }
+                    authorization: `Bearer ${token}`,
+                },
+            },
+        },
+    };
 }
 
-export function addShoppingListItem({token, listId, itemTypeId, quantity}) {
+export function addShoppingListItem({
+    token, listId, itemTypeId, quantity,
+}) {
     return {
         type: types.ADD_SHOPPING_LIST_ITEM,
         payload: {
@@ -92,18 +94,20 @@ export function addShoppingListItem({token, listId, itemTypeId, quantity}) {
                 method: 'post',
                 url: `shopping-list/${listId}/item`,
                 headers: {
-                    authorization: `Bearer ${token}`
+                    authorization: `Bearer ${token}`,
                 },
                 data: {
                     itemTypeId,
-                    quantity
-                }
-            }
-        }
-    }
+                    quantity,
+                },
+            },
+        },
+    };
 }
 
-export function updateShoppingListItem({token, listId, itemId, quantity, inCart}) {
+export function updateShoppingListItem({
+    token, listId, itemId, quantity, inCart,
+}) {
     return {
         type: types.UPDATE_SHOPPING_LIST_ITEM,
         payload: {
@@ -111,18 +115,18 @@ export function updateShoppingListItem({token, listId, itemId, quantity, inCart}
                 method: 'put',
                 url: `shopping-list/${listId}/item/${itemId}`,
                 headers: {
-                    authorization: `Bearer ${token}`
+                    authorization: `Bearer ${token}`,
                 },
                 data: {
                     quantity,
-                    inCart
-                }
-            }
-        }
-    }
+                    inCart,
+                },
+            },
+        },
+    };
 }
 
-export function deleteShoppingListItem({token, listId, itemId}) {
+export function deleteShoppingListItem({ token, listId, itemId }) {
     return {
         type: types.DELETE_SHOPPING_LIST_ITEM,
         payload: {
@@ -130,14 +134,14 @@ export function deleteShoppingListItem({token, listId, itemId}) {
                 method: 'delete',
                 url: `shopping-list/${listId}/item/${itemId}`,
                 headers: {
-                    authorization: `Bearer ${token}`
-                }
-            }
-        }
-    }
+                    authorization: `Bearer ${token}`,
+                },
+            },
+        },
+    };
 }
 
-export function emptyCart({token, listId}) {
+export function emptyCart({ token, listId }) {
     return {
         type: types.DELETE_SHOPPING_LIST_ITEM,
         payload: {
@@ -145,9 +149,9 @@ export function emptyCart({token, listId}) {
                 method: 'delete',
                 url: `shopping-list/${listId}/cart`,
                 headers: {
-                    authorization: `Bearer ${token}`
-                }
-            }
-        }
-    }
+                    authorization: `Bearer ${token}`,
+                },
+            },
+        },
+    };
 }
