@@ -153,7 +153,7 @@ describe('isEditing', () => {
     });
 });
 
-it('calls onEmptyCart when empty cart button clicked', () => {
+it('invokes onEmptyCart when empty cart button clicked', () => {
     // given
     component.setProps({ shoppingList: shoppingListWithItemsInCart });
 
@@ -166,7 +166,7 @@ it('calls onEmptyCart when empty cart button clicked', () => {
     expect(props.onEmptyCart).toHaveBeenCalledTimes(1);
 });
 
-it('calls onDelete when delete button clicked', () => {
+it('invokes onDelete when delete button clicked', () => {
     // given
     component.setProps({ shoppingList: shoppingListWithEmptyCart });
 

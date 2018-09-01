@@ -60,7 +60,7 @@ it('item is in cart', () => {
     expect(component.find('.shopping-list-item--in-cart')).toHaveLength(1);
 });
 
-it('invokes callback when increment button clicked', () => {
+it('invokes onUpdateQuantity when increment button clicked', () => {
     // when
     component.find('.shopping-list-item__inc-button').simulate('click', { stopPropagation: jest.fn() });
 
@@ -68,7 +68,7 @@ it('invokes callback when increment button clicked', () => {
     expect(props.onUpdateQuantity).toHaveBeenCalledWith(props.item, props.item.quantity + 1);
 });
 
-it('invokes callback when decrement button clicked', () => {
+it('invokes onUpdateQuantity when decrement button clicked', () => {
     // when
     component.find('.shopping-list-item__dec-button').simulate('click', { stopPropagation: jest.fn() });
 
