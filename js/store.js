@@ -21,8 +21,6 @@ function saveState(store) {
 
 export default () => {
     const persistedState = loadState();
-    console.log(window && window.location && window.location.hostname);
-
     const store = createStore(
         reducers,
         persistedState,
