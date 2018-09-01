@@ -18,19 +18,17 @@ function setup(optProps) {
     return { component, props };
 }
 
-describe('AddShoppingListItemInput', () => {
-    let component;
-    let props;
+let component;
+let props;
 
-    beforeEach(() => {
-        ({ component, props } = setup());
-    });
+beforeEach(() => {
+    ({ component, props } = setup());
+});
 
-    it('renders empty list of item types', () => {
-        component.setProps({ itemTypes: [] });
+it('renders empty list of item types', () => {
+    component.setProps({ itemTypes: [] });
 
-        const input = component.find('input');
-        expect(input.prop('value')).toBe('');
-        expect(input.prop('placeholder')).toBe('Add item');
-    });
+    const input = component.find('input');
+    expect(input.prop('value')).toBe('');
+    expect(input.prop('placeholder')).toBe('Add item');
 });
