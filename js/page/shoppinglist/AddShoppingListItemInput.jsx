@@ -28,6 +28,10 @@ export default class AddShoppingListItemInput extends React.Component {
     handleSubmit = () => {
         const { itemTypes, onAddItem } = this.props;
         const { nameInput } = this.state;
+        if (nameInput === '') {
+            return;
+        }
+
         const selectedItemType = itemTypes.find(type => type.name === nameInput);
         if (selectedItemType) {
             onAddItem({ ...selectedItemType });
