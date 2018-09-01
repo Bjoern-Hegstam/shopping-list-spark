@@ -280,15 +280,26 @@ describe('GET_SHOPPING_LIST', () => {
                 data: {
                     id: listId,
                     name: 'Foo',
-                    items: [{
-                        id: '2045b9a4-46b1-49a5-af68-2a6544490416',
-                        itemType: {
-                            id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
-                            name: 'Apples',
+                    items: [
+                        {
+                            id: 'b756f961-d8ab-4cbe-a9c5-641d3fb5036d',
+                            itemType: {
+                                id: '3370eb06-bc2f-45cc-ab19-5d4428d2beb6',
+                                name: 'Bananas',
+                            },
+                            quantity: 1,
+                            inCart: true,
                         },
-                        quantity: 5,
-                        inCart: false,
-                    }],
+                        {
+                            id: '2045b9a4-46b1-49a5-af68-2a6544490416',
+                            itemType: {
+                                id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
+                                name: 'Apples',
+                            },
+                            quantity: 5,
+                            inCart: false,
+                        },
+                    ],
                 },
             },
         };
@@ -303,15 +314,26 @@ describe('GET_SHOPPING_LIST', () => {
                 [listId]: {
                     id: listId,
                     name: 'Foo',
-                    items: [{
-                        id: '2045b9a4-46b1-49a5-af68-2a6544490416',
-                        itemType: {
-                            id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
-                            name: 'Apples',
+                    items: [
+                        {
+                            id: '2045b9a4-46b1-49a5-af68-2a6544490416',
+                            itemType: {
+                                id: '72c7314f-df0e-4fc7-b4d6-af1373bfb821',
+                                name: 'Apples',
+                            },
+                            quantity: 5,
+                            inCart: false,
                         },
-                        quantity: 5,
-                        inCart: false,
-                    }],
+                        {
+                            id: 'b756f961-d8ab-4cbe-a9c5-641d3fb5036d',
+                            itemType: {
+                                id: '3370eb06-bc2f-45cc-ab19-5d4428d2beb6',
+                                name: 'Bananas',
+                            },
+                            quantity: 1,
+                            inCart: true,
+                        },
+                    ],
                     fetching: false,
                     error: null,
                 },

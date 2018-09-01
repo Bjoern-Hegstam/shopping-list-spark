@@ -28,6 +28,12 @@ const initialState = {
     errorEmptyCart: null,
 };
 
+function sortByItemTypeName(a, b) {
+    if (a.itemType.name < b.itemType.name) return -1;
+    if (a.itemType.name > b.itemType.name) return 1;
+    return 0;
+}
+
 export default function (state = initialState, action) {
     switch (action.type) {
     case types.GET_SHOPPING_LISTS: {
@@ -84,6 +90,7 @@ export default function (state = initialState, action) {
         const { name, items } = action.payload.data;
 
         const newState = { ...state };
+        items.sort(sortByItemTypeName);
 
         newState.shoppingLists[listId] = {
             id: listId,
