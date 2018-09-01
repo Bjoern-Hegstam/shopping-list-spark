@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import AppLayout from '../../components/AppLayout';
 import { addShoppingList, getShoppingLists } from '../../actions/ShoppingListActions';
 import { ShoppingListType } from '../../propTypes';
-import { ShoppingListLink } from './ShoppingListLink';
+import ShoppingListLink from './ShoppingListLink';
 
 export class ShoppingListsPage extends React.Component {
     static propTypes = {

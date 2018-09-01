@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export class ShoppingListLink extends React.PureComponent {
+export default class ShoppingListLink extends React.PureComponent {
     static propTypes = {
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
-        onClick: PropTypes.func.isRequired
+        onClick: PropTypes.func.isRequired,
     };
 
     handleClick = () => {
@@ -13,12 +13,12 @@ export class ShoppingListLink extends React.PureComponent {
     };
 
     render() {
-        const {id, name} = this.props;
+        const { id, name } = this.props;
 
         return (
             <div className="shopping-list-link" key={id} onClick={this.handleClick}>
                 <span className="shopping-list-link--name">{name}</span>
             </div>
-        )
+        );
     }
 }
