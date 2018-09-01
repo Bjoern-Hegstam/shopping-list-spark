@@ -11,6 +11,15 @@
   &--in-cart {
     background-color: $item-selected-color;
   }
+
+  & .shopping-list-item-enter {
+    opacity: 0.1;
+  }
+
+  & .shopping-list-item-enter-active {
+    opacity: 1;
+    transition: opacity 200ms ease-in;
+  }
 }
 
 .shopping-list-item__quantity {

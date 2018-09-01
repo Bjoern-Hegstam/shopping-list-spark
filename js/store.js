@@ -1,6 +1,8 @@
 import { applyMiddleware, createStore } from 'redux';
 import axiosMiddleware from 'redux-axios-middleware';
 import axios from 'axios/index';
+import jwtDecode from 'jwt-decode';
+import moment from 'moment';
 import reducers from './reducers';
 import * as types from './actions/types';
 import { logout } from './actions/UserActions';
@@ -23,23 +25,25 @@ function saveState(store) {
 
 let tokenExpirationTimer;
 
-const logoutUserWhenTokenExpires = store => next => (action) => {
-    next(action);
+export const logoutUserWhenTokenExpires = store => next => (action) => {
+    next(action); // Allows action LOGIN_SUCCESS to store token before we inspect it
 
-    if (action.type === types.LOGIN_SUCCESS) {
-        if (tokenExpirationTimer) {
-            clearTimeout(tokenExpirationTimer);
-        }
-
-        const state = store.getState();
-        const { token } = state.auth;
-        // TODO: Install jwt-decode once npm DNS issue resolved, extract expiration time from token and use to calculate correct timeout
-        tokenExpirationTimer = setTimeout(() => {
-            tokenExpirationTimer = null; // Or else the following logout action will cause the middleware to clear the timeout
-            store.dispatch(logout());
-        }, 216000); // 1 hour
-    } else if (action.type === types.LOGOUT && tokenExpirationTimer) {
+    if (action.type === types.LOGOUT) {
         clearTimeout(tokenExpirationTimer);
+        tokenExpirationTimer = null;
+        return;
+    }
+
+    if (!tokenExpirationTimer) {
+        const state = store.getState();
+        if (state.auth.token) {
+            const claims = jwtDecode(state.auth.token);
+            const timeout = moment.unix(claims.exp).diff(moment());
+            tokenExpirationTimer = setTimeout(() => {
+                tokenExpirationTimer = null; // Or else the following logout action will cause the middleware to clear the timeout
+                store.dispatch(logout());
+            }, timeout);
+        }
     }
 };
 
