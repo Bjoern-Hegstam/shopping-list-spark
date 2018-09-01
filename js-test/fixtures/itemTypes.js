@@ -1,4 +1,4 @@
-export default [
+export const itemTypes = [
     {
         id: '29e5f3b8-735e-4eb3-a97d-917abaf14624',
         name: 'Apples',
@@ -28,3 +28,7 @@ export default [
         name: 'Tomatoes',
     },
 ];
+
+export function getItemTypeByName(name) {
+    return itemTypes.find(itemType => itemType.name === name);
+}

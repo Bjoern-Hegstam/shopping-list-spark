@@ -29,7 +29,7 @@ export default class ShoppingList extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.isEditing && this.props.isEditing) {
+        if (!prevProps.isEditing && this.props.isEditing && this.inputRef.current) {
             this.inputRef.current.focus();
         }
     }
@@ -65,7 +65,7 @@ export default class ShoppingList extends React.Component {
         } = this.props;
         const { name } = this.state;
 
-        const hasItemsInCart = shoppingList.items.length > 0;
+        const hasItemsInCart = shoppingList.items.some(item => item.inCart);
 
         return (
             <div className="shopping-list">
@@ -89,10 +89,22 @@ export default class ShoppingList extends React.Component {
                         />
                     )}
                     {hasItemsInCart && (
-                        <button type="button" className="shopping-list__header__empty-cart-button" onClick={onEmptyCart}>Empty Cart</button>
+                        <button
+                            type="button"
+                            className="shopping-list__header__empty-cart-button"
+                            onClick={onEmptyCart}
+                        >
+                            Empty Cart
+                        </button>
                     )}
                     {!hasItemsInCart && (
-                        <button type="button" className="shopping-list__header__delete-button" onClick={onDelete}>Delete</button>
+                        <button
+                            type="button"
+                            className="shopping-list__header__delete-button"
+                            onClick={onDelete}
+                        >
+                            Delete
+                        </button>
                     )}
                 </div>
                 <div className="shopping-list__body">

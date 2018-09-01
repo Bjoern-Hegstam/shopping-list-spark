@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import AddShoppingListItemInput from '../../../js/page/shoppinglist/AddShoppingListItemInput';
-import itemTypes from '../../fixtures/itemTypes';
+import { itemTypes } from '../../fixtures/itemTypes';
 
 function setup(optProps) {
     const defaultProps = {
@@ -45,20 +45,20 @@ describe('datalist', () => {
         component.setState({ nameInput: 'e' });
         let options = component.find('datalist#shopping-list__add-item__datalist option');
         expect(options).toHaveLength(3);
-        expect(options.get(0).props.children).toBe('Apples');
-        expect(options.get(1).props.children).toBe('Lettuce');
-        expect(options.get(2).props.children).toBe('Tomatoes');
+        expect(options.at(0).text()).toBe('Apples');
+        expect(options.at(1).text()).toBe('Lettuce');
+        expect(options.at(2).text()).toBe('Tomatoes');
 
         component.setState({ nameInput: 'le' });
         options = component.find('datalist#shopping-list__add-item__datalist option');
         expect(options).toHaveLength(2);
-        expect(options.get(0).props.children).toBe('Apples');
-        expect(options.get(1).props.children).toBe('Lettuce');
+        expect(options.at(0).text()).toBe('Apples');
+        expect(options.at(1).text()).toBe('Lettuce');
 
         component.setState({ nameInput: 'app' });
         options = component.find('datalist#shopping-list__add-item__datalist option');
         expect(options).toHaveLength(1);
-        expect(options.get(0).props.children).toBe('Apples');
+        expect(options.at(0).text()).toBe('Apples');
     });
 
     it('is empty when no item types matches entered name', () => {
