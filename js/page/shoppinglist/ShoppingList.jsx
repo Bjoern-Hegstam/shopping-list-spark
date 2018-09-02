@@ -66,6 +66,7 @@ export default class ShoppingList extends React.Component {
         } = this.props;
         const { name } = this.state;
 
+        const hasItems = shoppingList.items.length > 0;
         const hasItemsInCart = shoppingList.items.some(item => item.inCart);
 
         return (
@@ -89,24 +90,24 @@ export default class ShoppingList extends React.Component {
                             onBlur={this.props.onCancelEdit}
                         />
                     )}
-                    {hasItemsInCart && (
+                    <div className="shopping-list__header__buttons">
                         <button
                             type="button"
                             className="shopping-list__header__empty-cart-button"
                             onClick={onEmptyCart}
+                            disabled={!hasItemsInCart}
                         >
                             Empty Cart
                         </button>
-                    )}
-                    {!hasItemsInCart && (
                         <button
                             type="button"
                             className="shopping-list__header__delete-button"
                             onClick={onDelete}
+                            disabled={hasItems}
                         >
                             Delete
                         </button>
-                    )}
+                    </div>
                 </div>
                 <div className="shopping-list__body">
                     <TransitionGroup>

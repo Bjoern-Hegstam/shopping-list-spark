@@ -53,8 +53,8 @@ describe('initial render', () => {
         expect(component.find('.shopping-list__header__name-input')).toHaveLength(0);
 
 
-        expect(component.find('.shopping-list__header__empty-cart-button')).toHaveLength(0);
-        expect(component.find('.shopping-list__header__delete-button')).toHaveLength(1);
+        expect(component.find('.shopping-list__header__empty-cart-button').prop('disabled')).toBeTruthy();
+        expect(component.find('.shopping-list__header__delete-button').prop('disabled')).toBeFalsy();
 
         expect(component.find(ShoppingListItem)).toHaveLength(0);
     });
@@ -67,8 +67,9 @@ describe('initial render', () => {
         expect(component.find('.shopping-list__header__name').text()).toBe(shoppingListWithEmptyCart.name);
         expect(component.find('.shopping-list__header__name-input')).toHaveLength(0);
 
-        expect(component.find('.shopping-list__header__empty-cart-button')).toHaveLength(0);
-        expect(component.find('.shopping-list__header__delete-button')).toHaveLength(1);
+
+        expect(component.find('.shopping-list__header__empty-cart-button').prop('disabled')).toBeTruthy();
+        expect(component.find('.shopping-list__header__delete-button').prop('disabled')).toBeTruthy();
 
         expect(component.find(ShoppingListItem)).toHaveLength(shoppingListWithEmptyCart.items.length);
     });
@@ -81,8 +82,8 @@ describe('initial render', () => {
         expect(component.find('.shopping-list__header__name').text()).toBe(shoppingListWithItemsInCart.name);
         expect(component.find('.shopping-list__header__name-input')).toHaveLength(0);
 
-        expect(component.find('.shopping-list__header__empty-cart-button')).toHaveLength(1);
-        expect(component.find('.shopping-list__header__delete-button')).toHaveLength(0);
+        expect(component.find('.shopping-list__header__empty-cart-button').prop('disabled')).toBeFalsy();
+        expect(component.find('.shopping-list__header__delete-button').prop('disabled')).toBeTruthy();
 
         expect(component.find(ShoppingListItem)).toHaveLength(shoppingListWithItemsInCart.items.length);
     });

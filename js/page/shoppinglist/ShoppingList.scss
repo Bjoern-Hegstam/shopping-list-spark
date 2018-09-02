@@ -28,6 +28,10 @@ $name-font-size: 2rem;
   padding-left: 10px;
 }
 
+.shopping-list__header__buttons {
+  display: flex;
+}
+
 .shopping-list__header__empty-cart-button {
   @extend %button-danger;
   margin: 10px;
