@@ -56,8 +56,11 @@ export default function (state = initialState, action) {
             newState.shoppingLists[list.id] = {
                 ...list,
                 items: [],
-                fetching: false,
-                error: null,
+                meta: {
+                    loaded: false,
+                    fetching: false,
+                    error: null,
+                },
             };
         });
         return newState;
@@ -75,13 +78,17 @@ export default function (state = initialState, action) {
 
         const newState = { ...state };
 
+        const shoppingList = state.shoppingLists[listId];
         newState.shoppingLists[listId] = {
             id: listId,
             name: '',
             items: [],
-            ...state.shoppingLists[listId],
-            fetching: true,
-            error: null,
+            ...shoppingList,
+            meta: {
+                loaded: (shoppingList ? shoppingList.meta.loaded : false),
+                fetching: true,
+                error: null,
+            },
         };
         return newState;
     }
@@ -96,8 +103,11 @@ export default function (state = initialState, action) {
             id: listId,
             name,
             items,
-            fetching: false,
-            error: null,
+            meta: {
+                loaded: true,
+                fetching: false,
+                error: null,
+            },
         };
         return newState;
     }
@@ -108,8 +118,11 @@ export default function (state = initialState, action) {
 
         newState.shoppingLists[listId] = {
             ...state.shoppingLists[listId],
-            fetching: false,
-            error: action.error,
+            meta: {
+                loaded: false,
+                fetching: false,
+                error: action.error,
+            },
         };
         return newState;
     }

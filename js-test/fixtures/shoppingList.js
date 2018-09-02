@@ -4,6 +4,11 @@ export const emptyShoppingList = {
     id: '4e907f83-2353-4fc6-8e51-d0e55972ccbd',
     name: 'Empty shopping list',
     items: [],
+    meta: {
+        loaded: true,
+        fetching: false,
+        error: null,
+    },
 };
 
 export const shoppingListWithEmptyCart = {
@@ -29,6 +34,11 @@ export const shoppingListWithEmptyCart = {
             inCart: false,
         },
     ],
+    meta: {
+        loaded: true,
+        fetching: false,
+        error: null,
+    },
 };
 
 export const shoppingListWithItemsInCart = {
@@ -54,4 +64,9 @@ export const shoppingListWithItemsInCart = {
             inCart: true,
         },
     ],
+    meta: {
+        loaded: true,
+        fetching: false,
+        error: null,
+    },
 };

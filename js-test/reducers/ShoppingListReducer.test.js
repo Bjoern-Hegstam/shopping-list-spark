@@ -96,15 +96,21 @@ describe('GET_SHOPPING_LISTS', () => {
                     id: 17,
                     name: 'Foo',
                     items: [],
-                    fetching: false,
-                    error: null,
+                    meta: {
+                        loaded: false,
+                        fetching: false,
+                        error: null,
+                    },
                 },
                 18: {
                     id: 18,
                     name: 'Bar',
                     items: [],
-                    fetching: false,
-                    error: null,
+                    meta: {
+                        loaded: false,
+                        fetching: false,
+                        error: null,
+                    },
                 },
             },
         });
@@ -150,8 +156,11 @@ describe('GET_SHOPPING_LISTS', () => {
                     id: 17,
                     name: 'Bar',
                     items: [],
-                    fetching: false,
-                    error: null,
+                    meta: {
+                        loaded: false,
+                        fetching: false,
+                        error: null,
+                    },
                 },
             },
         });
@@ -205,8 +214,11 @@ describe('GET_SHOPPING_LIST', () => {
                     id: listId,
                     name: '',
                     items: [],
-                    fetching: true,
-                    error: null,
+                    meta: {
+                        loaded: false,
+                        fetching: true,
+                        error: null,
+                    },
                 },
             },
         });
@@ -230,8 +242,11 @@ describe('GET_SHOPPING_LIST', () => {
                         quantity: 5,
                         inCart: false,
                     }],
-                    fetching: false,
-                    error: 'Error',
+                    meta: {
+                        loaded: true,
+                        fetching: false,
+                        error: 'Error',
+                    },
                 },
             },
         };
@@ -261,8 +276,11 @@ describe('GET_SHOPPING_LIST', () => {
                         quantity: 5,
                         inCart: false,
                     }],
-                    fetching: true,
-                    error: null,
+                    meta: {
+                        loaded: true,
+                        fetching: true,
+                        error: null,
+                    },
                 },
             },
         });
@@ -334,8 +352,11 @@ describe('GET_SHOPPING_LIST', () => {
                             inCart: true,
                         },
                     ],
-                    fetching: false,
-                    error: null,
+                    meta: {
+                        loaded: true,
+                        fetching: false,
+                        error: null,
+                    },
                 },
             },
         });
@@ -359,8 +380,11 @@ describe('GET_SHOPPING_LIST', () => {
                         quantity: 5,
                         inCart: false,
                     }],
-                    fetching: true,
-                    error: null,
+                    meta: {
+                        loaded: true,
+                        fetching: true,
+                        error: null,
+                    },
                 },
             },
         };
@@ -395,8 +419,11 @@ describe('GET_SHOPPING_LIST', () => {
                         quantity: 5,
                         inCart: false,
                     }],
-                    fetching: false,
-                    error: 'Error',
+                    meta: {
+                        loaded: false,
+                        fetching: false,
+                        error: 'Error',
+                    },
                 },
             },
         });

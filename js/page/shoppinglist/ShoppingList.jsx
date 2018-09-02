@@ -64,7 +64,7 @@ export default class ShoppingList extends React.Component {
             onEmptyCart,
             onDelete,
         } = this.props;
-        const { name, mounted } = this.state;
+        const { name } = this.state;
 
         const hasItemsInCart = shoppingList.items.some(item => item.inCart);
 

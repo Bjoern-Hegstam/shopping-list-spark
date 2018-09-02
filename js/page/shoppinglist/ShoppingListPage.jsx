@@ -203,7 +203,7 @@ export class ShoppingListPage extends React.Component {
         const { shoppingList, itemTypes } = this.props;
         const { isEditing } = this.state;
 
-        if (!shoppingList) {
+        if (!shoppingList || !shoppingList.meta.loaded) {
             return (
                 <AppLayout>Loading...</AppLayout>
             );
@@ -243,8 +243,8 @@ export default connect(
             token: store.auth.token,
             ...store.shoppingList,
             shoppingList,
-            fetchingShoppingList: shoppingList ? shoppingList.fetching : false,
-            errorGetShoppingList: shoppingList ? shoppingList.error : null,
+            fetchingShoppingList: shoppingList ? shoppingList.meta.fetching : false,
+            errorGetShoppingList: shoppingList ? shoppingList.meta.error : null,
             ...store.itemType,
         };
     },
