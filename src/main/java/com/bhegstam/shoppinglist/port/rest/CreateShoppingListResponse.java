@@ -1,12 +1,12 @@
 package com.bhegstam.shoppinglist.port.rest;
 
 import com.bhegstam.shoppinglist.domain.ShoppingListId;
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-@Getter
 class CreateShoppingListResponse {
+    @JsonProperty
     private final String id;
 
     CreateShoppingListResponse(ShoppingListId id) {
