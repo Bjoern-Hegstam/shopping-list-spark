@@ -6,7 +6,6 @@ export const emptyShoppingList = {
     items: [],
     meta: {
         loaded: true,
-        fetching: false,
         error: null,
     },
 };
@@ -36,7 +35,6 @@ export const shoppingListWithEmptyCart = {
     ],
     meta: {
         loaded: true,
-        fetching: false,
         error: null,
     },
 };
@@ -66,7 +64,6 @@ export const shoppingListWithItemsInCart = {
     ],
     meta: {
         loaded: true,
-        fetching: false,
         error: null,
     },
 };

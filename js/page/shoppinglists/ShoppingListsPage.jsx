@@ -6,6 +6,8 @@ import AppLayout from '../../components/AppLayout';
 import { addShoppingList, getShoppingLists } from '../../actions/ShoppingListActions';
 import { ShoppingListType } from '../../propTypes';
 import ShoppingListLink from './ShoppingListLink';
+import { createErrorMessageSelector, createLoadingSelector, shoppingListsSelector } from '../../selectors';
+import * as types from '../../actions/types';
 
 export class ShoppingListsPage extends React.Component {
     static propTypes = {
@@ -97,8 +99,14 @@ export class ShoppingListsPage extends React.Component {
 
 export default withRouter(connect(
     store => ({
-        ...store.shoppingList,
         token: store.auth.token,
+
+        shoppingLists: shoppingListsSelector(store),
+        fetchingShoppingLists: createLoadingSelector([types.GET_SHOPPING_LISTS])(store),
+        errorGetShoppingLists: createErrorMessageSelector([types.GET_SHOPPING_LISTS])(store),
+
+        addingShoppingList: createLoadingSelector([types.ADD_SHOPPING_LIST])(store),
+        errorAddShoppingList: createErrorMessageSelector([types.ADD_SHOPPING_LIST])(store),
     }),
     dispatch => ({
         getShoppingLists: arg => dispatch(getShoppingLists(arg)),

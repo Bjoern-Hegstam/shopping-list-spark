@@ -24,7 +24,6 @@ export const ShoppingListType = PropTypes.shape({
     items: PropTypes.arrayOf(ShoppingListItemType).isRequired,
     meta: PropTypes.shape({
         loaded: PropTypes.bool.isRequired,
-        fetching: PropTypes.bool.isRequired,
         error: PropTypes.array,
     }).isRequired,
 });

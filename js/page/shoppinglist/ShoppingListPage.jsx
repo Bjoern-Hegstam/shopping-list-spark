@@ -15,11 +15,22 @@ import {
 import { addItemType, getItemTypes } from '../../actions/ItemTypeActions';
 
 import ShoppingList from './ShoppingList';
+import {
+    createErrorMessageSelector,
+    createLoadingSelector,
+    itemTypesSelector,
+    shoppingListSelector,
+} from '../../selectors';
+import * as types from '../../actions/types';
 
 export class ShoppingListPage extends React.Component {
     static propTypes = {
         token: PropTypes.string.isRequired,
-        match: PropTypes.object.isRequired,
+        match: PropTypes.shape({
+            params: PropTypes.shape({
+                listId: PropTypes.string.isRequired,
+            }).isRequired,
+        }).isRequired,
         history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
 
         shoppingList: ShoppingListType,
@@ -236,16 +247,36 @@ export default connect(
         }
 
         const { listId } = ownProps.match.params;
-        const { shoppingLists } = store.shoppingList;
 
-        const shoppingList = listId ? shoppingLists[listId] : undefined;
         return {
             token: store.auth.token,
-            ...store.shoppingList,
-            shoppingList,
-            fetchingShoppingList: shoppingList ? shoppingList.meta.fetching : false,
-            errorGetShoppingList: shoppingList ? shoppingList.meta.error : null,
-            ...store.itemType,
+
+            shoppingList: shoppingListSelector(store, listId),
+            itemTypes: itemTypesSelector(store),
+
+            fetchingShoppingList: createLoadingSelector([types.GET_SHOPPING_LIST])(store),
+            errorGetShoppingList: createErrorMessageSelector([types.GET_SHOPPING_LIST])(store),
+
+            addingItemType: createLoadingSelector([types.ADD_ITEM_TYPE])(store),
+            errorAddItemType: createErrorMessageSelector([types.ADD_ITEM_TYPE])(store),
+
+            updatingShoppingList: createLoadingSelector([types.UPDATE_SHOPPING_LIST])(store),
+            errorUpdateShoppingList: createErrorMessageSelector([types.UPDATE_SHOPPING_LIST])(store),
+
+            deletingShoppingList: createLoadingSelector([types.DELETE_SHOPPING_LIST])(store),
+            errorDeleteShoppingList: createErrorMessageSelector([types.DELETE_SHOPPING_LIST])(store),
+
+            addingShoppingListItem: createLoadingSelector([types.ADD_SHOPPING_LIST_ITEM])(store),
+            errorAddShoppingListItem: createErrorMessageSelector([types.ADD_SHOPPING_LIST_ITEM])(store),
+
+            updatingShoppingListItem: createLoadingSelector([types.UPDATE_SHOPPING_LIST_ITEM])(store),
+            errorUpdateShoppingListItem: createErrorMessageSelector([types.UPDATE_SHOPPING_LIST_ITEM])(store),
+
+            deletingShoppingListItem: createLoadingSelector([types.DELETE_SHOPPING_LIST_ITEM])(store),
+            errorDeleteShoppingListItem: createErrorMessageSelector([types.DELETE_SHOPPING_LIST_ITEM])(store),
+
+            emptyingCart: createLoadingSelector([types.EMPTY_CART])(store),
+            errorEmptyCart: createErrorMessageSelector([types.EMPTY_CART])(store),
         };
     },
     dispatch => ({
