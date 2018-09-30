@@ -9,5 +9,3 @@ export const itemSchema = new schema.Entity('items', {
 export const shoppingListSchema = new schema.Entity('shoppingLists', {
     items: [itemSchema],
 });
-
-export const shoppingListsSchema = [shoppingListSchema];

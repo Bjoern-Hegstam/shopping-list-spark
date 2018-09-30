@@ -1,12 +1,12 @@
 import { normalize } from 'normalizr';
 import * as types from '../actions/types';
-import { shoppingListSchema, shoppingListsSchema } from '../schemas';
+import { itemTypeSchema, shoppingListSchema } from '../schemas';
 
 export default function (state = {}, action) {
     switch (action.type) {
         case types.GET_SHOPPING_LISTS_SUCCESS: {
             const { data } = action.payload;
-            const normalizedData = normalize(data.shoppingLists, shoppingListsSchema);
+            const normalizedData = normalize(data.shoppingLists, [shoppingListSchema]);
             const { shoppingLists } = normalizedData.entities;
 
             return {
@@ -28,6 +28,18 @@ export default function (state = {}, action) {
                     ...state.items,
                     ...normalizedData.entities.items,
                 },
+                itemTypes: {
+                    ...state.itemTypes,
+                    ...normalizedData.entities.itemTypes,
+                },
+            };
+        }
+        case types.GET_ITEM_TYPES_SUCCESS: {
+            const { data } = action.payload;
+            const normalizedData = normalize(data.itemTypes, [itemTypeSchema]);
+
+            return {
+                ...state,
                 itemTypes: {
                     ...state.itemTypes,
                     ...normalizedData.entities.itemTypes,
