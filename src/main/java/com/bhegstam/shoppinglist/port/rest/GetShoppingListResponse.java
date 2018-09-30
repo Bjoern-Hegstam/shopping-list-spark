@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
+import java.util.Comparator;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -20,6 +21,7 @@ class GetShoppingListResponse {
         this.name = shoppingList.getName();
         this.items = shoppingList
                 .getItems().stream()
+                .sorted(Comparator.comparing(item -> item.getItemType().getName()))
                 .map(ShoppingListItemResponse::new)
                 .collect(toList());
     }
