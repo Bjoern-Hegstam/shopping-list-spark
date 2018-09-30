@@ -214,7 +214,7 @@ export class ShoppingListPage extends React.Component {
         const { shoppingList, itemTypes } = this.props;
         const { isEditing } = this.state;
 
-        if (!shoppingList || !shoppingList.meta.loaded) {
+        if (!shoppingList) {
             return (
                 <AppLayout>Loading...</AppLayout>
             );

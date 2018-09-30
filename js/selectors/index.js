@@ -5,14 +5,41 @@ export const createErrorMessageSelector = actionTypes => state => actionTypes
     .find(type => state.request.error[type]);
 
 export function shoppingListsSelector(state) {
-    return state.shoppingList.shoppingLists;
+    const { shoppingLists } = state.entities;
+
+    if (!shoppingLists) {
+        return [];
+    }
+
+    return Object
+        .values(shoppingLists)
+        .map(shoppingList => ({
+            id: shoppingList.id,
+            name: shoppingList.name,
+        }));
 }
 
 export function shoppingListSelector(state, listId) {
-    const { shoppingLists } = state.shoppingList;
-    return listId in shoppingLists ? shoppingLists[listId] : undefined;
+    const { shoppingLists, items, itemTypes } = state.entities;
+
+    if (!shoppingLists) {
+        return undefined;
+    }
+
+    const shoppingList = shoppingLists[listId];
+
+    return {
+        ...shoppingList,
+        items: (shoppingList.items || [])
+            .map(itemId => items[itemId])
+            .map(item => ({
+                ...item,
+                itemType: itemTypes[item.itemType],
+            })),
+    };
 }
 
 export function itemTypesSelector(state) {
-    return state.itemType.itemTypes;
+    const { itemTypes } = state.entities;
+    return itemTypes ? Object.values(itemTypes) : [];
 }

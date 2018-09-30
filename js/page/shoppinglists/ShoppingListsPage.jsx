@@ -12,7 +12,7 @@ import * as types from '../../actions/types';
 export class ShoppingListsPage extends React.Component {
     static propTypes = {
         token: PropTypes.string.isRequired,
-        shoppingLists: PropTypes.objectOf(ShoppingListType),
+        shoppingLists: PropTypes.arrayOf(ShoppingListType),
 
         getShoppingLists: PropTypes.func.isRequired,
         fetchingShoppingLists: PropTypes.bool.isRequired,

@@ -1,14 +1,12 @@
 import { combineReducers } from 'redux';
 import auth from './UserReducer';
-import shoppingList from './ShoppingListReducer';
-import itemType from './ItemTypeReducer';
+import entities from './EntitiesReducer';
 import loading from './LoadingReducer';
 import error from './ErrorReducer';
 
 export default combineReducers({
     auth,
-    shoppingList,
-    itemType,
+    entities,
     request: combineReducers({
         loading,
         error,
