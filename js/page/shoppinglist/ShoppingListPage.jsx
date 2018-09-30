@@ -85,6 +85,7 @@ export class ShoppingListPage extends React.Component {
 
     state = {
         isEditing: false,
+        initialFetchComplete: false,
     };
 
     componentDidMount() {
@@ -115,8 +116,19 @@ export class ShoppingListPage extends React.Component {
         }
 
         const shoppingListFetched = prevProps.fetchingShoppingList && !this.props.fetchingShoppingList;
-        if (shoppingListFetched && this.state.isEditing) {
-            this.setState({ isEditing: false });
+        if (shoppingListFetched) {
+            const newState = {};
+            if (prevProps.isEditing) {
+                newState.isEditing = false;
+            }
+
+            if (!prevProps.initialFetchComplete) {
+                newState.initialFetchComplete = true;
+            }
+
+            if (newState) {
+                this.setState(newState);
+            }
         }
 
         const shoppingListDeleted = prevProps.deletingShoppingList && !this.props.deletingShoppingList;
@@ -212,9 +224,9 @@ export class ShoppingListPage extends React.Component {
 
     render() {
         const { shoppingList, itemTypes } = this.props;
-        const { isEditing } = this.state;
+        const { initialFetchComplete, isEditing } = this.state;
 
-        if (!shoppingList) {
+        if (!initialFetchComplete) {
             return (
                 <AppLayout>Loading...</AppLayout>
             );
