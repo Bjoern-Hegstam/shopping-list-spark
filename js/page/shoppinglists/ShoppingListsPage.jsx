@@ -97,19 +97,26 @@ export class ShoppingListsPage extends React.Component {
     }
 }
 
-export default withRouter(connect(
-    store => ({
-        token: store.auth.token,
+const fetchingShoppingListsSelector = createLoadingSelector([types.GET_SHOPPING_LISTS]);
+const errorGetShoppingLists = createErrorMessageSelector([types.GET_SHOPPING_LISTS]);
 
-        shoppingLists: shoppingListsSelector(store),
-        fetchingShoppingLists: createLoadingSelector([types.GET_SHOPPING_LISTS])(store),
-        errorGetShoppingLists: createErrorMessageSelector([types.GET_SHOPPING_LISTS])(store),
+const addShoppingListSelector = createLoadingSelector([types.ADD_SHOPPING_LIST]);
+const errorAddShoppingListSelector = createErrorMessageSelector([types.ADD_SHOPPING_LIST]);
 
-        addingShoppingList: createLoadingSelector([types.ADD_SHOPPING_LIST])(store),
-        errorAddShoppingList: createErrorMessageSelector([types.ADD_SHOPPING_LIST])(store),
-    }),
-    dispatch => ({
-        getShoppingLists: arg => dispatch(getShoppingLists(arg)),
-        addShoppingList: arg => dispatch(addShoppingList(arg)),
-    }),
-)(ShoppingListsPage));
+const mapStateToProps = store => ({
+    token: store.auth.token,
+
+    shoppingLists: shoppingListsSelector(store),
+    fetchingShoppingLists: fetchingShoppingListsSelector(store),
+    errorGetShoppingLists: errorGetShoppingLists(store),
+
+    addingShoppingList: addShoppingListSelector(store),
+    errorAddShoppingList: errorAddShoppingListSelector(store),
+});
+
+const mapDispatchToProps = dispatch => ({
+    getShoppingLists: arg => dispatch(getShoppingLists(arg)),
+    addShoppingList: arg => dispatch(addShoppingList(arg)),
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ShoppingListsPage));

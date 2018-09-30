@@ -240,54 +240,79 @@ export class ShoppingListPage extends React.Component {
     }
 }
 
-export default connect(
-    (store, ownProps) => {
-        if (!ownProps.match) {
-            return {};
-        }
+const fetchingShoppingListSelector = createLoadingSelector([types.GET_SHOPPING_LIST]);
+const errorGetShoppingListSelector = createErrorMessageSelector([types.GET_SHOPPING_LIST]);
 
-        const { listId } = ownProps.match.params;
+const addingItemTypeSelector = createLoadingSelector([types.ADD_ITEM_TYPE]);
+const errorAddItemTypeSelector = createErrorMessageSelector([types.ADD_ITEM_TYPE]);
 
-        return {
-            token: store.auth.token,
+const updatingShoppingListSelector = createLoadingSelector([types.UPDATE_SHOPPING_LIST]);
+const errorUpdateShoppingListSelector = createErrorMessageSelector([types.UPDATE_SHOPPING_LIST]);
 
-            shoppingList: shoppingListSelector(store, listId),
-            itemTypes: itemTypesSelector(store),
+const deletingShoppingListSelector = createLoadingSelector([types.DELETE_SHOPPING_LIST]);
+const errorDeleteShoppingListSelector = createErrorMessageSelector([types.DELETE_SHOPPING_LIST]);
 
-            fetchingShoppingList: createLoadingSelector([types.GET_SHOPPING_LIST])(store),
-            errorGetShoppingList: createErrorMessageSelector([types.GET_SHOPPING_LIST])(store),
+const addingItemSelector = createLoadingSelector([types.ADD_SHOPPING_LIST_ITEM]);
+const errorAddItemSelector = createErrorMessageSelector([types.ADD_SHOPPING_LIST_ITEM]);
 
-            addingItemType: createLoadingSelector([types.ADD_ITEM_TYPE])(store),
-            errorAddItemType: createErrorMessageSelector([types.ADD_ITEM_TYPE])(store),
+const updatingItemSelector = createLoadingSelector([types.UPDATE_SHOPPING_LIST_ITEM]);
+const errorUpdateItemSelector = createErrorMessageSelector([types.UPDATE_SHOPPING_LIST_ITEM]);
 
-            updatingShoppingList: createLoadingSelector([types.UPDATE_SHOPPING_LIST])(store),
-            errorUpdateShoppingList: createErrorMessageSelector([types.UPDATE_SHOPPING_LIST])(store),
+const deletingItemSelector = createLoadingSelector([types.DELETE_SHOPPING_LIST_ITEM]);
+const errorDeleteItemSelector = createErrorMessageSelector([types.DELETE_SHOPPING_LIST_ITEM]);
 
-            deletingShoppingList: createLoadingSelector([types.DELETE_SHOPPING_LIST])(store),
-            errorDeleteShoppingList: createErrorMessageSelector([types.DELETE_SHOPPING_LIST])(store),
+const emptyingCartSelector = createLoadingSelector([types.EMPTY_CART]);
+const errorEmptyCartSelector = createErrorMessageSelector([types.EMPTY_CART]);
 
-            addingShoppingListItem: createLoadingSelector([types.ADD_SHOPPING_LIST_ITEM])(store),
-            errorAddShoppingListItem: createErrorMessageSelector([types.ADD_SHOPPING_LIST_ITEM])(store),
+const mapStateToProps = (store, ownProps) => {
+    if (!ownProps.match) {
+        return {};
+    }
 
-            updatingShoppingListItem: createLoadingSelector([types.UPDATE_SHOPPING_LIST_ITEM])(store),
-            errorUpdateShoppingListItem: createErrorMessageSelector([types.UPDATE_SHOPPING_LIST_ITEM])(store),
+    const { listId } = ownProps.match.params;
 
-            deletingShoppingListItem: createLoadingSelector([types.DELETE_SHOPPING_LIST_ITEM])(store),
-            errorDeleteShoppingListItem: createErrorMessageSelector([types.DELETE_SHOPPING_LIST_ITEM])(store),
+    return {
+        token: store.auth.token,
 
-            emptyingCart: createLoadingSelector([types.EMPTY_CART])(store),
-            errorEmptyCart: createErrorMessageSelector([types.EMPTY_CART])(store),
-        };
-    },
-    dispatch => ({
-        getShoppingList: args => dispatch(getShoppingList(args)),
-        updateShoppingList: args => dispatch(updateShoppingList(args)),
-        deleteShoppingList: args => dispatch(deleteShoppingList(args)),
-        addItemType: args => dispatch(addItemType(args)),
-        getItemTypes: args => dispatch(getItemTypes(args)),
-        addShoppingListItem: args => dispatch(addShoppingListItem(args)),
-        updateShoppingListItem: args => dispatch(updateShoppingListItem(args)),
-        deleteShoppingListItem: args => dispatch(deleteShoppingListItem(args)),
-        emptyCart: args => dispatch(emptyCart(args)),
-    }),
-)(ShoppingListPage);
+        shoppingList: shoppingListSelector(store, listId),
+        itemTypes: itemTypesSelector(store),
+
+        fetchingShoppingList: fetchingShoppingListSelector(store),
+        errorGetShoppingList: errorGetShoppingListSelector(store),
+
+        addingItemType: addingItemTypeSelector(store),
+        errorAddItemType: errorAddItemTypeSelector(store),
+
+        updatingShoppingList: updatingShoppingListSelector(store),
+        errorUpdateShoppingList: errorUpdateShoppingListSelector(store),
+
+        deletingShoppingList: deletingShoppingListSelector(store),
+        errorDeleteShoppingList: errorDeleteShoppingListSelector(store),
+
+        addingShoppingListItem: addingItemSelector(store),
+        errorAddShoppingListItem: errorAddItemSelector(store),
+
+        updatingShoppingListItem: updatingItemSelector(store),
+        errorUpdateShoppingListItem: errorUpdateItemSelector(store),
+
+        deletingShoppingListItem: deletingItemSelector(store),
+        errorDeleteShoppingListItem: errorDeleteItemSelector(store),
+
+        emptyingCart: emptyingCartSelector(store),
+        errorEmptyCart: errorEmptyCartSelector(store),
+    };
+};
+
+const mapDispatchToProps = dispatch => ({
+    getShoppingList: args => dispatch(getShoppingList(args)),
+    updateShoppingList: args => dispatch(updateShoppingList(args)),
+    deleteShoppingList: args => dispatch(deleteShoppingList(args)),
+    addItemType: args => dispatch(addItemType(args)),
+    getItemTypes: args => dispatch(getItemTypes(args)),
+    addShoppingListItem: args => dispatch(addShoppingListItem(args)),
+    updateShoppingListItem: args => dispatch(updateShoppingListItem(args)),
+    deleteShoppingListItem: args => dispatch(deleteShoppingListItem(args)),
+    emptyCart: args => dispatch(emptyCart(args)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShoppingListPage);
