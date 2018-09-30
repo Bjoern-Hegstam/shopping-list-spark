@@ -6,7 +6,7 @@ module.exports = {
     },
     "rules": {
         "max-len": [1, 120],
-        "indent": ["error", 4],
+        "indent": ["error", 4, {"SwitchCase": 1}],
         "react/jsx-indent": [2, 4],
         "react/jsx-indent-props": [2, 4],
         "linebreak-style": "off",
