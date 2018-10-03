@@ -2,7 +2,7 @@ import * as types from './types';
 
 export function addItemType({ token, name }) {
     return {
-        type: types.GET_ITEM_TYPES,
+        type: types.ADD_ITEM_TYPE,
         payload: {
             request: {
                 method: 'post',
