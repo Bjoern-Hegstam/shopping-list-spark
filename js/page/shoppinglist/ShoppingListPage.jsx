@@ -143,6 +143,7 @@ export class ShoppingListPage extends React.Component {
     handleChangeName = (newName) => {
         const { token, shoppingList } = this.props;
         this.props.updateShoppingList({ token, listId: shoppingList.id, name: newName });
+        this.setState({ isEditing: false });
     };
 
     handleAddItem = async ({ id, name }) => {
