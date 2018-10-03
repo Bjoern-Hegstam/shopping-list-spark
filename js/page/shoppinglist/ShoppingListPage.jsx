@@ -15,12 +15,7 @@ import {
 import { addItemType, getItemTypes } from '../../actions/ItemTypeActions';
 
 import ShoppingList from './ShoppingList';
-import {
-    createErrorMessageSelector,
-    createLoadingSelector,
-    itemTypesSelector,
-    shoppingListSelector,
-} from '../../selectors';
+import { createErrorSelector, createLoadingSelector, itemTypesSelector, shoppingListSelector, } from '../../selectors';
 import * as types from '../../actions/types';
 
 export class ShoppingListPage extends React.Component {
@@ -253,28 +248,28 @@ export class ShoppingListPage extends React.Component {
 }
 
 const fetchingShoppingListSelector = createLoadingSelector([types.GET_SHOPPING_LIST]);
-const errorGetShoppingListSelector = createErrorMessageSelector([types.GET_SHOPPING_LIST]);
+const errorGetShoppingListSelector = createErrorSelector([types.GET_SHOPPING_LIST]);
 
 const addingItemTypeSelector = createLoadingSelector([types.ADD_ITEM_TYPE]);
-const errorAddItemTypeSelector = createErrorMessageSelector([types.ADD_ITEM_TYPE]);
+const errorAddItemTypeSelector = createErrorSelector([types.ADD_ITEM_TYPE]);
 
 const updatingShoppingListSelector = createLoadingSelector([types.UPDATE_SHOPPING_LIST]);
-const errorUpdateShoppingListSelector = createErrorMessageSelector([types.UPDATE_SHOPPING_LIST]);
+const errorUpdateShoppingListSelector = createErrorSelector([types.UPDATE_SHOPPING_LIST]);
 
 const deletingShoppingListSelector = createLoadingSelector([types.DELETE_SHOPPING_LIST]);
-const errorDeleteShoppingListSelector = createErrorMessageSelector([types.DELETE_SHOPPING_LIST]);
+const errorDeleteShoppingListSelector = createErrorSelector([types.DELETE_SHOPPING_LIST]);
 
 const addingItemSelector = createLoadingSelector([types.ADD_SHOPPING_LIST_ITEM]);
-const errorAddItemSelector = createErrorMessageSelector([types.ADD_SHOPPING_LIST_ITEM]);
+const errorAddItemSelector = createErrorSelector([types.ADD_SHOPPING_LIST_ITEM]);
 
 const updatingItemSelector = createLoadingSelector([types.UPDATE_SHOPPING_LIST_ITEM]);
-const errorUpdateItemSelector = createErrorMessageSelector([types.UPDATE_SHOPPING_LIST_ITEM]);
+const errorUpdateItemSelector = createErrorSelector([types.UPDATE_SHOPPING_LIST_ITEM]);
 
 const deletingItemSelector = createLoadingSelector([types.DELETE_SHOPPING_LIST_ITEM]);
-const errorDeleteItemSelector = createErrorMessageSelector([types.DELETE_SHOPPING_LIST_ITEM]);
+const errorDeleteItemSelector = createErrorSelector([types.DELETE_SHOPPING_LIST_ITEM]);
 
 const emptyingCartSelector = createLoadingSelector([types.EMPTY_CART]);
-const errorEmptyCartSelector = createErrorMessageSelector([types.EMPTY_CART]);
+const errorEmptyCartSelector = createErrorSelector([types.EMPTY_CART]);
 
 const mapStateToProps = (store, ownProps) => {
     if (!ownProps.match) {

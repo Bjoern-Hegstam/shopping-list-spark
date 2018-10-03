@@ -6,7 +6,7 @@ import AppLayout from '../../components/AppLayout';
 import { addShoppingList, getShoppingLists } from '../../actions/ShoppingListActions';
 import { ShoppingListType } from '../../propTypes';
 import ShoppingListLink from './ShoppingListLink';
-import { createErrorMessageSelector, createLoadingSelector, shoppingListsSelector } from '../../selectors';
+import { createErrorSelector, createLoadingSelector, shoppingListsSelector } from '../../selectors';
 import * as types from '../../actions/types';
 
 export class ShoppingListsPage extends React.Component {
@@ -98,10 +98,10 @@ export class ShoppingListsPage extends React.Component {
 }
 
 const fetchingShoppingListsSelector = createLoadingSelector([types.GET_SHOPPING_LISTS]);
-const errorGetShoppingLists = createErrorMessageSelector([types.GET_SHOPPING_LISTS]);
+const errorGetShoppingLists = createErrorSelector([types.GET_SHOPPING_LISTS]);
 
 const addShoppingListSelector = createLoadingSelector([types.ADD_SHOPPING_LIST]);
-const errorAddShoppingListSelector = createErrorMessageSelector([types.ADD_SHOPPING_LIST]);
+const errorAddShoppingListSelector = createErrorSelector([types.ADD_SHOPPING_LIST]);
 
 const mapStateToProps = store => ({
     token: store.auth.token,
