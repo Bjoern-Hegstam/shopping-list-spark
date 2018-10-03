@@ -12,12 +12,13 @@ export default class ShoppingList extends React.Component {
         isEditing: PropTypes.bool.isRequired,
 
         onStartEdit: PropTypes.func.isRequired,
+        onChangeName: PropTypes.func.isRequired,
         onCancelEdit: PropTypes.func.isRequired,
+
         onAddItem: PropTypes.func.isRequired,
         onToggleItemInCart: PropTypes.func.isRequired,
         onUpdateItemQuantity: PropTypes.func.isRequired,
         onEmptyCart: PropTypes.func.isRequired,
-        onChangeName: PropTypes.func.isRequired,
         onDelete: PropTypes.func.isRequired,
     };
 

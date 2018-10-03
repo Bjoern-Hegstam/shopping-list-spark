@@ -136,13 +136,13 @@ export class ShoppingListPage extends React.Component {
         this.setState({ isEditing: true });
     };
 
-    handleCancelEdit = () => {
-        this.setState({ isEditing: false });
-    };
-
     handleChangeName = (newName) => {
         const { token, shoppingList } = this.props;
         this.props.updateShoppingList({ token, listId: shoppingList.id, name: newName });
+        this.setState({ isEditing: false });
+    };
+
+    handleCancelEdit = () => {
         this.setState({ isEditing: false });
     };
 
@@ -235,12 +235,12 @@ export class ShoppingListPage extends React.Component {
                     itemTypes={itemTypes}
                     isEditing={isEditing}
                     onStartEdit={this.handleStartEdit}
+                    onChangeName={this.handleChangeName}
                     onCancelEdit={this.handleCancelEdit}
                     onAddItem={this.handleAddItem}
                     onToggleItemInCart={this.handleToggleItemInCart}
                     onUpdateItemQuantity={this.handleUpdateItemQuantity}
                     onEmptyCart={this.handleEmptyCart}
-                    onChangeName={this.handleChangeName}
                     onDelete={this.handleDelete}
                 />
             </AppLayout>
