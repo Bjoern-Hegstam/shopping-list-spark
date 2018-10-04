@@ -70,6 +70,7 @@ export class ShoppingListPage extends React.Component {
         shoppingList: undefined,
         itemTypes: [],
 
+        errorGetShoppingList: null,
         errorAddItemType: null,
         errorUpdateShoppingList: null,
         errorDeleteShoppingList: null,
@@ -113,11 +114,11 @@ export class ShoppingListPage extends React.Component {
         const shoppingListFetched = prevProps.fetchingShoppingList && !this.props.fetchingShoppingList;
         if (shoppingListFetched) {
             const newState = {};
-            if (prevProps.isEditing) {
+            if (this.state.isEditing) {
                 newState.isEditing = false;
             }
 
-            if (!prevProps.initialFetchComplete) {
+            if (!this.state.initialFetchComplete) {
                 newState.initialFetchComplete = true;
             }
 
