@@ -16,5 +16,9 @@ export default function AppLayout(props) {
 }
 
 AppLayout.propTypes = {
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node,
+};
+
+AppLayout.defaultProps = {
+    children: undefined,
 };

@@ -225,7 +225,7 @@ export class ShoppingListPage extends React.Component {
 
         if (!initialFetchComplete) {
             return (
-                <AppLayout>Loading...</AppLayout>
+                <AppLayout />
             );
         }
 
