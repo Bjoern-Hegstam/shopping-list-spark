@@ -1,1 +1,1 @@
-web: java -cp target/classes/:target/dependency/* com.bhegstam.Application
+web: java -jar target/shopping-list-spark-1.0-SNAPSHOT.jar server config.yml

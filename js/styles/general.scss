@@ -1,0 +1,67 @@
+$app-layout-min-side-margin: 10px;
+$app-layout-min-width: 1500px;
+$app-layout-grid-template-columns: minmax($app-layout-min-side-margin, 1fr) minmax($app-layout-min-width, 2fr) minmax($app-layout-min-side-margin, 1fr);
+
+$small-screen-width: $app-layout-min-width + 2 * $app-layout-min-side-margin;
+$small-screen-app-layout-grid-template-columns: $app-layout-min-side-margin 2fr $app-layout-min-side-margin;
+
+$border-color: #e7e7e7;
+$background-color: #f8f8f8;
+$item-selected-color: #97ec8d;
+
+$button-color-primary: #337ab7;
+$button-color-danger: #d83232;
+
+html {
+  font-size: 100%;
+}
+
+@media (max-width: $small-screen-width) {
+  html {
+    font-size: 300%;
+  }
+}
+
+%base-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  border: none;
+  font-size: 1rem;
+  font-weight: bolder;
+  padding: 15px;
+  border-radius: 5px;
+
+  user-select: none;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:disabled {
+    background-color: #777777;
+  }
+}
+
+%button-primary {
+  @extend %base-button;
+  background-color: $button-color-primary;
+}
+
+%button-danger {
+  @extend %base-button;
+  background-color: $button-color-danger;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

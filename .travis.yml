@@ -1,6 +1,6 @@
 language: java
 jdk:
-  - oraclejdk9
+  - openjdk10
 
 services:
  - postgresql
@@ -8,10 +8,15 @@ services:
 addons:
   postgresql: "9.6"
 
+env:
+  global:
+    - CONF_FILENAME: travis-config.yml
+
 before_install:
  - psql -c 'create database travis_ci_test;' -U postgres
- - mvn flyway:migrate -Ddb.url=jdbc:postgresql://localhost/travis_ci_test -Ddb.user=postgres -Ddb.password=''
+ - sudo sed -i 's/max_connections = 255/max_connections = 1000/g' /etc/postgresql/9.6/main/postgresql.conf
+ - sudo service postgresql restart
 
 install: true # Disable default install step. Maven runs install as part of the test life cycle anyway.
 
-script: mvn test -B -Ddb.url=jdbc:postgresql://localhost/travis_ci_test -Ddb.user=postgres -Ddb.password=''
+script: mvn test -B

@@ -1,0 +1,21 @@
+@import '../../styles/general';
+
+.login-form {
+  display: flex;
+  flex-flow: column;
+  margin: 15px 0 0;
+
+  input {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    font-family: inherit;
+    margin: 0 0 15px;
+    padding: 6px 12px;
+    text-shadow: none;
+  }
+
+  button {
+    @extend %button-primary;
+  }
+}

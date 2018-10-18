@@ -1,32 +1,48 @@
 package com.bhegstam.shoppinglist.domain;
 
-import com.bhegstam.itemtype.domain.ItemType;
-import com.bhegstam.itemtype.domain.ItemTypeId;
+import com.bhegstam.shoppinglist.port.persistence.PersistenceStatus;
 
 import java.util.*;
 
-import static com.bhegstam.webutil.CustomCollectors.onlyElement;
+import static com.bhegstam.webutil.CustomCollectors.onlyOptionalElement;
 import static java.util.stream.Collectors.toList;
 
-public class ShoppingList {
-    private final String name;
-    private final ShoppingListId id;
+public class ShoppingList extends Entity<ShoppingListId> {
+    private String name;
     private final Map<ItemTypeId, ShoppingListItem> items;
     private final Set<ShoppingListItemId> removedItems;
+    private PersistenceStatus persistenceStatus;
 
-    public ShoppingList(ShoppingListId id, String name) {
-        this.id = id;
+    public ShoppingList(String name) {
+        this(new ShoppingListId(), name, PersistenceStatus.INSERT_REQUIRED);
+    }
+
+    public static ShoppingList fromDb(String id, String name) {
+        return new ShoppingList(ShoppingListId.fromString(id), name, PersistenceStatus.PERSISTED);
+    }
+
+    private ShoppingList(ShoppingListId id, String name, PersistenceStatus persistenceStatus) {
+        super(id);
         this.name = name;
         items = new HashMap<>();
         removedItems = new HashSet<>();
+        this.persistenceStatus = persistenceStatus;
     }
 
     public String getName() {
         return name;
     }
 
-    public ShoppingListId getId() {
-        return id;
+    public void setName(String name) {
+        this.name = name;
+
+        if (persistenceStatus != PersistenceStatus.INSERT_REQUIRED) {
+            persistenceStatus = PersistenceStatus.UPDATED_REQUIRED;
+        }
+    }
+
+    public PersistenceStatus getPersistenceStatus() {
+        return persistenceStatus;
     }
 
     public ShoppingListItem add(ItemType itemType) {
@@ -47,7 +63,8 @@ public class ShoppingList {
         return items
                 .values().stream()
                 .filter(item -> item.getId().equals(itemId))
-                .collect(onlyElement());
+                .collect(onlyOptionalElement())
+                .orElseThrow(() -> new ShoppingListItemNotFoundException(itemId));
     }
 
     public void remove(ItemTypeId itemTypeId) {
@@ -60,7 +77,8 @@ public class ShoppingList {
                 .entrySet().stream()
                 .filter(e -> e.getValue().getId().equals(listItemId))
                 .map(Map.Entry::getKey)
-                .collect(onlyElement());
+                .collect(onlyOptionalElement())
+                .orElseThrow(() -> new ShoppingListItemNotFoundException(listItemId));
 
         ShoppingListItem item = items.remove(itemTypeId);
         removedItems.add(item.getId());
@@ -88,5 +106,9 @@ public class ShoppingList {
         this.items.clear();
         this.removedItems.clear();
         items.forEach(item -> this.items.put(item.getItemType().getId(), item));
+    }
+
+    public void setPersistenceStatus(PersistenceStatus persistenceStatus) {
+        this.persistenceStatus = persistenceStatus;
     }
 }

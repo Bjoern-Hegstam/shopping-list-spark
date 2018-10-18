@@ -1,8 +1,6 @@
 package com.bhegstam.shoppinglist.domain;
 
-import com.bhegstam.itemtype.InMemoryItemTypeRepository;
-import com.bhegstam.itemtype.domain.ItemType;
-import com.bhegstam.util.db.PersistenceStatus;
+import com.bhegstam.shoppinglist.port.persistence.PersistenceStatus;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,7 +16,7 @@ public class ShoppingListItemTest {
 
     @Before
     public void setUp() {
-        itemType = new InMemoryItemTypeRepository().createItemType("TEST_ITEM_TYPE");
+        itemType = new ItemType("TEST_ITEM_TYPE");
     }
 
     @Test
@@ -40,7 +38,7 @@ public class ShoppingListItemTest {
     public void setQuantity_shouldMarkItemAsUpdated() {
         // given
         ShoppingListItem item = new ShoppingListItem(itemType);
-        item.setPersistenceStatus(PersistenceStatus.NOT_CHANGED);
+        item.setPersistenceStatus(PersistenceStatus.PERSISTED);
 
         // when
         item.setQuantity(item.getQuantity() + 1);
@@ -53,7 +51,7 @@ public class ShoppingListItemTest {
     public void setInCart_shouldMarkItemAsUpdated() {
         // given
         ShoppingListItem item = new ShoppingListItem(itemType);
-        item.setPersistenceStatus(PersistenceStatus.NOT_CHANGED);
+        item.setPersistenceStatus(PersistenceStatus.PERSISTED);
 
         // when
         item.setInCart(!item.isInCart());

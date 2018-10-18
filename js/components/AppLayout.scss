@@ -1,0 +1,25 @@
+@import "../styles/general";
+
+body {
+  margin: 0;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+main {
+  display: grid;
+  grid-template-columns: $app-layout-grid-template-columns;
+}
+
+.main-content {
+  grid-column: 2/3;
+}
+
+@media (max-width: $small-screen-width) {
+  header {
+    grid-template-columns: $small-screen-app-layout-grid-template-columns;
+  }
+
+  main {
+    grid-template-columns: $small-screen-app-layout-grid-template-columns;
+  }
+}

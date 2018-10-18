@@ -1,0 +1,53 @@
+@import '../../styles/general';
+
+.shopping-list-item {
+  border-bottom: 1px solid $border-color;
+  font-size: 1.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &--in-cart {
+    background-color: $item-selected-color;
+  }
+
+  &-enter {
+    background-color: #777777;
+  }
+
+  &-enter-active {
+    background-color: white;
+    transition: background-color 500ms ease-in;
+  }
+}
+
+.shopping-list-item__quantity {
+  padding: 0 0.2rem;
+}
+
+.shopping-list-item__name {
+}
+
+.shopping-list-item__buttons {
+  color: white;
+  display: flex;
+  justify-content: space-between;
+}
+
+%button {
+  @extend %base-button;
+
+  width: 1rem;
+  margin: 0.2rem;
+}
+
+.shopping-list-item__inc-button {
+  @extend %button;
+  background: green;
+}
+
+.shopping-list-item__dec-button {
+  @extend %button;
+  background: red;
+}

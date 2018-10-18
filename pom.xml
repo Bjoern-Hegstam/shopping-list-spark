@@ -10,22 +10,14 @@
     <packaging>jar</packaging>
 
     <properties>
-        <java.version>1.9</java.version>
-
-        <less.version>1.2.1</less.version>
-        <jooq.version>3.10.4</jooq.version>
-        <postgresql.version>42.2.1</postgresql.version>
-        <flyway.version>5.0.1</flyway.version>
-        <log4j.version>2.10.0</log4j.version>
-
-        <db.url>${env.JDBC_DATABASE_URL}</db.url>
-        <db.user>${env.JDBC_DATABASE_USERNAME}</db.user>
-        <db.password>${env.JDBC_DATABASE_PASSWORD}</db.password>
+        <java.version>1.10</java.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <dependency.locations.enabled>false</dependency.locations.enabled>
     </properties>
 
     <repositories>
@@ -35,6 +27,132 @@
         </repository>
     </repositories>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-bom</artifactId>
+                <version>1.3.5</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-assets</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-auth</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.toastshaman</groupId>
+            <artifactId>dropwizard-auth-jwt</artifactId>
+            <version>1.1.2-0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-jdbi3</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-testing</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.Bjoern-Hegstam</groupId>
+            <artifactId>web-util</artifactId>
+            <version>4.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--Password encryption -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+
+        <!--Use to validate email addresses -->
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.6</version>
+        </dependency>
+
+        <!-- Automatic bean generation. Requires IDE plugin to work -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.2</version>
+        </dependency>
+
+        <!-- Database migrations -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>5.1.4</version>
+        </dependency>
+
+        <!-- Database driver -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.4</version>
+        </dependency>
+
+        <!-- Java EE runtime requirements not included in Java SE by default since jdk 9 -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <!-- Unit testing -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.21.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Test database -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.197</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -42,6 +160,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>1.8</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.6.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -85,6 +208,11 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.1.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>3.0.2</version>
                 </plugin>
@@ -96,252 +224,106 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.19.1</version>
+                    <version>2.22.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
 
         <plugins>
-            <!-- Automatically convert css to less -->
+            <!-- Frontend: Install dependencies and build dist -->
             <plugin>
-                <groupId>biz.gabrys.maven.plugins</groupId>
-                <artifactId>lesscss-maven-plugin</artifactId>
-                <version>${less.version}</version>
-                <configuration>
-                    <sourceDirectory>${project.basedir}/src/main/resources/public/less</sourceDirectory>
-                    <outputDirectory>${project.basedir}/src/main/resources/public/css</outputDirectory>
-                    <compress>true</compress>
-                </configuration>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>default-compile</id>
-                        <phase>process-sources</phase>
+                        <id>npm install</id>
                         <goals>
-                            <goal>compile</goal>
+                            <goal>exec</goal>
                         </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>install</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm run build</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>run</argument>
+                                <argument>build</argument>
+                            </arguments>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
 
-            <!-- Database migrations -->
+            <!-- Copy frontend dist to target -->
             <plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>${flyway.version}</version>
-                <configuration>
-                    <url>${db.url}</url>
-                    <user>${db.user}</user>
-                    <password>${db.password}</password>
-                </configuration>
-            </plugin>
-
-            <!-- Generate code from database. Used for persistence layer -->
-            <plugin>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen-maven</artifactId>
-                <version>${jooq.version}</version>
+                <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>copy-frontend-dist</id>
+                        <phase>compile</phase>  <!-- Same phase as "npm run build", but will run after due to order in pom -->
                         <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.postgresql</groupId>
-                        <artifactId>postgresql</artifactId>
-                        <version>${postgresql.version}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <jdbc>
-                        <driver>org.postgresql.Driver</driver>
-                        <url>${db.url}</url>
-                        <user>${db.user}</user>
-                        <password>${db.password}</password>
-                    </jdbc>
-                    <generator>
-                        <database>
-                            <name>org.jooq.util.postgres.PostgresDatabase</name>
-                            <includes>.*</includes>
-                            <excludes/>
-                            <inputSchema>public</inputSchema>
-                        </database>
-                        <target>
-                            <packageName>com.bhe.jooq</packageName>
-                            <directory>target/generated-sources/jooq</directory>
-                        </target>
-                    </generator>
-                </configuration>
-            </plugin>
-
-            <!-- Required by Heroku -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>copy-flyway-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
+                            <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.flywaydb</groupId>
-                                    <artifactId>flyway-core</artifactId>
-                                    <version>${flyway.version}</version>
-                                    <destFileName>flyway.jar</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.postgresql</groupId>
-                                    <artifactId>postgresql</artifactId>
-                                    <version>${postgresql.version}</version>
-                                    <destFileName>postgres.jar</destFileName>
-                                </artifactItem>
-                            </artifactItems>
+                            <outputDirectory>${basedir}/target/classes/public</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>dist/</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Package fat JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <configuration>
+                    <createDependencyReducedPom>true</createDependencyReducedPom>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.bhegstam.shoppinglist.ShoppingListApplication</mainClass>
+                                </transformer>
+                            </transformers>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.github.Bjoern-Hegstam</groupId>
-            <artifactId>web-util</artifactId>
-            <version>4.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sparkjava</groupId>
-            <artifactId>spark-core</artifactId>
-            <version>2.7.1</version>
-        </dependency>
-
-        <!--Template engine -->
-        <dependency>
-            <groupId>com.sparkjava</groupId>
-            <artifactId>spark-template-velocity</artifactId>
-            <version>2.7.1</version>
-        </dependency>
-
-        <!--Password encryption -->
-        <dependency>
-            <groupId>org.mindrot</groupId>
-            <artifactId>jbcrypt</artifactId>
-            <version>0.4</version>
-        </dependency>
-
-        <!--Use to validate email addresses -->
-        <dependency>
-            <groupId>commons-validator</groupId>
-            <artifactId>commons-validator</artifactId>
-            <version>1.6</version>
-        </dependency>
-
-        <!-- Dependency injection framework -->
-        <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <version>4.1.0</version>
-        </dependency>
-
-        <!-- Used to serialize/deserialize java objects to/from yaml/json -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-yaml</artifactId>
-            <version>2.9.4</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.9.4</version>
-        </dependency>
-
-        <!-- Automatic bean generation. Requires IDE plugin to work -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.16.20</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Database migrations -->
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-            <version>${flyway.version}</version>
-        </dependency>
-
-
-        <!-- Database driver -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
-        </dependency>
-
-        <!-- ORM -->
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq</artifactId>
-            <version>${jooq.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-meta</artifactId>
-            <version>${jooq.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-codegen</artifactId>
-            <version>${jooq.version}</version>
-        </dependency>
-
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-
-        <!-- Required by jooq -->
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <version>1.3.1</version>
-        </dependency>
-
-        <!-- Unit testing -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>2.15.0</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
     <reporting>
         <plugins>

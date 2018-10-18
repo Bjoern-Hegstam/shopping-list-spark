@@ -1,0 +1,50 @@
+@import '../../styles/general';
+
+$name-font-size: 2rem;
+
+.shopping-list {
+  border: 1px solid $border-color;
+  margin-top: 50px;
+}
+
+.shopping-list__header {
+
+  &, &--edit {
+    background: $background-color;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.shopping-list__header__name {
+  display: flex;
+  align-items: center;
+  font-size: $name-font-size;
+  padding-left: 10px;
+}
+
+.shopping-list__header__name-input {
+  font-size: $name-font-size;
+  padding-left: 10px;
+}
+
+@media (max-width: $small-screen-width) {
+  .shopping-list__header__name-input {
+    max-width: 50vw;
+  }
+}
+
+
+.shopping-list__header__buttons {
+  display: flex;
+}
+
+.shopping-list__header__empty-cart-button {
+  @extend %button-danger;
+  margin: 10px;
+}
+
+.shopping-list__header__delete-button {
+  @extend %button-danger;
+  margin: 10px;
+}

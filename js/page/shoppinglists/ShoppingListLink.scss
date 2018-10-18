@@ -1,0 +1,17 @@
+@import '../../styles/general';
+
+.shopping-list-link {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid $border-color;
+  margin-top: 50px;
+}
+
+.shopping-list-link--name {
+  font-size: 3rem;
+  margin: 10px 0;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
