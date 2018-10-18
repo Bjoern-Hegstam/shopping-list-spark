@@ -2,12 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { registerUser } from '../../actions/UserActions';
+import { createErrorSelector, createLoadingSelector } from '../../selectors';
+import * as types from '../../actions/types';
 
 export class RegistrationForm extends React.Component {
     static propTypes = {
         registerUser: PropTypes.func.isRequired,
         registeringUser: PropTypes.bool.isRequired,
-        errorRegisterUser: PropTypes.object.isRequired,
+        errorRegisterUser: PropTypes.object,
+    };
+
+    static defaultProps = {
+        errorRegisterUser: undefined,
     };
 
     initialState = {
@@ -86,11 +92,9 @@ export class RegistrationForm extends React.Component {
 }
 
 function mapStateToProps(store) {
-    const { registerUser, errorRegisterUser } = store.auth;
-
     return {
-        registerUser,
-        errorRegisterUser,
+        registeringUser: createLoadingSelector(types.REGISTER_USER)(store),
+        errorRegisterUser: createErrorSelector(types.REGISTER_USER)(store),
     };
 }
 
