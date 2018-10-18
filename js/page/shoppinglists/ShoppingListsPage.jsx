@@ -97,21 +97,15 @@ export class ShoppingListsPage extends React.Component {
     }
 }
 
-const fetchingShoppingListsSelector = createLoadingSelector(types.GET_SHOPPING_LISTS);
-const errorGetShoppingLists = createErrorSelector(types.GET_SHOPPING_LISTS);
-
-const addShoppingListSelector = createLoadingSelector(types.ADD_SHOPPING_LIST);
-const errorAddShoppingListSelector = createErrorSelector(types.ADD_SHOPPING_LIST);
-
 const mapStateToProps = store => ({
     token: store.auth.token,
 
     shoppingLists: shoppingListsSelector(store),
-    fetchingShoppingLists: fetchingShoppingListsSelector(store),
-    errorGetShoppingLists: errorGetShoppingLists(store),
+    fetchingShoppingLists: createLoadingSelector(types.GET_SHOPPING_LISTS)(store),
+    errorGetShoppingLists: createErrorSelector(types.GET_SHOPPING_LISTS)(store),
 
-    addingShoppingList: addShoppingListSelector(store),
-    errorAddShoppingList: errorAddShoppingListSelector(store),
+    addingShoppingList: createLoadingSelector(types.ADD_SHOPPING_LIST)(store),
+    errorAddShoppingList: createErrorSelector(types.ADD_SHOPPING_LIST)(store),
 });
 
 const mapDispatchToProps = dispatch => ({

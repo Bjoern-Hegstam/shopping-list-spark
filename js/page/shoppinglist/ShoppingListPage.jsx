@@ -249,30 +249,6 @@ export class ShoppingListPage extends React.Component {
     }
 }
 
-const fetchingShoppingListSelector = createLoadingSelector(types.GET_SHOPPING_LIST);
-const errorGetShoppingListSelector = createErrorSelector(types.GET_SHOPPING_LIST);
-
-const addingItemTypeSelector = createLoadingSelector(types.ADD_ITEM_TYPE);
-const errorAddItemTypeSelector = createErrorSelector(types.ADD_ITEM_TYPE);
-
-const updatingShoppingListSelector = createLoadingSelector(types.UPDATE_SHOPPING_LIST);
-const errorUpdateShoppingListSelector = createErrorSelector(types.UPDATE_SHOPPING_LIST);
-
-const deletingShoppingListSelector = createLoadingSelector(types.DELETE_SHOPPING_LIST);
-const errorDeleteShoppingListSelector = createErrorSelector(types.DELETE_SHOPPING_LIST);
-
-const addingItemSelector = createLoadingSelector(types.ADD_SHOPPING_LIST_ITEM);
-const errorAddItemSelector = createErrorSelector(types.ADD_SHOPPING_LIST_ITEM);
-
-const updatingItemSelector = createLoadingSelector(types.UPDATE_SHOPPING_LIST_ITEM);
-const errorUpdateItemSelector = createErrorSelector(types.UPDATE_SHOPPING_LIST_ITEM);
-
-const deletingItemSelector = createLoadingSelector(types.DELETE_SHOPPING_LIST_ITEM);
-const errorDeleteItemSelector = createErrorSelector(types.DELETE_SHOPPING_LIST_ITEM);
-
-const emptyingCartSelector = createLoadingSelector(types.EMPTY_CART);
-const errorEmptyCartSelector = createErrorSelector(types.EMPTY_CART);
-
 const mapStateToProps = (store, ownProps) => {
     if (!ownProps.match) {
         return {};
@@ -286,29 +262,29 @@ const mapStateToProps = (store, ownProps) => {
         shoppingList: shoppingListSelector(store, listId),
         itemTypes: itemTypesSelector(store),
 
-        fetchingShoppingList: fetchingShoppingListSelector(store),
-        errorGetShoppingList: errorGetShoppingListSelector(store),
+        fetchingShoppingList: createLoadingSelector(types.GET_SHOPPING_LIST)(store),
+        errorGetShoppingList: createErrorSelector(types.GET_SHOPPING_LIST)(store),
 
-        addingItemType: addingItemTypeSelector(store),
-        errorAddItemType: errorAddItemTypeSelector(store),
+        addingItemType: createLoadingSelector(types.ADD_ITEM_TYPE)(store),
+        errorAddItemType: createErrorSelector(types.ADD_ITEM_TYPE)(store),
 
-        updatingShoppingList: updatingShoppingListSelector(store),
-        errorUpdateShoppingList: errorUpdateShoppingListSelector(store),
+        updatingShoppingList: createLoadingSelector(types.UPDATE_SHOPPING_LIST)(store),
+        errorUpdateShoppingList: createErrorSelector(types.UPDATE_SHOPPING_LIST)(store),
 
-        deletingShoppingList: deletingShoppingListSelector(store),
-        errorDeleteShoppingList: errorDeleteShoppingListSelector(store),
+        deletingShoppingList: createLoadingSelector(types.DELETE_SHOPPING_LIST)(store),
+        errorDeleteShoppingList: createErrorSelector(types.DELETE_SHOPPING_LIST)(store),
 
-        addingShoppingListItem: addingItemSelector(store),
-        errorAddShoppingListItem: errorAddItemSelector(store),
+        addingShoppingListItem: createLoadingSelector(types.ADD_SHOPPING_LIST_ITEM)(store),
+        errorAddShoppingListItem: createErrorSelector(types.ADD_SHOPPING_LIST_ITEM)(store),
 
-        updatingShoppingListItem: updatingItemSelector(store),
-        errorUpdateShoppingListItem: errorUpdateItemSelector(store),
+        updatingShoppingListItem: createLoadingSelector(types.UPDATE_SHOPPING_LIST_ITEM)(store),
+        errorUpdateShoppingListItem: createErrorSelector(types.UPDATE_SHOPPING_LIST_ITEM)(store),
 
-        deletingShoppingListItem: deletingItemSelector(store),
-        errorDeleteShoppingListItem: errorDeleteItemSelector(store),
+        deletingShoppingListItem: createLoadingSelector(types.DELETE_SHOPPING_LIST_ITEM)(store),
+        errorDeleteShoppingListItem: createErrorSelector(types.DELETE_SHOPPING_LIST_ITEM)(store),
 
-        emptyingCart: emptyingCartSelector(store),
-        errorEmptyCart: errorEmptyCartSelector(store),
+        emptyingCart: createLoadingSelector(types.EMPTY_CART)(store),
+        errorEmptyCart: createErrorSelector(types.EMPTY_CART)(store),
     };
 };
 
