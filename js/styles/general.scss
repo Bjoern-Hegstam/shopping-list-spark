@@ -3,7 +3,8 @@ $app-layout-min-width: 1500px;
 $app-layout-grid-template-columns: minmax($app-layout-min-side-margin, 1fr) minmax($app-layout-min-width, 2fr) minmax($app-layout-min-side-margin, 1fr);
 
 $small-screen-width: $app-layout-min-width + 2 * $app-layout-min-side-margin;
-$small-screen-app-layout-grid-template-columns: $app-layout-min-side-margin 2fr $app-layout-min-side-margin;
+$small-screen-content-width: 90vw;
+$small-screen-content-margin: 5vw;
 
 $border-color: #e7e7e7;
 $background-color: #f8f8f8;
@@ -18,7 +19,7 @@ html {
 
 @media (max-width: $small-screen-width) {
   html {
-    font-size: 300%;
+    font-size: 200%;
   }
 }
 

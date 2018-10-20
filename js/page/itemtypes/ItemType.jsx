@@ -12,7 +12,7 @@ export default class ItemType extends React.Component {
 
         return (
             <div className="item-type">
-                <span className="item-type__name">{name}</span>
+                <div className="item-type__name">{name}</div>
             </div>
         );
     }

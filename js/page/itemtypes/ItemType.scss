@@ -1,3 +1,19 @@
+@import "../../styles/general";
+
+.item-type {
+  margin: 1rem 0;
+}
+
 .item-type__name {
   font-size: 3rem;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@media (max-width: $small-screen-width) {
+  .item-type {
+    width: $small-screen-content-width;
+  }
 }

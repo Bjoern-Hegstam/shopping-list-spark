@@ -16,10 +16,10 @@ main {
 
 @media (max-width: $small-screen-width) {
   header {
-    grid-template-columns: $small-screen-app-layout-grid-template-columns;
+    grid-template-columns: $small-screen-content-margin $small-screen-content-width $small-screen-content-margin;
   }
 
   main {
-    grid-template-columns: $small-screen-app-layout-grid-template-columns;
+    grid-template-columns: $small-screen-content-margin $small-screen-content-width $small-screen-content-margin;
   }
 }
