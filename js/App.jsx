@@ -23,12 +23,9 @@ function App(props) {
     }
     return (
         <Switch>
-            <Redirect exact path="/" to="/login" />
-            <Redirect exact path="/lists" to="/login" />
-
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/register" component={RegistrationPage} />
-            <Route component={PageNotFound} />
+            <Redirect path="/" to="/login" />
         </Switch>
     );
 }
