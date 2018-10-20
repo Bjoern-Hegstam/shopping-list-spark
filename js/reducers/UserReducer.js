@@ -1,8 +1,6 @@
 import * as types from '../actions/types';
 
 const initialState = {
-    loggingIn: false,
-    errorLogin: null,
 };
 
 export default function (state = initialState, action) {
@@ -12,8 +10,6 @@ export default function (state = initialState, action) {
 
             return {
                 ...state,
-                loggingIn: false,
-                errorLogin: null,
                 token,
                 currentUser: {
                     id: user.id,

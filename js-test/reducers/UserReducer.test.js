@@ -1,13 +1,7 @@
 import reducer from '../../js/reducers/UserReducer';
 import * as types from '../../js/actions/types';
 
-const initialState = {
-    registeringUser: false,
-    errorRegisterUser: null,
-
-    loggingIn: false,
-    errorLogin: null,
-};
+const initialState = {};
 
 it('should return initial state for unknown action type', () => {
     // given
@@ -26,7 +20,6 @@ describe('LOGIN', () => {
         // given
         const state = {
             ...initialState,
-            loggingIn: true,
         };
         const action = {
             type: types.LOGIN_SUCCESS,
@@ -48,8 +41,6 @@ describe('LOGIN', () => {
         // then
         expect(newState).toEqual({
             ...initialState,
-            loggingIn: false,
-            errorLogin: null,
             token: 'token-1',
             currentUser: {
                 id: 'd6c08dd9-d430-4d2c-b471-c469e79c4797',
