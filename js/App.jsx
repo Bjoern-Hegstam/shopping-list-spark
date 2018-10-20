@@ -7,6 +7,7 @@ import RegistrationPage from './page/registration/RegistrationPage';
 import PageNotFound from './components/PageNotFound';
 import ShoppingListsPage from './page/shoppinglists/ShoppingListsPage';
 import ShoppingListPage from './page/shoppinglist/ShoppingListPage';
+import ItemTypesPage from './page/itemtypes/ItemTypesPage';
 import { UserType } from './propTypes';
 import { createErrorSelector, createLoadingSelector } from './selectors';
 import * as actionTypes from './actions/types';
@@ -52,6 +53,7 @@ export class App extends Component {
 
                     <Route exact path="/lists" component={ShoppingListsPage} />
                     <Route path="/lists/:listId" component={ShoppingListPage} />
+                    <Route path="/item-types" component={ItemTypesPage} />
                     <Route component={PageNotFound} />
                 </Switch>
             );
@@ -66,13 +68,11 @@ export class App extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        user: state.auth.currentUser,
+const mapStateToProps = state => ({
+    user: state.auth.currentUser,
 
-        loggingIn: createLoadingSelector(actionTypes.LOGIN)(state),
-        errorLogin: createErrorSelector(actionTypes.LOGIN)(state),
-    };
-}
+    loggingIn: createLoadingSelector(actionTypes.LOGIN)(state),
+    errorLogin: createErrorSelector(actionTypes.LOGIN)(state),
+});
 
 export default withRouter(connect(mapStateToProps)(App));

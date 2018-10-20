@@ -30,6 +30,7 @@ export class Header extends React.Component {
                             <nav>
                                 <ul>
                                     <li><NavLink to="/lists">Lists</NavLink></li>
+                                    <li><NavLink to="/item-types">Items</NavLink></li>
                                     <li><a href="#" onClick={this.logoutCurrentUser}>Logout</a></li>
                                 </ul>
                             </nav>
