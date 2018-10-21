@@ -80,6 +80,8 @@ nav a:hover {
 
   .header__name {
     border: none;
+    border-bottom: 1px solid $border-color;
+    padding: 0 0 10px;
   }
 
   .header__logout {
