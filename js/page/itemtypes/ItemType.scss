@@ -26,7 +26,7 @@
   overflow: hidden;
 }
 
-@media (max-width: $small-screen-width) {
+@media (max-width: $small-screen-width-breakpoint) {
   .item-type {
     width: $small-screen-content-width;
   }

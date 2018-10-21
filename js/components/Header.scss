@@ -53,3 +53,9 @@ nav ul li {
 nav a:hover {
   color: black;
 }
+
+@media (max-width: $small-screen-width-breakpoint) {
+  header {
+    grid-template-columns: 1fr $small-screen-content-width 1fr;
+  }
+}

@@ -1,11 +1,14 @@
-$app-layout-min-side-margin: 10px;
-$app-layout-min-width: 1500px;
-$app-layout-grid-template-columns: minmax($app-layout-min-side-margin, 1fr) minmax($app-layout-min-width, 2fr) minmax($app-layout-min-side-margin, 1fr);
+// Large screen layout
+$large-screen-content-width: 1500px;
+$large-screen-content-min-margin: 75px;
 
-$small-screen-width: $app-layout-min-width + 2 * $app-layout-min-side-margin;
+$app-layout-grid-template-columns: 1fr $large-screen-content-width 1fr;
+
+// Small screen layout
+$small-screen-width-breakpoint: $large-screen-content-width + 2 * $large-screen-content-min-margin;
 $small-screen-content-width: 90vw;
-$small-screen-content-margin: 5vw;
 
+// Colors
 $border-color: #e7e7e7;
 $background-color: #f8f8f8;
 $item-selected-color: #97ec8d;
@@ -17,7 +20,7 @@ html {
   font-size: 100%;
 }
 
-@media (max-width: $small-screen-width) {
+@media (max-width: $small-screen-width-breakpoint) {
   html {
     font-size: 200%;
   }

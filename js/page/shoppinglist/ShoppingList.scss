@@ -28,7 +28,7 @@ $name-font-size: 2rem;
   padding-left: 10px;
 }
 
-@media (max-width: $small-screen-width) {
+@media (max-width: $small-screen-width-breakpoint) {
   .shopping-list__header__name-input {
     max-width: 50vw;
   }

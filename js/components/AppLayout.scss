@@ -14,12 +14,8 @@ main {
   grid-column: 2/3;
 }
 
-@media (max-width: $small-screen-width) {
-  header {
-    grid-template-columns: $small-screen-content-margin $small-screen-content-width $small-screen-content-margin;
-  }
-
+@media (max-width: $small-screen-width-breakpoint) {
   main {
-    grid-template-columns: $small-screen-content-margin $small-screen-content-width $small-screen-content-margin;
+    grid-template-columns: 1fr $small-screen-content-width 1fr;
   }
 }
