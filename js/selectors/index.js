@@ -41,5 +41,5 @@ export function shoppingListSelector(state, listId) {
 
 export function itemTypesSelector(state) {
     const { itemTypes } = state.entities;
-    return itemTypes ? Object.values(itemTypes) : [];
+    return itemTypes ? Object.values(itemTypes).filter(itemType => !itemType.deleted) : [];
 }

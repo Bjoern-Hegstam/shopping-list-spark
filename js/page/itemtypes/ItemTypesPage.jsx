@@ -2,11 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ItemTypeType } from '../../propTypes';
-import { createErrorSelector, createLoadingSelector, itemTypesSelector } from '../../selectors';
-import * as types from '../../actions/types';
+import { itemTypesSelector } from '../../selectors';
 import AppLayout from '../../components/AppLayout';
 import ItemType from './ItemType';
-import { getItemTypes } from '../../actions/ItemTypeActions';
+import { deleteItemType, getItemTypes } from '../../actions/ItemTypeActions';
 
 export class ItemTypesPage extends React.Component {
     static propTypes = {
@@ -14,19 +13,20 @@ export class ItemTypesPage extends React.Component {
         itemTypes: PropTypes.arrayOf(ItemTypeType),
 
         getItemTypes: PropTypes.func.isRequired,
-        fetchingItemTypes: PropTypes.bool.isRequired,
-        errorGetItemTypes: PropTypes.object,
+        deleteItemType: PropTypes.func.isRequired,
     };
 
     static defaultProps = {
         itemTypes: [],
-
-        fetchingItemTypes: false,
     };
 
     componentDidMount() {
         this.props.getItemTypes(this.props.token);
     }
+
+    handleDeleteItemType = (id) => {
+        this.props.deleteItemType({ token: this.props.token, id });
+    };
 
     render() {
         const { itemTypes } = this.props;
@@ -34,7 +34,13 @@ export class ItemTypesPage extends React.Component {
         return (
             <AppLayout>
                 <div className="item-types">
-                    {itemTypes.map(itemType => <ItemType key={itemType.id} {...itemType} />)}
+                    {itemTypes.map(itemType => (
+                        <ItemType
+                            key={itemType.id}
+                            onDelete={this.handleDeleteItemType}
+                            {...itemType}
+                        />
+                    ))}
                 </div>
             </AppLayout>
         );
@@ -44,13 +50,11 @@ export class ItemTypesPage extends React.Component {
 const mapStateToProps = state => ({
     token: state.auth.token,
     itemTypes: itemTypesSelector(state),
-
-    fetchingItemTypes: createLoadingSelector(types.GET_ITEM_TYPES)(state),
-    errorGetItemTypes: createErrorSelector(types.GET_ITEM_TYPES)(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     getItemTypes: token => dispatch(getItemTypes(token)),
+    deleteItemType: token => dispatch(deleteItemType(token)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ItemTypesPage);

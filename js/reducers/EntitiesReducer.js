@@ -41,8 +41,28 @@ export default function (state = {}, action) {
             return {
                 ...state,
                 itemTypes: {
-                    ...state.itemTypes,
                     ...normalizedData.entities.itemTypes,
+                },
+            };
+        }
+        case types.DELETE_ITEM_TYPE_SUCCESS: {
+            const { itemTypeId } = action.meta.previousAction.queryInfo;
+
+            return {
+                ...state,
+                itemTypes: {
+                    ...Object
+                        .keys(state.itemTypes)
+                        .map(id => (id !== itemTypeId
+                            ? state.itemTypes[id]
+                            : {
+                                ...state.itemTypes[id],
+                                deleted: true,
+                            }))
+                        .reduce((obj, itemType) => ({
+                            ...obj,
+                            [itemType.id]: itemType,
+                        }), {}),
                 },
             };
         }

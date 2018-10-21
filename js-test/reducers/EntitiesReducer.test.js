@@ -5,7 +5,7 @@ const shoppingList1Id = 'd84fcaa9-d3b4-49f5-bb6f-4f3889406056';
 const shoppingList2Id = 'f4783aa3-7171-413a-a8a3-2c3669ded567';
 
 const itemType1Id = '83b66aa7-3189-4e11-b4fa-fc73ded86ca5';
-const itemType2Id = '83b66aa7-3189-4e11-b4fa-fc73ded86ca5';
+const itemType2Id = '69d58d9c-f763-4481-a5a6-0defa1993329';
 
 const initialState = {
     shoppingLists: {
@@ -212,6 +212,48 @@ it('handles GET_ITEM_TYPES_SUCCESS', () => {
             [newItemTypeId]: {
                 id: newItemTypeId,
                 name: 'Apples',
+            },
+        },
+    });
+});
+
+it('handles DELETE_ITEM_TYPE_SUCCESS', () => {
+    // given
+    const action = {
+        type: types.DELETE_ITEM_TYPE_SUCCESS,
+        meta: {
+            previousAction: {
+                queryInfo: {
+                    itemTypeId: itemType1Id,
+                },
+            },
+        },
+    };
+
+    // when
+    const newState = reducer(initialState, action);
+
+    // then
+    expect(newState).toEqual({
+        shoppingLists: {
+            [shoppingList1Id]: {
+                id: shoppingList1Id,
+                name: 'Foo',
+            },
+            [shoppingList2Id]: {
+                id: shoppingList2Id,
+                name: 'Baz',
+            },
+        },
+        itemTypes: {
+            [itemType1Id]: {
+                id: itemType1Id,
+                name: 'itemType1',
+                deleted: true,
+            },
+            [itemType2Id]: {
+                id: itemType2Id,
+                name: 'itemType2',
             },
         },
     });
