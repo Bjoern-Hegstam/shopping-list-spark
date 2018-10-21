@@ -27,20 +27,22 @@ export class Header extends React.Component {
                     <span className="header__name">shopping-list-spark</span>
                     {this.props.user
                         ? (
-                            <nav>
-                                <ul>
-                                    <li><NavLink to="/lists">Lists</NavLink></li>
-                                    <li><NavLink to="/item-types">Items</NavLink></li>
-                                    <li><a href="#" onClick={this.logoutCurrentUser}>Logout</a></li>
-                                </ul>
-                            </nav>
+                            <>
+                                <nav role="navigation" className="header__links">
+                                    <NavLink to="/lists">Lists</NavLink>
+                                    <NavLink to="/item-types">Items</NavLink>
+                                </nav>
+                                <nav role="navigation" className="header__logout">
+                                    <button type="button" onClick={this.logoutCurrentUser}>Logout</button>
+                                </nav>
+                            </>
                         )
                         : (
-                            <nav>
-                                <ul>
-                                    <li><NavLink to="/login">Login</NavLink></li>
-                                    <li><NavLink to="/register">Register</NavLink></li>
-                                </ul>
+                            <nav role="navigation">
+                                <div className="header__links">
+                                    <NavLink to="/login">Login</NavLink>
+                                    <NavLink to="/register">Register</NavLink>
+                                </div>
                             </nav>
                         )
                     }
