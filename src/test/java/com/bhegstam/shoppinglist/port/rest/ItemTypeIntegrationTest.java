@@ -1,9 +1,7 @@
 package com.bhegstam.shoppinglist.port.rest;
 
 import com.bhegstam.shoppinglist.configuration.ShoppingListApplicationConfiguration;
-import com.bhegstam.shoppinglist.domain.ItemType;
-import com.bhegstam.shoppinglist.domain.ItemTypeId;
-import com.bhegstam.shoppinglist.domain.ItemTypeRepository;
+import com.bhegstam.shoppinglist.domain.*;
 import com.bhegstam.shoppinglist.port.persistence.RepositoryFactory;
 import com.bhegstam.shoppinglist.util.DropwizardAppRuleFactory;
 import com.bhegstam.shoppinglist.util.TestData;
@@ -37,6 +35,7 @@ public class ItemTypeIntegrationTest {
     private final JsonMapper jsonMapper = new JsonMapper();
     private ItemTypeApi api;
     private ItemTypeRepository itemTypeRepository;
+    private ShoppingListRepository shoppingListRepository;
 
     @Before
     public void setUp() throws JoseException {
@@ -46,6 +45,7 @@ public class ItemTypeIntegrationTest {
 
         RepositoryFactory repositoryFactory = new RepositoryFactory(service.getEnvironment(), service.getConfiguration().getDataSourceFactory());
         itemTypeRepository = repositoryFactory.createItemTypeRepository();
+        shoppingListRepository = repositoryFactory.createShoppingListRepository();
     }
 
     @Test
@@ -145,5 +145,26 @@ public class ItemTypeIntegrationTest {
 
         // then
         assertResponseStatus(response, BAD_REQUEST);
+    }
+
+    @Test
+    public void deleteItemType_usedByShoppingList() {
+        // given
+        ItemType itemType = new ItemType("Apples");
+        itemTypeRepository.add(itemType);
+
+        ShoppingList list = new ShoppingList("foo");
+        list.add(itemType);
+        shoppingListRepository.persist(list);
+
+        // when
+        Response response = api.deleteItemType(itemType.getId().getId());
+
+        // then
+        assertResponseStatus(response, CONFLICT);
+
+        JsonNode responseJson = jsonMapper.read(response);
+        assertThat(responseJson.get("errorCode").asText(), is("ITEM_TYPE_USED_IN_SHOPPING_LIST"));
+        assertThat(responseJson.get("message").asText(), is(itemType.getId().getId()));
     }
 }

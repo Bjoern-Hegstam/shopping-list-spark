@@ -3,6 +3,7 @@ package com.bhegstam.shoppinglist.port.rest;
 import com.bhegstam.shoppinglist.application.ItemTypeApplication;
 import com.bhegstam.shoppinglist.domain.ItemType;
 import com.bhegstam.shoppinglist.domain.ItemTypeId;
+import com.bhegstam.shoppinglist.domain.ItemTypeUsedInShoppingList;
 import com.bhegstam.shoppinglist.domain.User;
 import io.dropwizard.auth.Auth;
 import org.slf4j.Logger;
@@ -87,14 +88,21 @@ public class ItemTypeResource {
                     .build();
         }
 
-        itemTypeApplication.deleteItemType(itemTypeId);
+        Response.Status status;
+        Object body = null;
+        try {
+            itemTypeApplication.deleteItemType(itemTypeId);
+            status = NO_CONTENT;
+        } catch (ItemTypeUsedInShoppingList e) {
+            status = CONFLICT;
+            body = ErrorResponse.exception(e);
+        }
 
-        Response.Status status = NO_CONTENT;
-
-        logResponse(status, null);
+        logResponse(status, body);
 
         return Response
                 .status(status)
+                .entity(body)
                 .build();
     }
 
