@@ -1,35 +1,29 @@
-import React from 'react';
-import { shallow } from 'enzyme';
 import ShoppingList from '../../../js/page/shoppinglist/ShoppingList';
 import { emptyShoppingList, shoppingListWithEmptyCart, shoppingListWithItemsInCart } from '../../fixtures/shoppingList';
 import { itemTypes } from '../../fixtures/itemTypes';
 import ShoppingListItem from '../../../js/page/shoppinglist/ShoppingListItem';
 import AddShoppingListItemInput from '../../../js/page/shoppinglist/AddShoppingListItemInput';
+import { setupComponent } from '../../util';
 
 function setup(optProps) {
-    const defaultProps = {
-        shoppingList: emptyShoppingList,
-        itemTypes,
-        isEditing: false,
+    return setupComponent(
+        ShoppingList,
+        {
+            shoppingList: emptyShoppingList,
+            itemTypes,
+            isEditing: false,
 
-        onStartEdit: jest.fn(),
-        onCancelEdit: jest.fn(),
-        onAddItem: jest.fn(),
-        onToggleItemInCart: jest.fn(),
-        onUpdateItemQuantity: jest.fn(),
-        onEmptyCart: jest.fn(),
-        onChangeName: jest.fn(),
-        onDelete: jest.fn(),
-    };
-
-    const props = {
-        ...defaultProps,
-        ...optProps,
-    };
-
-    const component = shallow(<ShoppingList {...props} />);
-
-    return { component, props };
+            onStartEdit: jest.fn(),
+            onCancelEdit: jest.fn(),
+            onAddItem: jest.fn(),
+            onToggleItemInCart: jest.fn(),
+            onUpdateItemQuantity: jest.fn(),
+            onEmptyCart: jest.fn(),
+            onChangeName: jest.fn(),
+            onDelete: jest.fn(),
+        },
+        optProps,
+    );
 }
 
 let component;

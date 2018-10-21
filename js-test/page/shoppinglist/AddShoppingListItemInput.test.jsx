@@ -1,22 +1,16 @@
-import React from 'react';
-import { shallow } from 'enzyme';
 import AddShoppingListItemInput from '../../../js/page/shoppinglist/AddShoppingListItemInput';
 import { itemTypes } from '../../fixtures/itemTypes';
+import { setupComponent } from '../../util';
 
 function setup(optProps) {
-    const defaultProps = {
-        itemTypes,
-        onAddItem: jest.fn(),
-    };
-
-    const props = {
-        ...defaultProps,
-        ...optProps,
-    };
-
-    const component = shallow(<AddShoppingListItemInput {...props} />);
-
-    return { component, props };
+    return setupComponent(
+        AddShoppingListItemInput,
+        {
+            itemTypes,
+            onAddItem: jest.fn(),
+        },
+        optProps,
+    );
 }
 
 let component;

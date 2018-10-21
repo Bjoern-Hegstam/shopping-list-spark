@@ -1,27 +1,21 @@
-import { shallow } from 'enzyme/build';
-import React from 'react';
 import { App } from '../js/App';
+import { setupComponent } from './util';
 
 function setup(optProps) {
-    const defaultProps = {
-        location: {
-            pathname: '/',
+    return setupComponent(
+        App,
+        {
+            location: {
+                pathname: '/',
+            },
+            history: {
+                push: jest.fn(),
+            },
+
+            loggingIn: false,
         },
-        history: {
-            push: jest.fn(),
-        },
-
-        loggingIn: false,
-    };
-
-    const props = {
-        ...defaultProps,
-        ...optProps,
-    };
-
-    const component = shallow(<App {...props} />);
-
-    return { component, props };
+        optProps,
+    );
 }
 
 let component;

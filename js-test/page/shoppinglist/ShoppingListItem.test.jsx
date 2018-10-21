@@ -1,7 +1,6 @@
-import React from 'react';
-import { shallow } from 'enzyme';
 import ShoppingListItem from '../../../js/page/shoppinglist/ShoppingListItem';
 import { getItemTypeByName } from '../../fixtures/itemTypes';
+import { setupComponent } from '../../util';
 
 const item = {
     id: 'fc30a4d5-6bc8-4448-970d-dd01597e22cb',
@@ -11,21 +10,16 @@ const item = {
 };
 
 function setup(optProps) {
-    const defaultProps = {
-        item,
+    return setupComponent(
+        ShoppingListItem,
+        {
+            item,
 
-        onToggleInCart: jest.fn(),
-        onUpdateQuantity: jest.fn(),
-    };
-
-    const props = {
-        ...defaultProps,
-        ...optProps,
-    };
-
-    const component = shallow(<ShoppingListItem {...props} />);
-
-    return { component, props };
+            onToggleInCart: jest.fn(),
+            onUpdateQuantity: jest.fn(),
+        },
+        optProps,
+    );
 }
 
 let component;

@@ -1,8 +1,6 @@
-import React from 'react';
-import { shallow } from 'enzyme';
 import { ShoppingListPage } from '../../../js/page/shoppinglist/ShoppingListPage';
 import ShoppingList from '../../../js/page/shoppinglist/ShoppingList';
-import AppLayout from '../../../js/components/AppLayout';
+import { setupComponent } from '../../util';
 
 const itemType = {
     id: '721eb282-a107-4263-99d9-d29e4785f0b8',
@@ -17,51 +15,48 @@ const item = {
 };
 
 function setup(optProps) {
-    const defaultProps = {
-        token: 'token',
-        match: { params: { listId } },
-        history: { push: jest.fn() },
+    const {component, props} = setupComponent(
+        ShoppingListPage,
+        {
+            token: 'token',
+            match: { params: { listId } },
+            history: { push: jest.fn() },
 
-        shoppingList: {
-            id: listId,
-            name: 'Foo',
-            items: [item],
+            shoppingList: {
+                id: listId,
+                name: 'Foo',
+                items: [item],
+            },
+            itemTypes: [itemType],
+
+            getShoppingList: jest.fn(),
+            fetchingShoppingList: false,
+
+            addItemType: jest.fn(),
+            addingItemType: false,
+
+            getItemTypes: jest.fn(),
+
+            updateShoppingList: jest.fn(),
+            updatingShoppingList: false,
+
+            deleteShoppingList: jest.fn(),
+            deletingShoppingList: false,
+
+            addShoppingListItem: jest.fn(),
+            addingShoppingListItem: false,
+
+            updateShoppingListItem: jest.fn(),
+            updatingShoppingListItem: false,
+
+            deleteShoppingListItem: jest.fn(),
+            deletingShoppingListItem: false,
+
+            emptyCart: jest.fn(),
+            emptyingCart: false,
         },
-        itemTypes: [itemType],
-
-        getShoppingList: jest.fn(),
-        fetchingShoppingList: false,
-
-        addItemType: jest.fn(),
-        addingItemType: false,
-
-        getItemTypes: jest.fn(),
-
-        updateShoppingList: jest.fn(),
-        updatingShoppingList: false,
-
-        deleteShoppingList: jest.fn(),
-        deletingShoppingList: false,
-
-        addShoppingListItem: jest.fn(),
-        addingShoppingListItem: false,
-
-        updateShoppingListItem: jest.fn(),
-        updatingShoppingListItem: false,
-
-        deleteShoppingListItem: jest.fn(),
-        deletingShoppingListItem: false,
-
-        emptyCart: jest.fn(),
-        emptyingCart: false,
-    };
-
-    const props = {
-        ...defaultProps,
-        ...optProps,
-    };
-
-    const component = shallow(<ShoppingListPage {...props} />);
+        optProps,
+    );
 
     component.setState({ initialFetchComplete: true });
 
@@ -83,7 +78,6 @@ it('renders loading text when initial fetch not complete', () => {
     component.setState({ initialFetchComplete: false });
 
     // then
-    expect(component.find(AppLayout).prop('children')).toBe('Loading...');
     expect(component.find(ShoppingList)).toHaveLength(0);
 });
 
