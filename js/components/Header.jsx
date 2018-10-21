@@ -38,11 +38,9 @@ export class Header extends React.Component {
                             </>
                         )
                         : (
-                            <nav role="navigation">
-                                <div className="header__links">
-                                    <NavLink to="/login">Login</NavLink>
-                                    <NavLink to="/register">Register</NavLink>
-                                </div>
+                            <nav role="navigation" className="header__links">
+                                <NavLink to="/login">Login</NavLink>
+                                <NavLink to="/register">Register</NavLink>
                             </nav>
                         )
                     }
