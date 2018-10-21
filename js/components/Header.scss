@@ -56,10 +56,10 @@ nav a:hover {
 
   & button {
     @extend %base-button;
-    padding: 0;
     background: $background-color;
-    color: red;
-    font-weight: bold;
+    color: $text-color;
+    font-weight: normal;
+    padding: 0 5px;
   }
 }
 
@@ -73,7 +73,7 @@ nav a:hover {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas:
             ". name logout"
-            ". links logout";
+            ". links .";
     grid-row-gap: 15px;
     justify-items: center;
   }
