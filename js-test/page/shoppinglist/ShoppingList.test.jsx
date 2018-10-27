@@ -43,12 +43,11 @@ describe('initial render', () => {
         component.setProps({ shoppingList: emptyShoppingList });
 
         // then
-        expect(component.find('.shopping-list__header__name').text()).toBe(emptyShoppingList.name);
-        expect(component.find('.shopping-list__header__name-input')).toHaveLength(0);
+        expect(component.find('.shopping-list__name').text()).toBe(emptyShoppingList.name);
+        expect(component.find('.shopping-list__name--edit')).toHaveLength(0);
 
-
-        expect(component.find('.shopping-list__header__empty-cart-button').prop('disabled')).toBeTruthy();
-        expect(component.find('.shopping-list__header__delete-button').prop('disabled')).toBeFalsy();
+        expect(component.find('.shopping-list__button').text()).toBe('Delete');
+        expect(component.find('.shopping-list__button').prop('disabled')).toBeFalsy();
 
         expect(component.find(ShoppingListItem)).toHaveLength(0);
     });
@@ -58,12 +57,12 @@ describe('initial render', () => {
         component.setProps({ shoppingList: shoppingListWithEmptyCart });
 
         // then
-        expect(component.find('.shopping-list__header__name').text()).toBe(shoppingListWithEmptyCart.name);
-        expect(component.find('.shopping-list__header__name-input')).toHaveLength(0);
+        expect(component.find('.shopping-list__name').text()).toBe(shoppingListWithEmptyCart.name);
+        expect(component.find('.shopping-list__name--edit')).toHaveLength(0);
 
 
-        expect(component.find('.shopping-list__header__empty-cart-button').prop('disabled')).toBeTruthy();
-        expect(component.find('.shopping-list__header__delete-button').prop('disabled')).toBeTruthy();
+        expect(component.find('.shopping-list__button').text()).toBe('Empty Cart');
+        expect(component.find('.shopping-list__button').prop('disabled')).toBeTruthy();
 
         expect(component.find(ShoppingListItem)).toHaveLength(shoppingListWithEmptyCart.items.length);
     });
@@ -73,11 +72,11 @@ describe('initial render', () => {
         component.setProps({ shoppingList: shoppingListWithItemsInCart });
 
         // then
-        expect(component.find('.shopping-list__header__name').text()).toBe(shoppingListWithItemsInCart.name);
-        expect(component.find('.shopping-list__header__name-input')).toHaveLength(0);
+        expect(component.find('.shopping-list__name').text()).toBe(shoppingListWithItemsInCart.name);
+        expect(component.find('.shopping-list__name--edit')).toHaveLength(0);
 
-        expect(component.find('.shopping-list__header__empty-cart-button').prop('disabled')).toBeFalsy();
-        expect(component.find('.shopping-list__header__delete-button').prop('disabled')).toBeTruthy();
+        expect(component.find('.shopping-list__button').text()).toBe('Empty Cart');
+        expect(component.find('.shopping-list__button').prop('disabled')).toBeFalsy();
 
         expect(component.find(ShoppingListItem)).toHaveLength(shoppingListWithItemsInCart.items.length);
     });
@@ -85,7 +84,7 @@ describe('initial render', () => {
 
 it('starts editing when name clicked', () => {
     // when
-    component.find('.shopping-list__header__name').simulate('click');
+    component.find('.shopping-list__name').simulate('click');
 
     // then
     expect(component.state('name')).toBe(emptyShoppingList.name);
@@ -98,14 +97,14 @@ describe('isEditing', () => {
     });
 
     it('initial render', () => {
-        expect(component.find('.shopping-list__header__name')).toHaveLength(0);
-        expect(component.find('.shopping-list__header__name-input')).toHaveLength(1);
+        expect(component.find('span.shopping-list__name')).toHaveLength(0);
+        expect(component.find('input.shopping-list__name--edit')).toHaveLength(1);
     });
 
     it('updates state when name changed', () => {
         // when
         component
-            .find('.shopping-list__header__name-input')
+            .find('.shopping-list__name--edit')
             .simulate('change', { target: { value: 'Edited name' } });
 
         // then
@@ -118,7 +117,7 @@ describe('isEditing', () => {
 
         // when
         component
-            .find('.shopping-list__header__name-input')
+            .find('.shopping-list__name--edit')
             .simulate('keyDown', { key: 'Enter' });
 
         // then
@@ -127,7 +126,7 @@ describe('isEditing', () => {
 
     it('cancels edit onBlur', () => {
         // when
-        component.find('.shopping-list__header__name-input').simulate('blur');
+        component.find('.shopping-list__name--edit').simulate('blur');
 
         // then
         expect(props.onCancelEdit).toHaveBeenCalledTimes(1);
@@ -139,7 +138,7 @@ describe('isEditing', () => {
 
         // when
         component
-            .find('.shopping-list__header__name-input')
+            .find('.shopping-list__name--edit')
             .simulate('keyDown', { key: 'Escape' });
 
         // then
@@ -154,7 +153,7 @@ it('invokes onEmptyCart when empty cart button clicked', () => {
 
     // when
     component
-        .find('.shopping-list__header__empty-cart-button')
+        .find('.shopping-list__button')
         .simulate('click');
 
     // then
@@ -163,11 +162,11 @@ it('invokes onEmptyCart when empty cart button clicked', () => {
 
 it('invokes onDelete when delete button clicked', () => {
     // given
-    component.setProps({ shoppingList: shoppingListWithEmptyCart });
+    component.setProps({ shoppingList: emptyShoppingList });
 
     // when
     component
-        .find('.shopping-list__header__delete-button')
+        .find('.shopping-list__button')
         .simulate('click');
 
     // then

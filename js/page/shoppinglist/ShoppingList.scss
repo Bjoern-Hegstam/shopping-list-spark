@@ -1,50 +1,31 @@
 @import '../../styles/general';
 
-$name-font-size: 2rem;
-
 .shopping-list {
-  border: 1px solid $border-color;
-  margin-top: 50px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-areas:
+      "name button"
+      "items items"
+      "add-item add-item";
 }
 
-.shopping-list__header {
-
-  &, &--edit {
-    background: $background-color;
-    display: flex;
-    justify-content: space-between;
-  }
-}
-
-.shopping-list__header__name {
-  display: flex;
-  align-items: center;
-  font-size: $name-font-size;
+.shopping-list__name {
+  grid-area: name;
+  align-self: center;
+  font-size: 2rem;
   padding-left: 10px;
 }
 
-.shopping-list__header__name-input {
-  font-size: $name-font-size;
-  padding-left: 10px;
-}
-
-@media (max-width: $small-screen-width-breakpoint) {
-  .shopping-list__header__name-input {
-    max-width: 50vw;
-  }
-}
-
-
-.shopping-list__header__buttons {
-  display: flex;
-}
-
-.shopping-list__header__empty-cart-button {
+.shopping-list__button {
   @extend %button-danger;
+  grid-area: button;
   margin: 10px;
 }
 
-.shopping-list__header__delete-button {
-  @extend %button-danger;
-  margin: 10px;
+.shopping-list__items {
+  grid-area: items;
+}
+
+.shopping-list__add-item {
+  grid-area: add-item;
 }

@@ -38,17 +38,13 @@ export default class ShoppingListItem extends React.Component {
 
         return (
             <div className={itemClassName} onClick={this.handleClick}>
-                <div className="shopping-list-item__info">
-                    <span className="shopping-list-item__quantity">{item.quantity}</span>
-                    <span className="shopping-list-item__name">{item.itemType.name}</span>
+                <div className="shopping-list-item__button shopping-list-item__button--incr" onClick={this.handleIncrementClick}>
+                    <span>+</span>
                 </div>
-                <div className="shopping-list-item__buttons">
-                    <div className="shopping-list-item__inc-button" onClick={this.handleIncrementClick}>
-                        <span>+</span>
-                    </div>
-                    <div className="shopping-list-item__dec-button" onClick={this.handleDecrementClick}>
-                        <span>-</span>
-                    </div>
+                <span className="shopping-list-item__quantity">{item.quantity}</span>
+                <span className="shopping-list-item__name">{item.itemType.name}</span>
+                <div className="shopping-list-item__button shopping-list-item__button--decr" onClick={this.handleDecrementClick}>
+                    <span>-</span>
                 </div>
             </div>
         );

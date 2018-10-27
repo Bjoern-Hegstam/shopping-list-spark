@@ -33,8 +33,8 @@ it('initial render', () => {
     expect(component.find('.shopping-list-item__quantity').text()).toBe(`${item.quantity}`);
     expect(component.find('.shopping-list-item__name').text()).toBe(item.itemType.name);
 
-    expect(component.find('.shopping-list-item__inc-button').find('span').text()).toBe('+');
-    expect(component.find('.shopping-list-item__dec-button').find('span').text()).toBe('-');
+    expect(component.find('.shopping-list-item__button--incr').find('span').text()).toBe('+');
+    expect(component.find('.shopping-list-item__button--decr').find('span').text()).toBe('-');
 });
 
 it('item not in cart', () => {
@@ -56,7 +56,7 @@ it('item is in cart', () => {
 
 it('invokes onUpdateQuantity when increment button clicked', () => {
     // when
-    component.find('.shopping-list-item__inc-button').simulate('click', { stopPropagation: jest.fn() });
+    component.find('.shopping-list-item__button--incr').simulate('click', { stopPropagation: jest.fn() });
 
     // then
     expect(props.onUpdateQuantity).toHaveBeenCalledWith(props.item, props.item.quantity + 1);
@@ -64,7 +64,7 @@ it('invokes onUpdateQuantity when increment button clicked', () => {
 
 it('invokes onUpdateQuantity when decrement button clicked', () => {
     // when
-    component.find('.shopping-list-item__dec-button').simulate('click', { stopPropagation: jest.fn() });
+    component.find('.shopping-list-item__button--decr').simulate('click', { stopPropagation: jest.fn() });
 
     // then
     expect(props.onUpdateQuantity).toHaveBeenCalledWith(props.item, props.item.quantity - 1);

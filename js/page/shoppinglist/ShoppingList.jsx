@@ -37,8 +37,7 @@ export default class ShoppingList extends React.Component {
     }
 
     handleStartEdit = () => {
-        this.setState({ name: this.props.shoppingList.name });
-        this.props.onStartEdit();
+        this.setState({ name: this.props.shoppingList.name }, () => this.props.onStartEdit());
     };
 
     handleNameChange = (e) => {
@@ -72,45 +71,46 @@ export default class ShoppingList extends React.Component {
 
         return (
             <div className="shopping-list">
-                <div className="shopping-list__header">
-                    {!isEditing && (
-                        <span
-                            className="shopping-list__header__name"
-                            onClick={this.handleStartEdit}
-                        >
-                            {shoppingList.name}
-                        </span>
-                    )}
-                    {isEditing && (
-                        <input
-                            ref={this.inputRef}
-                            className="shopping-list__header__name-input"
-                            value={name}
-                            onChange={this.handleNameChange}
-                            onKeyDown={this.handleNameInputKeyDown}
-                            onBlur={this.props.onCancelEdit}
-                        />
-                    )}
-                    <div className="shopping-list__header__buttons">
-                        <button
-                            type="button"
-                            className="shopping-list__header__empty-cart-button"
-                            onClick={onEmptyCart}
-                            disabled={!hasItemsInCart}
-                        >
-                            Empty Cart
-                        </button>
-                        <button
-                            type="button"
-                            className="shopping-list__header__delete-button"
-                            onClick={onDelete}
-                            disabled={hasItems}
-                        >
-                            Delete
-                        </button>
-                    </div>
-                </div>
-                <div className="shopping-list__body">
+                {!isEditing && (
+                    <span
+                        className="shopping-list__name"
+                        onClick={this.handleStartEdit}
+                    >
+                        {shoppingList.name}
+                    </span>
+                )}
+                {isEditing && (
+                    <input
+                        ref={this.inputRef}
+                        className="shopping-list__name shopping-list__name--edit"
+                        value={name}
+                        onChange={this.handleNameChange}
+                        onKeyDown={this.handleNameInputKeyDown}
+                        onBlur={this.props.onCancelEdit}
+                        size={1} // Prevents input from getting too wide
+                    />
+                )}
+                {hasItems && (
+                    <button
+                        type="button"
+                        className="shopping-list__button"
+                        onClick={onEmptyCart}
+                        disabled={!hasItemsInCart}
+                    >
+                        Empty Cart
+                    </button>
+                )}
+                {!hasItems && (
+                    <button
+                        type="button"
+                        className="shopping-list__button"
+                        onClick={onDelete}
+                        disabled={hasItems}
+                    >
+                        Delete
+                    </button>
+                )}
+                <div className="shopping-list__items">
                     <TransitionGroup>
                         {shoppingList.items.map(item => (
                             <CSSTransition
@@ -129,7 +129,9 @@ export default class ShoppingList extends React.Component {
                         ))}
                     </TransitionGroup>
                 </div>
-                <AddShoppingListItemInput itemTypes={itemTypes} onAddItem={onAddItem} />
+                <div className="shopping-list__add-item">
+                    <AddShoppingListItemInput itemTypes={itemTypes} onAddItem={onAddItem} />
+                </div>
             </div>
         );
     }
