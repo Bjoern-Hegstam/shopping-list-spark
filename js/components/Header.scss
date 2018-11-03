@@ -11,13 +11,6 @@ header {
   border-bottom: 1px solid $border-color;
 
   display: grid;
-  grid-template-columns: $app-layout-grid-template-columns;
-  grid-template-areas: ". content .";
-}
-
-.header-content {
-  grid-area: content;
-  display: grid;
   grid-template-columns: 150px 1fr 75px;
   grid-template-areas: "name links logout";
 
@@ -66,10 +59,9 @@ nav a:hover {
 
 @media (max-width: $small-screen-width-breakpoint) {
   header {
-    grid-template-columns: 1fr $small-screen-content-width 1fr;
-  }
+    height: 10vh;
+    padding: 0 2vw;
 
-  .header-content {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas:

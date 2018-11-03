@@ -2,8 +2,6 @@
 $large-screen-content-width: 1200px;
 $large-screen-content-min-margin: 75px;
 
-$app-layout-grid-template-columns: 1fr $large-screen-content-width 1fr;
-
 // Small screen layout
 $small-screen-width-breakpoint: $large-screen-content-width + 2 * $large-screen-content-min-margin;
 $small-screen-content-width: 90vw;

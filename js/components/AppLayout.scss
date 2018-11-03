@@ -7,7 +7,7 @@ body {
 
 .app-layout {
   display: grid;
-  grid-template-columns: $app-layout-grid-template-columns;
+  grid-template-columns: 1fr $large-screen-content-width 1fr;
   grid-template-areas:
           ". header ."
           ". main .";

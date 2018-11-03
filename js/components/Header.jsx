@@ -23,28 +23,26 @@ export class Header extends React.Component {
     render() {
         return (
             <header>
-                <div className="header-content">
-                    <span className="header__name">shopping-list-spark</span>
-                    {this.props.user
-                        ? (
-                            <>
-                                <nav role="navigation" className="header__links">
-                                    <NavLink to="/lists">Lists</NavLink>
-                                    <NavLink to="/item-types">Items</NavLink>
-                                </nav>
-                                <nav role="navigation" className="header__logout">
-                                    <button type="button" onClick={this.logoutCurrentUser}>Logout</button>
-                                </nav>
-                            </>
-                        )
-                        : (
+                <span className="header__name">shopping-list-spark</span>
+                {this.props.user
+                    ? (
+                        <>
                             <nav role="navigation" className="header__links">
-                                <NavLink to="/login">Login</NavLink>
-                                <NavLink to="/register">Register</NavLink>
+                                <NavLink to="/lists">Lists</NavLink>
+                                <NavLink to="/item-types">Items</NavLink>
                             </nav>
-                        )
-                    }
-                </div>
+                            <nav role="navigation" className="header__logout">
+                                <button type="button" onClick={this.logoutCurrentUser}>Logout</button>
+                            </nav>
+                        </>
+                    )
+                    : (
+                        <nav role="navigation" className="header__links">
+                            <NavLink to="/login">Login</NavLink>
+                            <NavLink to="/register">Register</NavLink>
+                        </nav>
+                    )
+                }
             </header>
         );
     }

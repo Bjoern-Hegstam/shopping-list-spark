@@ -36,17 +36,12 @@
 }
 
 @media (max-width: $small-screen-width-breakpoint) {
-  .shopping-list__items {
-    height: 75vh;
-    overflow: auto;
-    overflow-x: hidden;
+  .shopping-list {
+    height: 89vh;
   }
 
-  .shopping-list__add-item {
-    position: fixed;
-
-    bottom: 1vw;
-    left: 1vw;
-    right: 1vw;
+  .shopping-list__items {
+    overflow: auto;
+    overflow-x: hidden;
   }
 }
