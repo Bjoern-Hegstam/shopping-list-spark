@@ -33,21 +33,5 @@
   grid-area: add-item;
   align-self: center;
 
-  margin-top: 15px;
-}
-
-@media (max-width: $small-screen-width-breakpoint) {
-  .shopping-list {
-    height: 89vh;
-    grid-template-rows: 10% 80% 10%;
-  }
-
-  .shopping-list__items {
-    overflow: auto;
-    overflow-x: hidden;
-  }
-
-  .shopping-list__add-item {
-    margin: 0;
-  }
+  margin: 15px 0;
 }
