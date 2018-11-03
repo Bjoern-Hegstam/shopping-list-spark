@@ -4,14 +4,12 @@ import Header from './Header';
 
 export default function AppLayout(props) {
     return (
-        <>
+        <div className="app-layout">
             <Header />
             <main>
-                <div className="main-content">
-                    {props.children}
-                </div>
+                {props.children}
             </main>
-        </>
+        </div>
     );
 }
 

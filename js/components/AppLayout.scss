@@ -5,17 +5,31 @@ body {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
-main {
+.app-layout {
   display: grid;
   grid-template-columns: $app-layout-grid-template-columns;
+  grid-template-areas:
+          ". header ."
+          ". main .";
 }
 
-.main-content {
-  grid-column: 2/3;
+header {
+  grid-area: header;
+}
+
+main {
+  grid-area: main;
 }
 
 @media (max-width: $small-screen-width-breakpoint) {
+  .app-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+            "header"
+            "main";
+  }
+
   main {
-    grid-template-columns: 1fr $small-screen-content-width 1fr;
+    padding: 0 1vw;
   }
 }

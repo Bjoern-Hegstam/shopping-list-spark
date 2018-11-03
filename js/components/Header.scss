@@ -6,8 +6,9 @@ header {
   background: $background-color;
   color: $text-color;
 
+  border-left: 1px solid $border-color;
+  border-right: 1px solid $border-color;
   border-bottom: 1px solid $border-color;
-  margin: 0;
 
   display: grid;
   grid-template-columns: $app-layout-grid-template-columns;
