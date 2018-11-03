@@ -24,8 +24,29 @@
 
 .shopping-list__items {
   grid-area: items;
+
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
 }
 
 .shopping-list__add-item {
   grid-area: add-item;
+
+  margin-top: 15px;
+}
+
+@media (max-width: $small-screen-width-breakpoint) {
+  .shopping-list__items {
+    height: 75vh;
+    overflow: auto;
+    overflow-x: hidden;
+  }
+
+  .shopping-list__add-item {
+    position: fixed;
+
+    bottom: 1vw;
+    left: 1vw;
+    right: 1vw;
+  }
 }
