@@ -14,7 +14,7 @@ header {
   grid-template-columns: 150px 1fr 75px;
   grid-template-areas: "name links logout";
 
-  padding: 20px 0;
+  padding: 20px 10px;
 }
 
 .header__name {
@@ -53,13 +53,13 @@ nav a:hover {
     background: $background-color;
     color: $text-color;
     font-weight: normal;
-    padding: 0 5px;
+    padding: 0;
   }
 }
 
 @media (max-width: $small-screen-width-breakpoint) {
   header {
-    padding: 0 2vw;
+    padding: 1vh 2vw;
 
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
