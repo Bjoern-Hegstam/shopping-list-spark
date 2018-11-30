@@ -1,4 +1,12 @@
+@import '../../styles/general';
+
 .shopping-list__add-item__input {
   font-size: 1.5rem;
   width: 100%;
+}
+
+@media (max-width: $small-screen-width-breakpoint) {
+  .shopping-list__add-item__input {
+    font-size: 2rem;
+  }
 }

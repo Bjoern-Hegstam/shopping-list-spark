@@ -35,3 +35,9 @@
 
   margin: 15px 0;
 }
+
+@media (max-width: $small-screen-width-breakpoint) {
+  .shopping-list__button {
+    padding: 2rem 0;
+  }
+}
