@@ -34,23 +34,23 @@ export class LoginPage extends React.Component {
     render() {
         return (
             <AppLayout>
-                <form className="login-form" onSubmit={this.onLoginSubmit}>
-                    <input
-                        type="text"
-                        placeholder="Username"
-                        value={this.state.username}
-                        onChange={this.onUsernameChange}
-                    />
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={this.state.password}
-                        onChange={this.onPasswordChange}
-                    />
-                    <div>
+                <div className="login-form__container">
+                    <form className="login-form" onSubmit={this.onLoginSubmit}>
+                        <input
+                            type="text"
+                            placeholder="Username"
+                            value={this.state.username}
+                            onChange={this.onUsernameChange}
+                        />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={this.state.password}
+                            onChange={this.onPasswordChange}
+                        />
                         <button type="submit">Login</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </AppLayout>
         );
     }

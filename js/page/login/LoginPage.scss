@@ -1,9 +1,19 @@
 @import '../../styles/general';
 
+.login-form__container {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas:
+          '. . .'
+          '. form .'
+          '. . .';
+}
+
 .login-form {
-  display: flex;
-  flex-flow: column;
-  margin: 15px 0 0;
+  grid-area: form;
+  display: grid;
+  grid-template-columns: 1fr;
 
   input {
     border-radius: 5px;
@@ -17,5 +27,37 @@
 
   button {
     @extend %button-primary;
+  }
+}
+
+@media (max-width: $small-screen-width-breakpoint) {
+  .login-form__container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-areas:
+            '.'
+            'form'
+            '.';
+  }
+
+  .login-form {
+    grid-area: form;
+    display: grid;
+    grid-template-columns: 1fr;
+
+    input {
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 2rem;
+      font-family: inherit;
+      margin: 0 0 15px;
+      padding: 6px 12px;
+      text-shadow: none;
+    }
+
+    button {
+      height: 4rem;
+    }
   }
 }
