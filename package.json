@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
+    "heroku-postbuild": "echo Skip builds on Heroku",
     "start:dev": "cross-env NODE_ENV=development webpack-serve webpack.dev.js",
     "test": "jest"
   },
