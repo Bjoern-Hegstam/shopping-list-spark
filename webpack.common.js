@@ -39,7 +39,7 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(['dist']),
         new webpack.DefinePlugin({
-            BASE_URL: JSON.stringify(devMode ? 'http://localhost:4567' : ''),
+            API_BASE_URL: JSON.stringify(devMode ? 'http://localhost:4567/api' : ''),
         }),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'index.ejs'),

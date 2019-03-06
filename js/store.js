@@ -55,7 +55,7 @@ export default () => {
         applyMiddleware(
             axiosMiddleware(
                 axios.create({
-                    baseURL: `${BASE_URL}/api`,
+                    baseURL: API_BASE_URL,
                     responseType: 'json',
                 }),
             ),
