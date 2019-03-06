@@ -12,16 +12,16 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static com.bhegstam.shoppinglist.domain.Role.RoleName.ADMIN;
 import static com.bhegstam.shoppinglist.domain.Role.RoleName.USER;
+import static com.bhegstam.shoppinglist.port.rest.shoppinglist.RestApiMimeType.SHOPPING_LIST_1_0;
 import static javax.ws.rs.core.Response.Status.*;
 
 @Path("item-type")
-@Produces(MediaType.APPLICATION_JSON)
+@Produces(SHOPPING_LIST_1_0)
 public class ItemTypeResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingListResource.class);
 

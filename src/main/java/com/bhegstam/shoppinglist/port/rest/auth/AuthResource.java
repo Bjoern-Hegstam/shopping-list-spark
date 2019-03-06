@@ -12,16 +12,16 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static com.bhegstam.shoppinglist.domain.Role.RoleName.ADMIN;
 import static com.bhegstam.shoppinglist.domain.Role.RoleName.USER;
+import static com.bhegstam.shoppinglist.port.rest.auth.RestApiMimeType.AUTH_1_0;
 import static javax.ws.rs.core.Response.Status.OK;
 
 
 @Path("auth")
-@Produces(MediaType.APPLICATION_JSON)
+@Produces(AUTH_1_0)
 public class AuthResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthResource.class);
     private final byte[] tokenSecret;

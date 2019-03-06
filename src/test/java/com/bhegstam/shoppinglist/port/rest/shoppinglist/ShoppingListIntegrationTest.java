@@ -20,6 +20,7 @@ import javax.ws.rs.core.Response;
 
 import static com.bhegstam.shoppinglist.port.rest.ResponseTestUtil.UNPROCESSABLE_ENTITY;
 import static com.bhegstam.shoppinglist.port.rest.ResponseTestUtil.assertResponseStatus;
+import static com.bhegstam.shoppinglist.port.rest.shoppinglist.RestApiMimeType.SHOPPING_LIST_1_0;
 import static javax.ws.rs.core.Response.Status.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -48,7 +49,7 @@ public class ShoppingListIntegrationTest {
     public void setUp() throws JoseException {
         String serviceUrl = "http://localhost:" + service.getLocalPort() + "/api/";
         String token = TokenGenerator.generate(TestData.ADMIN, service.getConfiguration().getJwtTokenSecret());
-        api = new ShoppingListApi(token, serviceUrl);
+        api = new ShoppingListApi(SHOPPING_LIST_1_0, serviceUrl, token);
 
         shoppingListRepository = testDatabaseSetup.getRepositoryFactory().createShoppingListRepository();
 

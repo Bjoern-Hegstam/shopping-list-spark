@@ -1,4 +1,5 @@
 import * as types from './types';
+import { SHOPPING_LIST_1_0 } from './MimeTypes';
 
 export function getShoppingLists(token) {
     return {
@@ -9,6 +10,7 @@ export function getShoppingLists(token) {
                 url: 'shopping-list',
                 headers: {
                     authorization: `Bearer ${token}`,
+                    accept: SHOPPING_LIST_1_0,
                 },
             },
         },
@@ -27,6 +29,7 @@ export function getShoppingList({ token, id }) {
                 url: `shopping-list/${id}`,
                 headers: {
                     authorization: `Bearer ${token}`,
+                    accept: SHOPPING_LIST_1_0,
                 },
             },
         },
@@ -42,6 +45,7 @@ export function addShoppingList({ token, name }) {
                 url: 'shopping-list',
                 headers: {
                     authorization: `Bearer ${token}`,
+                    accept: SHOPPING_LIST_1_0,
                 },
                 data: {
                     name,
@@ -60,6 +64,7 @@ export function updateShoppingList({ token, listId, name }) {
                 url: `shopping-list/${listId}`,
                 headers: {
                     authorization: `Bearer ${token}`,
+                    accept: SHOPPING_LIST_1_0,
                 },
                 data: {
                     name,
@@ -78,6 +83,7 @@ export function deleteShoppingList({ token, listId }) {
                 url: `shopping-list/${listId}`,
                 headers: {
                     authorization: `Bearer ${token}`,
+                    accept: SHOPPING_LIST_1_0,
                 },
             },
         },
@@ -95,6 +101,7 @@ export function addShoppingListItem({
                 url: `shopping-list/${listId}/item`,
                 headers: {
                     authorization: `Bearer ${token}`,
+                    accept: SHOPPING_LIST_1_0,
                 },
                 data: {
                     itemTypeId,
@@ -116,6 +123,7 @@ export function updateShoppingListItem({
                 url: `shopping-list/${listId}/item/${itemId}`,
                 headers: {
                     authorization: `Bearer ${token}`,
+                    accept: SHOPPING_LIST_1_0,
                 },
                 data: {
                     quantity,
@@ -135,6 +143,7 @@ export function deleteShoppingListItem({ token, listId, itemId }) {
                 url: `shopping-list/${listId}/item/${itemId}`,
                 headers: {
                     authorization: `Bearer ${token}`,
+                    accept: SHOPPING_LIST_1_0,
                 },
             },
         },
@@ -150,6 +159,7 @@ export function emptyCart({ token, listId }) {
                 url: `shopping-list/${listId}/cart`,
                 headers: {
                     authorization: `Bearer ${token}`,
+                    accept: SHOPPING_LIST_1_0,
                 },
             },
         },

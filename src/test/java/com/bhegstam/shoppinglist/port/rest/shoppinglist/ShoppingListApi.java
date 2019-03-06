@@ -7,9 +7,11 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
 class ShoppingListApi {
+    private final String apiVersion;
     private final WebTarget webTarget;
 
-    ShoppingListApi(String token, String serviceUrl) {
+    ShoppingListApi(String apiVersion, String serviceUrl, String token) {
+        this.apiVersion = apiVersion;
         webTarget = TestClientFactory
                 .createClient(token)
                 .target(serviceUrl);
@@ -19,6 +21,7 @@ class ShoppingListApi {
         return webTarget
                 .path("shopping-list")
                 .request()
+                .accept(apiVersion)
                 .post(Entity.json(json));
     }
 
@@ -27,6 +30,7 @@ class ShoppingListApi {
                 .path("shopping-list")
                 .path(listId)
                 .request()
+                .accept(apiVersion)
                 .get();
     }
 
@@ -34,6 +38,7 @@ class ShoppingListApi {
         return webTarget
                 .path("shopping-list")
                 .request()
+                .accept(apiVersion)
                 .get();
     }
 
@@ -42,6 +47,7 @@ class ShoppingListApi {
                 .path("shopping-list")
                 .path(listId)
                 .request()
+                .accept(apiVersion)
                 .put(Entity.json(json));
     }
 
@@ -50,6 +56,7 @@ class ShoppingListApi {
                 .path("shopping-list")
                 .path(listId)
                 .request()
+                .accept(apiVersion)
                 .delete();
     }
 
@@ -59,6 +66,7 @@ class ShoppingListApi {
                 .path(listId)
                 .path("item")
                 .request()
+                .accept(apiVersion)
                 .post(Entity.json(json));
     }
 
@@ -69,6 +77,7 @@ class ShoppingListApi {
                 .path("item")
                 .path(listItemId)
                 .request()
+                .accept(apiVersion)
                 .put(Entity.json(json));
     }
 
@@ -79,6 +88,7 @@ class ShoppingListApi {
                 .path("item")
                 .path(listItemId)
                 .request()
+                .accept(apiVersion)
                 .delete();
     }
 
@@ -88,6 +98,7 @@ class ShoppingListApi {
                 .path(listId)
                 .path("cart")
                 .request()
+                .accept(apiVersion)
                 .delete();
     }
 }

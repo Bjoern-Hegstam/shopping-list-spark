@@ -21,6 +21,7 @@ import org.junit.Test;
 import javax.ws.rs.core.Response;
 
 import static com.bhegstam.shoppinglist.port.rest.ResponseTestUtil.assertResponseStatus;
+import static com.bhegstam.shoppinglist.port.rest.shoppinglist.RestApiMimeType.SHOPPING_LIST_1_0;
 import static javax.ws.rs.core.Response.Status.*;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.is;
@@ -43,7 +44,7 @@ public class ItemTypeIntegrationTest {
     public void setUp() throws JoseException {
         String serviceUrl = "http://localhost:" + service.getLocalPort() + "/api/";
         String token = TokenGenerator.generate(TestData.ADMIN, service.getConfiguration().getJwtTokenSecret());
-        api = new ItemTypeApi(token, serviceUrl);
+        api = new ItemTypeApi(SHOPPING_LIST_1_0, serviceUrl, token);
 
         RepositoryFactory repositoryFactory = new RepositoryFactory(service.getEnvironment(), service.getConfiguration().getDataSourceFactory());
         itemTypeRepository = repositoryFactory.createItemTypeRepository();

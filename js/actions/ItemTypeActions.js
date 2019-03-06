@@ -1,4 +1,5 @@
 import * as types from './types';
+import { SHOPPING_LIST_1_0 } from './MimeTypes';
 
 export function addItemType({ token, name }) {
     return {
@@ -9,6 +10,7 @@ export function addItemType({ token, name }) {
                 url: 'item-type',
                 headers: {
                     authorization: `Bearer ${token}`,
+                    accept: SHOPPING_LIST_1_0,
                 },
                 data: {
                     name,
@@ -30,6 +32,7 @@ export function deleteItemType({ token, id }) {
                 url: `item-type/${id}`,
                 headers: {
                     authorization: `Bearer ${token}`,
+                    accept: SHOPPING_LIST_1_0,
                 },
             },
         },
@@ -45,6 +48,7 @@ export function getItemTypes(token) {
                 url: 'item-type',
                 headers: {
                     authorization: `Bearer ${token}`,
+                    accept: SHOPPING_LIST_1_0,
                 },
             },
         },
