@@ -9,7 +9,7 @@ import java.io.IOException;
 public class JsonMapper {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    JsonNode read(Response response) {
+    public JsonNode read(Response response) {
         try {
             return OBJECT_MAPPER.readTree(response.readEntity(String.class));
         } catch (IOException e) {

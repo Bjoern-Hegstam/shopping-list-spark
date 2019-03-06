@@ -1,4 +1,4 @@
-package com.bhegstam.shoppinglist.port.rest;
+package com.bhegstam.shoppinglist.port.rest.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -11,7 +11,7 @@ class UpdateUserRequest {
 
     private final String role;
 
-    public UpdateUserRequest(
+    UpdateUserRequest(
             @JsonProperty("verified") Boolean verified,
             @JsonProperty("role") String role
     ) {

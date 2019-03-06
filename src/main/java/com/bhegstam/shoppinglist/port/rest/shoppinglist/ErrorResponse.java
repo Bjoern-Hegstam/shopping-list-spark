@@ -1,4 +1,4 @@
-package com.bhegstam.shoppinglist.port.rest;
+package com.bhegstam.shoppinglist.port.rest.shoppinglist;
 
 import com.bhegstam.shoppinglist.domain.ItemTypeUsedInShoppingList;
 import com.fasterxml.jackson.annotation.JsonProperty;

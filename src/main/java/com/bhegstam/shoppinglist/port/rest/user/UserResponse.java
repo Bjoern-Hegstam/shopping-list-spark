@@ -1,4 +1,4 @@
-package com.bhegstam.shoppinglist.port.rest;
+package com.bhegstam.shoppinglist.port.rest.user;
 
 import com.bhegstam.shoppinglist.domain.Role;
 import com.bhegstam.shoppinglist.domain.User;

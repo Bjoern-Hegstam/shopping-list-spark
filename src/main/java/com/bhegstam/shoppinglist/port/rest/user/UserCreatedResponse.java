@@ -1,22 +1,18 @@
-package com.bhegstam.shoppinglist.port.rest;
+package com.bhegstam.shoppinglist.port.rest.user;
 
+import com.bhegstam.shoppinglist.domain.UserId;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import org.hibernate.validator.constraints.NotEmpty;
 
-public class CreateItemTypeRequest {
-    @NotEmpty
-    private final String name;
+class UserCreatedResponse {
+    @JsonProperty
+    private final String id;
 
     @JsonCreator
-    public CreateItemTypeRequest(@JsonProperty("name") String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
+    UserCreatedResponse(UserId userId) {
+        id = userId.getId();
     }
 
     @Override

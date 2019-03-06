@@ -1,20 +1,16 @@
-package com.bhegstam.shoppinglist.port.rest;
+package com.bhegstam.shoppinglist.port.rest.shoppinglist;
 
-import com.bhegstam.shoppinglist.domain.ItemType;
+import com.bhegstam.shoppinglist.domain.ShoppingListId;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-public class ItemTypeDto {
+class CreateShoppingListResponse {
     @JsonProperty
     private final String id;
 
-    @JsonProperty
-    private final String name;
-
-    ItemTypeDto(ItemType itemType) {
-        this.id = itemType.getId().getId();
-        this.name = itemType.getName();
+    CreateShoppingListResponse(ShoppingListId id) {
+        this.id = id.getId();
     }
 
     @Override

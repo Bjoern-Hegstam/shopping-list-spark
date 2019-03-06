@@ -1,23 +1,20 @@
-package com.bhegstam.shoppinglist.port.rest;
+package com.bhegstam.shoppinglist.port.rest.shoppinglist;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Getter
-public class UpdateShoppingListItemRequest {
-    private final int quantity;
-    private final boolean inCart;
+public class CreateShoppingListRequest {
+    @NotEmpty
+    private final String name;
 
     @JsonCreator
-    public UpdateShoppingListItemRequest(
-            @JsonProperty("quantity") int quantity,
-            @JsonProperty("inCart") boolean inCart
-    ) {
-        this.quantity = quantity;
-        this.inCart = inCart;
+    public CreateShoppingListRequest(@JsonProperty(value = "name", required = true) String name) {
+        this.name = name;
     }
 
     @Override

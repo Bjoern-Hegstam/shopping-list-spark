@@ -1,6 +1,6 @@
-package com.bhegstam.shoppinglist.port.rest;
+package com.bhegstam.shoppinglist.port.rest.user;
 
-import com.bhegstam.shoppinglist.domain.ItemType;
+import com.bhegstam.shoppinglist.domain.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -9,14 +9,14 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-class ItemTypesResponse {
+class GetUsersResponse {
     @JsonProperty
-    List<ItemTypeResponse> itemTypes;
+    private final List<UserResponse> users;
 
-    ItemTypesResponse(List<ItemType> itemTypes) {
-        this.itemTypes = itemTypes
+    GetUsersResponse(List<User> users) {
+        this.users = users
                 .stream()
-                .map(ItemTypeResponse::new)
+                .map(UserResponse::new)
                 .collect(toList());
     }
 

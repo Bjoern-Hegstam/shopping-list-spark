@@ -3,7 +3,7 @@ package com.bhegstam.shoppinglist.application;
 import com.bhegstam.shoppinglist.domain.Role;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserId;
-import com.bhegstam.shoppinglist.port.rest.UserBean;
+import com.bhegstam.shoppinglist.port.rest.user.UserBean;
 import com.bhegstam.shoppinglist.util.TestDatabaseSetup;
 import org.junit.Before;
 import org.junit.Rule;

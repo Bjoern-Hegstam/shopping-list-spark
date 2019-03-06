@@ -1,4 +1,4 @@
-package com.bhegstam.shoppinglist.port.rest;
+package com.bhegstam.shoppinglist.port.rest.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

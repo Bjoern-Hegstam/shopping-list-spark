@@ -1,8 +1,10 @@
-package com.bhegstam.shoppinglist.port.rest;
+package com.bhegstam.shoppinglist.port.rest.shoppinglist;
 
 import com.bhegstam.shoppinglist.configuration.ShoppingListApplicationConfiguration;
 import com.bhegstam.shoppinglist.domain.*;
 import com.bhegstam.shoppinglist.port.persistence.RepositoryFactory;
+import com.bhegstam.shoppinglist.port.rest.JsonMapper;
+import com.bhegstam.shoppinglist.port.rest.TokenGenerator;
 import com.bhegstam.shoppinglist.util.DropwizardAppRuleFactory;
 import com.bhegstam.shoppinglist.util.TestData;
 import com.bhegstam.shoppinglist.util.TestDatabaseSetup;

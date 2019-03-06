@@ -1,4 +1,6 @@
-package com.bhegstam.shoppinglist.port.rest;
+package com.bhegstam.shoppinglist.port.rest.shoppinglist;
+
+import com.bhegstam.shoppinglist.port.rest.TestClientFactory;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
