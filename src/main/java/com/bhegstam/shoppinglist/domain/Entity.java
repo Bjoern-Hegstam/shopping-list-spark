@@ -4,25 +4,32 @@ import com.bhegstam.shoppinglist.port.persistence.PersistenceStatus;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.Objects;
 
 public abstract class Entity<I extends Identifier> {
     private PersistenceStatus persistenceStatus;
     private final I id;
-    private final LocalDateTime createdAtUtc;
-    private LocalDateTime updatedAtUtc;
+    private final Instant createdAt;
+    private Instant updatedAt;
 
-    Entity(I id, LocalDateTime createdAtUtc, LocalDateTime updatedAtUtc, PersistenceStatus persistenceStatus) {
+    Entity(I id, Instant createdAt, Instant updatedAt, PersistenceStatus persistenceStatus) {
         this.id = id;
-        this.createdAtUtc = createdAtUtc;
-        this.updatedAtUtc = updatedAtUtc;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt != null ? updatedAt : createdAt;
         this.persistenceStatus = persistenceStatus;
     }
 
     public I getId() {
         return id;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 
     void markAsUpdated() {
@@ -32,7 +39,7 @@ public abstract class Entity<I extends Identifier> {
         }
 
         persistenceStatus = PersistenceStatus.UPDATED_REQUIRED;
-        updatedAtUtc = LocalDateTime.now(ZoneOffset.UTC);
+        updatedAt = Instant.now();
     }
 
     public PersistenceStatus getPersistenceStatus() {

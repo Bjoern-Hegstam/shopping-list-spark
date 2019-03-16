@@ -13,6 +13,7 @@ import java.util.List;
 import static com.bhegstam.shoppinglist.util.Matchers.isEmpty;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class JdbiShoppingListRepositoryTest {
     @Rule
@@ -74,6 +75,7 @@ public class JdbiShoppingListRepositoryTest {
         // then
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
         assertThat(persistedList.getName(), is("Bar"));
+        assertTrue(persistedList.getUpdatedAt().isAfter(persistedList.getCreatedAt()));
     }
 
     @Test

@@ -14,6 +14,8 @@ public class ItemTypeMapper implements RowMapper<ItemType> {
         return new ItemType(
                 ItemTypeId.parse(rs.getString("id")),
                 rs.getString("name"),
+                rs.getTimestamp("created_at").toInstant(),
+                rs.getTimestamp("updated_at").toInstant(),
                 PersistenceStatus.PERSISTED);
     }
 }

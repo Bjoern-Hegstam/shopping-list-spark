@@ -12,7 +12,9 @@ public class ShoppingListMapper implements RowMapper<ShoppingList> {
     public ShoppingList map(ResultSet rs, StatementContext ctx) throws SQLException {
         return ShoppingList.fromDb(
                 rs.getString("id"),
-                rs.getString("name")
+                rs.getString("name"),
+                rs.getTimestamp("created_at").toInstant(),
+                rs.getTimestamp("updated_at").toInstant()
         );
     }
 }

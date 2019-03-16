@@ -18,10 +18,14 @@ public class ShoppingListItemMapper implements RowMapper<ShoppingListItem> {
                 new ItemType(
                         ItemTypeId.parse(rs.getString("it_id")),
                         rs.getString("it_name"),
+                        rs.getTimestamp("it_created_at").toInstant(),
+                        rs.getTimestamp("it_updated_at").toInstant(),
                         PersistenceStatus.PERSISTED
                 ),
                 rs.getInt("i_quantity"),
                 rs.getBoolean("i_in_cart"),
+                rs.getTimestamp("i_created_at").toInstant(),
+                rs.getTimestamp("i_updated_at").toInstant(),
                 PersistenceStatus.PERSISTED
         );
     }

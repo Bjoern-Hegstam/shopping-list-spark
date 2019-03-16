@@ -11,12 +11,27 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @RegisterRowMapper(ItemTypeMapper.class)
 public interface JdbiItemTypeRepository extends ItemTypeRepository {
-    @SqlUpdate("insert into item_type(id, name) values (:itemType.id.id, :itemType.name)")
-    void add(@BindBean("itemType") ItemType itemType);
+    default void add(ItemType itemType) {
+        add(
+                itemType.getId(),
+                itemType.getName(),
+                Timestamp.from(itemType.getCreatedAt()),
+                Timestamp.from(itemType.getUpdatedAt())
+        );
+    }
+
+    @SqlUpdate("insert into item_type(id, name, created_at, updated_at) values (:itemTypeId.id, :name, :createdAt, :updatedAt)")
+    void add(
+            @BindBean("itemTypeId") ItemTypeId id,
+            @Bind("name") String name,
+            @Bind("createdAt") Timestamp createdAt,
+            @Bind("updatedAt") Timestamp updatedAt
+    );
 
     default ItemType get(ItemTypeId id) {
         ItemType itemType = getItemType(id);

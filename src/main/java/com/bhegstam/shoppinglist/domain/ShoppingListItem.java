@@ -2,8 +2,7 @@ package com.bhegstam.shoppinglist.domain;
 
 import com.bhegstam.shoppinglist.port.persistence.PersistenceStatus;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 
 public class ShoppingListItem extends Entity<ShoppingListItemId> {
     private final ItemType itemType;
@@ -16,6 +15,8 @@ public class ShoppingListItem extends Entity<ShoppingListItemId> {
                 itemType,
                 0,
                 false,
+                Instant.now(),
+                null,
                 PersistenceStatus.INSERT_REQUIRED
         );
     }
@@ -25,12 +26,14 @@ public class ShoppingListItem extends Entity<ShoppingListItemId> {
             ItemType itemType,
             int quantity,
             boolean inCart,
+            Instant createdAt,
+            Instant updatedAt,
             PersistenceStatus persistenceStatus
     ) {
         super(
                 id,
-                LocalDateTime.now(ZoneOffset.UTC),
-                LocalDateTime.now(ZoneOffset.UTC),
+                createdAt,
+                updatedAt,
                 persistenceStatus
         );
         this.itemType = itemType;

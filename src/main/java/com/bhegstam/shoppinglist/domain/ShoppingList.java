@@ -2,8 +2,7 @@ package com.bhegstam.shoppinglist.domain;
 
 import com.bhegstam.shoppinglist.port.persistence.PersistenceStatus;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.*;
 
 import static com.bhegstam.webutil.CustomCollectors.onlyOptionalElement;
@@ -15,20 +14,33 @@ public class ShoppingList extends Entity<ShoppingListId> {
     private final Set<ShoppingListItemId> removedItems;
 
     public ShoppingList(String name) {
-        this(new ShoppingListId(), name, PersistenceStatus.INSERT_REQUIRED);
-    }
-
-    public static ShoppingList fromDb(String id, String name) {
-        return new ShoppingList(ShoppingListId.fromString(id), name, PersistenceStatus.PERSISTED);
-    }
-
-    private ShoppingList(ShoppingListId id, String name, PersistenceStatus persistenceStatus) {
-        super(
-                id,
-                LocalDateTime.now(ZoneOffset.UTC),
-                LocalDateTime.now(ZoneOffset.UTC),
-                persistenceStatus
+        this(
+                new ShoppingListId(),
+                name,
+                Instant.now(),
+                null,
+                PersistenceStatus.INSERT_REQUIRED
         );
+    }
+
+    public static ShoppingList fromDb(String id, String name, Instant createdAt, Instant updatedAt) {
+        return new ShoppingList(
+                ShoppingListId.fromString(id),
+                name,
+                createdAt,
+                updatedAt,
+                PersistenceStatus.PERSISTED
+        );
+    }
+
+    private ShoppingList(
+            ShoppingListId id,
+            String name,
+            Instant createdAt,
+            Instant updatedAt,
+            PersistenceStatus persistenceStatus
+    ) {
+        super(id, createdAt, updatedAt, persistenceStatus);
         this.name = name;
         items = new HashMap<>();
         removedItems = new HashSet<>();
