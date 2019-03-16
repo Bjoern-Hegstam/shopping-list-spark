@@ -3,6 +3,8 @@ package com.bhegstam.shoppinglist.domain;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
+import java.util.Objects;
+
 public abstract class Entity<I extends Identifier> {
     private final I id;
 
@@ -25,7 +27,7 @@ public abstract class Entity<I extends Identifier> {
 
         Entity<?> entity = (Entity<?>) o;
 
-        return id != null ? id.equals(entity.id) : entity.id == null;
+        return Objects.equals(id, entity.id);
     }
 
     @Override

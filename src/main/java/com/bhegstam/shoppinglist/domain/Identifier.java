@@ -10,11 +10,11 @@ import java.util.UUID;
 public abstract class Identifier {
     private final String id;
 
-    public Identifier() {
+    Identifier() {
         id = UUID.randomUUID().toString();
     }
 
-    public Identifier(String id) {
+    Identifier(String id) {
         UUID.fromString(id); // Ensure that id is UUID
         this.id = id;
     }
