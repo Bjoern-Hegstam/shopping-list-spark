@@ -41,19 +41,39 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
     }
 
     @SqlUpdate("update shopping_list set name = :name where id = :listId.id")
-    void updateShoppingList(@BindBean("listId") ShoppingListId listId, @Bind("name") String name);
+    void updateShoppingList(
+            @BindBean("listId") ShoppingListId listId,
+            @Bind("name") String name
+    );
 
     @SqlUpdate("insert into shopping_list(id, name) values (:listId.id, :name)")
-    void createShoppingList(@BindBean("listId") ShoppingListId listId, @Bind("name") String name);
+    void createShoppingList(
+            @BindBean("listId") ShoppingListId listId,
+            @Bind("name") String name
+    );
 
     @SqlUpdate("insert into shopping_list_item(id, shopping_list_id, item_type_id, quantity, in_cart) values (:itemId.id, :listId.id, :itemTypeId.id, :quantity, :inCart)")
-    void createItem(@BindBean("itemId") ShoppingListItemId itemId, @BindBean("listId") ShoppingListId listId, @BindBean("itemTypeId") ItemTypeId itemTypeId, @Bind("quantity") int quantity, @Bind("inCart") boolean inCart);
+    void createItem(
+            @BindBean("itemId") ShoppingListItemId itemId,
+            @BindBean("listId") ShoppingListId listId,
+            @BindBean("itemTypeId") ItemTypeId itemTypeId,
+            @Bind("quantity") int quantity,
+            @Bind("inCart") boolean inCart
+    );
 
     @SqlUpdate("update shopping_list_item set quantity = :quantity, in_cart = :inCart where id = :itemId.id and shopping_list_id = :listId.id")
-    void updateItem(@BindBean("listId") ShoppingListId listId, @BindBean("itemId") ShoppingListItemId itemId, @Bind("quantity") int quantity, @Bind("inCart") boolean inCart);
+    void updateItem(
+            @BindBean("listId") ShoppingListId listId,
+            @BindBean("itemId") ShoppingListItemId itemId,
+            @Bind("quantity") int quantity,
+            @Bind("inCart") boolean inCart
+    );
 
     @SqlUpdate("delete from shopping_list_item where id = :itemId.id and shopping_list_id = :listId.id")
-    void deleteItem(@BindBean("listId") ShoppingListId listId, @BindBean("itemId") ShoppingListItemId itemId);
+    void deleteItem(
+            @BindBean("listId") ShoppingListId listId,
+            @BindBean("itemId") ShoppingListItemId itemId
+    );
 
     @Transaction
     default ShoppingList get(ShoppingListId listId) {

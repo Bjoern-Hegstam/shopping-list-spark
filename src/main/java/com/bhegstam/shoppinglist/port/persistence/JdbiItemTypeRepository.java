@@ -31,7 +31,10 @@ public interface JdbiItemTypeRepository extends ItemTypeRepository {
     ItemType getItemType(@BindBean("itemTypeId") ItemTypeId id);
 
     @SqlQuery("select * from item_type where name like ':nameStart%' order by name limit :limit")
-    List<ItemType> findItemTypes(@Bind("nameStart") String nameStart, @Bind("limit") int limit);
+    List<ItemType> findItemTypes(
+            @Bind("nameStart") String nameStart,
+            @Bind("limit") int limit
+    );
 
     @SqlQuery("select * from item_type order by name")
     List<ItemType> getItemTypes();
