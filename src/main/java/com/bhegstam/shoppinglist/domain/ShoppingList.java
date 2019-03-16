@@ -2,6 +2,8 @@ package com.bhegstam.shoppinglist.domain;
 
 import com.bhegstam.shoppinglist.port.persistence.PersistenceStatus;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static com.bhegstam.webutil.CustomCollectors.onlyOptionalElement;
@@ -11,7 +13,6 @@ public class ShoppingList extends Entity<ShoppingListId> {
     private String name;
     private final Map<ItemTypeId, ShoppingListItem> items;
     private final Set<ShoppingListItemId> removedItems;
-    private PersistenceStatus persistenceStatus;
 
     public ShoppingList(String name) {
         this(new ShoppingListId(), name, PersistenceStatus.INSERT_REQUIRED);
@@ -22,11 +23,15 @@ public class ShoppingList extends Entity<ShoppingListId> {
     }
 
     private ShoppingList(ShoppingListId id, String name, PersistenceStatus persistenceStatus) {
-        super(id);
+        super(
+                id,
+                LocalDateTime.now(ZoneOffset.UTC),
+                LocalDateTime.now(ZoneOffset.UTC),
+                persistenceStatus
+        );
         this.name = name;
         items = new HashMap<>();
         removedItems = new HashSet<>();
-        this.persistenceStatus = persistenceStatus;
     }
 
     public String getName() {
@@ -34,20 +39,16 @@ public class ShoppingList extends Entity<ShoppingListId> {
     }
 
     public void setName(String name) {
+        markAsUpdated();
         this.name = name;
-
-        if (persistenceStatus != PersistenceStatus.INSERT_REQUIRED) {
-            persistenceStatus = PersistenceStatus.UPDATED_REQUIRED;
-        }
-    }
-
-    public PersistenceStatus getPersistenceStatus() {
-        return persistenceStatus;
     }
 
     public ShoppingListItem add(ItemType itemType) {
         ShoppingListItem item = items.computeIfAbsent(itemType.getId(), k -> new ShoppingListItem(itemType));
         item.setQuantity(item.getQuantity() + 1);
+
+        markAsUpdated();
+
         return item;
     }
 
@@ -70,6 +71,7 @@ public class ShoppingList extends Entity<ShoppingListId> {
     public void remove(ItemTypeId itemTypeId) {
         ShoppingListItem item = items.remove(itemTypeId);
         removedItems.add(item.getId());
+        markAsUpdated();
     }
 
     public void remove(ShoppingListItemId listItemId) {
@@ -82,6 +84,7 @@ public class ShoppingList extends Entity<ShoppingListId> {
 
         ShoppingListItem item = items.remove(itemTypeId);
         removedItems.add(item.getId());
+        markAsUpdated();
     }
 
     public void removeItemsInCart() {
@@ -92,6 +95,10 @@ public class ShoppingList extends Entity<ShoppingListId> {
                 .collect(toList());
 
         itemTypeIds.forEach(this::remove);
+
+        if (!itemTypeIds.isEmpty()) {
+            markAsUpdated();
+        }
     }
 
     public Collection<ShoppingListItemId> removedItemIds() {
@@ -102,13 +109,9 @@ public class ShoppingList extends Entity<ShoppingListId> {
         return Collections.unmodifiableCollection(items.values());
     }
 
-    public void setItems(Collection<ShoppingListItem> items) {
+    public void loadItemsFromDb(Collection<ShoppingListItem> items) {
         this.items.clear();
         this.removedItems.clear();
         items.forEach(item -> this.items.put(item.getItemType().getId(), item));
-    }
-
-    public void setPersistenceStatus(PersistenceStatus persistenceStatus) {
-        this.persistenceStatus = persistenceStatus;
     }
 }

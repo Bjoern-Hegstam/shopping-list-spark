@@ -2,11 +2,13 @@ package com.bhegstam.shoppinglist.domain;
 
 import com.bhegstam.shoppinglist.port.persistence.PersistenceStatus;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 public class ShoppingListItem extends Entity<ShoppingListItemId> {
     private final ItemType itemType;
     private int quantity;
     private boolean inCart;
-    private PersistenceStatus persistenceStatus;
 
     public ShoppingListItem(ItemType itemType) {
         this(
@@ -25,11 +27,15 @@ public class ShoppingListItem extends Entity<ShoppingListItemId> {
             boolean inCart,
             PersistenceStatus persistenceStatus
     ) {
-        super(id);
+        super(
+                id,
+                LocalDateTime.now(ZoneOffset.UTC),
+                LocalDateTime.now(ZoneOffset.UTC),
+                persistenceStatus
+        );
         this.itemType = itemType;
         this.quantity = quantity;
         this.inCart = inCart;
-        this.persistenceStatus = persistenceStatus;
     }
 
     public ItemType getItemType() {
@@ -43,13 +49,7 @@ public class ShoppingListItem extends Entity<ShoppingListItemId> {
     public void setQuantity(int quantity) {
         if (this.quantity != quantity) {
             this.quantity = quantity;
-            itemUpdated();
-        }
-    }
-
-    private void itemUpdated() {
-        if (persistenceStatus != PersistenceStatus.INSERT_REQUIRED) {
-            persistenceStatus = PersistenceStatus.UPDATED_REQUIRED;
+            markAsUpdated();
         }
     }
 
@@ -60,15 +60,7 @@ public class ShoppingListItem extends Entity<ShoppingListItemId> {
     public void setInCart(boolean inCart) {
         if (this.inCart != inCart) {
             this.inCart = inCart;
-            itemUpdated();
+            markAsUpdated();
         }
-    }
-
-    public PersistenceStatus getPersistenceStatus() {
-        return persistenceStatus;
-    }
-
-    public void setPersistenceStatus(PersistenceStatus persistenceStatus) {
-        this.persistenceStatus = persistenceStatus;
     }
 }

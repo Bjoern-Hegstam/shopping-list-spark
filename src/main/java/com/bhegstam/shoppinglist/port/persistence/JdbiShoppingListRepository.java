@@ -70,7 +70,7 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
             return null;
         }
 
-        shoppingList.setItems(getItems(listId));
+        shoppingList.loadItemsFromDb(getItems(listId));
         return shoppingList;
     }
 
@@ -83,7 +83,7 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
     @Transaction
     default List<ShoppingList> getShoppingLists() {
         List<ShoppingList> lists = getShoppingLists_internal();
-        lists.forEach(list -> list.setItems(getItems(list.getId())));
+        lists.forEach(list -> list.loadItemsFromDb(getItems(list.getId())));
         return lists;
     }
 

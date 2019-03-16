@@ -13,7 +13,7 @@ public class ItemTypeMapper implements RowMapper<ItemType> {
     public ItemType map(ResultSet rs, StatementContext ctx) throws SQLException {
         return new ItemType(
                 ItemTypeId.parse(rs.getString("id")),
-                rs.getString("name")
-        );
+                rs.getString("name"),
+                PersistenceStatus.PERSISTED);
     }
 }
