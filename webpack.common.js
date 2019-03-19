@@ -37,7 +37,7 @@ module.exports = {
         extensions: ['.js', '.jsx', '.less'],
     },
     plugins: [
-        new CleanWebpackPlugin(['dist']),
+        new CleanWebpackPlugin(),
         new webpack.DefinePlugin({
             API_BASE_URL: JSON.stringify(devMode ? 'http://localhost:4567/api' : 'api'),
         }),
