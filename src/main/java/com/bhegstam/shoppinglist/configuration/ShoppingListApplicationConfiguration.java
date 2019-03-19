@@ -7,7 +7,7 @@ import io.dropwizard.db.DataSourceFactory;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 public class ShoppingListApplicationConfiguration extends Configuration {
     @NotNull
@@ -17,14 +17,10 @@ public class ShoppingListApplicationConfiguration extends Configuration {
     @Valid
     @NotNull
     @JsonProperty
-    private DataSourceFactory dataSourceFactory = new DataSourceFactory();
+    private final DataSourceFactory dataSourceFactory = new DataSourceFactory();
 
     public byte[] getJwtTokenSecret() {
-        try {
-            return jwtTokenSecret.getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        return jwtTokenSecret.getBytes(StandardCharsets.UTF_8);
     }
 
     public DataSourceFactory getDataSourceFactory() {
