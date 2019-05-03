@@ -6,9 +6,9 @@ module.exports = {
     },
     rules: {
         'max-len': [1, 120],
-        indent: ['error', 4, { SwitchCase: 1 }],
-        'react/jsx-indent': [2, 4],
-        'react/jsx-indent-props': [2, 4],
+        indent: ['error', 2, { SwitchCase: 1 }],
+        'react/jsx-indent': [2, 2],
+        'react/jsx-indent-props': [2, 2],
         'linebreak-style': 'off',
         'react/destructuring-assignment': [0],
         'react/no-did-update-set-state': [0],

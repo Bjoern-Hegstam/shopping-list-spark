@@ -8,10 +8,10 @@ import createStore from './store';
 import './styles';
 
 render(
-    <Provider store={createStore()}>
-        <HashRouter>
-            <App />
-        </HashRouter>
-    </Provider>,
-    document.getElementById('root'),
+  <Provider store={createStore()}>
+    <HashRouter>
+      <App />
+    </HashRouter>
+  </Provider>,
+  document.getElementById('root'),
 );

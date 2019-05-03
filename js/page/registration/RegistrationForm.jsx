@@ -7,93 +7,93 @@ import * as types from '../../actions/types';
 
 export class RegistrationForm extends React.Component {
     static propTypes = {
-        registerUser: PropTypes.func.isRequired,
-        registeringUser: PropTypes.bool.isRequired,
-        errorRegisterUser: PropTypes.object,
+      registerUser: PropTypes.func.isRequired,
+      registeringUser: PropTypes.bool.isRequired,
+      errorRegisterUser: PropTypes.object,
     };
 
     static defaultProps = {
-        errorRegisterUser: undefined,
+      errorRegisterUser: undefined,
     };
 
     initialState = {
-        username: '',
-        password: '',
-        email: '',
+      username: '',
+      password: '',
+      email: '',
     };
 
     state = { ...this.initialState };
 
     componentDidUpdate(prevProps) {
-        if (prevProps.registeringUser && !this.props.registeringUser && !this.props.errorRegisterUser) {
-            this.setState({ ...this.initialState });
-        }
+      if (prevProps.registeringUser && !this.props.registeringUser && !this.props.errorRegisterUser) {
+        this.setState({ ...this.initialState });
+      }
     }
 
     handleUsernameChanged = (e) => {
-        this.setState({ username: e.target.value });
+      this.setState({ username: e.target.value });
     };
 
     handlePasswordChanged = (e) => {
-        this.setState({ password: e.target.value });
+      this.setState({ password: e.target.value });
     };
 
     handleEmailChanged = (e) => {
-        this.setState({ email: e.target.value });
+      this.setState({ email: e.target.value });
     };
 
     onSubmit = () => {
-        const { username, password, email } = this.state;
-        if (this.isFormValid()) {
-            this.props.registerUser({ username, password, email });
-        }
+      const { username, password, email } = this.state;
+      if (this.isFormValid()) {
+        this.props.registerUser({ username, password, email });
+      }
     };
 
     isFormValid() {
-        const { username, password, email } = this.state;
+      const { username, password, email } = this.state;
 
-        return username.trim() !== ''
+      return username.trim() !== ''
             && password.trim() !== ''
             && email.trim() !== '';
     }
 
     render() {
-        const { username, password, email } = this.state;
+      const { username, password, email } = this.state;
 
-        return (
-            <form className="registration-form" onSubmit={this.onSubmit}>
-                <input
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={this.handleUsernameChanged}
-                />
+      return (
+        <form className="registration-form" onSubmit={this.onSubmit}>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={this.handleUsernameChanged}
+          />
 
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={this.handlePasswordChanged}
-                />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={this.handlePasswordChanged}
+          />
 
-                <input
-                    type="text"
-                    placeholder="Email"
-                    value={email}
-                    onChange={this.handleEmailChanged}
-                />
+          <input
+            type="text"
+            placeholder="Email"
+            value={email}
+            onChange={this.handleEmailChanged}
+          />
 
-                <div>
-                    <button type="submit" disabled={!this.isFormValid()}>Register</button>
-                </div>
-            </form>
-        );
+          <div>
+            <button type="submit" disabled={!this.isFormValid()}>Register</button>
+          </div>
+        </form>
+      );
     }
 }
 
 const mapStateToProps = state => ({
-    registeringUser: createLoadingSelector(types.REGISTER_USER)(state),
-    errorRegisterUser: createErrorSelector(types.REGISTER_USER)(state),
+  registeringUser: createLoadingSelector(types.REGISTER_USER)(state),
+  errorRegisterUser: createErrorSelector(types.REGISTER_USER)(state),
 });
 
 export default connect(mapStateToProps, { registerUser })(RegistrationForm);

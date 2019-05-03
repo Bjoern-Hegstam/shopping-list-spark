@@ -5,10 +5,10 @@ import loading from './LoadingReducer';
 import error from './ErrorReducer';
 
 export default combineReducers({
-    auth,
-    entities,
-    request: combineReducers({
-        loading,
-        error,
-    }),
+  auth,
+  entities,
+  request: combineReducers({
+    loading,
+    error,
+  }),
 });
