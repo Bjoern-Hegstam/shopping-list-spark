@@ -10,74 +10,14 @@ header {
   border-right: 1px solid $border-color;
   border-bottom: 1px solid $border-color;
 
-  display: grid;
-  grid-template-columns: 150px 1fr 75px;
-  grid-template-areas: "name links logout";
-
-  padding: 20px 10px;
+  display: flex;
+  align-items: center;
 }
 
 .header__name {
   grid-area: name;
-  place-self: center;
 
-  border-right: 1px solid $text-color;
-
-  font-size: 1rem;
-  padding-right: 0.5rem;
+  font-size: 1.5rem;
+  padding-left: 0.5rem;
   white-space: nowrap;
-}
-
-nav a {
-  color: inherit;
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-}
-
-nav a:hover {
-  color: black;
-}
-
-.header__links {
-  grid-area: links;
-
-  font-weight: bold;
-  font-size: 1rem;
-}
-
-.header__logout {
-  grid-area: logout;
-
-  & button {
-    @extend %base-button;
-    background: $background-color;
-    color: $text-color;
-    font-weight: normal;
-    padding: 0;
-  }
-}
-
-@media (max-width: $small-screen-width-breakpoint) {
-  header {
-    padding: 1vh 2vw;
-
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-areas:
-            ". name logout"
-            ". links .";
-    grid-row-gap: 15px;
-    justify-items: center;
-  }
-
-  .header__name {
-    border: none;
-    border-bottom: 1px solid $border-color;
-    padding: 0 0 10px;
-  }
-
-  .header__logout {
-    justify-self: right;
-    align-self: center;
-  }
 }

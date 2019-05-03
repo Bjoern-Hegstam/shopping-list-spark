@@ -6,15 +6,31 @@ body {
 }
 
 .app-layout {
+  width: 100vw;
+  height: 100vh;
+
   display: grid;
-  grid-template-columns: 1fr $large-screen-content-width 1fr;
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: 4rem 1fr;
   grid-template-areas:
-          ". header ."
-          ". main .";
+          "header header"
+          "navigation main-container";
 }
 
 header {
   grid-area: header;
+}
+
+.nav-container {
+  grid-area: navigation;
+}
+
+.main-container {
+  grid-area: main-container;
+
+  display: grid;
+  grid-template-columns: 1fr $large-screen-content-width 1fr;
+  grid-template-areas: ". main .";
 }
 
 main {
@@ -26,6 +42,7 @@ main {
     grid-template-columns: 1fr;
     grid-template-areas:
             "header"
+            "navgivation"
             "main";
   }
 
