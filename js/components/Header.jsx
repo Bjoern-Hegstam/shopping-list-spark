@@ -1,58 +1,54 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-
 import { connect } from 'react-redux';
+
 import { UserType } from '../propTypes';
 import { logout } from '../actions/UserActions';
 
-export class Header extends React.Component {
-    static propTypes = {
-        user: UserType,
-        logout: PropTypes.func.isRequired,
+export function Header(props) {
+    const logoutCurrentUser = () => {
+        props.logout();
     };
 
-    static defaultProps = {
-        user: undefined,
-    };
-
-    logoutCurrentUser = () => {
-        this.props.logout();
-    };
-
-    render() {
-        return (
-            <header>
-                <span className="header__name">shopping-list-spark</span>
-                {this.props.user
-                    ? (
-                        <>
-                            <nav role="navigation" className="header__links">
-                                <NavLink to="/lists">Lists</NavLink>
-                                <NavLink to="/item-types">Items</NavLink>
-                            </nav>
-                            <nav role="navigation" className="header__logout">
-                                <button type="button" onClick={this.logoutCurrentUser}>Logout</button>
-                            </nav>
-                        </>
-                    )
-                    : (
+    return (
+        <header>
+            <span className="header__name">shopping-list-spark</span>
+            {props.user
+                ? (
+                    <>
                         <nav role="navigation" className="header__links">
-                            <NavLink to="/login">Login</NavLink>
-                            <NavLink to="/register">Register</NavLink>
+                            <NavLink to="/lists">Lists</NavLink>
+                            <NavLink to="/item-types">Items</NavLink>
                         </nav>
-                    )
-                }
-            </header>
-        );
-    }
+                        <nav role="navigation" className="header__logout">
+                            <button type="button" onClick={logoutCurrentUser}>Logout</button>
+                        </nav>
+                    </>
+                )
+                : (
+                    <nav role="navigation" className="header__links">
+                        <NavLink to="/login">Login</NavLink>
+                        <NavLink to="/register">Register</NavLink>
+                    </nav>
+                )
+            }
+        </header>
+    );
 }
 
+Header.propTypes = {
+    user: UserType,
+    logout: PropTypes.func.isRequired,
+};
+
+Header.defaultProps = {
+    user: undefined,
+};
+
 export default connect(
-    store => ({
-        user: store.auth.currentUser,
+    state => ({
+        user: state.auth.currentUser,
     }),
-    dispatch => ({
-        logout: () => dispatch(logout()),
-    }),
+    { logout },
 )(Header);

@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import { FaTrash } from 'react-icons/fa';
 
 export default class ItemType extends React.Component {
@@ -32,7 +32,7 @@ export default class ItemType extends React.Component {
                     className="item-type__delete-button"
                     onClick={this.handleOnDeleteClicked}
                 >
-                    <FaTrash />
+                    <FaTrash/>
                 </button>
                 <div className="item-type__name">{name}</div>
             </div>

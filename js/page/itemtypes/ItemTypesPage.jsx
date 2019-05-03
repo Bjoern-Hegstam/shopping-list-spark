@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ItemTypeType } from '../../propTypes';
 import { itemTypesSelector } from '../../selectors';
@@ -52,9 +52,9 @@ const mapStateToProps = state => ({
     itemTypes: itemTypesSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-    getItemTypes: token => dispatch(getItemTypes(token)),
-    deleteItemType: token => dispatch(deleteItemType(token)),
-});
+const mapDispatchToProps = {
+    getItemTypes,
+    deleteItemType,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ItemTypesPage);

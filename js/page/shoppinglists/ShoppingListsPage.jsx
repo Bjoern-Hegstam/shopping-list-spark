@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import AppLayout from '../../components/AppLayout';
@@ -97,20 +97,20 @@ export class ShoppingListsPage extends React.Component {
     }
 }
 
-const mapStateToProps = store => ({
-    token: store.auth.token,
+const mapStateToProps = state => ({
+    token: state.auth.token,
 
-    shoppingLists: shoppingListsSelector(store),
-    fetchingShoppingLists: createLoadingSelector(types.GET_SHOPPING_LISTS)(store),
-    errorGetShoppingLists: createErrorSelector(types.GET_SHOPPING_LISTS)(store),
+    shoppingLists: shoppingListsSelector(state),
+    fetchingShoppingLists: createLoadingSelector(types.GET_SHOPPING_LISTS)(state),
+    errorGetShoppingLists: createErrorSelector(types.GET_SHOPPING_LISTS)(state),
 
-    addingShoppingList: createLoadingSelector(types.ADD_SHOPPING_LIST)(store),
-    errorAddShoppingList: createErrorSelector(types.ADD_SHOPPING_LIST)(store),
+    addingShoppingList: createLoadingSelector(types.ADD_SHOPPING_LIST)(state),
+    errorAddShoppingList: createErrorSelector(types.ADD_SHOPPING_LIST)(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-    getShoppingLists: arg => dispatch(getShoppingLists(arg)),
-    addShoppingList: arg => dispatch(addShoppingList(arg)),
-});
+const mapDispatchToProps = {
+    getShoppingLists,
+    addShoppingList,
+};
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ShoppingListsPage));

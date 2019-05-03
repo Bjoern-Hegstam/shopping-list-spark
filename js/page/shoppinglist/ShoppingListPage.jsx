@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import AppLayout from '../../components/AppLayout';
 import { ItemTypeType, ShoppingListType } from '../../propTypes';
@@ -225,7 +225,7 @@ export class ShoppingListPage extends React.Component {
 
         if (!initialFetchComplete) {
             return (
-                <AppLayout />
+                <AppLayout/>
             );
         }
 
@@ -288,16 +288,16 @@ const mapStateToProps = (store, ownProps) => {
     };
 };
 
-const mapDispatchToProps = dispatch => ({
-    getShoppingList: args => dispatch(getShoppingList(args)),
-    updateShoppingList: args => dispatch(updateShoppingList(args)),
-    deleteShoppingList: args => dispatch(deleteShoppingList(args)),
-    addItemType: args => dispatch(addItemType(args)),
-    getItemTypes: args => dispatch(getItemTypes(args)),
-    addShoppingListItem: args => dispatch(addShoppingListItem(args)),
-    updateShoppingListItem: args => dispatch(updateShoppingListItem(args)),
-    deleteShoppingListItem: args => dispatch(deleteShoppingListItem(args)),
-    emptyCart: args => dispatch(emptyCart(args)),
-});
+const mapDispatchToProps = {
+    getShoppingList,
+    updateShoppingList,
+    deleteShoppingList,
+    addItemType,
+    getItemTypes,
+    addShoppingListItem,
+    updateShoppingListItem,
+    deleteShoppingListItem,
+    emptyCart,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShoppingListPage);

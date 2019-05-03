@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { ItemTypeType, ShoppingListType } from '../../propTypes';
 import ShoppingListItem from './ShoppingListItem';

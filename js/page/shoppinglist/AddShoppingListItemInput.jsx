@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import { ItemTypeType } from '../../propTypes';
 
 export default class AddShoppingListItemInput extends React.Component {

@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { registerUser } from '../../actions/UserActions';
 import { createErrorSelector, createLoadingSelector } from '../../selectors';
@@ -91,17 +91,9 @@ export class RegistrationForm extends React.Component {
     }
 }
 
-function mapStateToProps(store) {
-    return {
-        registeringUser: createLoadingSelector(types.REGISTER_USER)(store),
-        errorRegisterUser: createErrorSelector(types.REGISTER_USER)(store),
-    };
-}
+const mapStateToProps = state => ({
+    registeringUser: createLoadingSelector(types.REGISTER_USER)(state),
+    errorRegisterUser: createErrorSelector(types.REGISTER_USER)(state),
+});
 
-function mapDispatchToProps(dispatch) {
-    return {
-        registerUser: args => dispatch(registerUser(args)),
-    };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(RegistrationForm);
+export default connect(mapStateToProps, { registerUser })(RegistrationForm);
