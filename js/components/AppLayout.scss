@@ -1,8 +1,5 @@
 @import "../styles/general";
 
-$navigation-width: 15rem;
-$header-height: 4rem;
-
 body {
   margin: 0;
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -13,7 +10,7 @@ body {
   height: 100vh;
 
   display: grid;
-  grid-template-columns: $navigation-width 1fr;
+  grid-template-columns: $large-screen-navigation-width 1fr;
   grid-template-rows: $header-height 1fr;
   grid-template-areas:
           "header header"
@@ -44,10 +41,16 @@ main {
 @media (max-width: $small-screen-width-breakpoint) {
   .app-layout {
     grid-template-columns: 1fr;
+    grid-template-rows: $header-height $small-screen-navigation-height 1fr;
     grid-template-areas:
             "header"
-            "navgivation"
-            "main";
+            "navigation"
+            "main-container";
+  }
+
+  .main-container {
+    grid-template-columns: 1fr;
+    grid-template-areas: "main";
   }
 
   main {

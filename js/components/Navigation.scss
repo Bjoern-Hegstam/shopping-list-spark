@@ -69,5 +69,29 @@ $hover-background: gray;
 }
 
 @media (max-width: $small-screen-width-breakpoint) {
+  .navigation {
+    grid-template-rows: 1fr;
+    grid-template-columns: 3fr 1fr;
+    grid-template-areas: 'links logout';
 
+    &__links {
+      ul li {
+        display: inline;
+
+        a {
+          line-height: $small-screen-navigation-height;
+          padding: 0 2rem;
+          width: unset;
+        }
+      }
+    }
+
+    &__logout {
+      align-self: unset;
+
+      button {
+        height: unset;
+      }
+    }
+  }
 }

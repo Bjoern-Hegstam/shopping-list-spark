@@ -1,10 +1,13 @@
+$header-height: 4rem;
+
 // Large screen layout
-$large-screen-content-width: 1200px;
-$large-screen-content-min-margin: 75px;
+$large-screen-content-width: 75rem;
+$large-screen-navigation-width: 15rem;
 
 // Small screen layout
-$small-screen-width-breakpoint: $large-screen-content-width + 2 * $large-screen-content-min-margin;
+$small-screen-width-breakpoint: $large-screen-content-width + $large-screen-navigation-width;
 $small-screen-content-width: 90vw;
+$small-screen-navigation-height: 2rem;
 
 // Colors
 $border-color: #e7e7e7;
