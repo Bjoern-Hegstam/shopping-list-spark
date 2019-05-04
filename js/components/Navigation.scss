@@ -46,6 +46,12 @@ $hover-background: gray;
     }
   }
 
+  &__link {
+    &--active {
+      background: $hover-background;
+    }
+  }
+
   &__logout {
     grid-area: logout;
     align-self: end;

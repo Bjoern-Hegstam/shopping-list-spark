@@ -1,5 +1,8 @@
 @import "../styles/general";
 
+$navigation-width: 15rem;
+$header-height: 4rem;
+
 body {
   margin: 0;
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -10,8 +13,8 @@ body {
   height: 100vh;
 
   display: grid;
-  grid-template-columns: 250px 1fr;
-  grid-template-rows: 4rem 1fr;
+  grid-template-columns: $navigation-width 1fr;
+  grid-template-rows: $header-height 1fr;
   grid-template-areas:
           "header header"
           "navigation main-container";
@@ -27,6 +30,7 @@ header {
 
 .main-container {
   grid-area: main-container;
+  overflow: auto;
 
   display: grid;
   grid-template-columns: 1fr $large-screen-content-width 1fr;
