@@ -1,7 +1,0 @@
-#* @implicitly included *#
-#* @vtlvariable name="authenticationFailed" type="java.lang.String" *#
-#* @vtlvariable name="currentUser" type="com.bhegstam.shoppinglist.domain.User" *#
-#* @vtlvariable name="errorMessage" type="java.lang.String" *#
-#* @vtlvariable name="itemTypes" type="java.util.List<com.bhegstam.shoppinglist.port.rest.shoppinglist.ItemTypeBean>" *#
-#* @vtlvariable name="msg" type="com.bhegstam.webutil.MessageBundle" *#
-#* @vtlvariable name="users" type="java.util.List<com.bhegstam.shoppinglist.port.rest.user.UserBean>" *#
