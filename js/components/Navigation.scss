@@ -74,6 +74,8 @@ $hover-background: gray;
     grid-template-columns: 3fr 1fr;
     grid-template-areas: 'links logout';
 
+    border-bottom: 1px solid $border-color;
+
     &__links {
       ul li {
         display: inline;

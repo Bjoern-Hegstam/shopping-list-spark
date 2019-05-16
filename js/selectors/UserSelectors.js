@@ -1,1 +1,1 @@
-export const userLoggedInSelector = state => !!state.auth.currentUser;
+export const isUserAuthenticatedSelector = state => !!state.auth.currentUser;
