@@ -2,8 +2,8 @@ import React from 'react';
 import * as PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { registerUser } from '../../actions/UserActions';
-import { createErrorSelector, createLoadingSelector } from '../../selectors';
 import * as types from '../../actions/types';
+import { createErrorSelector, createLoadingSelector } from '../../selectors/RequestSelectors';
 
 export class RegistrationForm extends React.Component {
     static propTypes = {

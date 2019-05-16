@@ -2,7 +2,7 @@ import React from 'react';
 import * as PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ItemTypeType } from '../../propTypes';
-import { itemTypesSelector } from '../../selectors';
+import { itemTypesSelector } from '../../selectors/ShoppingListSelectors';
 import AppLayout from '../../components/AppLayout';
 import ItemType from './ItemType';
 import { deleteItemType, getItemTypes } from '../../actions/ItemTypeActions';

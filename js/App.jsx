@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Redirect, Route, Switch, withRouter, } from 'react-router-dom';
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import LoginPage from './page/login/LoginPage';
 import RegistrationPage from './page/registration/RegistrationPage';
 import PageNotFound from './components/PageNotFound';
@@ -9,8 +9,8 @@ import ShoppingListsPage from './page/shoppinglists/ShoppingListsPage';
 import ShoppingListPage from './page/shoppinglist/ShoppingListPage';
 import ItemTypesPage from './page/itemtypes/ItemTypesPage';
 import { UserType } from './propTypes';
-import { createErrorSelector, createLoadingSelector } from './selectors';
 import * as actionTypes from './actions/types';
+import { createErrorSelector, createLoadingSelector } from './selectors/RequestSelectors';
 
 export class App extends Component {
     static propTypes = {

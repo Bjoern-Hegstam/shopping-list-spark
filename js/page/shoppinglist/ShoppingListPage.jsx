@@ -15,8 +15,9 @@ import {
 import { addItemType, getItemTypes } from '../../actions/ItemTypeActions';
 
 import ShoppingList from './ShoppingList';
-import { createErrorSelector, createLoadingSelector, itemTypesSelector, shoppingListSelector, } from '../../selectors';
 import * as types from '../../actions/types';
+import { itemTypesSelector, shoppingListSelector } from '../../selectors/ShoppingListSelectors';
+import { createErrorSelector, createLoadingSelector } from '../../selectors/RequestSelectors';
 
 export class ShoppingListPage extends React.Component {
     static propTypes = {

@@ -1,4 +1,4 @@
-import { itemTypesSelector } from '../../js/selectors';
+import { itemTypesSelector } from '../../js/selectors/ShoppingListSelectors';
 
 it('item types selector', () => {
   // given

@@ -6,8 +6,9 @@ import AppLayout from '../../components/AppLayout';
 import { addShoppingList, getShoppingLists } from '../../actions/ShoppingListActions';
 import { ShoppingListType } from '../../propTypes';
 import ShoppingListLink from './ShoppingListLink';
-import { createErrorSelector, createLoadingSelector, shoppingListsSelector } from '../../selectors';
+import { shoppingListsSelector } from '../../selectors/ShoppingListSelectors';
 import * as types from '../../actions/types';
+import { createErrorSelector, createLoadingSelector } from '../../selectors/RequestSelectors';
 
 export class ShoppingListsPage extends React.Component {
     static propTypes = {
