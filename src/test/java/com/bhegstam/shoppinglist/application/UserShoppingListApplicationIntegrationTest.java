@@ -3,7 +3,6 @@ package com.bhegstam.shoppinglist.application;
 import com.bhegstam.shoppinglist.domain.Role;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserId;
-import com.bhegstam.shoppinglist.port.rest.user.UserBean;
 import com.bhegstam.shoppinglist.util.TestDatabaseSetup;
 import org.junit.Before;
 import org.junit.Rule;
@@ -30,11 +29,8 @@ public class UserShoppingListApplicationIntegrationTest {
 
     @Test
     public void updateUser_emptyBean() {
-        // given
-        UserBean userBean = new UserBean();
-
         // when
-        userApplication.updateUser(userId, userBean.getRole(), userBean.getVerified());
+        userApplication.updateUser(userId, Role.USER, false);
 
         // then
         User user = userApplication.getUser(userId);
@@ -45,12 +41,8 @@ public class UserShoppingListApplicationIntegrationTest {
 
     @Test
     public void updateUser_setVerified() {
-        // given
-        UserBean userBean = new UserBean();
-        userBean.setVerified(true);
-
         // when
-        userApplication.updateUser(userId, userBean.getRole(), userBean.getVerified());
+        userApplication.updateUser(userId, Role.USER, true);
 
         // then
         User user = userApplication.getUser(userId);
@@ -61,12 +53,8 @@ public class UserShoppingListApplicationIntegrationTest {
 
     @Test
     public void updateUser_makeAdmin() {
-        // given
-        UserBean userBean = new UserBean();
-        userBean.setRole(Role.ADMIN);
-
         // when
-        userApplication.updateUser(userId, userBean.getRole(), userBean.getVerified());
+        userApplication.updateUser(userId, Role.ADMIN, false);
 
         // then
         User user = userApplication.getUser(userId);

@@ -32,8 +32,8 @@ public class UserResource {
     }
 
     @POST
-    public Response createUser(@Valid CreateUserRequest request) {
-        LOGGER.info("Received request to create user [{}] by user [{}]", request.getUsername());
+    public Response createUser(@Auth User user, @Valid CreateUserRequest request) {
+        LOGGER.info("Received request to create user [{}] by user [{}]", request.getUsername(), user.getId());
 
         UserId userId = userApplication.addUser(
                 request.getUsername(),
