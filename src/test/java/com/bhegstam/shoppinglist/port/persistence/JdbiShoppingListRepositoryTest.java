@@ -48,7 +48,7 @@ public class JdbiShoppingListRepositoryTest {
     }
 
     @Test
-    public void persist_emptyList() {
+    public void persist_newEmptyList() {
         // given
         ShoppingList shoppingList = ShoppingList.create("Foo");
 
@@ -63,7 +63,7 @@ public class JdbiShoppingListRepositoryTest {
     }
 
     @Test
-    public void persist_updateNameOfList() {
+    public void persist_updateNameOfPersistedList() {
         // given
         ShoppingList shoppingList = ShoppingList.create("Foo");
         shoppingListRepository.persist(shoppingList);
@@ -79,7 +79,7 @@ public class JdbiShoppingListRepositoryTest {
     }
 
     @Test
-    public void persist_itemsAddedBeforePersist() {
+    public void persist_newListWithItems() {
         // create new list with items
         ShoppingList shoppingList = ShoppingList.create("Foo");
         ShoppingListItem item1 = shoppingList.add(itemType1);
@@ -161,6 +161,24 @@ public class JdbiShoppingListRepositoryTest {
 
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
         assertThat(persistedList.getItems(), contains(item2));
+    }
+
+    @Test
+    public void persist_throwsExceptionIfListInDatabaseModifiedSinceFetch() {
+        // given
+        ShoppingList shoppingList = ShoppingList.create("Foo");
+        shoppingListRepository.persist(shoppingList);
+
+        ShoppingList secondListInstance = shoppingListRepository.get(shoppingList.getId());
+        secondListInstance.setName("Bar");
+        shoppingListRepository.persist(secondListInstance);
+
+        // then
+        expectedException.expect(OptimisticLockingException.class);
+
+        // when
+        shoppingList.add(itemType1);
+        shoppingListRepository.persist(shoppingList);
     }
 
     @Test

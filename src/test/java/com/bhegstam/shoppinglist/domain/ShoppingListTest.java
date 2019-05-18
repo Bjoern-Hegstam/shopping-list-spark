@@ -25,7 +25,7 @@ public class ShoppingListTest {
 
     @Before
     public void setUp() {
-        before = Instant.now();
+        before = Instant.now().truncatedTo(ChronoUnit.MICROS);
     }
 
     @Test

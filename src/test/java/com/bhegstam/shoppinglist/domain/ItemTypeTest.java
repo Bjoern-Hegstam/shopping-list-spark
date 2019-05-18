@@ -18,7 +18,7 @@ public class ItemTypeTest {
 
     @Test
     public void create() {
-        Instant before = Instant.now();
+        Instant before = Instant.now().truncatedTo(ChronoUnit.MICROS);
 
         ItemType itemType = ItemType.create("Foo");
 
@@ -32,7 +32,7 @@ public class ItemTypeTest {
     @Test
     public void fromDb() {
         ItemTypeId id = new ItemTypeId();
-        Instant createdAt = Instant.now();
+        Instant createdAt = Instant.now().truncatedTo(ChronoUnit.MICROS);
         Instant updatedAt = createdAt.plus(1, ChronoUnit.HOURS);
 
         ItemType itemType = ItemType.fromDb(id, "Foo", createdAt, updatedAt, PersistenceStatus.PERSISTED);

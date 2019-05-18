@@ -19,7 +19,7 @@ public class EntityTest {
     public void createWithoutUpdatedAt() {
         // given
         TestIdentifier id = new TestIdentifier();
-        Instant createdAt = Instant.now();
+        Instant createdAt = now();
 
         // when
         TestEntity entity = new TestEntity(id, createdAt, null, PersistenceStatus.INSERT_REQUIRED);
@@ -35,7 +35,7 @@ public class EntityTest {
     public void createWithCustomUpdatedAt() {
         // given
         TestIdentifier id = new TestIdentifier();
-        Instant createdAt = Instant.now();
+        Instant createdAt = now();;
         Instant updatedAt = createdAt.plus(1, ChronoUnit.HOURS);
 
         // when
@@ -65,7 +65,7 @@ public class EntityTest {
     @Test
     public void markAsUpdatedWhenInsertRequired() {
         // given
-        Instant createdAt = Instant.now().minus(1, ChronoUnit.HOURS);
+        Instant createdAt = now().minus(1, ChronoUnit.HOURS);
         TestEntity entity = new TestEntity(new TestIdentifier(), createdAt, null, PersistenceStatus.INSERT_REQUIRED);
 
         // when
@@ -80,7 +80,7 @@ public class EntityTest {
     @Test
     public void markAsUpdatedWhenUpdateRequired() {
         // given
-        Instant createdAt = Instant.now().minus(1, ChronoUnit.HOURS);
+        Instant createdAt = now().minus(1, ChronoUnit.HOURS);
         TestEntity entity = new TestEntity(new TestIdentifier(), createdAt, null, PersistenceStatus.UPDATED_REQUIRED);
 
         // when
@@ -91,6 +91,10 @@ public class EntityTest {
         errorCollector.checkThat(entity.getUpdatedAt(), is(createdAt));
     }
 
+    private Instant now() {
+        return Instant.now().truncatedTo(ChronoUnit.MICROS);
+    }
+
     @Test
     public void equals() {
         EqualsVerifier
@@ -98,7 +102,6 @@ public class EntityTest {
                 .withOnlyTheseFields("id")
                 .verify();
     }
-
     private static final class TestIdentifier extends Identifier {
 
     }

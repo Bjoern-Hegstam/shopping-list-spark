@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 public abstract class Entity<I extends Identifier> {
@@ -12,12 +13,22 @@ public abstract class Entity<I extends Identifier> {
     private final I id;
     private final Instant createdAt;
     private Instant updatedAt;
+    private Instant updateAtOnFetch;
 
     Entity(I id, Instant createdAt, Instant updatedAt, PersistenceStatus persistenceStatus) {
         this.id = id;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt != null ? updatedAt : createdAt;
+
+        // Timestamps are truncated to ensure the timestamps in the database have the same
+        // precision as the ones created by the application
+        this.createdAt = truncateTimestamp(createdAt);
+        this.updatedAt = truncateTimestamp(updatedAt != null ? updatedAt : createdAt);
+        this.updateAtOnFetch = this.updatedAt;
+
         this.persistenceStatus = persistenceStatus;
+    }
+
+    private Instant truncateTimestamp(Instant instant) {
+        return instant.truncatedTo(ChronoUnit.MICROS);
     }
 
     public I getId() {
@@ -32,6 +43,10 @@ public abstract class Entity<I extends Identifier> {
         return updatedAt;
     }
 
+    public Instant getUpdateAtOnFetch() {
+        return updateAtOnFetch;
+    }
+
     void markAsUpdated() {
         if (persistenceStatus != PersistenceStatus.PERSISTED) {
             // Already marked as needing insert/update
@@ -44,6 +59,7 @@ public abstract class Entity<I extends Identifier> {
 
     public void markAsPersisted() {
         persistenceStatus = PersistenceStatus.PERSISTED;
+        this.updateAtOnFetch = this.updatedAt;
     }
 
     public boolean insertRequired() {

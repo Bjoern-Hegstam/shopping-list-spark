@@ -16,6 +16,15 @@ import java.util.List;
 public interface JdbiShoppingListRepository extends ShoppingListRepository {
     @Transaction
     default void persist(ShoppingList shoppingList) {
+        ShoppingList listInDatabase = getShoppingList(shoppingList.getId());
+        if (listInDatabase != null && !listInDatabase.getUpdatedAt().equals(shoppingList.getUpdateAtOnFetch())) {
+            throw new OptimisticLockingException(String.format(
+                    "Cannot persist shopping list [%s], list in database was last updated [%s]",
+                    shoppingList,
+                    listInDatabase.getUpdatedAt()
+            ));
+        }
+
         if (shoppingList.insertRequired()) {
             createShoppingList(
                     shoppingList.getId(),
