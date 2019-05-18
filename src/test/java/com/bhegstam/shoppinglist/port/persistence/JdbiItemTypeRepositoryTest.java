@@ -33,16 +33,19 @@ public class JdbiItemTypeRepositoryTest {
     @Test
     public void createAndGetItemType() {
         ItemType itemType = new ItemType("Foo");
+        assertThat(itemType.getPersistenceStatus(), is(PersistenceStatus.INSERT_REQUIRED));
 
         // persist
         itemTypeRepository.add(itemType);
         assertThat(itemType.getId(), notNullValue());
         assertThat(itemType.getName(), is("Foo"));
+        assertThat(itemType.getPersistenceStatus(), is(PersistenceStatus.PERSISTED));
 
         // get
         ItemType persistedItemType = itemTypeRepository.get(itemType.getId());
         assertThat(persistedItemType.getId(), notNullValue());
         assertThat(persistedItemType.getName(), is("Foo"));
+        assertThat(persistedItemType.getPersistenceStatus(), is(PersistenceStatus.PERSISTED));
     }
 
     @Test(expected = ItemTypeNotFoundException.class)

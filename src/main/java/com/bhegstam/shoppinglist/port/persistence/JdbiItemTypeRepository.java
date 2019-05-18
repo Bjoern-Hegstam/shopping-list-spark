@@ -17,12 +17,15 @@ import java.util.List;
 @RegisterRowMapper(ItemTypeMapper.class)
 public interface JdbiItemTypeRepository extends ItemTypeRepository {
     default void add(ItemType itemType) {
-        add(
-                itemType.getId(),
-                itemType.getName(),
-                Timestamp.from(itemType.getCreatedAt()),
-                Timestamp.from(itemType.getUpdatedAt())
-        );
+        if (itemType.getPersistenceStatus() == PersistenceStatus.INSERT_REQUIRED) {
+            add(
+                    itemType.getId(),
+                    itemType.getName(),
+                    Timestamp.from(itemType.getCreatedAt()),
+                    Timestamp.from(itemType.getUpdatedAt())
+            );
+            itemType.setPersistenceStatus(PersistenceStatus.PERSISTED);
+        }
     }
 
     @SqlUpdate("insert into item_type(id, name, created_at, updated_at) values (:itemTypeId.id, :name, :createdAt, :updatedAt)")
