@@ -1,44 +1,67 @@
 package com.bhegstam.shoppinglist.domain;
 
-import com.bhegstam.shoppinglist.port.persistence.PersistenceStatus;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
+import static com.bhegstam.shoppinglist.util.Matchers.isAfter;
+import static com.bhegstam.shoppinglist.util.Matchers.isAtOrAfter;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class ShoppingListTest {
+    private static final ShoppingListId LIST_ID = new ShoppingListId();
     private static final String LIST_NAME = "LIST";
     private static final String ITEM_TYPE_NAME = "ITEM_TYPE";
 
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
 
+    private Instant before;
+
+    @Before
+    public void setUp() {
+        before = Instant.now();
+    }
+
     @Test
     public void setNameOfNotPersistedShoppingList() {
         // given
         ShoppingList list = new ShoppingList(LIST_NAME);
-        assertThat(list.getPersistenceStatus(), is(PersistenceStatus.INSERT_REQUIRED));
+
+        assertThat(list.insertRequired(), is(true));
+        assertThat(list.getCreatedAt(), isAtOrAfter(before));
+        assertThat(list.getUpdatedAt(), is(list.getCreatedAt()));
 
         // when
         list.setName("New name");
 
         // then
-        assertThat(list.getPersistenceStatus(), is(PersistenceStatus.INSERT_REQUIRED));
+        assertThat(list.insertRequired(), is(true));
+        assertThat(list.getCreatedAt(), isAtOrAfter(before));
+        assertThat(list.getUpdatedAt(), is(list.getCreatedAt()));
     }
 
     @Test
     public void setNameOfPersistedShoppingList() {
         // given
-        ShoppingList list = new ShoppingList(LIST_NAME);
-        list.setPersistenceStatus(PersistenceStatus.PERSISTED);
+        Instant createdAt = before.minus(1, ChronoUnit.HOURS);
+        ShoppingList list = ShoppingList.fromDb(LIST_ID.getId(), LIST_NAME, createdAt, createdAt);
+
+        assertThat(list.getCreatedAt(), is(createdAt));
+        assertThat(list.getUpdatedAt(), is(createdAt));
 
         // when
         list.setName("New name");
 
         // then
-        assertThat(list.getPersistenceStatus(), is(PersistenceStatus.UPDATED_REQUIRED));
+        assertThat(list.updateRequired(), is(true));
+        assertThat(list.getCreatedAt(), is(createdAt));
+        assertThat(list.getUpdatedAt(), isAfter(createdAt));
     }
 
     @Test
@@ -78,7 +101,7 @@ public class ShoppingListTest {
     public void addItemToPersistedShoppingList() {
         // given
         ShoppingList list = new ShoppingList(LIST_NAME);
-        list.setPersistenceStatus(PersistenceStatus.PERSISTED);
+        list.markAsPersisted();
 
         ItemType itemType = new ItemType(ITEM_TYPE_NAME);
 
@@ -86,7 +109,7 @@ public class ShoppingListTest {
         list.add(itemType);
 
         // then
-        assertThat(list.getPersistenceStatus(), is(PersistenceStatus.UPDATED_REQUIRED));
+        assertThat(list.updateRequired(), is(true));
     }
 
     @Test
@@ -95,13 +118,13 @@ public class ShoppingListTest {
         ShoppingList list = new ShoppingList(LIST_NAME);
         ItemType itemType = new ItemType(ITEM_TYPE_NAME);
         list.add(itemType);
-        list.setPersistenceStatus(PersistenceStatus.PERSISTED);
+        list.markAsPersisted();
 
         // when
         list.remove(itemType.getId());
 
         // then
-        assertThat(list.getPersistenceStatus(), is(PersistenceStatus.UPDATED_REQUIRED));
+        assertThat(list.updateRequired(), is(true));
     }
 
     @Test
@@ -110,13 +133,13 @@ public class ShoppingListTest {
         ShoppingList list = new ShoppingList(LIST_NAME);
         ItemType itemType = new ItemType(ITEM_TYPE_NAME);
         ShoppingListItem listItem = list.add(itemType);
-        list.setPersistenceStatus(PersistenceStatus.PERSISTED);
+        list.markAsPersisted();
 
         // when
         list.remove(listItem.getId());
 
         // then
-        assertThat(list.getPersistenceStatus(), is(PersistenceStatus.UPDATED_REQUIRED));
+        assertThat(list.updateRequired(), is(true));
     }
 
     @Test
@@ -168,25 +191,25 @@ public class ShoppingListTest {
         ShoppingListItem listItem = list.add(itemType);
         listItem.setInCart(true);
 
-        list.setPersistenceStatus(PersistenceStatus.PERSISTED);
+        list.markAsPersisted();
 
         // when
         list.removeItemsInCart();
 
         // then
-        assertThat(list.getPersistenceStatus(), is(PersistenceStatus.UPDATED_REQUIRED));
+        assertThat(list.updateRequired(), is(true));
     }
 
     @Test
     public void removeItemsInCartOfAlreadyEmptyPersistedShoppingList() {
         // given
         ShoppingList list = new ShoppingList(LIST_NAME);
-        list.setPersistenceStatus(PersistenceStatus.PERSISTED);
+        list.markAsPersisted();
 
         // when
         list.removeItemsInCart();
 
         // then
-        assertThat(list.getPersistenceStatus(), is(PersistenceStatus.PERSISTED));
+        assertThat(list.isPersisted(), is(true));
     }
 }

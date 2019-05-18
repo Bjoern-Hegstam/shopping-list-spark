@@ -42,20 +42,28 @@ public abstract class Entity<I extends Identifier> {
         updatedAt = Instant.now();
     }
 
-    public PersistenceStatus getPersistenceStatus() {
-        return persistenceStatus;
+    public void markAsPersisted() {
+        persistenceStatus = PersistenceStatus.PERSISTED;
     }
 
-    public void setPersistenceStatus(PersistenceStatus persistenceStatus) {
-        this.persistenceStatus = persistenceStatus;
+    public boolean insertRequired() {
+        return persistenceStatus == PersistenceStatus.INSERT_REQUIRED;
+    }
+
+    public boolean updateRequired() {
+        return persistenceStatus == PersistenceStatus.UPDATED_REQUIRED;
+    }
+
+    public boolean isPersisted() {
+        return persistenceStatus == PersistenceStatus.PERSISTED;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Entity)) {
             return false;
         }
 
@@ -65,7 +73,7 @@ public abstract class Entity<I extends Identifier> {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
 

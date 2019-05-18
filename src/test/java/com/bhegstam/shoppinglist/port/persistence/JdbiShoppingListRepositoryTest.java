@@ -59,7 +59,7 @@ public class JdbiShoppingListRepositoryTest {
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
         errorCollector.checkThat(persistedList.getName(), is("Foo"));
         errorCollector.checkThat(persistedList.getItems(), isEmpty());
-        errorCollector.checkThat(persistedList.getPersistenceStatus(), is(PersistenceStatus.PERSISTED));
+        errorCollector.checkThat(persistedList.isPersisted(), is(true));
     }
 
     @Test
@@ -94,18 +94,18 @@ public class JdbiShoppingListRepositoryTest {
         // then items should be persisted
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
 
-        assertThat(persistedList.getPersistenceStatus(), is(PersistenceStatus.PERSISTED));
+        assertThat(persistedList.isPersisted(), is(true));
         assertThat(persistedList.getItems(), containsInAnyOrder(item1, item2));
 
         ShoppingListItem persistedItem1 = persistedList.get(itemType1.getId());
         errorCollector.checkThat(persistedItem1.getQuantity(), is(1));
         errorCollector.checkThat(persistedItem1.isInCart(), is(false));
-        errorCollector.checkThat(persistedItem1.getPersistenceStatus(), is(PersistenceStatus.PERSISTED));
+        errorCollector.checkThat(persistedItem1.isPersisted(), is(true));
 
         ShoppingListItem persistedItem2 = persistedList.get(itemType2.getId());
         errorCollector.checkThat(persistedItem2.getQuantity(), is(5));
         errorCollector.checkThat(persistedItem2.isInCart(), is(true));
-        errorCollector.checkThat(persistedItem2.getPersistenceStatus(), is(PersistenceStatus.PERSISTED));
+        errorCollector.checkThat(persistedItem2.isPersisted(), is(true));
     }
 
 

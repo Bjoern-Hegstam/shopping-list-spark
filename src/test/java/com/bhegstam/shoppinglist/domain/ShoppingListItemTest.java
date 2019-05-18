@@ -1,6 +1,5 @@
 package com.bhegstam.shoppinglist.domain;
 
-import com.bhegstam.shoppinglist.port.persistence.PersistenceStatus;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,38 +24,38 @@ public class ShoppingListItemTest {
         ShoppingListItem item = new ShoppingListItem(itemType);
 
         // then
-        errorCollector.checkThat(item.getPersistenceStatus(), is(PersistenceStatus.INSERT_REQUIRED));
+        errorCollector.checkThat(item.insertRequired(), is(true));
 
         // should still require insert after updating quantity or in cart status
         item.setQuantity(item.getQuantity() + 1);
         item.setInCart(!item.isInCart());
 
-        errorCollector.checkThat(item.getPersistenceStatus(), is(PersistenceStatus.INSERT_REQUIRED));
+        errorCollector.checkThat(item.insertRequired(), is(true));
     }
 
     @Test
     public void setQuantity_shouldMarkItemAsUpdated() {
         // given
         ShoppingListItem item = new ShoppingListItem(itemType);
-        item.setPersistenceStatus(PersistenceStatus.PERSISTED);
+        item.markAsPersisted();
 
         // when
         item.setQuantity(item.getQuantity() + 1);
 
         // then
-        errorCollector.checkThat(item.getPersistenceStatus(), is(PersistenceStatus.UPDATED_REQUIRED));
+        errorCollector.checkThat(item.updateRequired(), is(true));
     }
 
     @Test
     public void setInCart_shouldMarkItemAsUpdated() {
         // given
         ShoppingListItem item = new ShoppingListItem(itemType);
-        item.setPersistenceStatus(PersistenceStatus.PERSISTED);
+        item.markAsPersisted();
 
         // when
         item.setInCart(!item.isInCart());
 
         // then
-        errorCollector.checkThat(item.getPersistenceStatus(), is(PersistenceStatus.UPDATED_REQUIRED));
+        errorCollector.checkThat(item.updateRequired(), is(true));
     }
 }

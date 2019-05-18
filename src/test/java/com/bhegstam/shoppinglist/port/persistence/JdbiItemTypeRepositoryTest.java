@@ -10,8 +10,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import static com.bhegstam.shoppinglist.util.Matchers.isAtOrAfter;
 import static com.bhegstam.shoppinglist.util.Matchers.isEmpty;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -32,26 +35,26 @@ public class JdbiItemTypeRepositoryTest {
 
     @Test
     public void createAndGetItemType() {
+        // given
+        Instant before = Instant.now();
         ItemType itemType = new ItemType("Foo");
-        assertThat(itemType.getPersistenceStatus(), is(PersistenceStatus.INSERT_REQUIRED));
+        assertThat(itemType.insertRequired(), is(true));
 
-        // persist
+        // when
         itemTypeRepository.add(itemType);
-        assertThat(itemType.getId(), notNullValue());
-        assertThat(itemType.getName(), is("Foo"));
-        assertThat(itemType.getPersistenceStatus(), is(PersistenceStatus.PERSISTED));
 
-        // get
+        // then
         ItemType persistedItemType = itemTypeRepository.get(itemType.getId());
-        assertThat(persistedItemType.getId(), notNullValue());
-        assertThat(persistedItemType.getName(), is("Foo"));
-        assertThat(persistedItemType.getPersistenceStatus(), is(PersistenceStatus.PERSISTED));
+        errorCollector.checkThat(persistedItemType.getId(), notNullValue());
+        errorCollector.checkThat(persistedItemType.getName(), is("Foo"));
+        errorCollector.checkThat(persistedItemType.isPersisted(), is(true));
+        errorCollector.checkThat(persistedItemType.getCreatedAt(), isAtOrAfter(before.truncatedTo(ChronoUnit.MICROS)));
+        errorCollector.checkThat(persistedItemType.getUpdatedAt(), is(itemType.getCreatedAt().truncatedTo(ChronoUnit.MICROS)));
     }
 
     @Test(expected = ItemTypeNotFoundException.class)
     public void getItemType_itemTypeNotFound() {
         itemTypeRepository.get(ItemTypeId.parse("3bef76e6-2756-4352-b564-d172a9aa93f8"));
-
     }
 
     @Test

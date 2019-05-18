@@ -16,27 +16,27 @@ import java.util.List;
 public interface JdbiShoppingListRepository extends ShoppingListRepository {
     @Transaction
     default void persist(ShoppingList shoppingList) {
-        if (shoppingList.getPersistenceStatus() == PersistenceStatus.INSERT_REQUIRED) {
+        if (shoppingList.insertRequired()) {
             createShoppingList(
                     shoppingList.getId(),
                     shoppingList.getName(),
                     Timestamp.from(shoppingList.getCreatedAt()),
                     Timestamp.from(shoppingList.getUpdatedAt())
             );
-            shoppingList.setPersistenceStatus(PersistenceStatus.PERSISTED);
-        } else if (shoppingList.getPersistenceStatus() == PersistenceStatus.UPDATED_REQUIRED) {
+            shoppingList.markAsPersisted();
+        } else if (shoppingList.updateRequired()) {
             updateShoppingList(
                     shoppingList.getId(),
                     shoppingList.getName(),
                     Timestamp.from(shoppingList.getUpdatedAt())
             );
-            shoppingList.setPersistenceStatus(PersistenceStatus.PERSISTED);
+            shoppingList.markAsPersisted();
         }
 
         shoppingList
                 .getItems()
                 .forEach(item -> {
-                    if (item.getPersistenceStatus() == PersistenceStatus.INSERT_REQUIRED) {
+                    if (item.insertRequired()) {
                         createItem(
                                 item.getId(),
                                 shoppingList.getId(),
@@ -45,8 +45,8 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
                                 Timestamp.from(item.getCreatedAt()),
                                 Timestamp.from(item.getUpdatedAt())
                         );
-                        item.setPersistenceStatus(PersistenceStatus.PERSISTED);
-                    } else if (item.getPersistenceStatus() == PersistenceStatus.UPDATED_REQUIRED) {
+                        item.markAsPersisted();
+                    } else if (item.updateRequired()) {
                         updateItem(
                                 shoppingList.getId(),
                                 item.getId(),
@@ -54,7 +54,7 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
                                 item.isInCart(),
                                 Timestamp.from(item.getUpdatedAt())
                         );
-                        item.setPersistenceStatus(PersistenceStatus.PERSISTED);
+                        item.markAsPersisted();
                     }
                 });
 

@@ -17,14 +17,14 @@ import java.util.List;
 @RegisterRowMapper(ItemTypeMapper.class)
 public interface JdbiItemTypeRepository extends ItemTypeRepository {
     default void add(ItemType itemType) {
-        if (itemType.getPersistenceStatus() == PersistenceStatus.INSERT_REQUIRED) {
+        if (itemType.insertRequired()) {
             add(
                     itemType.getId(),
                     itemType.getName(),
                     Timestamp.from(itemType.getCreatedAt()),
                     Timestamp.from(itemType.getUpdatedAt())
             );
-            itemType.setPersistenceStatus(PersistenceStatus.PERSISTED);
+            itemType.markAsPersisted();
         }
     }
 
