@@ -14,7 +14,7 @@ public class ItemTypeApplication {
     }
 
     public ItemType createItemType(String name) {
-        ItemType itemType = new ItemType(name);
+        ItemType itemType = ItemType.create(name);
         itemTypeRepository.add(itemType);
         return itemType;
     }

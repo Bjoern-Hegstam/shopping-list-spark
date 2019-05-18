@@ -13,9 +13,9 @@ import java.sql.SQLException;
 public class ShoppingListItemMapper implements RowMapper<ShoppingListItem> {
     @Override
     public ShoppingListItem map(ResultSet rs, StatementContext ctx) throws SQLException {
-        return new ShoppingListItem(
+        return ShoppingListItem.fromDb(
                 ShoppingListItemId.fromString(rs.getString("i_id")),
-                new ItemType(
+                ItemType.fromDb(
                         ItemTypeId.parse(rs.getString("it_id")),
                         rs.getString("it_name"),
                         rs.getTimestamp("it_created_at").toInstant(),

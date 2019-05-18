@@ -22,7 +22,7 @@ public class ShoppingListApplication {
     }
 
     public ShoppingList createShoppingList(String name) {
-        ShoppingList shoppingList = new ShoppingList(name);
+        ShoppingList shoppingList = ShoppingList.create(name);
         shoppingListRepository.persist(shoppingList);
         return shoppingList;
     }

@@ -35,10 +35,10 @@ public class JdbiShoppingListRepositoryTest {
 
         ItemTypeRepository itemTypeRepository = testDatabaseSetup.getRepositoryFactory().createItemTypeRepository();
 
-        itemType1 = new ItemType("itemType1");
+        itemType1 = ItemType.create("itemType1");
         itemTypeRepository.add(itemType1);
 
-        itemType2 = new ItemType("itemType2");
+        itemType2 = ItemType.create("itemType2");
         itemTypeRepository.add(itemType2);
     }
 
@@ -50,7 +50,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_emptyList() {
         // given
-        ShoppingList shoppingList = new ShoppingList("Foo");
+        ShoppingList shoppingList = ShoppingList.create("Foo");
 
         // when
         shoppingListRepository.persist(shoppingList);
@@ -65,7 +65,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_updateNameOfList() {
         // given
-        ShoppingList shoppingList = new ShoppingList("Foo");
+        ShoppingList shoppingList = ShoppingList.create("Foo");
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -81,7 +81,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_itemsAddedBeforePersist() {
         // create new list with items
-        ShoppingList shoppingList = new ShoppingList("Foo");
+        ShoppingList shoppingList = ShoppingList.create("Foo");
         ShoppingListItem item1 = shoppingList.add(itemType1);
 
         ShoppingListItem item2 = shoppingList.add(itemType2);
@@ -112,7 +112,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_addItemsToPersistedList() {
         // given
-        ShoppingList shoppingList = new ShoppingList("Foo");
+        ShoppingList shoppingList = ShoppingList.create("Foo");
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -127,7 +127,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_updateItemInPersistedList() {
         // given
-        ShoppingList shoppingList = new ShoppingList("Foo");
+        ShoppingList shoppingList = ShoppingList.create("Foo");
         ShoppingListItem item1 = shoppingList.add(itemType1);
         shoppingListRepository.persist(shoppingList);
 
@@ -145,7 +145,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_itemDeletedFromList() {
         // given
-        ShoppingList shoppingList = new ShoppingList("Foo");
+        ShoppingList shoppingList = ShoppingList.create("Foo");
         ShoppingListItem item1 = shoppingList.add(itemType1);
         ShoppingListItem item2 = shoppingList.add(itemType2);
 
@@ -175,11 +175,11 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void getShoppingLists() {
         // given
-        ShoppingList shoppingList1 = new ShoppingList("Foo");
+        ShoppingList shoppingList1 = ShoppingList.create("Foo");
         ShoppingListItem item1 = shoppingList1.add(itemType1);
         shoppingListRepository.persist(shoppingList1);
 
-        ShoppingList shoppingList2 = new ShoppingList("Bar");
+        ShoppingList shoppingList2 = ShoppingList.create("Bar");
         shoppingListRepository.persist(shoppingList2);
 
         // when
@@ -193,8 +193,8 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void delete() {
         // given
-        ShoppingList shoppingList1 = new ShoppingList("Foo");
-        ShoppingList shoppingList2 = new ShoppingList("Bar");
+        ShoppingList shoppingList1 = ShoppingList.create("Foo");
+        ShoppingList shoppingList2 = ShoppingList.create("Bar");
         shoppingListRepository.persist(shoppingList1);
         shoppingListRepository.persist(shoppingList2);
 
@@ -213,7 +213,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void delete_listHasItems() {
         // given
-        ShoppingList shoppingList = new ShoppingList("Foo");
+        ShoppingList shoppingList = ShoppingList.create("Foo");
         shoppingList.add(itemType1);
         shoppingListRepository.persist(shoppingList);
 

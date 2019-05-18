@@ -31,7 +31,7 @@ public class ShoppingListTest {
     @Test
     public void setNameOfNotPersistedShoppingList() {
         // given
-        ShoppingList list = new ShoppingList(LIST_NAME);
+        ShoppingList list = ShoppingList.create(LIST_NAME);
 
         assertThat(list.insertRequired(), is(true));
         assertThat(list.getCreatedAt(), isAtOrAfter(before));
@@ -67,8 +67,8 @@ public class ShoppingListTest {
     @Test
     public void addAndUpdateItemQuantity() {
         // given
-        ShoppingList list = new ShoppingList(LIST_NAME);
-        ItemType itemType = new ItemType(ITEM_TYPE_NAME);
+        ShoppingList list = ShoppingList.create(LIST_NAME);
+        ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
 
         // when item added for the first time
         ShoppingListItem listItem = list.add(itemType);
@@ -100,10 +100,10 @@ public class ShoppingListTest {
     @Test
     public void addItemToPersistedShoppingList() {
         // given
-        ShoppingList list = new ShoppingList(LIST_NAME);
+        ShoppingList list = ShoppingList.create(LIST_NAME);
         list.markAsPersisted();
 
-        ItemType itemType = new ItemType(ITEM_TYPE_NAME);
+        ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
 
         // when
         list.add(itemType);
@@ -115,8 +115,8 @@ public class ShoppingListTest {
     @Test
     public void removeItemByItemTypeFromPersistedShoppingList() {
         // given
-        ShoppingList list = new ShoppingList(LIST_NAME);
-        ItemType itemType = new ItemType(ITEM_TYPE_NAME);
+        ShoppingList list = ShoppingList.create(LIST_NAME);
+        ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
         list.add(itemType);
         list.markAsPersisted();
 
@@ -130,8 +130,8 @@ public class ShoppingListTest {
     @Test
     public void removeItemByIdFromPersistedShoppingList() {
         // given
-        ShoppingList list = new ShoppingList(LIST_NAME);
-        ItemType itemType = new ItemType(ITEM_TYPE_NAME);
+        ShoppingList list = ShoppingList.create(LIST_NAME);
+        ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
         ShoppingListItem listItem = list.add(itemType);
         list.markAsPersisted();
 
@@ -145,8 +145,8 @@ public class ShoppingListTest {
     @Test
     public void accessByShoppingListItemId() {
         // given
-        ShoppingList list = new ShoppingList(LIST_NAME);
-        ItemType itemType = new ItemType(ITEM_TYPE_NAME);
+        ShoppingList list = ShoppingList.create(LIST_NAME);
+        ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
 
         // when
         ShoppingListItem listItem = list.add(itemType);
@@ -165,9 +165,9 @@ public class ShoppingListTest {
     @Test
     public void cartManagement() {
         // given
-        ShoppingList list = new ShoppingList(LIST_NAME);
-        ItemType itemTypeA = new ItemType(ITEM_TYPE_NAME + "_A");
-        ItemType itemTypeB = new ItemType(ITEM_TYPE_NAME + "_B");
+        ShoppingList list = ShoppingList.create(LIST_NAME);
+        ItemType itemTypeA = ItemType.create(ITEM_TYPE_NAME + "_A");
+        ItemType itemTypeB = ItemType.create(ITEM_TYPE_NAME + "_B");
 
         ShoppingListItem itemA = list.add(itemTypeA);
         list.add(itemTypeB);
@@ -186,8 +186,8 @@ public class ShoppingListTest {
     @Test
     public void removeItemsInCartOfPersistedShoppingList() {
         // given
-        ShoppingList list = new ShoppingList(LIST_NAME);
-        ItemType itemType = new ItemType(ITEM_TYPE_NAME);
+        ShoppingList list = ShoppingList.create(LIST_NAME);
+        ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
         ShoppingListItem listItem = list.add(itemType);
         listItem.setInCart(true);
 
@@ -203,7 +203,7 @@ public class ShoppingListTest {
     @Test
     public void removeItemsInCartOfAlreadyEmptyPersistedShoppingList() {
         // given
-        ShoppingList list = new ShoppingList(LIST_NAME);
+        ShoppingList list = ShoppingList.create(LIST_NAME);
         list.markAsPersisted();
 
         // when

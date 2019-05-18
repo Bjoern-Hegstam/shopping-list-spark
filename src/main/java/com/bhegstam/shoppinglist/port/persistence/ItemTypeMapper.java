@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class ItemTypeMapper implements RowMapper<ItemType> {
     @Override
     public ItemType map(ResultSet rs, StatementContext ctx) throws SQLException {
-        return new ItemType(
+        return ItemType.fromDb(
                 ItemTypeId.parse(rs.getString("id")),
                 rs.getString("name"),
                 rs.getTimestamp("created_at").toInstant(),

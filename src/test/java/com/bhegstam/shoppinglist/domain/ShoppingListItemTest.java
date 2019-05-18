@@ -15,13 +15,13 @@ public class ShoppingListItemTest {
 
     @Before
     public void setUp() {
-        itemType = new ItemType("TEST_ITEM_TYPE");
+        itemType = ItemType.create("TEST_ITEM_TYPE");
     }
 
     @Test
     public void createNewItem_shouldBeMarkedAsNew() {
         // when
-        ShoppingListItem item = new ShoppingListItem(itemType);
+        ShoppingListItem item = ShoppingListItem.create(itemType);
 
         // then
         errorCollector.checkThat(item.insertRequired(), is(true));
@@ -36,7 +36,7 @@ public class ShoppingListItemTest {
     @Test
     public void setQuantity_shouldMarkItemAsUpdated() {
         // given
-        ShoppingListItem item = new ShoppingListItem(itemType);
+        ShoppingListItem item = ShoppingListItem.create(itemType);
         item.markAsPersisted();
 
         // when
@@ -49,7 +49,7 @@ public class ShoppingListItemTest {
     @Test
     public void setInCart_shouldMarkItemAsUpdated() {
         // given
-        ShoppingListItem item = new ShoppingListItem(itemType);
+        ShoppingListItem item = ShoppingListItem.create(itemType);
         item.markAsPersisted();
 
         // when

@@ -7,8 +7,8 @@ import java.time.Instant;
 public class ItemType extends Entity<ItemTypeId> {
     private final String name;
 
-    public ItemType(String name) {
-        this(
+    public static ItemType create(String name) {
+        return new ItemType(
                 new ItemTypeId(),
                 name,
                 Instant.now(),
@@ -17,7 +17,18 @@ public class ItemType extends Entity<ItemTypeId> {
         );
     }
 
-    public ItemType(
+    public static ItemType fromDb(
+            ItemTypeId id,
+            String name,
+            Instant createdAt,
+            Instant updatedAt,
+            PersistenceStatus persistenceStatus
+    ) {
+        return new ItemType(id, name, createdAt, updatedAt, persistenceStatus);
+    }
+
+
+    private ItemType(
             ItemTypeId id,
             String name,
             Instant createdAt,

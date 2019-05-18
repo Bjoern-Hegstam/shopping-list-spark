@@ -37,7 +37,7 @@ public class JdbiItemTypeRepositoryTest {
     public void createAndGetItemType() {
         // given
         Instant before = Instant.now();
-        ItemType itemType = new ItemType("Foo");
+        ItemType itemType = ItemType.create("Foo");
         assertThat(itemType.insertRequired(), is(true));
 
         // when
@@ -49,7 +49,7 @@ public class JdbiItemTypeRepositoryTest {
         errorCollector.checkThat(persistedItemType.getName(), is("Foo"));
         errorCollector.checkThat(persistedItemType.isPersisted(), is(true));
         errorCollector.checkThat(persistedItemType.getCreatedAt(), isAtOrAfter(before.truncatedTo(ChronoUnit.MICROS)));
-        errorCollector.checkThat(persistedItemType.getUpdatedAt(), is(itemType.getCreatedAt().truncatedTo(ChronoUnit.MICROS)));
+        errorCollector.checkThat(persistedItemType.getUpdatedAt(), is(persistedItemType.getCreatedAt()));
     }
 
     @Test(expected = ItemTypeNotFoundException.class)
@@ -65,10 +65,10 @@ public class JdbiItemTypeRepositoryTest {
     @Test
     public void getItemTypes() {
         // given
-        ItemType itemType1 = new ItemType("Foo");
+        ItemType itemType1 = ItemType.create("Foo");
         itemTypeRepository.add(itemType1);
 
-        ItemType itemType2 = new ItemType("Bar");
+        ItemType itemType2 = ItemType.create("Bar");
         itemTypeRepository.add(itemType2);
 
         // when
@@ -81,7 +81,7 @@ public class JdbiItemTypeRepositoryTest {
     @Test
     public void deleteItemType() {
         // given
-        ItemType itemType1 = new ItemType("Foo");
+        ItemType itemType1 = ItemType.create("Foo");
         itemTypeRepository.add(itemType1);
 
         // when
@@ -98,13 +98,13 @@ public class JdbiItemTypeRepositoryTest {
         assertThat(itemTypeRepository.findItemTypes("foo", 5).size(), is(0));
 
         // Prep db
-        ItemType itemType1 = new ItemType("Foo");
+        ItemType itemType1 = ItemType.create("Foo");
         itemTypeRepository.add(itemType1);
 
-        ItemType itemType2 = new ItemType("Far");
+        ItemType itemType2 = ItemType.create("Far");
         itemTypeRepository.add(itemType2);
 
-        ItemType itemType3 = new ItemType("Baz");
+        ItemType itemType3 = ItemType.create("Baz");
         itemTypeRepository.add(itemType3);
 
         errorCollector.checkThat(itemTypeRepository.findItemTypes("", 0), isEmpty());

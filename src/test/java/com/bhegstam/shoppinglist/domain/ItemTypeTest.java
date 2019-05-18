@@ -20,7 +20,7 @@ public class ItemTypeTest {
     public void create() {
         Instant before = Instant.now();
 
-        ItemType itemType = new ItemType("Foo");
+        ItemType itemType = ItemType.create("Foo");
 
         errorCollector.checkThat(itemType.getId(), notNullValue());
         errorCollector.checkThat(itemType.getName(), is("Foo"));
@@ -35,7 +35,7 @@ public class ItemTypeTest {
         Instant createdAt = Instant.now();
         Instant updatedAt = createdAt.plus(1, ChronoUnit.HOURS);
 
-        ItemType itemType = new ItemType(id, "Foo", createdAt, updatedAt, PersistenceStatus.PERSISTED);
+        ItemType itemType = ItemType.fromDb(id, "Foo", createdAt, updatedAt, PersistenceStatus.PERSISTED);
 
         errorCollector.checkThat(itemType.getId(), is(id));
         errorCollector.checkThat(itemType.getName(), is("Foo"));

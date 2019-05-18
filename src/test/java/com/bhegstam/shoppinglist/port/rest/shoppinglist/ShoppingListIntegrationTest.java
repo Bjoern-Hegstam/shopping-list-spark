@@ -53,9 +53,9 @@ public class ShoppingListIntegrationTest {
 
         shoppingListRepository = testDatabaseSetup.getRepositoryFactory().createShoppingListRepository();
 
-        shoppingList = new ShoppingList(LIST_NAME);
+        shoppingList = ShoppingList.create(LIST_NAME);
 
-        itemType = new ItemType(ITEM_TYPE_NAME);
+        itemType = ItemType.create(ITEM_TYPE_NAME);
         testDatabaseSetup
                 .getRepositoryFactory()
                 .createItemTypeRepository()
@@ -168,8 +168,8 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteShoppingList() {
         // given
-        ShoppingList list1 = new ShoppingList("name");
-        ShoppingList list2 = new ShoppingList("name");
+        ShoppingList list1 = ShoppingList.create("name");
+        ShoppingList list2 = ShoppingList.create("name");
         shoppingListRepository.persist(list1);
         shoppingListRepository.persist(list2);
 

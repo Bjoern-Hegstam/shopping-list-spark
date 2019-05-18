@@ -9,8 +9,8 @@ public class ShoppingListItem extends Entity<ShoppingListItemId> {
     private int quantity;
     private boolean inCart;
 
-    public ShoppingListItem(ItemType itemType) {
-        this(
+    public static ShoppingListItem create(ItemType itemType) {
+        return new ShoppingListItem(
                 new ShoppingListItemId(),
                 itemType,
                 0,
@@ -21,7 +21,19 @@ public class ShoppingListItem extends Entity<ShoppingListItemId> {
         );
     }
 
-    public ShoppingListItem(
+    public static ShoppingListItem fromDb(
+            ShoppingListItemId id,
+            ItemType itemType,
+            int quantity,
+            boolean inCart,
+            Instant createdAt,
+            Instant updatedAt,
+            PersistenceStatus persistenceStatus
+    ) {
+        return new ShoppingListItem(id, itemType, quantity, inCart, createdAt, updatedAt, persistenceStatus);
+    }
+
+    private ShoppingListItem(
             ShoppingListItemId id,
             ItemType itemType,
             int quantity,

@@ -13,8 +13,8 @@ public class ShoppingList extends Entity<ShoppingListId> {
     private final Map<ItemTypeId, ShoppingListItem> items;
     private final Set<ShoppingListItemId> removedItems;
 
-    public ShoppingList(String name) {
-        this(
+    public static ShoppingList create(String name) {
+        return new ShoppingList(
                 new ShoppingListId(),
                 name,
                 Instant.now(),
@@ -56,7 +56,7 @@ public class ShoppingList extends Entity<ShoppingListId> {
     }
 
     public ShoppingListItem add(ItemType itemType) {
-        ShoppingListItem item = items.computeIfAbsent(itemType.getId(), k -> new ShoppingListItem(itemType));
+        ShoppingListItem item = items.computeIfAbsent(itemType.getId(), k -> ShoppingListItem.create(itemType));
         item.setQuantity(item.getQuantity() + 1);
 
         markAsUpdated();

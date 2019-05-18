@@ -100,7 +100,7 @@ public class ItemTypeIntegrationTest {
     @Test
     public void getItemTypes() {
         // given
-        ItemType itemType = new ItemType("Apples");
+        ItemType itemType = ItemType.create("Apples");
         itemTypeRepository.add(itemType);
 
         // when
@@ -120,7 +120,7 @@ public class ItemTypeIntegrationTest {
     @Test
     public void deleteItemType() {
         // given
-        ItemType itemType = new ItemType("Apples");
+        ItemType itemType = ItemType.create("Apples");
         itemTypeRepository.add(itemType);
 
         // when
@@ -153,10 +153,10 @@ public class ItemTypeIntegrationTest {
     @Test
     public void deleteItemType_usedByShoppingList() {
         // given
-        ItemType itemType = new ItemType("Apples");
+        ItemType itemType = ItemType.create("Apples");
         itemTypeRepository.add(itemType);
 
-        ShoppingList list = new ShoppingList("foo");
+        ShoppingList list = ShoppingList.create("foo");
         list.add(itemType);
         shoppingListRepository.persist(list);
 
