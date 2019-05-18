@@ -61,6 +61,7 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
         shoppingList
                 .removedItemIds()
                 .forEach(itemId -> deleteItem(shoppingList.getId(), itemId));
+        shoppingList.clearRemovedItems();
     }
 
     @SqlUpdate("insert into shopping_list(id, name, created_at, updated_at) values (:listId.id, :name, :createdAt, :updatedAt)")

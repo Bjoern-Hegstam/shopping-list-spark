@@ -156,6 +156,9 @@ public class JdbiShoppingListRepositoryTest {
         shoppingListRepository.persist(shoppingList);
 
         // then
+        assertThat(shoppingList.getItems(), contains(item2));
+        assertTrue(shoppingList.removedItemIds().isEmpty());
+
         ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
         assertThat(persistedList.getItems(), contains(item2));
     }

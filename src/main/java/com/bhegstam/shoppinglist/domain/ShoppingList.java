@@ -117,6 +117,10 @@ public class ShoppingList extends Entity<ShoppingListId> {
         return Collections.unmodifiableCollection(removedItems);
     }
 
+    public void clearRemovedItems() {
+        removedItems.clear();
+    }
+
     public Collection<ShoppingListItem> getItems() {
         return Collections.unmodifiableCollection(items.values());
     }
