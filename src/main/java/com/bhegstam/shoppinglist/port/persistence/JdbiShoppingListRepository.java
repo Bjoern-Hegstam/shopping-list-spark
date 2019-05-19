@@ -16,7 +16,7 @@ import java.util.List;
 public interface JdbiShoppingListRepository extends ShoppingListRepository {
     @Transaction
     default void persist(ShoppingList shoppingList) {
-        ShoppingList listInDatabase = getShoppingList(shoppingList.getId());
+        ShoppingList listInDatabase = findWithItems(shoppingList.getId());
         if (listInDatabase != null && !listInDatabase.getUpdatedAt().equals(shoppingList.getUpdateAtOnFetch())) {
             throw new OptimisticLockingException(String.format(
                     "Cannot persist shopping list [%s], list in database was last updated [%s]",
@@ -56,6 +56,15 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
                         );
                         item.markAsPersisted();
                     } else if (item.updateRequired()) {
+                        ShoppingListItem itemInDatabase = listInDatabase.get(item.getId());
+                        if (!itemInDatabase.getUpdatedAt().equals(item.getUpdateAtOnFetch())) {
+                            throw new OptimisticLockingException(String.format(
+                                    "Cannot persist item [%s], iten in database was last updated [%s]",
+                                    item,
+                                    itemInDatabase.getUpdatedAt()
+                            ));
+                        }
+
                         updateItem(
                                 shoppingList.getId(),
                                 item.getId(),
@@ -116,15 +125,15 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
 
     @Transaction
     default ShoppingList get(ShoppingListId listId) {
-        ShoppingList shoppingList = find(listId);
+        ShoppingList shoppingList = findWithItems(listId);
         if (shoppingList != null) {
             return shoppingList;
         }
         throw new ShoppingListNotFoundException(listId);
     }
 
-    default ShoppingList find(ShoppingListId listId) {
-        ShoppingList shoppingList = getShoppingList(listId);
+    default ShoppingList findWithItems(ShoppingListId listId) {
+        ShoppingList shoppingList = getShoppingListEntity(listId);
         if (shoppingList == null) {
             return null;
         }
@@ -134,7 +143,7 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
     }
 
     @SqlQuery("select * from shopping_list where id = :listId.id")
-    ShoppingList getShoppingList(@BindBean("listId") ShoppingListId listId);
+    ShoppingList getShoppingListEntity(@BindBean("listId") ShoppingListId listId);
 
     @SqlQuery("select " +
             "i.id i_id, " +
@@ -164,7 +173,7 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
 
     @Transaction
     default void delete(ShoppingListId listId) {
-        ShoppingList shoppingList = find(listId);
+        ShoppingList shoppingList = findWithItems(listId);
         if (shoppingList == null) {
             return;
         }

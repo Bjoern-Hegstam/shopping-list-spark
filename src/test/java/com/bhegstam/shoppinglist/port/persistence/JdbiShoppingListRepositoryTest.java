@@ -166,19 +166,56 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_throwsExceptionIfListInDatabaseModifiedSinceFetch() {
         // given
-        ShoppingList shoppingList = ShoppingList.create("Foo");
-        shoppingListRepository.persist(shoppingList);
+        ShoppingList shoppingListInstance1 = ShoppingList.create("Foo");
+        shoppingListRepository.persist(shoppingListInstance1);
 
-        ShoppingList secondListInstance = shoppingListRepository.get(shoppingList.getId());
-        secondListInstance.setName("Bar");
-        shoppingListRepository.persist(secondListInstance);
+        ShoppingList shoppingListInstance2 = shoppingListRepository.get(shoppingListInstance1.getId());
+        shoppingListInstance2.setName("Bar");
+        shoppingListRepository.persist(shoppingListInstance2);
 
         // then
         expectedException.expect(OptimisticLockingException.class);
 
         // when
-        shoppingList.add(itemType1);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListInstance1.add(itemType1);
+        shoppingListRepository.persist(shoppingListInstance1);
+    }
+
+    @Test
+    public void persist_throwsExceptionIfItemInListInDatabaseModifiedSinceFetch() {
+        // given
+        ShoppingList shoppingListInstance1 = ShoppingList.create("Foo");
+        shoppingListInstance1.add(itemType1);
+        shoppingListRepository.persist(shoppingListInstance1);
+
+        ShoppingList shoppingListInstance2 = shoppingListRepository.get(shoppingListInstance1.getId());
+        shoppingListInstance2.get(itemType1.getId()).setQuantity(2);
+        shoppingListRepository.persist(shoppingListInstance2);
+
+        // then
+        expectedException.expect(OptimisticLockingException.class);
+
+        // when
+        shoppingListInstance1.get(itemType1.getId()).setQuantity(2);
+        shoppingListRepository.persist(shoppingListInstance1);
+    }
+
+    @Test
+    public void persist_throwsExceptionIfTryingToInsertItemAlreadyInList() {
+        // given
+        ShoppingList shoppingListInstance1 = ShoppingList.create("Foo");
+        shoppingListRepository.persist(shoppingListInstance1);
+
+        ShoppingList shoppingListInstance2 = shoppingListRepository.get(shoppingListInstance1.getId());
+        shoppingListInstance2.add(itemType1);
+        shoppingListRepository.persist(shoppingListInstance2);
+
+        // then
+        expectedException.expect(OptimisticLockingException.class);
+
+        // when
+        shoppingListInstance1.add(itemType1);
+        shoppingListRepository.persist(shoppingListInstance1);
     }
 
     @Test
