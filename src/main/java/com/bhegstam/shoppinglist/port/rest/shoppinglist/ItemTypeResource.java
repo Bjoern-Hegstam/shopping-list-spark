@@ -38,15 +38,7 @@ public class ItemTypeResource {
 
         ItemType itemType = itemTypeApplication.createItemType(request.getName());
 
-        Response.Status status = CREATED;
-        ItemTypeResponse body = new ItemTypeResponse(itemType);
-
-        logResponse(status, body);
-
-        return Response
-                .status(status)
-                .entity(body)
-                .build();
+        return createAndLogResponse(CREATED, new ItemTypeResponse(itemType));
     }
 
     @RolesAllowed({USER, ADMIN})
@@ -61,15 +53,7 @@ public class ItemTypeResource {
             itemTypes = itemTypeApplication.findItemTypes(nameStart, limit);
         }
 
-        Response.Status status = OK;
-        ItemTypesResponse body = new ItemTypesResponse(itemTypes);
-
-        logResponse(status, body);
-
-        return Response
-                .status(status)
-                .entity(body)
-                .build();
+        return createAndLogResponse(OK, new ItemTypesResponse(itemTypes));
     }
 
     @Path("/{item_type_id}")
@@ -98,15 +82,11 @@ public class ItemTypeResource {
             body = ErrorResponse.exception(e);
         }
 
-        logResponse(status, body);
-
-        return Response
-                .status(status)
-                .entity(body)
-                .build();
+        return createAndLogResponse(status, body);
     }
 
-    private void logResponse(Response.Status status, Object body) {
+    private Response createAndLogResponse(Response.Status status, Object body) {
         LOGGER.info("Responding to request with status [{}] and body [{}]", status, body);
+        return Response.status(status).entity(body).build();
     }
 }

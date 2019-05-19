@@ -36,17 +36,10 @@ public class ShoppingListResource {
     @POST
     public Response postShoppingList(@Auth User user, @Valid CreateShoppingListRequest request) {
         LOGGER.info("Received request [{}] to create shopping list for user [{}]", request, user.getId());
+
         ShoppingList shoppingList = shoppingListApplication.createShoppingList(request.getName());
 
-        Response.Status status = CREATED;
-        CreateShoppingListResponse body = new CreateShoppingListResponse(shoppingList.getId());
-
-        logResponse(status, body);
-
-        return Response
-                .status(status)
-                .entity(body)
-                .build();
+        return createAndLogResponse(CREATED, new CreateShoppingListResponse(shoppingList.getId()));
     }
 
     @RolesAllowed({USER, ADMIN})
@@ -56,15 +49,7 @@ public class ShoppingListResource {
 
         List<ShoppingList> shoppingLists = shoppingListApplication.getShoppingLists();
 
-        Response.Status status = OK;
-        GetShoppingListsResponse body = new GetShoppingListsResponse(shoppingLists);
-
-        logResponse(status, body);
-
-        return Response
-                .status(status)
-                .entity(body)
-                .build();
+        return createAndLogResponse(OK, new GetShoppingListsResponse(shoppingLists));
     }
 
     @Path("/{shoppingListId}")
@@ -78,28 +63,16 @@ public class ShoppingListResource {
             listId = ShoppingListId.fromString(shoppingListIdString);
         } catch (IllegalArgumentException e) {
             LOGGER.error("Error while getting shopping list with id [" + shoppingListIdString + "]", e);
-            return Response
-                    .status(BAD_REQUEST)
-                    .build();
+            return Response.status(BAD_REQUEST).build();
         }
 
         try {
             ShoppingList shoppingList = shoppingListApplication.getShoppingList(listId);
 
-            Response.Status status = OK;
-            GetShoppingListResponse body = new GetShoppingListResponse(shoppingList);
-
-            logResponse(status, body);
-
-            return Response
-                    .status(status)
-                    .entity(body)
-                    .build();
+            return createAndLogResponse(OK, new GetShoppingListResponse(shoppingList));
         } catch (ShoppingListNotFoundException e) {
             LOGGER.error("Error while getting shopping list with id [" + shoppingListIdString + "]", e);
-            return Response
-                    .status(BAD_REQUEST)
-                    .build();
+            return Response.status(BAD_REQUEST).build();
         }
     }
 
@@ -114,26 +87,16 @@ public class ShoppingListResource {
             listId = ShoppingListId.fromString(shoppingListIdString);
         } catch (IllegalArgumentException e) {
             LOGGER.error("Error while updating shopping list with id [" + shoppingListIdString + "]", e);
-            return Response
-                    .status(BAD_REQUEST)
-                    .build();
+            return Response.status(BAD_REQUEST).build();
         }
 
         try {
             shoppingListApplication.updateShoppingList(listId, request.getName());
 
-            Response.Status status = NO_CONTENT;
-
-            logResponse(status, null);
-
-            return Response
-                    .status(status)
-                    .build();
+            return createAndLogResponse(NO_CONTENT, null);
         } catch (ShoppingListNotFoundException e) {
             LOGGER.error("Error while getting shopping list with id [" + shoppingListIdString + "]", e);
-            return Response
-                    .status(BAD_REQUEST)
-                    .build();
+            return Response.status(BAD_REQUEST).build();
         }
     }
 
@@ -148,26 +111,16 @@ public class ShoppingListResource {
             listId = ShoppingListId.fromString(shoppingListIdString);
         } catch (IllegalArgumentException e) {
             LOGGER.error("Error while deleting shopping list with id [" + shoppingListIdString + "]", e);
-            return Response
-                    .status(BAD_REQUEST)
-                    .build();
+            return Response.status(BAD_REQUEST).build();
         }
 
         try {
             shoppingListApplication.deleteShoppingList(listId);
 
-            Response.Status status = NO_CONTENT;
-
-            logResponse(status, null);
-
-            return Response
-                    .status(status)
-                    .build();
+            return createAndLogResponse(NO_CONTENT, null);
         } catch (ShoppingListDeleteNotAllowedException e) {
             LOGGER.error("Error while deleting shopping list with id [" + shoppingListIdString + "]");
-            return Response
-                    .status(BAD_REQUEST)
-                    .build();
+            return Response.status(BAD_REQUEST).build();
         }
     }
 
@@ -184,28 +137,16 @@ public class ShoppingListResource {
             itemTypeId = ItemTypeId.parse(request.getItemTypeId());
         } catch (IllegalArgumentException | NullPointerException e) {
             LOGGER.error("Error while adding item to shopping list [" + shoppingListIdString + "] for user [" + user.getId() + "]", e);
-            return Response
-                    .status(BAD_REQUEST)
-                    .build();
+            return Response.status(BAD_REQUEST).build();
         }
 
         try {
             ShoppingListItem listItem = shoppingListApplication.addItem(listId, itemTypeId, request.getQuantity());
 
-            Response.Status status = CREATED;
-            ShoppingListItemResponse body = new ShoppingListItemResponse(listItem);
-
-            logResponse(status, body);
-
-            return Response
-                    .status(status)
-                    .entity(body)
-                    .build();
+            return createAndLogResponse(CREATED, new ShoppingListItemResponse(listItem));
         } catch (ItemTypeNotFoundException | ShoppingListNotFoundException e) {
             LOGGER.error("Error while adding item of type [" + itemTypeId + "] to shopping list [" + listId + "] for user [" + user.getId() + "]", e);
-            return Response
-                    .status(BAD_REQUEST)
-                    .build();
+            return Response.status(BAD_REQUEST).build();
         }
     }
 
@@ -227,26 +168,16 @@ public class ShoppingListResource {
             listItemId = ShoppingListItemId.fromString(shoppingListItemIdString);
         } catch (IllegalArgumentException e) {
             LOGGER.error("Error while updating item [" + shoppingListItemIdString + "] in shopping list [" + shoppingListIdString + "] for user [" + user.getId() + "]", e);
-            return Response
-                    .status(BAD_REQUEST)
-                    .build();
+            return Response.status(BAD_REQUEST).build();
         }
 
         try {
             shoppingListApplication.updateItem(listId, listItemId, request.getQuantity(), request.isInCart());
 
-            Response.Status status = NO_CONTENT;
-
-            logResponse(status, null);
-
-            return Response
-                    .status(status)
-                    .build();
+            return createAndLogResponse(NO_CONTENT, null);
         } catch (ShoppingListNotFoundException | ShoppingListItemNotFoundException e) {
             LOGGER.error("Error while updating item [" + listItemId + "] in shopping list [" + listId + "] for user [" + user.getId() + "]", e);
-            return Response
-                    .status(BAD_REQUEST)
-                    .build();
+            return Response.status(BAD_REQUEST).build();
         }
     }
 
@@ -267,26 +198,16 @@ public class ShoppingListResource {
             listItemId = ShoppingListItemId.fromString(shoppingListItemIdString);
         } catch (IllegalArgumentException e) {
             LOGGER.error("Error while deleting item [" + shoppingListItemIdString + "] in shopping list [" + shoppingListIdString + "] for user [" + user.getId() + "]", e);
-            return Response
-                    .status(BAD_REQUEST)
-                    .build();
+            return Response.status(BAD_REQUEST).build();
         }
 
         try {
             shoppingListApplication.deleteItem(listId, listItemId);
 
-            Response.Status status = NO_CONTENT;
-
-            logResponse(status, null);
-
-            return Response
-                    .status(status)
-                    .build();
+            return createAndLogResponse(NO_CONTENT, null);
         } catch (ShoppingListNotFoundException | ShoppingListItemNotFoundException e) {
             LOGGER.error("Error while deleting item [" + listItemId + "] in shopping list [" + listId + "] for user [" + user.getId() + "]", e);
-            return Response
-                    .status(BAD_REQUEST)
-                    .build();
+            return Response.status(BAD_REQUEST).build();
         }
     }
 
@@ -304,30 +225,21 @@ public class ShoppingListResource {
             listId = ShoppingListId.fromString(shoppingListIdString);
         } catch (IllegalArgumentException e) {
             LOGGER.error("Error while emptying card of shopping list [" + shoppingListIdString + "]", e);
-            return Response
-                    .status(BAD_REQUEST)
-                    .build();
+            return Response.status(BAD_REQUEST).build();
         }
 
         try {
             shoppingListApplication.emptyCart(listId);
 
-            Response.Status status = NO_CONTENT;
-
-            logResponse(status, null);
-
-            return Response
-                    .status(status)
-                    .build();
+            return createAndLogResponse(NO_CONTENT, null);
         } catch (ShoppingListNotFoundException e) {
             LOGGER.error("Error while emptying card of shopping list [" + listId + "]", e);
-            return Response
-                    .status(BAD_REQUEST)
-                    .build();
+            return Response.status(BAD_REQUEST).build();
         }
     }
 
-    private void logResponse(Response.Status status, Object body) {
+    private Response createAndLogResponse(Response.Status status, Object body) {
         LOGGER.info("Responding to request with status [{}] and body [{}]", status, body);
+        return Response.status(status).entity(body).build();
     }
 }

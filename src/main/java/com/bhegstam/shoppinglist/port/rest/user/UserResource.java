@@ -41,15 +41,7 @@ public class UserResource {
                 request.getEmail()
         );
 
-        Response.Status status = CREATED;
-        UserCreatedResponse body = new UserCreatedResponse(userId);
-
-        logResponse(status, body);
-
-        return Response
-                .status(status)
-                .entity(body)
-                .build();
+        return createAndLogResponse(CREATED, new UserCreatedResponse(userId));
     }
 
     @RolesAllowed(ADMIN)
@@ -59,15 +51,7 @@ public class UserResource {
 
         List<User> users = userApplication.getUsers();
 
-        Response.Status status = OK;
-        GetUsersResponse body = new GetUsersResponse(users);
-
-        logResponse(status, body);
-
-        return Response
-                .status(status)
-                .entity(body)
-                .build();
+        return createAndLogResponse(OK, new GetUsersResponse(users));
     }
 
     @Path("/{userId}")
@@ -80,18 +64,11 @@ public class UserResource {
 
         User updateUser = userApplication.updateUser(userId, Role.fromString(request.getRole()), request.getVerified());
 
-        Response.Status status = OK;
-        UserResponse body = new UserResponse(updateUser);
-
-        logResponse(status, body);
-
-        return Response
-                .status(status)
-                .entity(body)
-                .build();
+        return createAndLogResponse(OK, new UserResponse(updateUser));
     }
 
-    private void logResponse(Response.Status status, Object body) {
+    private Response createAndLogResponse(Response.Status status, Object body) {
         LOGGER.info("Responding to request with status [{}] and body [{}]", status, body);
+        return Response.status(status).entity(body).build();
     }
 }
