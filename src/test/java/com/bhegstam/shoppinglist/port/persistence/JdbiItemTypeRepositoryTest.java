@@ -2,6 +2,7 @@ package com.bhegstam.shoppinglist.port.persistence;
 
 import com.bhegstam.shoppinglist.domain.ItemType;
 import com.bhegstam.shoppinglist.domain.ItemTypeId;
+import com.bhegstam.shoppinglist.domain.ItemTypeNameAlreadyTakenException;
 import com.bhegstam.shoppinglist.domain.ItemTypeRepository;
 import com.bhegstam.shoppinglist.util.TestDatabaseSetup;
 import org.junit.Before;
@@ -9,6 +10,7 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
+import org.junit.rules.ExpectedException;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -26,6 +28,9 @@ public class JdbiItemTypeRepositoryTest {
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     private ItemTypeRepository itemTypeRepository;
 
     @Before
@@ -34,7 +39,7 @@ public class JdbiItemTypeRepositoryTest {
     }
 
     @Test
-    public void createAndGetItemType() {
+    public void persistAndGetItemType() {
         // given
         Instant before = Instant.now();
         ItemType itemType = ItemType.create("Foo");
@@ -50,6 +55,18 @@ public class JdbiItemTypeRepositoryTest {
         errorCollector.checkThat(persistedItemType.isPersisted(), is(true));
         errorCollector.checkThat(persistedItemType.getCreatedAt(), isAtOrAfter(before.truncatedTo(ChronoUnit.MICROS)));
         errorCollector.checkThat(persistedItemType.getUpdatedAt(), is(persistedItemType.getCreatedAt()));
+    }
+
+    @Test
+    public void persistItemType_throwsExceptionIfItemTypeNameAlreadyTaken() {
+        // given
+        itemTypeRepository.add(ItemType.create("Foo"));
+
+        // then
+        expectedException.expect(ItemTypeNameAlreadyTakenException.class);
+
+        // when
+        itemTypeRepository.add(ItemType.create("Foo"));
     }
 
     @Test(expected = ItemTypeNotFoundException.class)

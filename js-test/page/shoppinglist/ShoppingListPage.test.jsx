@@ -1,4 +1,4 @@
-import { ShoppingListPage } from '../../../js/page/shoppinglist/ShoppingListPage';
+import { AddItemFlowStep, ShoppingListPage } from '../../../js/page/shoppinglist/ShoppingListPage';
 import ShoppingList from '../../../js/page/shoppinglist/ShoppingList';
 import { setupComponent } from '../../util';
 
@@ -80,7 +80,6 @@ it('renders loading text when initial fetch not complete', () => {
   // then
   expect(component.find(ShoppingList)).toHaveLength(0);
 });
-
 
 it('renders shopping list when initial fetch complete', () => {
   // given
@@ -248,76 +247,107 @@ describe('edit', () => {
 });
 
 describe('item actions', () => {
-  describe('add item', () => {
-    it('new item type', async () => {
-      // given
-      const newItemTypeId = 'f6ac3770-c837-4e70-b580-fecc1216a195';
-      props.addItemType.mockReturnValueOnce({ payload: { data: { id: newItemTypeId } } });
+  describe('add item flow', () => {
+    describe('it updates state with request to add item', () => {
+      it('when using new item type', () => {
+        // when
+        component.find(ShoppingList).simulate('addItem', { name: 'Bananas' });
 
-      // when
-      component.find(ShoppingList).simulate('addItem', {
-        name: 'Bananas',
+        // then
+        expect(component.state('addItemFlow')).toEqual({
+          step: AddItemFlowStep.CREATE_ITEM_TYPE,
+          itemType: { name: 'Bananas' },
+        });
       });
 
-      await props.addItemType;
+      it('when using existing item type', () => {
+        // when
+        component.find(ShoppingList).simulate('addItem', { ...itemType });
+
+        // then
+        expect(component.state('addItemFlow')).toEqual({
+          step: AddItemFlowStep.ADD_ITEM,
+          itemType,
+        });
+      });
+    });
+
+    it('sends request to add item type if it does not exist', () => {
+      // when
+      component.setState({
+        addItemFlow: {
+          step: AddItemFlowStep.CREATE_ITEM_TYPE,
+          itemType: { name: 'Bananas' },
+        },
+      });
 
       // then
-      expect(props.addItemType).toHaveBeenCalledWith({
-        token: props.token,
+      expect(props.addItemType).toHaveBeenCalledWith({ token: props.token, name: 'Bananas' });
+    });
+
+    it('handles successful creation of item type', () => {
+      // given
+      const newItemType = {
+        id: '2f7baf32-3de4-4239-aa63-32459732f1b0',
         name: 'Bananas',
+      };
+      component.setState({
+        addItemFlow: {
+          step: AddItemFlowStep.CREATE_ITEM_TYPE,
+          itemType: newItemType,
+        },
       });
-      expect(props.getItemTypes).toHaveBeenCalledWith(props.token);
+      component.setProps({ addingItemType: true });
+
+      // when
+      component.setProps({
+        addingItemType: false,
+        itemTypes: [
+          ...props.itemTypes,
+          newItemType,
+        ],
+      });
+
+      // then
+      expect(component.state('addItemFlow')).toEqual({
+        step: AddItemFlowStep.ADD_ITEM,
+        itemType: { ...newItemType },
+      });
+    });
+
+    it('handles ADD_ITEM step', () => {
+      // when
+      component.setState({
+        addItemFlow: {
+          step: AddItemFlowStep.ADD_ITEM,
+          itemType,
+        },
+      });
+
+      // then
       expect(props.addShoppingListItem).toHaveBeenCalledWith({
         token: props.token,
         listId: props.shoppingList.id,
-        itemTypeId: newItemTypeId,
+        itemTypeId: itemType.id,
         quantity: 1,
       });
     });
 
-    describe('existing item type', () => {
-      it('adds item with quantity 1 if item of type not already in list', () => {
-        // given
-        component.setProps({
-          shoppingList: {
-            ...props.shoppingList,
-            items: [],
-          },
-        });
-
-        // when
-        component.find(ShoppingList).simulate('addItem', itemType);
-
-        // then
-        expect(props.addShoppingListItem).toHaveBeenCalledWith({
-          token: props.token,
-          listId: props.shoppingList.id,
-          itemTypeId: itemType.id,
-          quantity: 1,
-        });
+    it('handles item successfully added to list', () => {
+      // given
+      component.setState({
+        addItemFlow: {
+          step: AddItemFlowStep.ADD_ITEM,
+          itemType,
+        },
       });
+      component.setProps({ addingShoppingListItem: true });
 
-      it('increases quantity by 1 if item of type already in list', () => {
-        // given
-        component.setProps({
-          shoppingList: {
-            ...props.shoppingList,
-            items: [item],
-          },
-        });
+      // when
+      component.setProps({ addingShoppingListItem: false });
 
-        // when
-        component.find(ShoppingList).simulate('addItem', itemType);
-
-        // then
-        expect(props.updateShoppingListItem).toHaveBeenCalledWith({
-          token: props.token,
-          listId: props.shoppingList.id,
-          itemId: item.id,
-          quantity: 2,
-          inCart: false,
-        });
-      });
+      // then
+      expect(component.state('addItemFlow')).toBe(null);
     });
   });
 

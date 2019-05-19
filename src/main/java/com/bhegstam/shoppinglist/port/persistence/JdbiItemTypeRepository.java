@@ -1,9 +1,6 @@
 package com.bhegstam.shoppinglist.port.persistence;
 
-import com.bhegstam.shoppinglist.domain.ItemType;
-import com.bhegstam.shoppinglist.domain.ItemTypeId;
-import com.bhegstam.shoppinglist.domain.ItemTypeRepository;
-import com.bhegstam.shoppinglist.domain.ItemTypeUsedInShoppingListException;
+import com.bhegstam.shoppinglist.domain.*;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -16,16 +13,24 @@ import java.util.List;
 
 @RegisterRowMapper(ItemTypeMapper.class)
 public interface JdbiItemTypeRepository extends ItemTypeRepository {
+    @Transaction
     default void add(ItemType itemType) {
-        if (itemType.insertRequired()) {
-            add(
-                    itemType.getId(),
-                    itemType.getName(),
-                    Timestamp.from(itemType.getCreatedAt()),
-                    Timestamp.from(itemType.getUpdatedAt())
-            );
-            itemType.markAsPersisted();
+        if (!itemType.insertRequired()) {
+            throw new UnsupportedOperationException("Insert of new item type is the only currently supported method");
         }
+
+        ItemType existingItemType = findItemType(itemType.getName());
+        if (existingItemType != null) {
+            throw new ItemTypeNameAlreadyTakenException(existingItemType);
+        }
+
+        add(
+                itemType.getId(),
+                itemType.getName(),
+                Timestamp.from(itemType.getCreatedAt()),
+                Timestamp.from(itemType.getUpdatedAt())
+        );
+        itemType.markAsPersisted();
     }
 
     @SqlUpdate("insert into item_type(id, name, created_at, updated_at) values (:itemTypeId.id, :name, :createdAt, :updatedAt)")
@@ -53,6 +58,9 @@ public interface JdbiItemTypeRepository extends ItemTypeRepository {
             @Bind("nameStart") String nameStart,
             @Bind("limit") int limit
     );
+
+    @SqlQuery("select * from item_type where name = :name")
+    ItemType findItemType(@Bind("name") String name);
 
     @SqlQuery("select * from item_type order by name")
     List<ItemType> getItemTypes();

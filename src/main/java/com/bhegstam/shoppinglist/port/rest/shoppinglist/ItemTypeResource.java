@@ -1,10 +1,7 @@
 package com.bhegstam.shoppinglist.port.rest.shoppinglist;
 
 import com.bhegstam.shoppinglist.application.ItemTypeApplication;
-import com.bhegstam.shoppinglist.domain.ItemType;
-import com.bhegstam.shoppinglist.domain.ItemTypeId;
-import com.bhegstam.shoppinglist.domain.ItemTypeUsedInShoppingListException;
-import com.bhegstam.shoppinglist.domain.User;
+import com.bhegstam.shoppinglist.domain.*;
 import io.dropwizard.auth.Auth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +33,19 @@ public class ItemTypeResource {
     public Response postItemType(@Auth User user, @Valid CreateItemTypeRequest request) {
         LOGGER.info("Received request [{}] to create item type for user [{}]", request, user.getId());
 
-        ItemType itemType = itemTypeApplication.createItemType(request.getName());
+        Response.Status status;
+        Object body;
+        try {
+            ItemType itemType = itemTypeApplication.createItemType(request.getName());
 
-        return createAndLogResponse(CREATED, new ItemTypeResponse(itemType));
+            status = CREATED;
+            body = new ItemTypeResponse(itemType);
+        } catch (ItemTypeNameAlreadyTakenException e) {
+            status = CONFLICT;
+            body = ErrorResponse.exception(e);
+        }
+
+        return createAndLogResponse(status, body);
     }
 
     @RolesAllowed({USER, ADMIN})

@@ -86,6 +86,22 @@ public class ItemTypeIntegrationTest {
     }
 
     @Test
+    public void postItemType_itemTypeWithSameNameAlreadyExists() {
+        // given
+        ItemType existingItemType = ItemType.create("Apples");
+        itemTypeRepository.add(existingItemType);
+
+        // when
+        Response response = api.postItemType("{ \"name\": \"Apples\" }");
+
+        // then
+        assertResponseStatus(response, CONFLICT);
+
+        JsonNode responseJson = jsonMapper.read(response);
+        assertThat(responseJson.get("errorCode").asText(), is("ITEM_TYPE_NAME_ALREADY_TAKEN"));
+    }
+
+    @Test
     public void getItemTypes_noItemTypesExist() {
         // when
         Response response = api.getItemTypes();

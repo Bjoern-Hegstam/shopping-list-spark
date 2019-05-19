@@ -34,6 +34,18 @@ export default function (state = {}, action) {
         },
       };
     }
+    case types.ADD_ITEM_TYPE_SUCCESS: {
+      const { data } = action.payload;
+      const normalizedData = normalize(data, itemTypeSchema);
+
+      return {
+        ...state,
+        itemTypes: {
+          ...state.itemTypes,
+          ...normalizedData.entities.itemTypes,
+        },
+      };
+    }
     case types.GET_ITEM_TYPES_SUCCESS: {
       const { data } = action.payload;
       const normalizedData = normalize(data.itemTypes, [itemTypeSchema]);
