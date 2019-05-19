@@ -1,10 +1,10 @@
 import reducer from '../../js/reducers/ErrorReducer';
 
-const TYPE = 'GET_DATA';
+const ACTION_TYPE = 'GET_DATA';
 
 it('ignores non-fail action without request payload', () => {
   // given
-  const action = { type: TYPE };
+  const action = { type: ACTION_TYPE };
 
   // when
   const newState = reducer({}, action);
@@ -16,8 +16,8 @@ it('ignores non-fail action without request payload', () => {
 it('clears error when new request initiated', () => {
   // given
   const action = {
-    type: TYPE,
-    payload: { request: Promise.resolve() },
+    type: ACTION_TYPE,
+    payload: { request: {} },
   };
 
   // when
@@ -25,15 +25,15 @@ it('clears error when new request initiated', () => {
 
   // then
   expect(newState).toEqual({
-    [TYPE]: '',
+    [ACTION_TYPE]: '',
   });
 });
 
 it('ignores SUCCESS', () => {
   // given
   const action = {
-    type: `${TYPE}_SUCCESS`,
-    payload: { request: Promise.resolve() },
+    type: `${ACTION_TYPE}_SUCCESS`,
+    payload: { request: {} },
   };
 
   // when
@@ -45,10 +45,10 @@ it('ignores SUCCESS', () => {
 
 it('stores error message on FAIL', () => {
   // given
-  const state = { [TYPE]: '' };
+  const state = { [ACTION_TYPE]: '' };
 
   const action = {
-    type: `${TYPE}_FAIL`,
+    type: `${ACTION_TYPE}_FAIL`,
     error: {
       response: {
         status: 400,
@@ -64,7 +64,7 @@ it('stores error message on FAIL', () => {
 
   // then
   expect(newState).toEqual({
-    [TYPE]: {
+    [ACTION_TYPE]: {
       status: 400,
       data: {
         errorCode: 'ERROR_CODE',

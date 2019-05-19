@@ -1,10 +1,10 @@
 import reducer from '../../js/reducers/LoadingReducer';
 
-const TYPE = 'GET_DATA';
+const ACTION_TYPE = 'GET_DATA';
 
 it('ignores action without request payload', () => {
   // given
-  const action = { type: TYPE };
+  const action = { type: ACTION_TYPE };
 
   // when
   const newState = reducer({}, action);
@@ -16,8 +16,8 @@ it('ignores action without request payload', () => {
 it('marks request as loading', () => {
   // given
   const action = {
-    type: TYPE,
-    payload: { request: Promise.resolve() },
+    type: ACTION_TYPE,
+    payload: { request: {} },
   };
 
   // when
@@ -25,17 +25,17 @@ it('marks request as loading', () => {
 
   // then
   expect(newState).toEqual({
-    [TYPE]: true,
+    [ACTION_TYPE]: true,
   });
 });
 
 it('marks request as not loading on SUCCESS', () => {
   // given
-  const state = { [TYPE]: true };
+  const state = { [ACTION_TYPE]: true };
 
   const action = {
-    type: `${TYPE}_SUCCESS`,
-    payload: { request: Promise.resolve() },
+    type: `${ACTION_TYPE}_SUCCESS`,
+    payload: { request: {} },
   };
 
   // when
@@ -43,17 +43,17 @@ it('marks request as not loading on SUCCESS', () => {
 
   // then
   expect(newState).toEqual({
-    [TYPE]: false,
+    [ACTION_TYPE]: false,
   });
 });
 
 it('marks request as not loading on FAIL', () => {
   // given
-  const state = { [TYPE]: true };
+  const state = { [ACTION_TYPE]: true };
 
   const action = {
-    type: `${TYPE}_FAIL`,
-    payload: { request: Promise.resolve() },
+    type: `${ACTION_TYPE}_FAIL`,
+    payload: { request: {} },
   };
 
   // when
@@ -61,6 +61,6 @@ it('marks request as not loading on FAIL', () => {
 
   // then
   expect(newState).toEqual({
-    [TYPE]: false,
+    [ACTION_TYPE]: false,
   });
 });
