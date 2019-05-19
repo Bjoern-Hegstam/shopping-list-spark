@@ -3,7 +3,7 @@ package com.bhegstam.shoppinglist.port.persistence;
 import com.bhegstam.shoppinglist.domain.ItemType;
 import com.bhegstam.shoppinglist.domain.ItemTypeId;
 import com.bhegstam.shoppinglist.domain.ItemTypeRepository;
-import com.bhegstam.shoppinglist.domain.ItemTypeUsedInShoppingList;
+import com.bhegstam.shoppinglist.domain.ItemTypeUsedInShoppingListException;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -61,7 +61,7 @@ public interface JdbiItemTypeRepository extends ItemTypeRepository {
     default void deleteItemType(ItemTypeId itemTypeId) {
         int itemTypeUseCount = countShoppingListItemsUsingItemType(itemTypeId);
         if (itemTypeUseCount > 0) {
-            throw new ItemTypeUsedInShoppingList(itemTypeId);
+            throw new ItemTypeUsedInShoppingListException(itemTypeId);
         }
 
         deleteItemType_internal(itemTypeId);

@@ -1,6 +1,6 @@
 package com.bhegstam.shoppinglist.port.rest.shoppinglist;
 
-import com.bhegstam.shoppinglist.domain.ItemTypeUsedInShoppingList;
+import com.bhegstam.shoppinglist.domain.ItemTypeUsedInShoppingListException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -17,7 +17,7 @@ class ErrorResponse {
         this.message = message;
     }
 
-    static Object exception(ItemTypeUsedInShoppingList e) {
+    static Object exception(ItemTypeUsedInShoppingListException e) {
         return new ErrorResponse(ErrorCode.ITEM_TYPE_USED_IN_SHOPPING_LIST, e.getMessage());
     }
 

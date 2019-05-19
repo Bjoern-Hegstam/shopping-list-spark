@@ -3,7 +3,7 @@ package com.bhegstam.shoppinglist.port.rest.shoppinglist;
 import com.bhegstam.shoppinglist.application.ItemTypeApplication;
 import com.bhegstam.shoppinglist.domain.ItemType;
 import com.bhegstam.shoppinglist.domain.ItemTypeId;
-import com.bhegstam.shoppinglist.domain.ItemTypeUsedInShoppingList;
+import com.bhegstam.shoppinglist.domain.ItemTypeUsedInShoppingListException;
 import com.bhegstam.shoppinglist.domain.User;
 import io.dropwizard.auth.Auth;
 import org.slf4j.Logger;
@@ -93,7 +93,7 @@ public class ItemTypeResource {
         try {
             itemTypeApplication.deleteItemType(itemTypeId);
             status = NO_CONTENT;
-        } catch (ItemTypeUsedInShoppingList e) {
+        } catch (ItemTypeUsedInShoppingListException e) {
             status = CONFLICT;
             body = ErrorResponse.exception(e);
         }
