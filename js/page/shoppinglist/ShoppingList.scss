@@ -6,6 +6,7 @@
   grid-template-areas:
       "name button"
       "items items"
+      "cart cart"
       "add-item add-item";
 }
 
@@ -24,6 +25,13 @@
 
 .shopping-list__items {
   grid-area: items;
+
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.shopping-list__cart {
+  grid-area: cart;
 
   border-top: 1px solid black;
   border-bottom: 1px solid black;

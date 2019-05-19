@@ -71,15 +71,7 @@ export default class ShoppingList extends React.Component {
 
       return (
         <div className="shopping-list">
-          {!isEditing && (
-            <span
-              className="shopping-list__name"
-              onClick={this.handleStartEdit}
-            >
-              {shoppingList.name}
-            </span>
-          )}
-          {isEditing && (
+          {isEditing ? (
             <input
               ref={this.inputRef}
               className="shopping-list__name shopping-list__name--edit"
@@ -89,8 +81,16 @@ export default class ShoppingList extends React.Component {
               onBlur={this.props.onCancelEdit}
               size={1} // Prevents input from getting too wide
             />
+          ) : (
+            <span
+              className="shopping-list__name"
+              onClick={this.handleStartEdit}
+            >
+              {shoppingList.name}
+            </span>
           )}
-          {hasItems && (
+
+          {hasItems ? (
             <button
               type="button"
               className="shopping-list__button"
@@ -99,8 +99,7 @@ export default class ShoppingList extends React.Component {
             >
                         Empty Cart
             </button>
-          )}
-          {!hasItems && (
+          ) : (
             <button
               type="button"
               className="shopping-list__button"
@@ -110,25 +109,46 @@ export default class ShoppingList extends React.Component {
                         Delete
             </button>
           )}
+
           <div className="shopping-list__items">
             <TransitionGroup>
-              {shoppingList.items.map(item => (
-                <CSSTransition
-                  key={item.id}
-                  classNames="shopping-list-item"
-                  timeout={{ enter: 500 }}
-                  exit={false}
-                >
+              {shoppingList
+                .items
+                .filter(item => !item.inCart)
+                .map(item => (
+                  <CSSTransition
+                    key={item.id}
+                    classNames="shopping-list-item"
+                    timeout={{ enter: 500 }}
+                    exit={false}
+                  >
+                    <ShoppingListItem
+                      key={item.id}
+                      item={item}
+                      onToggleInCart={onToggleItemInCart}
+                      onUpdateQuantity={onUpdateItemQuantity}
+                    />
+                  </CSSTransition>
+                ))}
+            </TransitionGroup>
+          </div>
+
+          {hasItemsInCart && (
+            <div className="shopping-list__cart">
+              {shoppingList
+                .items
+                .filter(item => item.inCart)
+                .map(item => (
                   <ShoppingListItem
                     key={item.id}
                     item={item}
                     onToggleInCart={onToggleItemInCart}
                     onUpdateQuantity={onUpdateItemQuantity}
                   />
-                </CSSTransition>
-              ))}
-            </TransitionGroup>
-          </div>
+                ))}
+            </div>
+          )}
+
           <div className="shopping-list__add-item">
             <AddShoppingListItemInput itemTypes={itemTypes} onAddItem={onAddItem} />
           </div>

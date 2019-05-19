@@ -78,7 +78,10 @@ describe('initial render', () => {
     expect(component.find('.shopping-list__button').text()).toBe('Empty Cart');
     expect(component.find('.shopping-list__button').prop('disabled')).toBeFalsy();
 
-    expect(component.find(ShoppingListItem)).toHaveLength(shoppingListWithItemsInCart.items.length);
+    const numItemsToGet = shoppingListWithItemsInCart.items.filter(item => !item.inCart).length;
+    const numItemsInCart = shoppingListWithItemsInCart.items.filter(item => item.inCart).length;
+    expect(component.find('.shopping-list__items').find(ShoppingListItem)).toHaveLength(numItemsToGet);
+    expect(component.find('.shopping-list__cart').find(ShoppingListItem)).toHaveLength(numItemsInCart);
   });
 });
 
