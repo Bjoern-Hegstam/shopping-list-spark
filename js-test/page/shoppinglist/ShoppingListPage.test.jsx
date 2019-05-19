@@ -248,7 +248,7 @@ describe('edit', () => {
 
 describe('item actions', () => {
   describe('add item flow', () => {
-    describe('it updates state with request to add item', () => {
+    describe('it initiates add item flow', () => {
       it('when using new item type', () => {
         // when
         component.find(ShoppingList).simulate('addItem', { name: 'Bananas' });
@@ -294,7 +294,7 @@ describe('item actions', () => {
       component.setState({
         addItemFlow: {
           step: AddItemFlowStep.CREATE_ITEM_TYPE,
-          itemType: newItemType,
+          itemType: { name: newItemType.name },
         },
       });
       component.setProps({ addingItemType: true });
@@ -315,7 +315,36 @@ describe('item actions', () => {
       });
     });
 
-    it('handles ADD_ITEM step', () => {
+    it('handles failure to create item type', () => {
+      // given
+      component.setState({
+        addItemFlow: {
+          step: AddItemFlowStep.CREATE_ITEM_TYPE,
+          itemType: { name: 'Bananas' },
+        },
+      });
+      component.setProps({ addingItemType: true });
+      props.getItemTypes.mockReset();
+      props.getShoppingList.mockReset();
+
+      // when
+      component.setProps({
+        addingItemType: false,
+        errorAddItemType: {
+          status: 409,
+          data: {
+            errorCode: 'ITEM_TYPE_NAME_ALREADY_TAKEN',
+            message: 'Something went wrong',
+          },
+        },
+      });
+
+      // then
+      expect(props.getItemTypes).toHaveBeenCalledWith(props.token);
+      expect(props.getShoppingList).toHaveBeenCalledWith(({ token: props.token, id: props.shoppingList.id }));
+    });
+
+    it('sends request to add item once item type id is known', () => {
       // when
       component.setState({
         addItemFlow: {
@@ -348,6 +377,28 @@ describe('item actions', () => {
 
       // then
       expect(component.state('addItemFlow')).toBe(null);
+    });
+
+    it('handles failure to add item to list', () => {
+      // given
+      component.setState({
+        addItemFlow: {
+          step: AddItemFlowStep.ADD_ITEM,
+          itemType,
+        },
+      });
+      component.setProps({ addingShoppingListItem: true });
+
+      // when
+      component.setProps({
+        addingShoppingListItem: false,
+        errorAddShoppingListItem: { status: 400 },
+      });
+
+      // then
+      expect(component.state('addItemFlow')).toBe(null);
+      expect(props.getItemTypes).toHaveBeenCalledWith(props.token);
+      expect(props.getShoppingList).toHaveBeenCalledWith(({ token: props.token, id: props.shoppingList.id }));
     });
   });
 

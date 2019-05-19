@@ -1,5 +1,13 @@
 import * as PropTypes from 'prop-types';
 
+export const RequestErrorType = PropTypes.shape({
+  status: PropTypes.number.isRequired,
+  data: PropTypes.shape({
+    errorCode: PropTypes.string.isRequired,
+    message: PropTypes.string.isRequired,
+  }),
+});
+
 export const UserType = PropTypes.shape({
   id: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,

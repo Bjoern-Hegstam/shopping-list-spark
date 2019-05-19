@@ -2,7 +2,7 @@ import reducer from '../../js/reducers/ErrorReducer';
 
 const TYPE = 'GET_DATA';
 
-it('ignores action without request payload', () => {
+it('ignores non-fail action without request payload', () => {
   // given
   const action = { type: TYPE };
 
@@ -13,14 +13,11 @@ it('ignores action without request payload', () => {
   expect(newState).toEqual({});
 });
 
-it('clears error as loading', () => {
+it('clears error when new request initiated', () => {
   // given
   const action = {
     type: TYPE,
-    payload: {
-      request: Promise.resolve(),
-      payload: { request: Promise.resolve() },
-    },
+    payload: { request: Promise.resolve() },
   };
 
   // when
@@ -52,8 +49,14 @@ it('stores error message on FAIL', () => {
 
   const action = {
     type: `${TYPE}_FAIL`,
-    payload: { request: Promise.resolve() },
-    error: 'Error',
+    error: {
+      response: {
+        status: 400,
+        data: {
+          errorCode: 'ERROR_CODE',
+        },
+      },
+    },
   };
 
   // when
@@ -61,6 +64,11 @@ it('stores error message on FAIL', () => {
 
   // then
   expect(newState).toEqual({
-    [TYPE]: 'Error',
+    [TYPE]: {
+      status: 400,
+      data: {
+        errorCode: 'ERROR_CODE',
+      },
+    },
   });
 });

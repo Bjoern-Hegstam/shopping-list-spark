@@ -2,7 +2,7 @@ import React from 'react';
 import * as PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import AppLayout from '../../components/AppLayout';
-import { ItemTypeType, ShoppingListType } from '../../propTypes';
+import { ItemTypeType, RequestErrorType, ShoppingListType } from '../../propTypes';
 import {
   addShoppingListItem,
   deleteShoppingList,
@@ -39,37 +39,37 @@ export class ShoppingListPage extends React.Component {
 
     getShoppingList: PropTypes.func.isRequired,
     fetchingShoppingList: PropTypes.bool.isRequired,
-    errorGetShoppingList: PropTypes.object,
+    errorGetShoppingList: RequestErrorType,
 
     addItemType: PropTypes.func.isRequired,
     addingItemType: PropTypes.bool.isRequired,
-    errorAddItemType: PropTypes.object,
+    errorAddItemType: RequestErrorType,
 
     getItemTypes: PropTypes.func.isRequired,
 
     updateShoppingList: PropTypes.func.isRequired,
     updatingShoppingList: PropTypes.bool.isRequired,
-    errorUpdateShoppingList: PropTypes.object,
+    errorUpdateShoppingList: RequestErrorType,
 
     deleteShoppingList: PropTypes.func.isRequired,
     deletingShoppingList: PropTypes.bool.isRequired,
-    errorDeleteShoppingList: PropTypes.object,
+    errorDeleteShoppingList: RequestErrorType,
 
     addShoppingListItem: PropTypes.func.isRequired,
     addingShoppingListItem: PropTypes.bool.isRequired,
-    errorAddShoppingListItem: PropTypes.object,
+    errorAddShoppingListItem: RequestErrorType,
 
     updateShoppingListItem: PropTypes.func.isRequired,
     updatingShoppingListItem: PropTypes.bool.isRequired,
-    errorUpdateShoppingListItem: PropTypes.object,
+    errorUpdateShoppingListItem: RequestErrorType,
 
     deleteShoppingListItem: PropTypes.func.isRequired,
     deletingShoppingListItem: PropTypes.bool.isRequired,
-    errorDeleteShoppingListItem: PropTypes.object,
+    errorDeleteShoppingListItem: RequestErrorType,
 
     emptyCart: PropTypes.func.isRequired,
     emptyingCart: PropTypes.bool.isRequired,
-    errorEmptyCart: PropTypes.object,
+    errorEmptyCart: RequestErrorType,
   };
 
   static defaultProps = {
@@ -117,28 +117,43 @@ export class ShoppingListPage extends React.Component {
     if (step === AddItemFlowStep.CREATE_ITEM_TYPE) {
       if (prevProps.addingItemType && !this.props.addingItemType) {
         if (!this.props.errorAddItemType) {
-          const persistedItemType = this.props.itemTypes.find(it => it.name === itemType.name);
-
+          // Successfully created item type, fetch it from state and go to next step in flow
           this.setState({
             addItemFlow: {
               step: AddItemFlowStep.ADD_ITEM,
-              itemType: persistedItemType,
+              itemType: this.props.itemTypes.find(it => it.name === itemType.name),
             },
           });
         } else {
-          // TODO: Handle error
+          // Something went wrong when creating item type, abort flow and refresh data
+          this.setState({ addItemFlow: null }, () => {
+            this.props.getItemTypes(this.props.token);
+            this.props.getShoppingList({
+              token: this.props.token,
+              id: this.props.shoppingList.id,
+            });
+          });
         }
       } else if (!this.props.addingItemType) {
-        this.props.addItemType({ token: this.props.token, name: itemType.name });
+        // Initiate creation of item type
+        this.props.addItemType({
+          token: this.props.token,
+          name: itemType.name,
+        });
       }
     } else if (step === AddItemFlowStep.ADD_ITEM) {
       if (prevProps.addingShoppingListItem && !this.props.addingShoppingListItem) {
         if (!this.props.errorAddShoppingListItem) {
+          // Item successfully added to list, clear flow.
+          // Can leave it to generic change handler to make call to refresh list data
           this.setState({ addItemFlow: null });
         } else {
-          // TODO: Handle error
+          // Something went wrong when adding item to list, abort flow.
+          // Generic change handler will refresh list data, but we need to manually re-fetch item types
+          this.setState({ addItemFlow: null }, () => this.props.getItemTypes(this.props.token));
         }
       } else if (!this.props.addingShoppingListItem) {
+        // Initiate adding of item to list
         this.props.addShoppingListItem({
           token: this.props.token,
           listId: this.props.shoppingList.id,
