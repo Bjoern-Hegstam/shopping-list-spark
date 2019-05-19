@@ -168,6 +168,32 @@ it('normalizes shopping list on GET_SHOPPING_LIST_SUCCESS', () => {
   });
 });
 
+it('handles ADD_ITEM_TYPE_SUCCESS', () => {
+  // given
+  const newItemType = {
+    id: '56cbbed1-ffce-403d-84ef-b98a4be839d9',
+    name: 'Apples',
+  };
+  const action = {
+    type: types.ADD_ITEM_TYPE_SUCCESS,
+    payload: {
+      data: newItemType,
+    },
+  };
+
+  // when
+  const newState = reducer(initialState, action);
+
+  // then
+  expect(newState).toEqual({
+    ...initialState,
+    itemTypes: {
+      ...initialState.itemTypes,
+      [newItemType.id]: newItemType,
+    },
+  });
+});
+
 it('handles GET_ITEM_TYPES_SUCCESS', () => {
   // given
   const newItemTypeId = '56cbbed1-ffce-403d-84ef-b98a4be839d9';
