@@ -405,7 +405,7 @@ describe('item actions', () => {
   describe('cart', () => {
     it('add item to cart', () => {
       // when
-      component.find(ShoppingList).simulate('toggleItemInCart', item, true);
+      component.find(ShoppingList).simulate('toggleItemInCart', { item, newInCart: true });
 
       // then
       expect(props.updateShoppingListItem).toHaveBeenCalledWith({
@@ -419,7 +419,7 @@ describe('item actions', () => {
 
     it('remove item from cart', () => {
       // when
-      component.find(ShoppingList).simulate('toggleItemInCart', item, false);
+      component.find(ShoppingList).simulate('toggleItemInCart', { item, newInCart: false });
 
       // then
       expect(props.updateShoppingListItem).toHaveBeenCalledWith({
@@ -435,7 +435,7 @@ describe('item actions', () => {
   describe('update item quantity', () => {
     it('sets new quantity when greater than zero', () => {
       // when
-      component.find(ShoppingList).simulate('updateItemQuantity', item, 5);
+      component.find(ShoppingList).simulate('updateItemQuantity', { item, newQuantity: 5 });
 
       // then
       expect(props.updateShoppingListItem).toHaveBeenCalledWith({
@@ -449,7 +449,7 @@ describe('item actions', () => {
 
     it('deletes item when new quantity less than or equal to zero', () => {
       // when
-      component.find(ShoppingList).simulate('updateItemQuantity', item, 0);
+      component.find(ShoppingList).simulate('updateItemQuantity', { item, newQuantity: 0 });
 
       // then
       expect(props.deleteShoppingListItem).toHaveBeenCalledWith({

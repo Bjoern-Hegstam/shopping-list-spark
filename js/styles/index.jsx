@@ -8,6 +8,7 @@ import '../page/login/LoginPage.scss';
 import '../page/registration/RegistrationForm.scss';
 import '../page/shoppinglist/ShoppingList.scss';
 import '../page/shoppinglist/ShoppingListItem.scss';
+import '../page/shoppinglist/ShoppingListItemSubPanel.scss';
 import '../page/shoppinglist/AddShoppingListItemInput.scss';
 import '../page/shoppinglists/ShoppingListsPage.scss';
 import '../page/shoppinglists/ShoppingListLink.scss';

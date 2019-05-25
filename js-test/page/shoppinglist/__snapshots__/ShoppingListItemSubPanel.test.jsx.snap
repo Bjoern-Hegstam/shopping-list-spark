@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`initial render 1`] = `
+"<div className=\\"shopping-list-item-sub-panel\\">
+  <div className=\\"shopping-list-item-sub-panel__button shopping-list-item-sub-panel__button__incr\\" onClick={[Function: mockConstructor]}>
+    <span>
+      +
+    </span>
+  </div>
+  <div className=\\"shopping-list-item-sub-panel__button shopping-list-item-sub-panel__button__decr\\" onClick={[Function: mockConstructor]}>
+    <span>
+      -
+    </span>
+  </div>
+</div>"
+`;

@@ -1,16 +1,16 @@
 @import '../../styles/general';
 
 .shopping-list-item {
-  border-bottom: 1px solid $border-color;
   font-size: 2rem;
-  padding: 30px 0;
+  line-height: 4rem;
 
-  display: grid;
-  grid-template-columns: 10% 10% 1fr 10%;
-  grid-template-areas: "incr quantity name decr";
-
-  align-items: center;
-  justify-items: center;
+  & {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    grid-template-areas:
+            "main"
+            "sub-panel";
+  }
 
   &--in-cart {
     background-color: $item-selected-color;
@@ -24,36 +24,40 @@
     background-color: white;
     transition: background-color 500ms ease-in;
   }
-}
 
-.shopping-list-item__quantity {
-  grid-area: quantity;
-}
+  &__main {
+    grid-area: main;
 
-.shopping-list-item__name {
-  grid-area: name;
-  justify-self: left;
-}
+    width: 100%;
+    height: 100%;
 
-.shopping-list-item__button {
-  @extend %base-button;
-  font-weight: normal;
-  font-size: 2.5rem;
-  color: black;
-  width: 100%;
-  height: 100%;
-
-  padding: 0;
-
-  border-radius: 0;
-
-  &--incr {
-    grid-area: incr;
-    border-right: 1px solid black;
+    display: grid;
+    grid-template-columns: 10% 1fr 20%;
+    grid-template-areas: "quantity name cart-button";
   }
 
-  &--decr {
-    grid-area: decr;
+  &__main__quantity {
+    grid-area: quantity;
+
+    text-align: center;
+  }
+
+  &__main__name {
+    grid-area: name;
+    justify-self: left;
+
+    width: 100%;
+  }
+
+  &__main__cart-button {
+    grid-area: cart-button;
+
+    @extend %base-button;
+    font-weight: normal;
+    font-size: 2.5rem;
+    color: black;
+
+    border-radius: 0;
     border-left: 1px solid black;
   }
 }

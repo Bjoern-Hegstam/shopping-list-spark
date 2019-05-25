@@ -231,7 +231,7 @@ export class ShoppingListPage extends React.Component {
     });
   };
 
-  handleToggleItemInCart = (item, newInCart) => {
+  handleToggleItemInCart = ({ item, newInCart }) => {
     const { token, shoppingList } = this.props;
 
     this.props.updateShoppingListItem({
@@ -243,7 +243,7 @@ export class ShoppingListPage extends React.Component {
     });
   };
 
-  handleUpdateItemQuantity = (item, newQuantity) => {
+  handleUpdateItemQuantity = ({ item, newQuantity }) => {
     const { token, shoppingList } = this.props;
 
     if (newQuantity > 0) {
