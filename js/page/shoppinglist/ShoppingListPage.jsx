@@ -5,6 +5,7 @@ import AppLayout from '../../components/AppLayout';
 import { ItemTypeType, RequestErrorType, ShoppingListType } from '../../propTypes';
 import {
   addShoppingListItem,
+  addShoppingListItemRequestSelectorKey,
   deleteShoppingList,
   deleteShoppingListItem,
   emptyCart,
@@ -17,7 +18,11 @@ import { addItemType, getItemTypes } from '../../actions/ItemTypeActions';
 import ShoppingList from './ShoppingList';
 import * as types from '../../actions/types';
 import { itemTypesSelector, shoppingListSelector } from '../../selectors/ShoppingListSelectors';
-import { createErrorSelector, createLoadingSelector } from '../../selectors/RequestSelectors';
+import {
+  createErrorSelector,
+  createLoadingSelector,
+  createSubRequestLoadingSelector,
+} from '../../selectors/RequestSelectors';
 
 export const AddItemFlowStep = {
   CREATE_ITEM_TYPE: 'CREATE_ITEM_TYPE',
@@ -39,7 +44,6 @@ export class ShoppingListPage extends React.Component {
 
     getShoppingList: PropTypes.func.isRequired,
     fetchingShoppingList: PropTypes.bool.isRequired,
-    errorGetShoppingList: RequestErrorType,
 
     addItemType: PropTypes.func.isRequired,
     addingItemType: PropTypes.bool.isRequired,
@@ -49,40 +53,27 @@ export class ShoppingListPage extends React.Component {
 
     updateShoppingList: PropTypes.func.isRequired,
     updatingShoppingList: PropTypes.bool.isRequired,
-    errorUpdateShoppingList: RequestErrorType,
 
     deleteShoppingList: PropTypes.func.isRequired,
     deletingShoppingList: PropTypes.bool.isRequired,
-    errorDeleteShoppingList: RequestErrorType,
 
     addShoppingListItem: PropTypes.func.isRequired,
-    addingShoppingListItem: PropTypes.bool.isRequired,
-    errorAddShoppingListItem: RequestErrorType,
+    addingShoppingListItem: PropTypes.objectOf(PropTypes.bool).isRequired,
+    errorAddShoppingListItem: PropTypes.objectOf(RequestErrorType),
 
     updateShoppingListItem: PropTypes.func.isRequired,
-    updatingShoppingListItem: PropTypes.bool.isRequired,
-    errorUpdateShoppingListItem: RequestErrorType,
-
     deleteShoppingListItem: PropTypes.func.isRequired,
-    deletingShoppingListItem: PropTypes.bool.isRequired,
-    errorDeleteShoppingListItem: RequestErrorType,
 
     emptyCart: PropTypes.func.isRequired,
     emptyingCart: PropTypes.bool.isRequired,
-    errorEmptyCart: RequestErrorType,
   };
 
   static defaultProps = {
     shoppingList: undefined,
     itemTypes: [],
 
-    errorGetShoppingList: null,
     errorAddItemType: null,
-    errorUpdateShoppingList: null,
-    errorDeleteShoppingList: null,
-    errorAddShoppingListItem: null,
-    errorUpdateShoppingListItem: null,
-    errorDeleteShoppingListItem: null,
+    errorAddShoppingListItem: {},
   };
 
   state = {
@@ -142,8 +133,9 @@ export class ShoppingListPage extends React.Component {
         });
       }
     } else if (step === AddItemFlowStep.ADD_ITEM) {
-      if (prevProps.addingShoppingListItem && !this.props.addingShoppingListItem) {
-        if (!this.props.errorAddShoppingListItem) {
+      const selectorKey = addShoppingListItemRequestSelectorKey(this.props.shoppingList.id, itemType.id);
+      if (prevProps.addingShoppingListItem[selectorKey] && !this.props.addingShoppingListItem[selectorKey]) {
+        if (!this.props.errorAddShoppingListItem[selectorKey]) {
           // Item successfully added to list, clear flow.
           // Can leave it to generic change handler to make call to refresh list data
           this.setState({ addItemFlow: null });
@@ -152,7 +144,7 @@ export class ShoppingListPage extends React.Component {
           // Generic change handler will refresh list data, but we need to manually re-fetch item types
           this.setState({ addItemFlow: null }, () => this.props.getItemTypes(this.props.token));
         }
-      } else if (!this.props.addingShoppingListItem) {
+      } else if (!this.props.addingShoppingListItem[selectorKey]) {
         // Initiate adding of item to list
         this.props.addShoppingListItem({
           token: this.props.token,
@@ -166,18 +158,9 @@ export class ShoppingListPage extends React.Component {
 
   reFetchShoppingListIfHasChanged = (prevProps) => {
     const shoppingListUpdated = prevProps.updatingShoppingList && !this.props.updatingShoppingList;
-    const shoppingListItemAdded = prevProps.addingShoppingListItem && !this.props.addingShoppingListItem;
-    const shoppingListItemUpdated = prevProps.updatingShoppingListItem && !this.props.updatingShoppingListItem;
-    const shoppingListItemDeleted = prevProps.deletingShoppingListItem && !this.props.deletingShoppingListItem;
     const cartEmptied = prevProps.emptyingCart && !this.props.emptyingCart;
 
-    const shoppingListHasChanged = shoppingListUpdated
-      || shoppingListItemAdded
-      || shoppingListItemUpdated
-      || shoppingListItemDeleted
-      || cartEmptied;
-
-    if (shoppingListHasChanged) {
+    if (shoppingListUpdated || cartEmptied) {
       const { token, shoppingList } = this.props;
       this.props.getShoppingList({ token, id: shoppingList.id });
     }
@@ -311,32 +294,21 @@ const mapStateToProps = (store, ownProps) => {
   return {
     token: store.auth.token,
 
-    shoppingList: shoppingListSelector(store, listId),
+    shoppingList: shoppingListSelector(listId)(store),
     itemTypes: itemTypesSelector(store),
 
     fetchingShoppingList: createLoadingSelector(types.GET_SHOPPING_LIST)(store),
-    errorGetShoppingList: createErrorSelector(types.GET_SHOPPING_LIST)(store),
 
     addingItemType: createLoadingSelector(types.ADD_ITEM_TYPE)(store),
     errorAddItemType: createErrorSelector(types.ADD_ITEM_TYPE)(store),
 
     updatingShoppingList: createLoadingSelector(types.UPDATE_SHOPPING_LIST)(store),
-    errorUpdateShoppingList: createErrorSelector(types.UPDATE_SHOPPING_LIST)(store),
-
     deletingShoppingList: createLoadingSelector(types.DELETE_SHOPPING_LIST)(store),
-    errorDeleteShoppingList: createErrorSelector(types.DELETE_SHOPPING_LIST)(store),
 
-    addingShoppingListItem: createLoadingSelector(types.ADD_SHOPPING_LIST_ITEM)(store),
+    addingShoppingListItem: createSubRequestLoadingSelector(types.ADD_SHOPPING_LIST_ITEM)(store),
     errorAddShoppingListItem: createErrorSelector(types.ADD_SHOPPING_LIST_ITEM)(store),
 
-    updatingShoppingListItem: createLoadingSelector(types.UPDATE_SHOPPING_LIST_ITEM)(store),
-    errorUpdateShoppingListItem: createErrorSelector(types.UPDATE_SHOPPING_LIST_ITEM)(store),
-
-    deletingShoppingListItem: createLoadingSelector(types.DELETE_SHOPPING_LIST_ITEM)(store),
-    errorDeleteShoppingListItem: createErrorSelector(types.DELETE_SHOPPING_LIST_ITEM)(store),
-
     emptyingCart: createLoadingSelector(types.EMPTY_CART)(store),
-    errorEmptyCart: createErrorSelector(types.EMPTY_CART)(store),
   };
 };
 

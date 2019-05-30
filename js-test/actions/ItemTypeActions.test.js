@@ -10,5 +10,5 @@ it('deleteItemType', () => {
 
   // then
   expect(action.type).toBe(types.DELETE_ITEM_TYPE);
-  expect(action.queryInfo.itemTypeId).toBe(id);
+  expect(action.meta.itemTypeId).toBe(id);
 });

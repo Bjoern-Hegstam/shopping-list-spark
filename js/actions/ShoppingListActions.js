@@ -20,7 +20,7 @@ export function getShoppingLists(token) {
 export function getShoppingList({ token, id }) {
   return {
     type: types.GET_SHOPPING_LIST,
-    queryInfo: {
+    meta: {
       listId: id,
     },
     payload: {
@@ -90,11 +90,17 @@ export function deleteShoppingList({ token, listId }) {
   };
 }
 
+export const addShoppingListItemRequestSelectorKey = (listId, itemTypeId) => `${listId}:${itemTypeId}`;
+
 export function addShoppingListItem({
   token, listId, itemTypeId, quantity,
 }) {
   return {
     type: types.ADD_SHOPPING_LIST_ITEM,
+    meta: {
+      requestId: addShoppingListItemRequestSelectorKey(listId, itemTypeId),
+      listId,
+    },
     payload: {
       request: {
         method: 'post',
@@ -112,11 +118,19 @@ export function addShoppingListItem({
   };
 }
 
+export const updateShoppingListItemRequestSelectorKey = (listId, itemId) => `${listId}:${itemId}`;
+
+
 export function updateShoppingListItem({
   token, listId, itemId, quantity, inCart,
 }) {
   return {
     type: types.UPDATE_SHOPPING_LIST_ITEM,
+    meta: {
+      requestId: updateShoppingListItemRequestSelectorKey(listId, itemId),
+      listId,
+      itemId,
+    },
     payload: {
       request: {
         method: 'put',
@@ -134,9 +148,16 @@ export function updateShoppingListItem({
   };
 }
 
+export const deleteShoppingListItemRequestSelectorKey = (listId, itemId) => `${listId}:${itemId}`;
+
 export function deleteShoppingListItem({ token, listId, itemId }) {
   return {
     type: types.DELETE_SHOPPING_LIST_ITEM,
+    meta: {
+      requestId: deleteShoppingListItemRequestSelectorKey(listId, itemId),
+      listId,
+      itemId,
+    },
     payload: {
       request: {
         method: 'delete',

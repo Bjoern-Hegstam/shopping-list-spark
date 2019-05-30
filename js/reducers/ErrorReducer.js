@@ -12,11 +12,21 @@ export default function (state = {}, action) {
       status,
       data,
     };
-  } else if (action.payload && action.payload.request && !type.endsWith('SUCCESS')) {
+  } else if (action.payload?.request && !type.endsWith('SUCCESS')) {
     actionType = action.type;
-    error = '';
+    error = null;
   } else {
     return state;
+  }
+
+  if (action.meta?.requestId) {
+    return {
+      ...state,
+      [actionType]: {
+        ...state[actionType],
+        [action.meta.requestId]: error,
+      },
+    };
   }
 
   return {

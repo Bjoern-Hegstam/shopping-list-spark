@@ -1,6 +1,7 @@
 import { AddItemFlowStep, ShoppingListPage } from '../../../js/page/shoppinglist/ShoppingListPage';
 import ShoppingList from '../../../js/page/shoppinglist/ShoppingList';
 import { setupComponent } from '../../util';
+import { addShoppingListItemRequestSelectorKey } from '../../../js/actions/ShoppingListActions';
 
 const itemType = {
   id: '721eb282-a107-4263-99d9-d29e4785f0b8',
@@ -44,13 +45,10 @@ function setup(optProps) {
       deletingShoppingList: false,
 
       addShoppingListItem: jest.fn(),
-      addingShoppingListItem: false,
+      addingShoppingListItem: {},
 
       updateShoppingListItem: jest.fn(),
-      updatingShoppingListItem: false,
-
       deleteShoppingListItem: jest.fn(),
-      deletingShoppingListItem: false,
 
       emptyCart: jest.fn(),
       emptyingCart: false,
@@ -101,6 +99,7 @@ describe('re-fetch shopping list', () => {
   it('when list updated', () => {
     // given
     component.setProps({ updatingShoppingList: true });
+    props.getShoppingList.mockReset();
 
     // when
     component.setProps({ updatingShoppingList: false });
@@ -112,51 +111,10 @@ describe('re-fetch shopping list', () => {
     });
   });
 
-  it('when item added', () => {
-    // given
-    component.setProps({ addingShoppingListItem: true });
-
-    // when
-    component.setProps({ addingShoppingListItem: false });
-
-    // then
-    expect(props.getShoppingList).toHaveBeenCalledWith({
-      token: props.token,
-      id: props.shoppingList.id,
-    });
-  });
-
-  it('when item updated', () => {
-    // given
-    component.setProps({ updatingShoppingListItem: true });
-
-    // when
-    component.setProps({ updatingShoppingListItem: false });
-
-    // then
-    expect(props.getShoppingList).toHaveBeenCalledWith({
-      token: props.token,
-      id: props.shoppingList.id,
-    });
-  });
-
-  it('when item deleted', () => {
-    // given
-    component.setProps({ deletingShoppingListItem: true });
-
-    // when
-    component.setProps({ deletingShoppingListItem: false });
-
-    // then
-    expect(props.getShoppingList).toHaveBeenCalledWith({
-      token: props.token,
-      id: props.shoppingList.id,
-    });
-  });
-
   it('when cart emptied', () => {
     // given
     component.setProps({ emptyingCart: true });
+    props.getShoppingList.mockReset();
 
     // when
     component.setProps({ emptyingCart: false });
@@ -370,10 +328,18 @@ describe('item actions', () => {
           itemType,
         },
       });
-      component.setProps({ addingShoppingListItem: true });
+      component.setProps({
+        addingShoppingListItem: {
+          [addShoppingListItemRequestSelectorKey(props.shoppingList.id, itemType.id)]: true,
+        },
+      });
 
       // when
-      component.setProps({ addingShoppingListItem: false });
+      component.setProps({
+        addingShoppingListItem: {
+          [addShoppingListItemRequestSelectorKey(props.shoppingList.id, itemType.id)]: false,
+        },
+      });
 
       // then
       expect(component.state('addItemFlow')).toBe(null);
@@ -387,18 +353,28 @@ describe('item actions', () => {
           itemType,
         },
       });
-      component.setProps({ addingShoppingListItem: true });
+      component.setProps({
+        addingShoppingListItem: {
+          [addShoppingListItemRequestSelectorKey(props.shoppingList.id, itemType.id)]: true,
+        },
+      });
+
+      props.getItemTypes.mockReset();
+      props.getShoppingList.mockReset();
 
       // when
       component.setProps({
-        addingShoppingListItem: false,
-        errorAddShoppingListItem: { status: 400 },
+        addingShoppingListItem: {
+          [addShoppingListItemRequestSelectorKey(props.shoppingList.id, itemType.id)]: false,
+        },
+        errorAddShoppingListItem: {
+          [`${props.shoppingList.id}:${itemType.id}`]: { status: 400 },
+        },
       });
 
       // then
       expect(component.state('addItemFlow')).toBe(null);
       expect(props.getItemTypes).toHaveBeenCalledWith(props.token);
-      expect(props.getShoppingList).toHaveBeenCalledWith(({ token: props.token, id: props.shoppingList.id }));
     });
   });
 

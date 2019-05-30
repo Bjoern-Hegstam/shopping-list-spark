@@ -1,4 +1,4 @@
-import ShoppingList from '../../../js/page/shoppinglist/ShoppingList';
+import { ShoppingList } from '../../../js/page/shoppinglist/ShoppingList';
 import { emptyShoppingList, shoppingListWithEmptyCart, shoppingListWithItemsInCart } from '../../fixtures/shoppingList';
 import { itemTypes } from '../../fixtures/itemTypes';
 import ShoppingListItem from '../../../js/page/shoppinglist/ShoppingListItem';
@@ -21,6 +21,10 @@ function setup(optProps) {
       onEmptyCart: jest.fn(),
       onChangeName: jest.fn(),
       onDelete: jest.fn(),
+
+      addingShoppingListItem: {},
+      updatingShoppingListItem: {},
+      deletingShoppingListItem: {},
     },
     optProps,
   );

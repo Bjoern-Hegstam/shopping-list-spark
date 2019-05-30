@@ -7,15 +7,26 @@ const shoppingList2Id = 'f4783aa3-7171-413a-a8a3-2c3669ded567';
 const itemType1Id = '83b66aa7-3189-4e11-b4fa-fc73ded86ca5';
 const itemType2Id = '69d58d9c-f763-4481-a5a6-0defa1993329';
 
+const list1Item1Id = 'f408c389-d7c2-4fa1-aa8d-12df80b1608a';
+
 const initialState = {
   shoppingLists: {
     [shoppingList1Id]: {
       id: shoppingList1Id,
       name: 'Foo',
+      items: [list1Item1Id],
     },
     [shoppingList2Id]: {
       id: shoppingList2Id,
       name: 'Baz',
+    },
+  },
+  items: {
+    [list1Item1Id]: {
+      id: list1Item1Id,
+      itemType: itemType1Id,
+      quantity: 1,
+      inCart: false,
     },
   },
   itemTypes: {
@@ -56,6 +67,7 @@ it('handles GET_SHOPPING_LISTS_SUCCESS where lists have been added, edited and d
 
   // then
   expect(newState).toEqual({
+    ...initialState,
     shoppingLists: {
       [shoppingList1Id]: {
         id: shoppingList1Id,
@@ -134,6 +146,7 @@ it('normalizes shopping list on GET_SHOPPING_LIST_SUCCESS', () => {
       },
     },
     items: {
+      ...initialState.items,
       [item1Id]: {
         id: item1Id,
         itemType: itemTypeBananas,
@@ -165,6 +178,252 @@ it('normalizes shopping list on GET_SHOPPING_LIST_SUCCESS', () => {
         name: 'itemType2',
       },
     },
+  });
+});
+
+describe('ADD_SHOPPING_LIST_ITEM', () => {
+  it('invoked', () => {
+    // given
+    const action = {
+      type: types.ADD_SHOPPING_LIST_ITEM,
+      meta: { listId: shoppingList1Id },
+      payload: {
+        request: {
+          data: {
+            itemTypeId: itemType2Id,
+            quantity: 3,
+          },
+        },
+      },
+    };
+
+    // when
+    const newState = reducer(initialState, action);
+
+    // then
+    const listItems = newState.shoppingLists[shoppingList1Id].items;
+    expect(listItems).toHaveLength(2);
+    const newItemTempId = listItems.find(id => id !== list1Item1Id);
+    expect(newState.items[newItemTempId]).toEqual({
+      id: newItemTempId,
+      itemType: itemType2Id,
+      quantity: 3,
+      inCart: false,
+    });
+  });
+
+  it('success - replace temp item id', () => {
+    // given
+    const tempItemId = '971c020b-1d97-489d-8afc-61116846f251';
+    const persistedItemId = 'eacccdde-cd2d-4041-87d5-342002ecd8c5';
+    const item = {
+      id: tempItemId,
+      itemType: itemType2Id,
+      quantity: 3,
+      inCart: false,
+    };
+    const state = {
+      ...initialState,
+      shoppingLists: {
+        ...initialState.shoppingLists,
+        [shoppingList1Id]: {
+          ...initialState.shoppingLists[shoppingList1Id],
+          items: [list1Item1Id, tempItemId],
+        },
+      },
+      items: {
+        ...initialState.items,
+        [tempItemId]: item,
+      },
+    };
+    const action = {
+      type: types.ADD_SHOPPING_LIST_ITEM_SUCCESS,
+      meta: {
+        previousAction: {
+          meta: { listId: shoppingList1Id },
+          payload: { request: { data: { itemTypeId: item.itemType } } },
+        },
+      },
+      payload: {
+        data: {
+          id: persistedItemId,
+        },
+      },
+    };
+
+    // when
+    const newState = reducer(state, action);
+
+    // then
+    expect(newState.shoppingLists[shoppingList1Id].items).toEqual([persistedItemId, list1Item1Id]);
+    expect(newState.items[persistedItemId]).toEqual({
+      ...item,
+      id: persistedItemId,
+    });
+  });
+
+  it('fail', () => {
+    // given
+    const tempItemId = '971c020b-1d97-489d-8afc-61116846f251';
+    const item = {
+      id: tempItemId,
+      itemType: itemType2Id,
+      quantity: 3,
+      inCart: false,
+    };
+    const state = {
+      ...initialState,
+      shoppingLists: {
+        ...initialState.shoppingLists,
+        [shoppingList1Id]: {
+          ...initialState.shoppingLists[shoppingList1Id],
+          items: [list1Item1Id, tempItemId],
+        },
+      },
+      items: {
+        ...initialState.items,
+        [tempItemId]: item,
+      },
+    };
+    const action = {
+      type: types.ADD_SHOPPING_LIST_ITEM_FAIL,
+      meta: {
+        previousAction: {
+          meta: { listId: shoppingList1Id },
+          payload: { request: { data: { itemTypeId: item.itemType } } },
+        },
+      },
+    };
+
+    // when
+    const newState = reducer(state, action);
+
+    // then
+    expect(newState.shoppingLists[shoppingList1Id].items).toEqual([list1Item1Id]);
+  });
+});
+
+describe('UPDATE_SHOPPING_LIST_ITEM', () => {
+  it('invoked', () => {
+    // given
+    const item = initialState.items[list1Item1Id];
+    const action = {
+      type: types.UPDATE_SHOPPING_LIST_ITEM,
+      meta: { itemId: item.id },
+      payload: {
+        request: {
+          data: {
+            quantity: item.quantity + 3,
+            inCart: !item.inCart,
+          },
+        },
+      },
+    };
+
+    // when
+    const newState = reducer(initialState, action);
+
+    // then
+    expect(newState).toEqual({
+      ...initialState,
+      items: {
+        [item.id]: {
+          id: item.id,
+          itemType: item.itemType,
+          quantity: item.quantity + 3,
+          inCart: !item.inCart,
+          prevItem: item,
+        },
+      },
+    });
+  });
+
+  it('success - clears previous item', () => {
+    // given
+    const item = initialState.items[list1Item1Id];
+    const prevItem = {
+      ...item,
+      inCart: !item.inCart,
+    };
+    const state = {
+      ...initialState,
+      items: {
+        ...initialState.items,
+        [item.id]: {
+          ...item,
+          prevItem,
+        },
+      },
+    };
+    const action = {
+      type: types.UPDATE_SHOPPING_LIST_ITEM_SUCCESS,
+      meta: { previousAction: { meta: { itemId: item.id } } },
+    };
+
+    // when
+    const newState = reducer(state, action);
+
+    // then
+    expect(newState).toEqual(initialState);
+  });
+
+  it('fail', () => {
+    // given
+    const item = initialState.items[list1Item1Id];
+    const prevItem = {
+      ...item,
+      inCart: !item.inCart,
+    };
+    const state = {
+      ...initialState,
+      items: {
+        ...initialState.items,
+        [item.id]: {
+          ...item,
+          prevItem,
+        },
+      },
+    };
+    const action = {
+      type: types.UPDATE_SHOPPING_LIST_ITEM_FAIL,
+      meta: { previousAction: { meta: { itemId: item.id } } },
+    };
+
+    // when
+    const newState = reducer(state, action);
+
+    // then
+    expect(newState).toEqual({
+      ...initialState,
+      items: {
+        [item.id]: {
+          ...prevItem,
+        },
+      },
+    });
+  });
+});
+
+describe('DELETE_SHOPPING_LIST_ITEM', () => {
+  it('success', () => {
+    // given
+    const action = {
+      type: types.DELETE_SHOPPING_LIST_ITEM_SUCCESS,
+      meta: {
+        previousAction: {
+          meta: {
+            listId: shoppingList1Id,
+            itemId: list1Item1Id,
+          },
+        },
+      },
+    };
+
+    // when
+    const newState = reducer(initialState, action);
+
+    // then
+    expect(newState.shoppingLists[shoppingList1Id].items).toEqual([]);
   });
 });
 
@@ -220,16 +479,7 @@ it('handles GET_ITEM_TYPES_SUCCESS', () => {
 
   // then
   expect(newState).toEqual({
-    shoppingLists: {
-      [shoppingList1Id]: {
-        id: shoppingList1Id,
-        name: 'Foo',
-      },
-      [shoppingList2Id]: {
-        id: shoppingList2Id,
-        name: 'Baz',
-      },
-    },
+    ...initialState,
     itemTypes: {
       [itemType1Id]: {
         id: itemType1Id,
@@ -249,8 +499,8 @@ it('handles DELETE_ITEM_TYPE_SUCCESS', () => {
     type: types.DELETE_ITEM_TYPE_SUCCESS,
     meta: {
       previousAction: {
-        queryInfo: {
-          itemTypeId: itemType1Id,
+        meta: {
+          itemTypeId: itemType2Id,
         },
       },
     },
@@ -261,25 +511,11 @@ it('handles DELETE_ITEM_TYPE_SUCCESS', () => {
 
   // then
   expect(newState).toEqual({
-    shoppingLists: {
-      [shoppingList1Id]: {
-        id: shoppingList1Id,
-        name: 'Foo',
-      },
-      [shoppingList2Id]: {
-        id: shoppingList2Id,
-        name: 'Baz',
-      },
-    },
+    ...initialState,
     itemTypes: {
       [itemType1Id]: {
         id: itemType1Id,
         name: 'itemType1',
-        deleted: true,
-      },
-      [itemType2Id]: {
-        id: itemType2Id,
-        name: 'itemType2',
       },
     },
   });

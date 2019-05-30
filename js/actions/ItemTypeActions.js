@@ -23,7 +23,7 @@ export function addItemType({ token, name }) {
 export function deleteItemType({ token, id }) {
   return {
     type: types.DELETE_ITEM_TYPE,
-    queryInfo: {
+    meta: {
       itemTypeId: id,
     },
     payload: {

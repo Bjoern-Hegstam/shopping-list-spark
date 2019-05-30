@@ -1,4 +1,8 @@
-import { createErrorSelector, createLoadingSelector } from '../../js/selectors/RequestSelectors';
+import {
+  createErrorSelector,
+  createLoadingSelector,
+  createSubRequestLoadingSelector,
+} from '../../js/selectors/RequestSelectors';
 
 const ACTION_TYPE_1 = 'ACTION_1';
 const ACTION_TYPE_2 = 'ACTION_2';
@@ -38,6 +42,27 @@ describe('LoadingSelector', () => {
   it('when multiple action types given and none ongoing requests', () => {
     expect(createLoadingSelector(ACTION_TYPE_2, ACTION_TYPE_4)(state))
       .toBe(false);
+  });
+});
+
+describe('createSubRequestLoadingSelector', () => {
+  const state = {
+    request: {
+      loading: {
+        [ACTION_TYPE_1]: {
+          requestId1: false,
+          requestId2: true,
+        },
+      },
+    },
+  };
+
+  it('when there is no entry for the given action type', () => {
+    expect(createSubRequestLoadingSelector(UNKNOWN_ACTION_TYPE)(state)).toEqual({});
+  });
+
+  it('when request object exists for action type', () => {
+    expect(createSubRequestLoadingSelector(ACTION_TYPE_1)(state)).toEqual(state.request.loading[ACTION_TYPE_1]);
   });
 });
 

@@ -1,4 +1,7 @@
-export function shoppingListsSelector(state) {
+import { createLoadingSelector } from './RequestSelectors';
+import { ADD_SHOPPING_LIST_ITEM, DELETE_SHOPPING_LIST_ITEM, UPDATE_SHOPPING_LIST_ITEM } from '../actions/types';
+
+export const shoppingListsSelector = (state) => {
   const { shoppingLists } = state.entities;
 
   if (!shoppingLists) {
@@ -11,9 +14,9 @@ export function shoppingListsSelector(state) {
       id: shoppingList.id,
       name: shoppingList.name,
     }));
-}
+};
 
-export function shoppingListSelector(state, listId) {
+export const shoppingListSelector = listId => (state) => {
   const { shoppingLists, items, itemTypes } = state.entities;
 
   if (!shoppingLists) {
@@ -22,18 +25,26 @@ export function shoppingListSelector(state, listId) {
 
   const shoppingList = shoppingLists[listId];
 
+  // TODO: Test use of selectors
+  const itemAddingSelector = createLoadingSelector(ADD_SHOPPING_LIST_ITEM)(state);
+  const itemUpdatingSelector = createLoadingSelector(UPDATE_SHOPPING_LIST_ITEM, DELETE_SHOPPING_LIST_ITEM)(state);
+
   return {
     ...shoppingList,
     items: (shoppingList.items || [])
       .map(itemId => items[itemId])
-      .map(item => ({
-        ...item,
-        itemType: itemTypes[item.itemType],
-      })),
+      .map((item) => {
+        const itemType = itemTypes[item.itemType];
+        return ({
+          ...item,
+          itemType,
+          loading: itemAddingSelector[`${listId}:${itemType.id}`] || itemUpdatingSelector[`${listId}:${item.id}`],
+        });
+      }),
   };
-}
+};
 
-export function itemTypesSelector(state) {
+export const itemTypesSelector = (state) => {
   const { itemTypes } = state.entities;
   return itemTypes ? Object.values(itemTypes).filter(itemType => !itemType.deleted) : [];
-}
+};

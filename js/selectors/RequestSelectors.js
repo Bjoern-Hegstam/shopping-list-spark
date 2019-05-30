@@ -1,5 +1,6 @@
-export const createLoadingSelector = (...actionTypes) => state => actionTypes
-  .some(type => state.request.loading[type]);
+export const createLoadingSelector = (...actionTypes) => state => actionTypes.some(type => state.request.loading[type]);
+
+export const createSubRequestLoadingSelector = actionType => state => state.request.loading[actionType] || {};
 
 export const createErrorSelector = (...actionTypes) => (state) => {
   if (actionTypes.length === 1) {
