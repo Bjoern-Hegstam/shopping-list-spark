@@ -173,7 +173,7 @@ export function deleteShoppingListItem({ token, listId, itemId }) {
 
 export function emptyCart({ token, listId }) {
   return {
-    type: types.DELETE_SHOPPING_LIST_ITEM,
+    type: types.EMPTY_CART,
     payload: {
       request: {
         method: 'delete',
