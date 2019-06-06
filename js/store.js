@@ -1,4 +1,4 @@
-import { applyMiddleware, createStore } from 'redux';
+import { applyMiddleware, compose, createStore } from 'redux';
 import axiosMiddleware from 'redux-axios-middleware';
 import axios from 'axios/index';
 import jwtDecode from 'jwt-decode';
@@ -47,21 +47,29 @@ export const logoutUserWhenTokenExpires = store => next => (action) => {
   }
 };
 
-export default () => {
-  const persistedState = loadState();
-  const store = createStore(
-    reducers,
-    persistedState,
-    applyMiddleware(
-      axiosMiddleware(
-        axios.create({
-          baseURL: API_BASE_URL,
-          responseType: 'json',
-        }),
-      ),
-      logoutUserWhenTokenExpires,
+function setupMiddleware() {
+  const middleware = applyMiddleware(
+    axiosMiddleware(
+      axios.create({
+        baseURL: API_BASE_URL,
+        responseType: 'json',
+      }),
     ),
+    logoutUserWhenTokenExpires,
   );
+
+  if (process.env.NODE_ENV !== 'production') {
+    // Needed for Redux plugin in browser
+    const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+    return composeEnhancers(middleware);
+  }
+
+  return middleware;
+}
+
+export default () => {
+  const store = createStore(reducers, loadState(), setupMiddleware());
 
   store.subscribe(() => saveState(store));
 
