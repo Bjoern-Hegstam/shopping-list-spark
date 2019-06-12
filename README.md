@@ -16,3 +16,6 @@
 ## Frontend
 1. Run `npm update`
 2. Run `npm outdated` and manually go through the list
+
+### Known depency issues
+* Upgrading axios to `0.19.0` breaks application. Calls to backend return 406. 
