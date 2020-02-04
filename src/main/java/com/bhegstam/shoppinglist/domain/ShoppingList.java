@@ -5,7 +5,7 @@ import com.bhegstam.shoppinglist.port.persistence.PersistenceStatus;
 import java.time.Instant;
 import java.util.*;
 
-import static com.bhegstam.webutil.CustomCollectors.onlyOptionalElement;
+import static com.bhegstam.shoppinglist.util.CustomCollectors.onlyOptionalElement;
 import static java.util.stream.Collectors.toList;
 
 public class ShoppingList extends Entity<ShoppingListId> {

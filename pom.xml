@@ -20,19 +20,12 @@
         <dependency.locations.enabled>false</dependency.locations.enabled>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>io.dropwizard</groupId>
                 <artifactId>dropwizard-bom</artifactId>
-                <version>1.3.12</version>
+                <version>1.3.18</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -71,18 +64,6 @@
             <artifactId>dropwizard-testing</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.github.Bjoern-Hegstam</groupId>
-            <artifactId>web-util</artifactId>
-            <version>4.4</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-simple</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!--Password encryption -->
         <dependency>
             <groupId>org.mindrot</groupId>
@@ -101,21 +82,21 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.8</version>
+            <version>1.18.10</version>
         </dependency>
 
         <!-- Database migrations -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>5.2.4</version>
+            <version>6.2.1</version>
         </dependency>
 
         <!-- Database driver -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.5</version>
+            <version>42.2.9</version>
         </dependency>
 
         <!-- Java EE runtime requirements not included in Java SE by default since jdk 9 -->
@@ -134,7 +115,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.28.2</version>
+            <version>3.2.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -148,14 +129,14 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.199</version>
+            <version>1.4.200</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.1.9</version>
+            <version>3.1.12</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
