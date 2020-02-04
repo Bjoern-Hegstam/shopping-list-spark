@@ -5,7 +5,6 @@ import com.bhegstam.shoppinglist.domain.Role;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserId;
 import io.dropwizard.auth.Auth;
-import io.dropwizard.jersey.PATCH;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,13 +55,13 @@ public class UserResource {
 
     @Path("/{userId}")
     @RolesAllowed(ADMIN)
-    @PATCH // TODO: Replace with PUT
+    @PUT
     public Response patchUser(@Auth User user, @PathParam("userId") String userIdString, @Valid UpdateUserRequest request) {
         LOGGER.info("Received request [{}] to update user [{}] for user [{}]", request, userIdString, user);
 
         UserId userId = UserId.from(userIdString);
 
-        User updateUser = userApplication.updateUser(userId, Role.fromString(request.getRole()), request.getVerified());
+        User updateUser = userApplication.updateUser(userId, Role.fromString(request.getRole()), request.isVerified());
 
         return createAndLogResponse(OK, new UserResponse(updateUser));
     }

@@ -2,14 +2,12 @@ package com.bhegstam.shoppinglist.port.rest.shoppinglist;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 
-@Getter
 public class CreateShoppingListItemRequest {
     @NotEmpty
     private final String itemTypeId;
@@ -24,6 +22,14 @@ public class CreateShoppingListItemRequest {
     ) {
         this.itemTypeId = itemTypeId;
         this.quantity = quantity;
+    }
+
+    public String getItemTypeId() {
+        return itemTypeId;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
     }
 
     @Override

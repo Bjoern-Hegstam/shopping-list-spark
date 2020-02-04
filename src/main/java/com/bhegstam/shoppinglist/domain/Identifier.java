@@ -1,12 +1,11 @@
 package com.bhegstam.shoppinglist.domain;
 
-import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.Objects;
 import java.util.UUID;
 
-@EqualsAndHashCode
 public abstract class Identifier {
     private final String id;
 
@@ -21,6 +20,19 @@ public abstract class Identifier {
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Identifier that = (Identifier) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override

@@ -31,8 +31,8 @@ public class UserApplication {
 
     public User updateUser(UserId userId, Role role, Boolean verified) {
         User user = userRepository.get(userId);
-        Optional.ofNullable(role).ifPresent(user::setRole);
-        Optional.ofNullable(verified).ifPresent(user::setVerified);
+        user.setRole(role);
+        user.setVerified(verified);
 
         userRepository.update(user);
 

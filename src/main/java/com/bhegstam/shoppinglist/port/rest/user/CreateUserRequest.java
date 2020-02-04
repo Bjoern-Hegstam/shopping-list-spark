@@ -1,12 +1,10 @@
 package com.bhegstam.shoppinglist.port.rest.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.validator.constraints.NotEmpty;
 
-@Getter
 class CreateUserRequest {
     @NotEmpty
     private final String username;
@@ -25,6 +23,18 @@ class CreateUserRequest {
         this.username = username;
         this.password = password;
         this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     @Override

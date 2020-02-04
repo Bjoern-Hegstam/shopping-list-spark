@@ -2,11 +2,9 @@ package com.bhegstam.shoppinglist.port.rest.shoppinglist;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-@Getter
 class UpdateShoppingListItemRequest {
     private final int quantity;
     private final boolean inCart;
@@ -18,6 +16,14 @@ class UpdateShoppingListItemRequest {
     ) {
         this.quantity = quantity;
         this.inCart = inCart;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public boolean isInCart() {
+        return inCart;
     }
 
     @Override

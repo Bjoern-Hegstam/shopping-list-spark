@@ -1,7 +1,6 @@
 package com.bhegstam.shoppinglist.port.rest.shoppinglist;
 
 import com.bhegstam.shoppinglist.domain.ShoppingList;
-import lombok.Getter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -10,7 +9,6 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-@Getter
 class GetShoppingListResponse {
     private final String id;
     private final String name;
@@ -24,6 +22,18 @@ class GetShoppingListResponse {
                 .sorted(Comparator.comparing(item -> item.getItemType().getName()))
                 .map(ShoppingListItemResponse::new)
                 .collect(toList());
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<ShoppingListItemResponse> getItems() {
+        return items;
     }
 
     @Override
