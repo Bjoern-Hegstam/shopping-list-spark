@@ -1,18 +1,17 @@
 package com.bhegstam.shoppinglist.port.rest;
 
-import org.glassfish.jersey.internal.util.Base64;
-
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public class AddBasicAuthHeaderFilter implements ClientRequestFilter {
     private final String encodedToken;
 
     AddBasicAuthHeaderFilter(String username, String password) {
         String token = username + ":" + password;
-        encodedToken = Base64.encodeAsString(token.getBytes(StandardCharsets.UTF_8));
+        encodedToken = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override

@@ -46,7 +46,7 @@ public class ItemTypeIntegrationTest {
         String token = TokenGenerator.generate(TestData.ADMIN, service.getConfiguration().getJwtTokenSecret());
         api = new ItemTypeApi(SHOPPING_LIST_1_0, serviceUrl, token);
 
-        RepositoryFactory repositoryFactory = new RepositoryFactory(service.getEnvironment(), service.getConfiguration().getDataSourceFactory());
+        RepositoryFactory repositoryFactory = testDatabaseSetup.getRepositoryFactory();
         itemTypeRepository = repositoryFactory.createItemTypeRepository();
         shoppingListRepository = repositoryFactory.createShoppingListRepository();
     }

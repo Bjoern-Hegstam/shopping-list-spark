@@ -5,6 +5,7 @@ import com.bhegstam.shoppinglist.configuration.ShoppingListApplicationConfigurat
 import com.bhegstam.shoppinglist.domain.UserRepository;
 import com.bhegstam.shoppinglist.port.persistence.RepositoryFactory;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.health.HealthCheckRegistry;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.dropwizard.configuration.FileConfigurationSourceProvider;
 import io.dropwizard.configuration.YamlConfigurationFactory;
@@ -18,11 +19,13 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+import javax.validation.ValidatorFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.mockito.Mockito.mock;
 
 public class TestDatabaseSetup implements TestRule {
     private static final List<String> CLEANUP_SQL_STATEMENTS = asList(
@@ -44,11 +47,14 @@ public class TestDatabaseSetup implements TestRule {
             config = loadConfiguration();
         }
 
-        Environment environment = new Environment("test-env", Jackson.newObjectMapper(), null, new MetricRegistry(), null);
+        new DbMigrationBundle().run(config, null);
 
-        new DbMigrationBundle().run(config, environment);
+        ValidatorFactory validatorFactory = mock(ValidatorFactory.class);
+        HealthCheckRegistry healthCheckRegistry = mock(HealthCheckRegistry.class);
+        Environment environment = new Environment("test-env", Jackson.newObjectMapper(), validatorFactory, new MetricRegistry(), null, healthCheckRegistry, config);
 
         DataSourceFactory dataSourceFactory = config.getDataSourceFactory();
+
         repositoryFactory = new RepositoryFactory(environment, dataSourceFactory);
         dataSource = dataSourceFactory.build(new MetricRegistry(), "cleanup");
     }
