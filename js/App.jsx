@@ -3,7 +3,6 @@ import * as PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import LoginPage from './page/login/LoginPage';
-import RegistrationPage from './page/registration/RegistrationPage';
 import PageNotFound from './components/PageNotFound';
 import ShoppingListsPage from './page/shoppinglists/ShoppingListsPage';
 import ShoppingListPage from './page/shoppinglist/ShoppingListPage';
@@ -61,7 +60,7 @@ export class App extends Component {
       return (
         <Switch>
           <Route exact path="/login" component={LoginPage} />
-          <Route exact path="/register" component={RegistrationPage} />
+          {/*<Route exact path="/register" component={RegistrationPage} />*/}
           <Redirect path="/" to={{ pathname: '/login', state: { referer: this.props.location.pathname } }} />
         </Switch>
       );
