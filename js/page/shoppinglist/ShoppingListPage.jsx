@@ -98,7 +98,7 @@ export class ShoppingListPage extends React.Component {
     this.handleShoppingListDeleted(prevProps);
   }
 
-  handleAddItemFlow = (prevProps) => {
+  handleAddItemFlow = prevProps => {
     if (!this.state.addItemFlow) {
       return;
     }
@@ -156,7 +156,7 @@ export class ShoppingListPage extends React.Component {
     }
   };
 
-  reFetchShoppingListIfHasChanged = (prevProps) => {
+  reFetchShoppingListIfHasChanged = prevProps => {
     const shoppingListUpdated = prevProps.updatingShoppingList && !this.props.updatingShoppingList;
     const cartEmptied = prevProps.emptyingCart && !this.props.emptyingCart;
 
@@ -166,7 +166,7 @@ export class ShoppingListPage extends React.Component {
     }
   };
 
-  handleShoppingListFetched = (prevProps) => {
+  handleShoppingListFetched = prevProps => {
     const shoppingListFetched = prevProps.fetchingShoppingList && !this.props.fetchingShoppingList;
     if (shoppingListFetched) {
       const newState = {};
@@ -184,7 +184,7 @@ export class ShoppingListPage extends React.Component {
     }
   };
 
-  handleShoppingListDeleted = (prevProps) => {
+  handleShoppingListDeleted = prevProps => {
     const shoppingListDeleted = prevProps.deletingShoppingList && !this.props.deletingShoppingList;
     if (shoppingListDeleted) {
       this.props.history.push('/lists');
@@ -195,7 +195,7 @@ export class ShoppingListPage extends React.Component {
     this.setState({ isEditing: true });
   };
 
-  handleChangeName = (newName) => {
+  handleChangeName = newName => {
     const { token, shoppingList } = this.props;
     this.props.updateShoppingList({ token, listId: shoppingList.id, name: newName });
     this.setState({ isEditing: false });

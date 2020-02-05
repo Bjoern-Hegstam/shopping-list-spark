@@ -25,7 +25,7 @@ function saveState(store) {
 
 let tokenExpirationTimer;
 
-export const logoutUserWhenTokenExpires = store => next => (action) => {
+export const logoutUserWhenTokenExpires = store => next => action => {
   next(action); // Allows action LOGIN_SUCCESS to store token before we inspect it
 
   if (action.type === types.LOGOUT) {

@@ -60,7 +60,7 @@ export class App extends Component {
       return (
         <Switch>
           <Route exact path="/login" component={LoginPage} />
-          {/*<Route exact path="/register" component={RegistrationPage} />*/}
+          {/* <Route exact path="/register" component={RegistrationPage} /> */}
           <Redirect path="/" to={{ pathname: '/login', state: { referer: this.props.location.pathname } }} />
         </Switch>
       );

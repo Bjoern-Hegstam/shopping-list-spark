@@ -48,7 +48,7 @@ export class ShoppingList extends React.Component {
     }
   }
 
-  itemIsLoading = (item) => {
+  itemIsLoading = item => {
     const { shoppingList } = this.props;
     return this.props.addingShoppingListItem[addShoppingListItemRequestSelectorKey(shoppingList.id, item.itemType.id)]
       || this.props.updatingShoppingListItem[updateShoppingListItemRequestSelectorKey(shoppingList.id, item.id)]
@@ -59,11 +59,11 @@ export class ShoppingList extends React.Component {
     this.setState({ name: this.props.shoppingList.name }, () => this.props.onStartEdit());
   };
 
-  handleNameChange = (e) => {
+  handleNameChange = e => {
     this.setState({ name: e.target.value });
   };
 
-  handleNameInputKeyDown = (e) => {
+  handleNameInputKeyDown = e => {
     if (e.key === 'Enter') {
       this.props.onChangeName(this.state.name);
     } else if (e.key === 'Escape') {

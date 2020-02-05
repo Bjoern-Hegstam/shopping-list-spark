@@ -30,11 +30,10 @@ export function Navigation(props) {
           <nav role="navigation" className="navigation__links">
             <ul>
               <li><NavLink to="/login" activeClassName="navigation__link--active">Login</NavLink></li>
-              {/*<li><NavLink to="/register" activeClassName="navigation__link--active">Register</NavLink></li>*/}
+              {/* <li><NavLink to="/register" activeClassName="navigation__link--active">Register</NavLink></li> */}
             </ul>
           </nav>
-        )
-      }
+        )}
     </div>
   );
 }

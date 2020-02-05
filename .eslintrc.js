@@ -6,6 +6,7 @@ module.exports = {
     jest: true,
   },
   rules: {
+    'arrow-parens': ['error', 'as-needed'],
     'max-len': [1, 120],
     indent: ['error', 2, { SwitchCase: 1 }],
     'react/jsx-indent': [2, 2],
@@ -16,6 +17,8 @@ module.exports = {
     'react/jsx-one-expression-per-line': 'off',
     'import/no-named-as-default': 'off',
     'import/prefer-default-export': 'off',
+    'react/state-in-constructor': 'off',
+    'react/static-property-placement': ['warn', 'static public field'],
     'object-curly-spacing': [1],
     'object-curly-newline': 'off',
   },

@@ -12,7 +12,7 @@ export default class AddShoppingListItemInput extends React.Component {
       nameInput: '',
     };
 
-    handleAddItemInputChange = (e) => {
+    handleAddItemInputChange = e => {
       const nameInput = e.target.value;
       this.setState({
         nameInput,

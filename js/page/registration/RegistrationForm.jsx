@@ -30,15 +30,15 @@ export class RegistrationForm extends React.Component {
       }
     }
 
-    handleUsernameChanged = (e) => {
+    handleUsernameChanged = e => {
       this.setState({ username: e.target.value });
     };
 
-    handlePasswordChanged = (e) => {
+    handlePasswordChanged = e => {
       this.setState({ password: e.target.value });
     };
 
-    handleEmailChanged = (e) => {
+    handleEmailChanged = e => {
       this.setState({ email: e.target.value });
     };
 

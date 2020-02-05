@@ -24,7 +24,7 @@ export class ItemTypesPage extends React.Component {
       this.props.getItemTypes(this.props.token);
     }
 
-    handleDeleteItemType = (id) => {
+    handleDeleteItemType = id => {
       this.props.deleteItemType({ token: this.props.token, id });
     };
 

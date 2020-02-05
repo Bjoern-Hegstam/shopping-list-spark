@@ -46,11 +46,11 @@ export class ShoppingListsPage extends React.Component {
       }
     }
 
-    handleLinkClicked = (listId) => {
+    handleLinkClicked = listId => {
       this.props.history.push(`/lists/${listId}/`);
     };
 
-    onNewListNameChange = (e) => {
+    onNewListNameChange = e => {
       this.setState({ newListName: e.target.value });
     };
 

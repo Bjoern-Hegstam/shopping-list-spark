@@ -15,17 +15,17 @@ export class LoginPage extends React.Component {
       password: '',
     };
 
-    onUsernameChange = (e) => {
+    onUsernameChange = e => {
       e.preventDefault();
       this.setState({ username: e.target.value });
     };
 
-    onPasswordChange = (e) => {
+    onPasswordChange = e => {
       e.preventDefault();
       this.setState({ password: e.target.value });
     };
 
-    onLoginSubmit = (e) => {
+    onLoginSubmit = e => {
       e.preventDefault();
       const { username, password } = this.state;
       this.props.login({ username, password });

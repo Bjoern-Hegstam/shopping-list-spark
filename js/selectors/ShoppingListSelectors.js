@@ -1,7 +1,7 @@
 import { createLoadingSelector } from './RequestSelectors';
 import { ADD_SHOPPING_LIST_ITEM, DELETE_SHOPPING_LIST_ITEM, UPDATE_SHOPPING_LIST_ITEM } from '../actions/types';
 
-export const shoppingListsSelector = (state) => {
+export const shoppingListsSelector = state => {
   const { shoppingLists } = state.entities;
 
   if (!shoppingLists) {
@@ -16,7 +16,7 @@ export const shoppingListsSelector = (state) => {
     }));
 };
 
-export const shoppingListSelector = listId => (state) => {
+export const shoppingListSelector = listId => state => {
   const { shoppingLists, items, itemTypes } = state.entities;
 
   if (!shoppingLists) {
@@ -33,7 +33,7 @@ export const shoppingListSelector = listId => (state) => {
     ...shoppingList,
     items: (shoppingList.items || [])
       .map(itemId => items[itemId])
-      .map((item) => {
+      .map(item => {
         const itemType = itemTypes[item.itemType];
         return ({
           ...item,
@@ -44,7 +44,7 @@ export const shoppingListSelector = listId => (state) => {
   };
 };
 
-export const itemTypesSelector = (state) => {
+export const itemTypesSelector = state => {
   const { itemTypes } = state.entities;
   return itemTypes ? Object.values(itemTypes).filter(itemType => !itemType.deleted) : [];
 };
