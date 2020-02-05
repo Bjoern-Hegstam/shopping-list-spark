@@ -11,3 +11,5 @@ export function setupComponent(Component, defaultProps, optProps) {
 
   return { component, props };
 }
+
+export const deepCopy = obj => JSON.parse(JSON.stringify(obj));

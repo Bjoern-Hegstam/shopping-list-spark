@@ -1,5 +1,6 @@
 import * as types from '../../js/actions/types';
 import reducer from '../../js/reducers/EntitiesReducer';
+import { deepCopy } from '../util';
 
 const shoppingList1Id = 'd84fcaa9-d3b4-49f5-bb6f-4f3889406056';
 const shoppingList2Id = 'f4783aa3-7171-413a-a8a3-2c3669ded567';
@@ -222,20 +223,11 @@ describe('ADD_SHOPPING_LIST_ITEM', () => {
       quantity: 3,
       inCart: false,
     };
-    const state = {
-      ...initialState,
-      shoppingLists: {
-        ...initialState.shoppingLists,
-        [shoppingList1Id]: {
-          ...initialState.shoppingLists[shoppingList1Id],
-          items: [list1Item1Id, tempItemId],
-        },
-      },
-      items: {
-        ...initialState.items,
-        [tempItemId]: item,
-      },
-    };
+
+    const state = deepCopy(initialState);
+    state.shoppingLists[shoppingList1Id].items = [list1Item1Id, tempItemId];
+    state.items[tempItemId] = item;
+
     const action = {
       type: types.ADD_SHOPPING_LIST_ITEM_SUCCESS,
       meta: {
@@ -271,20 +263,12 @@ describe('ADD_SHOPPING_LIST_ITEM', () => {
       quantity: 3,
       inCart: false,
     };
-    const state = {
-      ...initialState,
-      shoppingLists: {
-        ...initialState.shoppingLists,
-        [shoppingList1Id]: {
-          ...initialState.shoppingLists[shoppingList1Id],
-          items: [list1Item1Id, tempItemId],
-        },
-      },
-      items: {
-        ...initialState.items,
-        [tempItemId]: item,
-      },
-    };
+
+
+    const state = deepCopy(initialState);
+    state.shoppingLists[shoppingList1Id].items = [list1Item1Id, tempItemId];
+    state.items[tempItemId] = item;
+
     const action = {
       type: types.ADD_SHOPPING_LIST_ITEM_FAIL,
       meta: {
@@ -345,16 +329,10 @@ describe('UPDATE_SHOPPING_LIST_ITEM', () => {
       ...item,
       inCart: !item.inCart,
     };
-    const state = {
-      ...initialState,
-      items: {
-        ...initialState.items,
-        [item.id]: {
-          ...item,
-          prevItem,
-        },
-      },
-    };
+
+    const state = deepCopy(initialState);
+    state.items[item.id].prevItem = prevItem;
+
     const action = {
       type: types.UPDATE_SHOPPING_LIST_ITEM_SUCCESS,
       meta: { previousAction: { meta: { itemId: item.id } } },
@@ -374,16 +352,10 @@ describe('UPDATE_SHOPPING_LIST_ITEM', () => {
       ...item,
       inCart: !item.inCart,
     };
-    const state = {
-      ...initialState,
-      items: {
-        ...initialState.items,
-        [item.id]: {
-          ...item,
-          prevItem,
-        },
-      },
-    };
+
+    const state = deepCopy(initialState);
+    state.items[item.id].prevItem = prevItem;
+
     const action = {
       type: types.UPDATE_SHOPPING_LIST_ITEM_FAIL,
       meta: { previousAction: { meta: { itemId: item.id } } },
