@@ -205,7 +205,7 @@ export class ShoppingListPage extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  handleAddItem = async ({ id, name }) => {
+  handleAddItem = ({ id, name }) => {
     this.setState({
       addItemFlow: {
         step: id ? 'ADD_ITEM' : 'CREATE_ITEM_TYPE',

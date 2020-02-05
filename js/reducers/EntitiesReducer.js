@@ -41,27 +41,34 @@ export default function (state = {}, action) {
       const { itemTypeId, quantity } = action.payload.request.data;
       const tempItemId = uuid.v4();
 
+      const items = {
+        ...state.items,
+        [tempItemId]: {
+          id: tempItemId,
+          itemType: itemTypeId,
+          quantity,
+          inCart: false,
+        },
+      };
+
+      const shoppingListItemIds = [
+        ...state.shoppingLists[listId].items,
+        tempItemId,
+      ];
+
+      const itemTypeNameFromItemId = itemId => state.itemTypes[items[itemId].itemType].name;
+      shoppingListItemIds.sort((id1, id2) => itemTypeNameFromItemId(id1).localeCompare(itemTypeNameFromItemId(id2)));
+
       return {
         ...state,
         shoppingLists: {
           ...state.shoppingLists,
           [listId]: {
             ...state.shoppingLists[listId],
-            items: [
-              ...state.shoppingLists[listId].items,
-              tempItemId,
-            ],
+            items: shoppingListItemIds,
           },
         },
-        items: {
-          ...state.items,
-          [tempItemId]: {
-            id: tempItemId,
-            itemType: itemTypeId,
-            quantity,
-            inCart: false,
-          },
-        },
+        items,
       };
     }
     case types.ADD_SHOPPING_LIST_ITEM_SUCCESS: {

@@ -2,13 +2,13 @@ import * as types from '../../js/actions/types';
 import reducer from '../../js/reducers/EntitiesReducer';
 import { deepCopy } from '../util';
 
-const shoppingList1Id = 'd84fcaa9-d3b4-49f5-bb6f-4f3889406056';
-const shoppingList2Id = 'f4783aa3-7171-413a-a8a3-2c3669ded567';
+const shoppingList1Id = 'shopping-list-1-id';
+const shoppingList2Id = 'shopping-list-2-id';
 
-const itemType1Id = '83b66aa7-3189-4e11-b4fa-fc73ded86ca5';
-const itemType2Id = '69d58d9c-f763-4481-a5a6-0defa1993329';
+const itemType1Id = 'item-type-1-id';
+const itemType2Id = 'item-type-2-id';
 
-const list1Item1Id = 'f408c389-d7c2-4fa1-aa8d-12df80b1608a';
+const list1Item1Id = 'item-1-id';
 
 const initialState = {
   shoppingLists: {
@@ -44,7 +44,7 @@ const initialState = {
 
 it('handles GET_SHOPPING_LISTS_SUCCESS where lists have been added, edited and deleted', () => {
   // given
-  const newShoppingListId = '05c3cb46-35e6-462c-a40f-f9469f0e6d30';
+  const newShoppingListId = 'new-shopping-list-id';
   const action = {
     type: types.GET_SHOPPING_LISTS_SUCCESS,
     payload: {
@@ -94,11 +94,11 @@ it('handles GET_SHOPPING_LISTS_SUCCESS where lists have been added, edited and d
 
 it('normalizes shopping list on GET_SHOPPING_LIST_SUCCESS', () => {
   // given
-  const item1Id = 'b756f961-d8ab-4cbe-a9c5-641d3fb5036d';
-  const item2Id = '2045b9a4-46b1-49a5-af68-2a6544490416';
+  const item1Id = 'item-1-id';
+  const item2Id = 'item-2-id';
 
-  const itemTypeBananas = '3370eb06-bc2f-45cc-ab19-5d4428d2beb6';
-  const itemTypeApples = '72c7314f-df0e-4fc7-b4d6-af1373bfb821';
+  const itemTypeBananas = 'item-type-bananas-id';
+  const itemTypeApples = 'item-type-apples-id';
 
   const action = {
     type: types.GET_SHOPPING_LIST_SUCCESS,
@@ -183,7 +183,7 @@ it('normalizes shopping list on GET_SHOPPING_LIST_SUCCESS', () => {
 });
 
 describe('ADD_SHOPPING_LIST_ITEM', () => {
-  it('invoked', () => {
+  it('adds item to shopping list, sorted by item type name', () => {
     // given
     const action = {
       type: types.ADD_SHOPPING_LIST_ITEM,
@@ -191,23 +191,35 @@ describe('ADD_SHOPPING_LIST_ITEM', () => {
       payload: {
         request: {
           data: {
-            itemTypeId: itemType2Id,
+            itemTypeId: itemType1Id,
             quantity: 3,
           },
         },
       },
     };
 
+    const existingItemId = 'existing-item-id';
+
+    const state = deepCopy(initialState);
+    state.items[existingItemId] = {
+      id: existingItemId,
+      itemType: itemType2Id,
+      quantity: 1,
+      inCart: false,
+    };
+    state.shoppingLists[shoppingList1Id].items = [existingItemId];
+
     // when
-    const newState = reducer(initialState, action);
+    const newState = reducer(state, action);
 
     // then
     const listItems = newState.shoppingLists[shoppingList1Id].items;
     expect(listItems).toHaveLength(2);
-    const newItemTempId = listItems.find(id => id !== list1Item1Id);
+    expect(listItems[1]).toEqual(existingItemId);
+    const newItemTempId = listItems[0];
     expect(newState.items[newItemTempId]).toEqual({
       id: newItemTempId,
-      itemType: itemType2Id,
+      itemType: itemType1Id,
       quantity: 3,
       inCart: false,
     });
@@ -215,8 +227,8 @@ describe('ADD_SHOPPING_LIST_ITEM', () => {
 
   it('success - replace temp item id', () => {
     // given
-    const tempItemId = '971c020b-1d97-489d-8afc-61116846f251';
-    const persistedItemId = 'eacccdde-cd2d-4041-87d5-342002ecd8c5';
+    const tempItemId = 'temp-item-id';
+    const persistedItemId = 'persisted-item-id';
     const item = {
       id: tempItemId,
       itemType: itemType2Id,
@@ -256,7 +268,7 @@ describe('ADD_SHOPPING_LIST_ITEM', () => {
 
   it('fail', () => {
     // given
-    const tempItemId = '971c020b-1d97-489d-8afc-61116846f251';
+    const tempItemId = 'temp-item-id';
     const item = {
       id: tempItemId,
       itemType: itemType2Id,
@@ -402,7 +414,7 @@ describe('DELETE_SHOPPING_LIST_ITEM', () => {
 it('handles ADD_ITEM_TYPE_SUCCESS', () => {
   // given
   const newItemType = {
-    id: '56cbbed1-ffce-403d-84ef-b98a4be839d9',
+    id: 'new-item-type-id',
     name: 'Apples',
   };
   const action = {
@@ -427,7 +439,7 @@ it('handles ADD_ITEM_TYPE_SUCCESS', () => {
 
 it('handles GET_ITEM_TYPES_SUCCESS', () => {
   // given
-  const newItemTypeId = '56cbbed1-ffce-403d-84ef-b98a4be839d9';
+  const newItemTypeId = 'new-item-type-id';
   const action = {
     type: types.GET_ITEM_TYPES_SUCCESS,
     payload: {
