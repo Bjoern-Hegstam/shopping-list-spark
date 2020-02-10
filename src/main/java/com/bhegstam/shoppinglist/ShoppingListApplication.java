@@ -1,19 +1,16 @@
 package com.bhegstam.shoppinglist;
 
-import com.bhegstam.shoppinglist.application.ItemTypeApplication;
 import com.bhegstam.shoppinglist.application.UserApplication;
 import com.bhegstam.shoppinglist.configuration.DbMigrationBundle;
 import com.bhegstam.shoppinglist.configuration.ShoppingListApplicationConfiguration;
 import com.bhegstam.shoppinglist.configuration.auth.BasicAuthenticator;
 import com.bhegstam.shoppinglist.configuration.auth.JwtTokenAuthenticator;
 import com.bhegstam.shoppinglist.configuration.auth.UserRoleAuthorizer;
-import com.bhegstam.shoppinglist.domain.ItemTypeRepository;
 import com.bhegstam.shoppinglist.domain.ShoppingListRepository;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserRepository;
 import com.bhegstam.shoppinglist.port.persistence.RepositoryFactory;
 import com.bhegstam.shoppinglist.port.rest.auth.AuthResource;
-import com.bhegstam.shoppinglist.port.rest.shoppinglist.ItemTypeResource;
 import com.bhegstam.shoppinglist.port.rest.shoppinglist.ShoppingListResource;
 import com.bhegstam.shoppinglist.port.rest.user.UserResource;
 import com.github.toastshaman.dropwizard.auth.jwt.JwtAuthFilter;
@@ -70,17 +67,14 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
         RepositoryFactory repositoryFactory = new RepositoryFactory(environment, config.getDataSourceFactory());
 
         UserRepository userRepository = repositoryFactory.createUserRepository();
-        ItemTypeRepository itemTypeRepository = repositoryFactory.createItemTypeRepository();
         ShoppingListRepository shoppingListRepository = repositoryFactory.createShoppingListRepository();
 
         configureAuth(config, environment, userRepository);
 
         environment.jersey().register(new AuthResource(config.getJwtTokenSecret()));
-        environment.jersey().register(new ItemTypeResource(new ItemTypeApplication(itemTypeRepository)));
         environment.jersey().register(new ShoppingListResource(
                 new com.bhegstam.shoppinglist.application.ShoppingListApplication(
-                        shoppingListRepository,
-                        itemTypeRepository
+                        shoppingListRepository
                 )
         ));
         environment.jersey().register(new UserResource(new UserApplication(userRepository)));

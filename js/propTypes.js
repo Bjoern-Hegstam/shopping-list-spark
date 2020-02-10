@@ -15,12 +15,14 @@ export const UserType = PropTypes.shape({
 });
 
 export const ItemTypeType = PropTypes.shape({
-  id: PropTypes.string.isRequired,
+  requestId: PropTypes.string,
+  id: PropTypes.string,
   name: PropTypes.string.isRequired,
 });
 
 export const ShoppingListItemType = PropTypes.shape({
-  id: PropTypes.string.isRequired,
+  requestId: PropTypes.string,
+  id: PropTypes.string,
   itemType: ItemTypeType.isRequired,
   quantity: PropTypes.number.isRequired,
   inCart: PropTypes.bool.isRequired,
@@ -29,5 +31,6 @@ export const ShoppingListItemType = PropTypes.shape({
 export const ShoppingListType = PropTypes.shape({
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  items: PropTypes.arrayOf(ShoppingListItemType),
+  itemTypes: PropTypes.arrayOf(ItemTypeType).isRequired,
+  items: PropTypes.arrayOf(ShoppingListItemType).isRequired,
 });

@@ -1,6 +1,5 @@
 import { ShoppingList } from '../../../js/page/shoppinglist/ShoppingList';
 import { emptyShoppingList, shoppingListWithEmptyCart, shoppingListWithItemsInCart } from '../../fixtures/shoppingList';
-import { itemTypes } from '../../fixtures/itemTypes';
 import ShoppingListItem from '../../../js/page/shoppinglist/ShoppingListItem';
 import AddShoppingListItemInput from '../../../js/page/shoppinglist/AddShoppingListItemInput';
 import { setupComponent } from '../../util';
@@ -10,21 +9,17 @@ function setup(optProps) {
     ShoppingList,
     {
       shoppingList: emptyShoppingList,
-      itemTypes,
       isEditing: false,
 
       onStartEdit: jest.fn(),
+      onChangeName: jest.fn(),
       onCancelEdit: jest.fn(),
+
       onAddItem: jest.fn(),
       onToggleItemInCart: jest.fn(),
       onUpdateItemQuantity: jest.fn(),
       onEmptyCart: jest.fn(),
-      onChangeName: jest.fn(),
       onDelete: jest.fn(),
-
-      addingShoppingListItem: {},
-      updatingShoppingListItem: {},
-      deletingShoppingListItem: {},
     },
     optProps,
   );
@@ -229,8 +224,10 @@ describe('ShoppingListItem', () => {
 
 describe('AddShoppingListItemInput', () => {
   it('renders', () => {
+    component.setProps({ shoppingList: shoppingListWithItemsInCart });
+
     const addItemInput = component.find(AddShoppingListItemInput);
-    expect(addItemInput.prop('itemTypes')).toBe(itemTypes);
+    expect(addItemInput.prop('itemTypes')).toBe(shoppingListWithItemsInCart.itemTypes);
   });
 
   it('onAddItem', () => {

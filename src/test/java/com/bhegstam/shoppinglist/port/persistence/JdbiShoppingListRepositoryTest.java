@@ -26,25 +26,15 @@ public class JdbiShoppingListRepositoryTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     private ShoppingListRepository shoppingListRepository;
-    private ItemType itemType1;
-    private ItemType itemType2;
 
     @Before
     public void setUp() {
         shoppingListRepository = testDatabaseSetup.getRepositoryFactory().createShoppingListRepository();
-
-        ItemTypeRepository itemTypeRepository = testDatabaseSetup.getRepositoryFactory().createItemTypeRepository();
-
-        itemType1 = ItemType.create("itemType1");
-        itemTypeRepository.add(itemType1);
-
-        itemType2 = ItemType.create("itemType2");
-        itemTypeRepository.add(itemType2);
     }
 
     @Test(expected = ShoppingListNotFoundException.class)
     public void get_listNotFound() {
-        shoppingListRepository.get(ShoppingListId.fromString("a1f0b13b-41a2-4a47-96d5-10e4c2f7de67"));
+        shoppingListRepository.get(ShoppingListId.parse("a1f0b13b-41a2-4a47-96d5-10e4c2f7de67"));
     }
 
     @Test
@@ -82,8 +72,10 @@ public class JdbiShoppingListRepositoryTest {
     public void persist_newListWithItems() {
         // create new list with items
         ShoppingList shoppingList = ShoppingList.create("Foo");
+        ItemType itemType1 = shoppingList.addItemType("Type 1");
         ShoppingListItem item1 = shoppingList.add(itemType1);
 
+        ItemType itemType2 = shoppingList.addItemType("Type 2");
         ShoppingListItem item2 = shoppingList.add(itemType2);
         item2.setQuantity(5);
         item2.setInCart(true);
@@ -113,6 +105,7 @@ public class JdbiShoppingListRepositoryTest {
     public void persist_addItemsToPersistedList() {
         // given
         ShoppingList shoppingList = ShoppingList.create("Foo");
+        ItemType itemType1 = shoppingList.addItemType("Type 1");
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -128,6 +121,7 @@ public class JdbiShoppingListRepositoryTest {
     public void persist_updateItemInPersistedList() {
         // given
         ShoppingList shoppingList = ShoppingList.create("Foo");
+        ItemType itemType1 = shoppingList.addItemType("Type 1");
         ShoppingListItem item1 = shoppingList.add(itemType1);
         shoppingListRepository.persist(shoppingList);
 
@@ -146,7 +140,9 @@ public class JdbiShoppingListRepositoryTest {
     public void persist_itemDeletedFromList() {
         // given
         ShoppingList shoppingList = ShoppingList.create("Foo");
+        ItemType itemType1 = shoppingList.addItemType("Type 1");
         ShoppingListItem item1 = shoppingList.add(itemType1);
+        ItemType itemType2 = shoppingList.addItemType("Type 2");
         ShoppingListItem item2 = shoppingList.add(itemType2);
 
         shoppingListRepository.persist(shoppingList);
@@ -167,6 +163,7 @@ public class JdbiShoppingListRepositoryTest {
     public void persist_throwsExceptionIfListInDatabaseModifiedSinceFetch() {
         // given
         ShoppingList shoppingListInstance1 = ShoppingList.create("Foo");
+        ItemType itemType1 = shoppingListInstance1.addItemType("Type 1");
         shoppingListRepository.persist(shoppingListInstance1);
 
         ShoppingList shoppingListInstance2 = shoppingListRepository.get(shoppingListInstance1.getId());
@@ -185,6 +182,7 @@ public class JdbiShoppingListRepositoryTest {
     public void persist_throwsExceptionIfItemInListInDatabaseModifiedSinceFetch() {
         // given
         ShoppingList shoppingListInstance1 = ShoppingList.create("Foo");
+        ItemType itemType1 = shoppingListInstance1.addItemType("Type 1");
         shoppingListInstance1.add(itemType1);
         shoppingListRepository.persist(shoppingListInstance1);
 
@@ -207,6 +205,7 @@ public class JdbiShoppingListRepositoryTest {
         shoppingListRepository.persist(shoppingListInstance1);
 
         ShoppingList shoppingListInstance2 = shoppingListRepository.get(shoppingListInstance1.getId());
+        ItemType itemType1 = shoppingListInstance2.addItemType("Type 1");
         shoppingListInstance2.add(itemType1);
         shoppingListRepository.persist(shoppingListInstance2);
 
@@ -231,6 +230,7 @@ public class JdbiShoppingListRepositoryTest {
     public void getShoppingLists() {
         // given
         ShoppingList shoppingList1 = ShoppingList.create("Foo");
+        ItemType itemType1 = shoppingList1.addItemType("Type 1");
         ShoppingListItem item1 = shoppingList1.add(itemType1);
         shoppingListRepository.persist(shoppingList1);
 
@@ -269,6 +269,7 @@ public class JdbiShoppingListRepositoryTest {
     public void delete_listHasItems() {
         // given
         ShoppingList shoppingList = ShoppingList.create("Foo");
+        ItemType itemType1 = shoppingList.addItemType("Type 1");
         shoppingList.add(itemType1);
         shoppingListRepository.persist(shoppingList);
 

@@ -14,7 +14,7 @@ public class ShoppingListItemMapper implements RowMapper<ShoppingListItem> {
     @Override
     public ShoppingListItem map(ResultSet rs, StatementContext ctx) throws SQLException {
         return ShoppingListItem.fromDb(
-                ShoppingListItemId.fromString(rs.getString("i_id")),
+                ShoppingListItemId.parse(rs.getString("i_id")),
                 ItemType.fromDb(
                         ItemTypeId.parse(rs.getString("it_id")),
                         rs.getString("it_name"),

@@ -6,7 +6,6 @@ import LoginPage from './page/login/LoginPage';
 import PageNotFound from './components/PageNotFound';
 import ShoppingListsPage from './page/shoppinglists/ShoppingListsPage';
 import ShoppingListPage from './page/shoppinglist/ShoppingListPage';
-import ItemTypesPage from './page/itemtypes/ItemTypesPage';
 import { RequestErrorType, UserType } from './propTypes';
 import * as actionTypes from './actions/types';
 import { createErrorSelector, createLoadingSelector } from './selectors/RequestSelectors';
@@ -52,7 +51,6 @@ export class App extends Component {
 
             <Route exact path="/lists" component={ShoppingListsPage} />
             <Route path="/lists/:listId" component={ShoppingListPage} />
-            <Route path="/item-types" component={ItemTypesPage} />
             <Route component={PageNotFound} />
           </Switch>
         );

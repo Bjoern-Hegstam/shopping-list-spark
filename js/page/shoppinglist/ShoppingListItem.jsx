@@ -13,6 +13,7 @@ export default function ShoppingListItem({ item, onToggleInCart, onUpdateQuantit
     ' shopping-list-item--in-cart': item.inCart,
   });
 
+  // TODO: Disable editing while item is being added/updated/deleted
   return (
     <div className={itemClassNames}>
       <div className="shopping-list-item__main">

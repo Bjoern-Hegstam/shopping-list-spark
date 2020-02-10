@@ -31,8 +31,8 @@ public class TestDatabaseSetup implements TestRule {
     private static final List<String> CLEANUP_SQL_STATEMENTS = asList(
             "delete from application_user",
             "delete from shopping_list_item",
-            "delete from shopping_list",
-            "delete from item_type"
+            "delete from item_type",
+            "delete from shopping_list"
     );
 
     private final RepositoryFactory repositoryFactory;

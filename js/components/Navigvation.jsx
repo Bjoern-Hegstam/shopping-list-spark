@@ -18,7 +18,6 @@ export function Navigation(props) {
             <nav role="navigation" className="navigation__links">
               <ul>
                 <li><NavLink to="/lists" activeClassName="navigation__link--active">Lists</NavLink></li>
-                <li><NavLink to="/item-types" activeClassName="navigation__link--active">Items</NavLink></li>
               </ul>
             </nav>
             <nav role="navigation" className="navigation__logout">

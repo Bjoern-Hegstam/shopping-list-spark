@@ -6,11 +6,9 @@ import java.util.List;
 
 public class ShoppingListApplication {
     private final ShoppingListRepository shoppingListRepository;
-    private final ItemTypeRepository itemTypeRepository;
 
-    public ShoppingListApplication(ShoppingListRepository shoppingListRepository, ItemTypeRepository itemTypeRepository) {
+    public ShoppingListApplication(ShoppingListRepository shoppingListRepository) {
         this.shoppingListRepository = shoppingListRepository;
-        this.itemTypeRepository = itemTypeRepository;
     }
 
     public List<ShoppingList> getShoppingLists() {
@@ -37,10 +35,41 @@ public class ShoppingListApplication {
         shoppingListRepository.delete(listId);
     }
 
-    public ShoppingListItem addItem(ShoppingListId listId, ItemTypeId itemTypeId, Integer quantity) {
-        ItemType itemType = itemTypeRepository.get(itemTypeId);
-
+    public ItemType createItemType(ShoppingListId listId, String name) {
         ShoppingList shoppingList = shoppingListRepository.get(listId);
+        ItemType itemType = shoppingList.addItemType(name);
+        shoppingListRepository.persist(shoppingList);
+        return itemType;
+    }
+
+    public List<ItemType> getItemTypes(ShoppingListId listId) {
+        return shoppingListRepository.get(listId).getItemTypes();
+    }
+
+    public void deleteItemType(ShoppingListId listId, ItemTypeId itemTypeId) {
+        ShoppingList shoppingList = shoppingListRepository.get(listId);
+        shoppingList.deleteItemType(itemTypeId);
+        shoppingListRepository.persist(shoppingList);
+    }
+
+    public ShoppingListItem addItem(ShoppingListId listId, ItemTypeId itemTypeId, Integer quantity) {
+        ShoppingList shoppingList = shoppingListRepository.get(listId);
+
+        ItemType itemType = shoppingList.getItemType(itemTypeId);
+
+        ShoppingListItem listItem = shoppingList.add(itemType);
+        listItem.setQuantity(quantity);
+
+        shoppingListRepository.persist(shoppingList);
+
+        return listItem;
+    }
+
+    public ShoppingListItem addItem(ShoppingListId listId, String itemTypeName, Integer quantity) {
+        ShoppingList shoppingList = shoppingListRepository.get(listId);
+
+        ItemType itemType = shoppingList.addItemType(itemTypeName);
+
         ShoppingListItem listItem = shoppingList.add(itemType);
         listItem.setQuantity(quantity);
 

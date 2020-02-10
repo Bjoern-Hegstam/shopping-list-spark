@@ -3,7 +3,8 @@ package com.bhegstam.shoppinglist.port.rest.user;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotEmpty;
 
 class UpdateUserRequest {
     private final boolean verified;

@@ -60,6 +60,37 @@ class ShoppingListApi {
                 .delete();
     }
 
+    Response postItemType(String listId, String json) {
+        return webTarget
+                .path("shopping-list")
+                .path(listId)
+                .path("item-type")
+                .request()
+                .accept(apiVersion)
+                .post(Entity.json(json));
+    }
+
+    Response getItemTypes(String listId) {
+        return webTarget
+                .path("shopping-list")
+                .path(listId)
+                .path("item-type")
+                .request()
+                .accept(apiVersion)
+                .get();
+    }
+
+    Response deleteItemType(String listId, String id) {
+        return webTarget
+                .path("shopping-list")
+                .path(listId)
+                .path("item-type")
+                .path(id)
+                .request()
+                .accept(apiVersion)
+                .delete();
+    }
+
     Response postShoppingListItem(String listId, String json) {
         return webTarget
                 .path("shopping-list")

@@ -12,5 +12,3 @@ import '../page/shoppinglist/ShoppingListItemSubPanel.scss';
 import '../page/shoppinglist/AddShoppingListItemInput.scss';
 import '../page/shoppinglists/ShoppingListsPage.scss';
 import '../page/shoppinglists/ShoppingListLink.scss';
-import '../page/itemtypes/ItemTypesPage.scss';
-import '../page/itemtypes/ItemType.scss';

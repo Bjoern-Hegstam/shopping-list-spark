@@ -1,5 +1,5 @@
-import { deleteItemType } from '../../js/actions/ItemTypeActions';
 import * as types from '../../js/actions/types';
+import { deleteItemType } from '../../js/actions/ShoppingListActions';
 
 it('deleteItemType', () => {
 // when

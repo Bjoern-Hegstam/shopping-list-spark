@@ -1,5 +1,6 @@
 import * as types from './types';
 import { SHOPPING_LIST_1_0 } from './MimeTypes';
+import * as uuid from 'uuid';
 
 export function getShoppingLists(token) {
   return {
@@ -90,15 +91,49 @@ export function deleteShoppingList({ token, listId }) {
   };
 }
 
-export const addShoppingListItemRequestSelectorKey = (listId, itemTypeId) => `${listId}:${itemTypeId}`;
+export function addItemType({ token, listId, name }) {
+  return {
+    type: types.ADD_ITEM_TYPE,
+    payload: {
+      request: {
+        method: 'post',
+        url: `shopping-list/${listId}/item-type`,
+        headers: {
+          authorization: `Bearer ${token}`,
+          accept: SHOPPING_LIST_1_0,
+        },
+        data: {
+          name,
+        },
+      },
+    },
+  };
+}
 
-export function addShoppingListItem({
-  token, listId, itemTypeId, quantity,
-}) {
+export function deleteItemType({ token, listId, id }) {
+  return {
+    type: types.DELETE_ITEM_TYPE,
+    meta: {
+      itemTypeId: id,
+    },
+    payload: {
+      request: {
+        method: 'delete',
+        url: `shopping-list/${listId}/item-type/${id}`,
+        headers: {
+          authorization: `Bearer ${token}`,
+          accept: SHOPPING_LIST_1_0,
+        },
+      },
+    },
+  };
+}
+
+export function addShoppingListItem({ token, listId, itemTypeId, itemTypeName, quantity }) {
   return {
     type: types.ADD_SHOPPING_LIST_ITEM,
     meta: {
-      requestId: addShoppingListItemRequestSelectorKey(listId, itemTypeId),
+      requestId: uuid.v4(),
       listId,
     },
     payload: {
@@ -111,6 +146,7 @@ export function addShoppingListItem({
         },
         data: {
           itemTypeId,
+          itemTypeName,
           quantity,
         },
       },
@@ -120,10 +156,7 @@ export function addShoppingListItem({
 
 export const updateShoppingListItemRequestSelectorKey = (listId, itemId) => `${listId}:${itemId}`;
 
-
-export function updateShoppingListItem({
-  token, listId, itemId, quantity, inCart,
-}) {
+export function updateShoppingListItem({ token, listId, itemId, quantity, inCart }) {
   return {
     type: types.UPDATE_SHOPPING_LIST_ITEM,
     meta: {

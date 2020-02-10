@@ -1,6 +1,5 @@
 package com.bhegstam.shoppinglist.port.persistence;
 
-import com.bhegstam.shoppinglist.domain.ItemTypeRepository;
 import com.bhegstam.shoppinglist.domain.ShoppingListRepository;
 import com.bhegstam.shoppinglist.domain.UserRepository;
 import io.dropwizard.db.DataSourceFactory;
@@ -17,10 +16,6 @@ public class RepositoryFactory {
 
     public UserRepository createUserRepository() {
         return jdbi.onDemand(JdbiUserRepository.class);
-    }
-
-    public ItemTypeRepository createItemTypeRepository() {
-        return jdbi.onDemand(JdbiItemTypeRepository.class);
     }
 
     public ShoppingListRepository createShoppingListRepository() {

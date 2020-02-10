@@ -1,5 +1,6 @@
 package com.bhegstam.shoppinglist.domain;
 
+import com.bhegstam.shoppinglist.port.persistence.ItemTypeNotFoundException;
 import com.bhegstam.shoppinglist.port.persistence.PersistenceStatus;
 
 import java.time.Instant;
@@ -10,6 +11,8 @@ import static java.util.stream.Collectors.toList;
 
 public class ShoppingList extends Entity<ShoppingListId> {
     private String name;
+    private final Map<ItemTypeId, ItemType> itemTypes;
+    private final Set<ItemTypeId> deletedItemTypes;
     private final Map<ItemTypeId, ShoppingListItem> items;
     private final Set<ShoppingListItemId> removedItems;
 
@@ -25,7 +28,7 @@ public class ShoppingList extends Entity<ShoppingListId> {
 
     public static ShoppingList fromDb(String id, String name, Instant createdAt, Instant updatedAt) {
         return new ShoppingList(
-                ShoppingListId.fromString(id),
+                ShoppingListId.parse(id),
                 name,
                 createdAt,
                 updatedAt,
@@ -42,6 +45,8 @@ public class ShoppingList extends Entity<ShoppingListId> {
     ) {
         super(id, createdAt, updatedAt, persistenceStatus);
         this.name = name;
+        itemTypes = new HashMap<>();
+        deletedItemTypes = new HashSet<>();
         items = new HashMap<>();
         removedItems = new HashSet<>();
     }
@@ -53,6 +58,51 @@ public class ShoppingList extends Entity<ShoppingListId> {
     public void setName(String name) {
         markAsUpdated();
         this.name = name;
+    }
+
+    public ItemType addItemType(String name) {
+        Optional<ItemType> existingItemType = itemTypes
+                .values().stream()
+                .filter(itemType -> itemType.getName().equals(name))
+                .collect(onlyOptionalElement());
+        if (existingItemType.isPresent()) {
+            throw new ItemTypeNameAlreadyTakenException(existingItemType.get());
+        }
+
+        ItemType itemType = ItemType.create(name);
+        itemTypes.put(itemType.getId(), itemType);
+        markAsUpdated();
+        return itemType;
+    }
+
+    public List<ItemType> getItemTypes() {
+        return new ArrayList<>(itemTypes.values());
+    }
+
+    public ItemType getItemType(ItemTypeId itemTypeId) {
+        if (itemTypes.containsKey(itemTypeId)) {
+            return itemTypes.get(itemTypeId);
+        }
+
+        throw new ItemTypeNotFoundException(itemTypeId);
+    }
+
+    public void deleteItemType(ItemTypeId itemTypeId) {
+        if (items.containsKey(itemTypeId)) {
+            throw new ItemTypeUsedInShoppingListException(itemTypeId);
+        }
+
+        itemTypes.remove(itemTypeId);
+        deletedItemTypes.add(itemTypeId);
+        markAsUpdated();
+    }
+
+    public Collection<ItemTypeId> deletedItemTypeIds() {
+        return Collections.unmodifiableCollection(deletedItemTypes);
+    }
+
+    public void clearDeletedItemTypes() {
+        deletedItemTypes.clear();
     }
 
     public ShoppingListItem add(ItemType itemType) {
@@ -125,9 +175,12 @@ public class ShoppingList extends Entity<ShoppingListId> {
         return Collections.unmodifiableCollection(items.values());
     }
 
-    public void loadItemsFromDb(Collection<ShoppingListItem> items) {
+    public void loadFromDb(List<ItemType> itemTypes, Collection<ShoppingListItem> items) {
+        this.itemTypes.clear();
+        this.deletedItemTypes.clear();
         this.items.clear();
         this.removedItems.clear();
+        itemTypes.forEach(itemType -> this.itemTypes.put(itemType.getId(), itemType));
         items.forEach(item -> this.items.put(item.getItemType().getId(), item));
     }
 }

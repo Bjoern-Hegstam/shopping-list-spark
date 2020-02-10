@@ -9,7 +9,7 @@ public class ShoppingListItemId extends Identifier {
         super(id);
     }
 
-    public static ShoppingListItemId fromString(String s) {
+    public static ShoppingListItemId parse(String s) {
         return new ShoppingListItemId(s);
     }
 }

@@ -5,7 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.validation.constraints.Min;
+
 class UpdateShoppingListItemRequest {
+    @Min(0)
     private final int quantity;
     private final boolean inCart;
 

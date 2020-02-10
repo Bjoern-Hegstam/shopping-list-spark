@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @RegisterRowMapper(ShoppingListMapper.class)
+@RegisterRowMapper(ItemTypeMapper.class)
 @RegisterRowMapper(ShoppingListItemMapper.class)
 public interface JdbiShoppingListRepository extends ShoppingListRepository {
     @Transaction
@@ -42,6 +43,23 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
             shoppingList.markAsPersisted();
         }
 
+        // Add/update item types
+        shoppingList
+                .getItemTypes()
+                .forEach(itemType -> {
+                    if (itemType.insertRequired()) {
+                        createItemType(
+                                shoppingList.getId(),
+                                itemType.getId(),
+                                itemType.getName(),
+                                Timestamp.from(itemType.getCreatedAt()),
+                                Timestamp.from(itemType.getUpdatedAt())
+                        );
+                        itemType.markAsPersisted();
+                    }
+                });
+
+        // Synchronize items
         shoppingList
                 .getItems()
                 .forEach(item -> {
@@ -80,6 +98,12 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
                 .removedItemIds()
                 .forEach(itemId -> deleteItem(shoppingList.getId(), itemId));
         shoppingList.clearRemovedItems();
+
+        // Delete item types
+        shoppingList
+                .deletedItemTypeIds()
+                .forEach(itemTypeId -> deleteItemType(shoppingList.getId(), itemTypeId));
+        shoppingList.clearDeletedItemTypes();
     }
 
     @SqlUpdate("insert into shopping_list(id, name, created_at, updated_at) values (:listId.id, :name, :createdAt, :updatedAt)")
@@ -95,6 +119,29 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
             @BindBean("listId") ShoppingListId listId,
             @Bind("name") String name,
             @Bind("updatedAt") Timestamp updatedAt
+    );
+
+    @SqlUpdate("insert into item_type(shopping_list_id, id, name, created_at, updated_at) values (:listId.id, :itemTypeId.id, :name, :createdAt, :updatedAt)")
+    void createItemType(
+            @BindBean("listId") ShoppingListId listId,
+            @BindBean("itemTypeId") ItemTypeId itemTypeId,
+            @Bind("name") String name,
+            @Bind("createdAt") Timestamp createdAt,
+            @Bind("updatedAt") Timestamp updatedAt
+    );
+
+    @SqlUpdate("update item_type set name = :name, updated_at = :updatedAt where shopping_list_id = :listId.id and id = :itemTypeId.id")
+    void updateItemType(
+            @BindBean("listId") ShoppingListId listId,
+            @BindBean("itemTypeId") ItemTypeId itemTypeId,
+            @Bind("name") String name,
+            @Bind("updatedAt") Timestamp updatedAt
+    );
+
+    @SqlUpdate("delete from item_type where shopping_list_id = :listId.id and id = :itemTypeId.id")
+    void deleteItemType(
+            @BindBean("listId") ShoppingListId listId,
+            @BindBean("itemTypeId") ItemTypeId itemTypeId
     );
 
     @SqlUpdate("insert into shopping_list_item(id, shopping_list_id, item_type_id, quantity, in_cart, created_at, updated_at) values (:itemId.id, :listId.id, :itemTypeId.id, :quantity, :inCart, :createdAt, :updatedAt)")
@@ -138,12 +185,15 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
             return null;
         }
 
-        shoppingList.loadItemsFromDb(getItems(listId));
+        shoppingList.loadFromDb(getItemTypes(listId), getItems(listId));
         return shoppingList;
     }
 
     @SqlQuery("select * from shopping_list where id = :listId.id")
     ShoppingList getShoppingListEntity(@BindBean("listId") ShoppingListId listId);
+
+    @SqlQuery("select * from item_type where shopping_list_id = :listId.id")
+    List<ItemType> getItemTypes(@BindBean("listId") ShoppingListId listId);
 
     @SqlQuery("select " +
             "i.id i_id, " +
@@ -164,7 +214,7 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
     @Transaction
     default List<ShoppingList> getShoppingLists() {
         List<ShoppingList> lists = getShoppingLists_internal();
-        lists.forEach(list -> list.loadItemsFromDb(getItems(list.getId())));
+        lists.forEach(list -> list.loadFromDb(getItemTypes(list.getId()), getItems(list.getId())));
         return lists;
     }
 
@@ -178,7 +228,7 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
             return;
         }
 
-        if (shoppingList.getItems().isEmpty()) {
+        if (shoppingList.getItems().isEmpty() && shoppingList.getItemTypes().isEmpty()) {
             deleteShoppingList(listId);
         } else {
             throw new ShoppingListDeleteNotAllowedException(listId);

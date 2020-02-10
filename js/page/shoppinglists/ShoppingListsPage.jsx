@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import AppLayout from '../../components/AppLayout';
 import { addShoppingList, getShoppingLists } from '../../actions/ShoppingListActions';
-import { ShoppingListType } from '../../propTypes';
 import ShoppingListLink from './ShoppingListLink';
 import { shoppingListsSelector } from '../../selectors/ShoppingListSelectors';
 import * as types from '../../actions/types';
@@ -13,7 +12,10 @@ import { createErrorSelector, createLoadingSelector } from '../../selectors/Requ
 export class ShoppingListsPage extends React.Component {
     static propTypes = {
       token: PropTypes.string.isRequired,
-      shoppingLists: PropTypes.arrayOf(ShoppingListType),
+      shoppingLists: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+      })),
 
       getShoppingLists: PropTypes.func.isRequired,
       fetchingShoppingLists: PropTypes.bool.isRequired,
