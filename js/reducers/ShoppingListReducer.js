@@ -5,6 +5,11 @@ const initialState = {
   shoppingLists: [],
 };
 
+const itemTypeNameComparator = (item1, item2) => item1.itemType.name.localeCompare(item2.itemType.name, {
+  numeric: true,
+  sensitivity: 'base',
+});
+
 const replaceShoppingList = (state, shoppingList) => ({
   ...state,
   shoppingLists: [
@@ -42,35 +47,38 @@ export default function (state = initialState, action) {
       const shoppingList = state.shoppingLists.find(hasId(listId));
 
       let itemType;
-      let itemTypes;
+      let updatedItemTypes;
       if (itemTypeId) {
-        itemTypes = shoppingList.itemTypes;
-        itemType = itemTypes.find(hasId(itemTypeId));
+        updatedItemTypes = shoppingList.itemTypes;
+        itemType = updatedItemTypes.find(hasId(itemTypeId));
       } else {
         itemType = {
           requestId,
           name: itemTypeName,
         };
-        itemTypes = [
+        updatedItemTypes = [
           ...shoppingList.itemTypes,
           itemType,
         ];
       }
 
+      const updatedItems = [
+        ...shoppingList.items,
+        {
+          requestId,
+          itemType,
+          quantity,
+          inCart: false,
+        },
+      ];
+      updatedItems.sort(itemTypeNameComparator);
+
       return replaceShoppingList(
         state,
         {
           ...shoppingList,
-          itemTypes,
-          items: [
-            ...shoppingList.items,
-            {
-              requestId,
-              itemType,
-              quantity,
-              inCart: false,
-            },
-          ],
+          itemTypes: updatedItemTypes,
+          items: updatedItems,
         },
       );
     }
@@ -83,10 +91,10 @@ export default function (state = initialState, action) {
       const shoppingList = state.shoppingLists.find(hasId(listId));
 
       const itemTypeToUpdate = shoppingList.itemTypes.find(hasRequestId(requestId));
-      let itemTypes;
+      let updatedItemTypes;
       if (itemTypeToUpdate) {
         // Item type was created as part of the add item operation. Save the item type id and remove the request id.
-        itemTypes = [
+        updatedItemTypes = [
           ...shoppingList.itemTypes.filter(not(hasRequestId(requestId))),
           {
             ...itemTypeToUpdate,
@@ -95,10 +103,10 @@ export default function (state = initialState, action) {
           },
         ];
       } else {
-        itemTypes = shoppingList.itemTypes;
+        updatedItemTypes = shoppingList.itemTypes;
       }
 
-      const items = [
+      const updatedItems = [
         ...shoppingList.items.filter(not(hasRequestId(requestId))),
         {
           ...shoppingList.items.find(hasRequestId(requestId)),
@@ -106,13 +114,14 @@ export default function (state = initialState, action) {
           requestId: undefined,
         },
       ];
+      updatedItems.sort(itemTypeNameComparator);
 
       return replaceShoppingList(
         state,
         {
           ...shoppingList,
-          itemTypes,
-          items,
+          itemTypes: updatedItemTypes,
+          items: updatedItems,
         },
       );
     }
@@ -144,20 +153,23 @@ export default function (state = initialState, action) {
       const shoppingList = state.shoppingLists.find(hasId(listId));
       const item = shoppingList.items.find(hasId(itemId));
 
+      const updatedItems = [
+        ...shoppingList.items.filter(not(hasId(itemId))),
+        {
+          ...item,
+          id: itemId,
+          quantity,
+          inCart,
+          prevItem: item,
+        },
+      ];
+      updatedItems.sort(itemTypeNameComparator);
+
       return replaceShoppingList(
         state,
         {
           ...shoppingList,
-          items: [
-            ...shoppingList.items.filter(not(hasId(itemId))),
-            {
-              ...item,
-              id: itemId,
-              quantity,
-              inCart,
-              prevItem: item,
-            },
-          ],
+          items: updatedItems,
         },
       );
     }
@@ -169,17 +181,20 @@ export default function (state = initialState, action) {
       const shoppingList = state.shoppingLists.find(hasId(listId));
       const item = shoppingList.items.find(hasId(itemId));
 
+      const updatedItems = [
+        ...shoppingList.items.filter(not(hasId(itemId))),
+        {
+          ...item,
+          prevItem: undefined,
+        },
+      ];
+      updatedItems.sort(itemTypeNameComparator);
+
       return replaceShoppingList(
         state,
         {
           ...shoppingList,
-          items: [
-            ...shoppingList.items.filter(not(hasId(itemId))),
-            {
-              ...item,
-              prevItem: undefined,
-            },
-          ],
+          items: updatedItems,
         },
       );
     }
@@ -191,16 +206,19 @@ export default function (state = initialState, action) {
       const shoppingList = state.shoppingLists.find(hasId(listId));
       const item = shoppingList.items.find(hasId(itemId));
 
+      const updatedItems = [
+        ...shoppingList.items.filter(not(hasId(itemId))),
+        {
+          ...item.prevItem,
+        },
+      ];
+      updatedItems.sort(itemTypeNameComparator);
+
       return replaceShoppingList(
         state,
         {
           ...shoppingList,
-          items: [
-            ...shoppingList.items.filter(not(hasId(itemId))),
-            {
-              ...item.prevItem,
-            },
-          ],
+          items: updatedItems,
         },
       );
     }

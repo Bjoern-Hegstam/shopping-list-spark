@@ -32,6 +32,18 @@ const itemType1 = {
   name: 'item-type-1-name',
 };
 
+const itemType2 = {
+  id: 'item-type-2-id',
+  name: 'item-type-2-name',
+};
+
+const item2 = {
+  id: 'item-2-id',
+  itemType: itemType2,
+  quantity: 1,
+  inCart: false,
+};
+
 it('initial state', () => {
   const state = reducer(undefined, { type: 'INIT' });
 
@@ -105,7 +117,8 @@ describe('ADD_SHOPPING_LIST_ITEM', () => {
       ...initialState,
       shoppingLists: [{
         ...shoppingList1,
-        itemTypes: [itemType1],
+        itemTypes: [itemType1, itemType2],
+        items: [item2],
       }],
     };
 
@@ -133,13 +146,16 @@ describe('ADD_SHOPPING_LIST_ITEM', () => {
       ...initialState,
       shoppingLists: [{
         ...shoppingList1,
-        itemTypes: [itemType1],
-        items: [{
-          requestId,
-          itemType: itemType1,
-          quantity: 2,
-          inCart: false,
-        }],
+        itemTypes: [itemType1, itemType2],
+        items: [
+          {
+            requestId,
+            itemType: itemType1,
+            quantity: 2,
+            inCart: false,
+          },
+          item2,
+        ],
       }],
     });
   });
@@ -148,7 +164,11 @@ describe('ADD_SHOPPING_LIST_ITEM', () => {
     // given
     const state = {
       ...initialState,
-      shoppingLists: [shoppingList1],
+      shoppingLists: [{
+        ...shoppingList1,
+        itemTypes: [itemType2],
+        items: [item2],
+      }],
     };
 
     const action = {
@@ -175,19 +195,25 @@ describe('ADD_SHOPPING_LIST_ITEM', () => {
       ...initialState,
       shoppingLists: [{
         ...shoppingList1,
-        itemTypes: [{
-          requestId,
-          name: 'Apples',
-        }],
-        items: [{
-          requestId,
-          itemType: {
+        itemTypes: [
+          itemType2,
+          {
             requestId,
             name: 'Apples',
           },
-          quantity: 2,
-          inCart: false,
-        }],
+        ],
+        items: [
+          {
+            requestId,
+            itemType: {
+              requestId,
+              name: 'Apples',
+            },
+            quantity: 2,
+            inCart: false,
+          },
+          item2,
+        ],
       }],
     });
   });
@@ -198,12 +224,15 @@ describe('ADD_SHOPPING_LIST_ITEM', () => {
       ...initialState,
       shoppingLists: [{
         ...shoppingList1,
-        itemTypes: [itemType1],
-        items: [{
-          requestId,
-          itemType: itemType1,
-          quantity: 2,
-        }],
+        itemTypes: [itemType1, itemType2],
+        items: [
+          {
+            requestId,
+            itemType: itemType1,
+            quantity: 2,
+          },
+          item2,
+        ],
       }],
     };
 
@@ -242,18 +271,21 @@ describe('ADD_SHOPPING_LIST_ITEM', () => {
     // given
     const itemType = {
       requestId,
-      name: 'test-item-type-name',
+      name: 'a-test-item-type-name',
     };
     const state = {
       ...initialState,
       shoppingLists: [{
         ...shoppingList1,
-        itemTypes: [itemType],
-        items: [{
-          requestId,
-          itemType,
-          quantity: 2,
-        }],
+        itemTypes: [itemType, itemType2],
+        items: [
+          {
+            requestId,
+            itemType,
+            quantity: 2,
+          },
+          item2,
+        ],
       }],
     };
 
@@ -285,8 +317,14 @@ describe('ADD_SHOPPING_LIST_ITEM', () => {
 
     // then
     const expectedState = deepCopy(state);
-    expectedState.shoppingLists[0].itemTypes[0].id = persistedItemTypeId;
-    expectedState.shoppingLists[0].itemTypes[0].requestId = undefined;
+    expectedState.shoppingLists[0].itemTypes = [
+      itemType2,
+      {
+        id: persistedItemTypeId,
+        name: 'a-test-item-type-name',
+        requestId: undefined,
+      },
+    ];
     expectedState.shoppingLists[0].items[0].id = persistedItemId;
     expectedState.shoppingLists[0].items[0].requestId = undefined;
 
@@ -385,8 +423,8 @@ describe('UPDATE_SHOPPING_LIST_ITEM', () => {
       ...initialState,
       shoppingLists: [{
         ...shoppingList1,
-        itemTypes: [itemType1],
-        items: [item],
+        itemTypes: [itemType1, itemType2],
+        items: [item, item2],
       }],
     };
 
@@ -411,12 +449,15 @@ describe('UPDATE_SHOPPING_LIST_ITEM', () => {
 
     // then
     const expectedState = deepCopy(state);
-    expectedState.shoppingLists[0].items = [{
-      ...item,
-      quantity: 5,
-      inCart: true,
-      prevItem: item,
-    }];
+    expectedState.shoppingLists[0].items = [
+      {
+        ...item,
+        quantity: 5,
+        inCart: true,
+        prevItem: item,
+      },
+      item2,
+    ];
 
     expect(newState).toEqual(expectedState);
   });
@@ -438,8 +479,8 @@ describe('UPDATE_SHOPPING_LIST_ITEM', () => {
       ...initialState,
       shoppingLists: [{
         ...shoppingList1,
-        itemTypes: [itemType1],
-        items: [item],
+        itemTypes: [itemType1, itemType2],
+        items: [item, item2],
       }],
     };
 
@@ -460,10 +501,13 @@ describe('UPDATE_SHOPPING_LIST_ITEM', () => {
 
     // then
     const expectedState = deepCopy(state);
-    expectedState.shoppingLists[0].items = [{
-      ...item,
-      prevItem: undefined,
-    }];
+    expectedState.shoppingLists[0].items = [
+      {
+        ...item,
+        prevItem: undefined,
+      },
+      item2,
+    ];
 
     expect(newState).toEqual(expectedState);
   });
@@ -485,8 +529,8 @@ describe('UPDATE_SHOPPING_LIST_ITEM', () => {
       ...initialState,
       shoppingLists: [{
         ...shoppingList1,
-        itemTypes: [itemType1],
-        items: [item],
+        itemTypes: [itemType1, itemType2],
+        items: [item, item2],
       }],
     };
 
@@ -507,7 +551,7 @@ describe('UPDATE_SHOPPING_LIST_ITEM', () => {
 
     // then
     const expectedState = deepCopy(state);
-    expectedState.shoppingLists[0].items = [prevItem];
+    expectedState.shoppingLists[0].items = [prevItem, item2];
 
     expect(newState).toEqual(expectedState);
   });
