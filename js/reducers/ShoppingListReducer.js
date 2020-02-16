@@ -10,13 +10,17 @@ const itemTypeNameComparator = (item1, item2) => item1.itemType.name.localeCompa
   sensitivity: 'base',
 });
 
-const replaceShoppingList = (state, shoppingList) => ({
-  ...state,
-  shoppingLists: [
-    ...state.shoppingLists.filter(not(hasId(shoppingList.id))),
-    shoppingList,
-  ],
-});
+const replaceShoppingList = (state, shoppingList) => {
+  shoppingList.items.sort(itemTypeNameComparator);
+
+  return {
+    ...state,
+    shoppingLists: [
+      ...state.shoppingLists.filter(not(hasId(shoppingList.id))),
+      shoppingList,
+    ],
+  };
+};
 
 export default function (state = initialState, action) {
   switch (action.type) {
@@ -71,7 +75,6 @@ export default function (state = initialState, action) {
           inCart: false,
         },
       ];
-      updatedItems.sort(itemTypeNameComparator);
 
       return replaceShoppingList(
         state,
@@ -114,7 +117,6 @@ export default function (state = initialState, action) {
           requestId: undefined,
         },
       ];
-      updatedItems.sort(itemTypeNameComparator);
 
       return replaceShoppingList(
         state,
@@ -163,7 +165,6 @@ export default function (state = initialState, action) {
           prevItem: item,
         },
       ];
-      updatedItems.sort(itemTypeNameComparator);
 
       return replaceShoppingList(
         state,
@@ -188,7 +189,6 @@ export default function (state = initialState, action) {
           prevItem: undefined,
         },
       ];
-      updatedItems.sort(itemTypeNameComparator);
 
       return replaceShoppingList(
         state,
@@ -212,7 +212,6 @@ export default function (state = initialState, action) {
           ...item.prevItem,
         },
       ];
-      updatedItems.sort(itemTypeNameComparator);
 
       return replaceShoppingList(
         state,
