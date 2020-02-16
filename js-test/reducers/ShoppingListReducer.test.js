@@ -14,6 +14,8 @@ const shoppingList2Id = 'shopping-list-2-id';
 const partialShoppingList1 = {
   id: shoppingList1Id,
   name: 'partial-list-1-name',
+  itemTypes: [],
+  items: [],
 };
 
 const shoppingList1 = {
@@ -25,6 +27,8 @@ const shoppingList1 = {
 const partialShoppingList2 = {
   id: shoppingList2Id,
   name: 'partial-list-2-name',
+  itemTypes: [],
+  items: [],
 };
 
 const itemType1 = {
@@ -62,7 +66,10 @@ describe('GET_SHOPPING_LISTS', () => {
       type: types.GET_SHOPPING_LISTS_SUCCESS,
       payload: {
         data: {
-          shoppingLists: [partialShoppingList2],
+          shoppingLists: [{
+            id: shoppingList2Id,
+            name: 'partial-list-2-name',
+          }],
         },
       },
     };

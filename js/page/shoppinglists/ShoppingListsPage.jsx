@@ -8,14 +8,12 @@ import ShoppingListLink from './ShoppingListLink';
 import { shoppingListsSelector } from '../../selectors/ShoppingListSelectors';
 import * as types from '../../actions/types';
 import { createErrorSelector, createLoadingSelector } from '../../selectors/RequestSelectors';
+import { ShoppingListType } from '../../propTypes';
 
 export class ShoppingListsPage extends React.Component {
     static propTypes = {
       token: PropTypes.string.isRequired,
-      shoppingLists: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-      })),
+      shoppingLists: PropTypes.arrayOf(ShoppingListType),
 
       getShoppingLists: PropTypes.func.isRequired,
       fetchingShoppingLists: PropTypes.bool.isRequired,

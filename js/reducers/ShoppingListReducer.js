@@ -32,6 +32,8 @@ export default function (state = initialState, action) {
         shoppingLists: shoppingLists.map(list => ({
           id: list.id,
           name: list.name,
+          itemTypes: [],
+          items: [],
         })),
       };
     }
