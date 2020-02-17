@@ -1,6 +1,6 @@
+import * as uuid from 'uuid';
 import * as types from './types';
 import { SHOPPING_LIST_1_0 } from './MimeTypes';
-import * as uuid from 'uuid';
 
 export function getShoppingLists(token) {
   return {
@@ -85,25 +85,6 @@ export function deleteShoppingList({ token, listId }) {
         headers: {
           authorization: `Bearer ${token}`,
           accept: SHOPPING_LIST_1_0,
-        },
-      },
-    },
-  };
-}
-
-export function addItemType({ token, listId, name }) {
-  return {
-    type: types.ADD_ITEM_TYPE,
-    payload: {
-      request: {
-        method: 'post',
-        url: `shopping-list/${listId}/item-type`,
-        headers: {
-          authorization: `Bearer ${token}`,
-          accept: SHOPPING_LIST_1_0,
-        },
-        data: {
-          name,
         },
       },
     },
