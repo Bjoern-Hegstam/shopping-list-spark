@@ -9,13 +9,13 @@ addons:
   postgresql: "9.6"
 
 env:
-  global:
-    - CONF_FILENAME: travis-config.yml
+  - CONF_FILENAME=travis-config.yml NODE_VERSION=0.12
 
 before_install:
  - psql -c 'create database travis_ci_test;' -U postgres
  - sudo sed -i 's/max_connections = 255/max_connections = 1000/g' /etc/postgresql/9.6/main/postgresql.conf
  - sudo service postgresql restart
+ - nvm install $NODE_VERSION
 
 install: true # Disable default install step. Maven runs install as part of the test life cycle anyway.
 
