@@ -1,8 +1,17 @@
-## Special files
-* system.properties
-  * Specifies jdk version for Heroku
-* Procfile
-  * Heroku configuration
+## Environment
+
+### Versions
+* JDK: 10
+* node js: 12
+
+### Specified in
+* system.properties: jdk version for Heroku
+* package.json
+  * engines.node: node js version for Heroku
+* .travis.yml: jdk and node js version specified in CI configuration 
+
+## Other configuration
+* Procfile: Heroku configuration
 
 ## Keeping the project up-to-date
 
