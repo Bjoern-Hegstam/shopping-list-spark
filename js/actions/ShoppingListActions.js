@@ -1,4 +1,4 @@
-import * as uuid from 'uuid';
+import { v4 as uuidV4 } from 'uuid';
 import * as types from './types';
 import { SHOPPING_LIST_1_0 } from './MimeTypes';
 
@@ -114,7 +114,7 @@ export function addShoppingListItem({ token, listId, itemTypeId, itemTypeName, q
   return {
     type: types.ADD_SHOPPING_LIST_ITEM,
     meta: {
-      requestId: uuid.v4(),
+      requestId: uuidV4(),
       listId,
     },
     payload: {

@@ -1,7 +1,7 @@
 import React from 'react';
 import * as PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as uuid from 'uuid';
+import { v4 as uuidV4 } from 'uuid';
 import AppLayout from '../../components/AppLayout';
 import { ShoppingListType } from '../../propTypes';
 import {
@@ -129,7 +129,7 @@ export class ShoppingListPage extends React.Component {
 
   handleAddItem = ({ id, name }) => {
     const requestData = {
-      requestId: uuid.v4(),
+      requestId: uuidV4(),
       token: this.props.token,
       listId: this.props.shoppingList.id,
       quantity: 1,
