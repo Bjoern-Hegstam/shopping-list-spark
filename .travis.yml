@@ -9,7 +9,7 @@ addons:
   postgresql: "9.6"
 
 env:
-  - CONF_FILENAME=travis-config.yml NODE_VERSION=0.12
+  - CONF_FILENAME=travis-config.yml NODE_VERSION=12.9
 
 before_install:
  - psql -c 'create database travis_ci_test;' -U postgres
