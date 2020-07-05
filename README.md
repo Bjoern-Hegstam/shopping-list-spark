@@ -16,7 +16,7 @@ java -jar target/shopping-list-spark-1.0-SNAPSHOT.jar server config.yml
 
 ## CI/CD
 
-Travis CI is used to compile and test the project on each push. If all tests are green the project is automatically deployed to Heroku. Heroku currently does not use the artifacts created by travis, but rather builds the project again before deploy. That should clearly be improved. Should probably replace the current Heroku setup, with use of Travis CI support for deploying to Heroku.   
+Travis CI is used to compile, test and deploy the project to Heroku on each push. I would like to have the artifacts built by Travis be the ones that are deployed to Heroku, but I haven't been able to set that up so far. At the moment new artifacts are built on deploy to Heroku.
 
 ## Keeping the project up-to-date
 
