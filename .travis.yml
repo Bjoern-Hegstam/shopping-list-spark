@@ -23,6 +23,5 @@ script: mvn test -B
 
 deploy:
  - provider: heroku:api
-   api_key: $HEROKU_API_KEY
    app: shopping-list--staging
    edge: true # opt in to dpl v2
