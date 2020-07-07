@@ -6,14 +6,14 @@ services:
  - postgresql
 
 addons:
-  postgresql: "9.6"
+  postgresql: "10"
 
 env:
   - CONF_FILENAME=travis-config.yml NODE_VERSION=12.9
 
 before_install:
  - psql -c 'create database travis_ci_test;' -U postgres
- - sudo sed -i 's/max_connections = 255/max_connections = 1000/g' /etc/postgresql/9.6/main/postgresql.conf
+ - sudo sed -i 's/max_connections = 255/max_connections = 1000/g' /etc/postgresql/10/main/postgresql.conf
  - sudo service postgresql restart
  - nvm install $NODE_VERSION
 
