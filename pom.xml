@@ -199,6 +199,12 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>6.0.2</version>
+            </plugin>
+
             <!-- Frontend: Install dependencies and build dist -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
