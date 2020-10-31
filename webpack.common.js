@@ -10,7 +10,7 @@ module.exports = {
   entry: './js/index.jsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].bundle.js',
+    filename: '[name].[contenthash].bundle.js',
   },
   module: {
     rules: [
