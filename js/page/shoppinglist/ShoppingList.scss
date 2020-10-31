@@ -1,47 +1,50 @@
 @import '../../styles/general';
 
+%list-header {
+  font-weight: bold;
+  margin-left: 0.5rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+}
+
 .shopping-list {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-areas:
-      "name name"
-      "items items"
-      "cart cart"
-      "add-item add-item"
-      "empty-cart empty-cart";
+  display: flex;
+  flex-direction: column;
 }
 
 .shopping-list__name {
-  grid-area: name;
   align-self: center;
   font-size: 2rem;
-  padding-left: 10px;
+  margin-top: 0.5rem;
+}
+
+.shopping-list__to-buy-header {
+  @extend %list-header;
 }
 
 .shopping-list__items {
-  grid-area: items;
-
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-}
-
-.shopping-list__cart {
-  grid-area: cart;
-
   border-top: 1px solid black;
   border-bottom: 1px solid black;
 }
 
 .shopping-list__add-item {
-  grid-area: add-item;
   align-self: center;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
 
-  margin: 0.5rem;
+.shopping-list__cart-header {
+  @extend %list-header;
+  margin-top: 1rem;
+}
+
+.shopping-list__items-in-cart {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
 }
 
 .shopping-list__empty-cart-button {
   @extend %button-danger;
-  grid-area: empty-cart;
   margin: 0.5rem;
 }
 

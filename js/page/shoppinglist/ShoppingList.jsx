@@ -85,6 +85,12 @@ export default class ShoppingList extends React.Component {
           </span>
         )}
 
+        <p className="shopping-list__to-buy-header">To buy</p>
+
+        <div className="shopping-list__add-item">
+          <AddShoppingListItemInput itemTypes={shoppingList.itemTypes} onAddItem={onAddItem} />
+        </div>
+
         <div className="shopping-list__items">
           <TransitionGroup>
             {shoppingList
@@ -109,34 +115,31 @@ export default class ShoppingList extends React.Component {
         </div>
 
         {hasItemsInCart && (
-          <div className="shopping-list__cart">
-            {shoppingList
-              .items
-              .filter(item => item.inCart)
-              .map(item => (
-                <ShoppingListItem
-                  key={item.id || item.requestId}
-                  item={item}
-                  onToggleInCart={onToggleItemInCart}
-                  onUpdateQuantity={onUpdateItemQuantity}
-                />
-              ))}
-          </div>
-        )}
+          <>
+            <p className="shopping-list__cart-header">Cart</p>
+            <div className="shopping-list__items-in-cart">
+              {shoppingList
+                .items
+                .filter(item => item.inCart)
+                .map(item => (
+                  <ShoppingListItem
+                    key={item.id || item.requestId}
+                    item={item}
+                    onToggleInCart={onToggleItemInCart}
+                    onUpdateQuantity={onUpdateItemQuantity}
+                  />
+                ))}
+            </div>
 
-        <div className="shopping-list__add-item">
-          <AddShoppingListItemInput itemTypes={shoppingList.itemTypes} onAddItem={onAddItem} />
-        </div>
-
-        {hasItemsInCart && (
-          <button
-            type="button"
-            className="shopping-list__empty-cart-button"
-            onClick={onEmptyCart}
-            disabled={!hasItemsInCart}
-          >
-            Empty Cart
-          </button>
+            <button
+              type="button"
+              className="shopping-list__empty-cart-button"
+              onClick={onEmptyCart}
+              disabled={!hasItemsInCart}
+            >
+              Empty Cart
+            </button>
+          </>
         )}
       </div>
     );

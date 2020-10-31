@@ -74,7 +74,7 @@ describe('initial render', () => {
     const numItemsToGet = shoppingListWithItemsInCart.items.filter(item => !item.inCart).length;
     const numItemsInCart = shoppingListWithItemsInCart.items.filter(item => item.inCart).length;
     expect(component.find('.shopping-list__items').find(ShoppingListItem)).toHaveLength(numItemsToGet);
-    expect(component.find('.shopping-list__cart').find(ShoppingListItem)).toHaveLength(numItemsInCart);
+    expect(component.find('.shopping-list__items-in-cart').find(ShoppingListItem)).toHaveLength(numItemsInCart);
   });
 });
 
