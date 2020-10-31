@@ -1,4 +1,4 @@
-import { ShoppingList } from '../../../js/page/shoppinglist/ShoppingList';
+import ShoppingList from '../../../js/page/shoppinglist/ShoppingList';
 import { emptyShoppingList, shoppingListWithEmptyCart, shoppingListWithItemsInCart } from '../../fixtures/shoppingList';
 import ShoppingListItem from '../../../js/page/shoppinglist/ShoppingListItem';
 import AddShoppingListItemInput from '../../../js/page/shoppinglist/AddShoppingListItemInput';
@@ -19,7 +19,6 @@ function setup(optProps) {
       onToggleItemInCart: jest.fn(),
       onUpdateItemQuantity: jest.fn(),
       onEmptyCart: jest.fn(),
-      onDelete: jest.fn(),
     },
     optProps,
   );
@@ -45,9 +44,6 @@ describe('initial render', () => {
     expect(component.find('.shopping-list__name').text()).toBe(emptyShoppingList.name);
     expect(component.find('.shopping-list__name--edit')).toHaveLength(0);
 
-    expect(component.find('.shopping-list__button').text()).toBe('Delete');
-    expect(component.find('.shopping-list__button').prop('disabled')).toBeFalsy();
-
     expect(component.find(ShoppingListItem)).toHaveLength(0);
   });
 
@@ -59,9 +55,7 @@ describe('initial render', () => {
     expect(component.find('.shopping-list__name').text()).toBe(shoppingListWithEmptyCart.name);
     expect(component.find('.shopping-list__name--edit')).toHaveLength(0);
 
-
-    expect(component.find('.shopping-list__button').text()).toBe('Empty Cart');
-    expect(component.find('.shopping-list__button').prop('disabled')).toBeTruthy();
+    expect(component.find('.shopping-list__empty-cart-button')).toHaveLength(0);
 
     expect(component.find(ShoppingListItem)).toHaveLength(shoppingListWithEmptyCart.items.length);
   });
@@ -74,8 +68,8 @@ describe('initial render', () => {
     expect(component.find('.shopping-list__name').text()).toBe(shoppingListWithItemsInCart.name);
     expect(component.find('.shopping-list__name--edit')).toHaveLength(0);
 
-    expect(component.find('.shopping-list__button').text()).toBe('Empty Cart');
-    expect(component.find('.shopping-list__button').prop('disabled')).toBeFalsy();
+    expect(component.find('.shopping-list__empty-cart-button').text()).toBe('Empty Cart');
+    expect(component.find('.shopping-list__empty-cart-button').prop('disabled')).toBe(false);
 
     const numItemsToGet = shoppingListWithItemsInCart.items.filter(item => !item.inCart).length;
     const numItemsInCart = shoppingListWithItemsInCart.items.filter(item => item.inCart).length;
@@ -155,24 +149,11 @@ it('invokes onEmptyCart when empty cart button clicked', () => {
 
   // when
   component
-    .find('.shopping-list__button')
+    .find('.shopping-list__empty-cart-button')
     .simulate('click');
 
   // then
   expect(props.onEmptyCart).toHaveBeenCalledTimes(1);
-});
-
-it('invokes onDelete when delete button clicked', () => {
-  // given
-  component.setProps({ shoppingList: emptyShoppingList });
-
-  // when
-  component
-    .find('.shopping-list__button')
-    .simulate('click');
-
-  // then
-  expect(props.onDelete).toHaveBeenCalledTimes(1);
 });
 
 describe('ShoppingListItem', () => {

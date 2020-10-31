@@ -4,10 +4,11 @@
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-template-areas:
-      "name button"
+      "name name"
       "items items"
       "cart cart"
-      "add-item add-item";
+      "add-item add-item"
+      "empty-cart empty-cart";
 }
 
 .shopping-list__name {
@@ -15,12 +16,6 @@
   align-self: center;
   font-size: 2rem;
   padding-left: 10px;
-}
-
-.shopping-list__button {
-  @extend %button-danger;
-  grid-area: button;
-  margin: 10px;
 }
 
 .shopping-list__items {
@@ -41,7 +36,13 @@
   grid-area: add-item;
   align-self: center;
 
-  margin: 15px 0;
+  margin: 0.5rem;
+}
+
+.shopping-list__empty-cart-button {
+  @extend %button-danger;
+  grid-area: empty-cart;
+  margin: 0.5rem;
 }
 
 @media (max-width: $small-screen-width-breakpoint) {

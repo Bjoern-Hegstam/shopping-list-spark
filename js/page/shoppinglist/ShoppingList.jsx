@@ -1,12 +1,11 @@
 import React from 'react';
 import * as PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { ShoppingListType } from '../../propTypes';
 import ShoppingListItem from './ShoppingListItem';
 import AddShoppingListItemInput from './AddShoppingListItemInput';
 
-export class ShoppingList extends React.Component {
+export default class ShoppingList extends React.Component {
   static propTypes = {
     shoppingList: ShoppingListType.isRequired,
     isEditing: PropTypes.bool.isRequired,
@@ -19,7 +18,6 @@ export class ShoppingList extends React.Component {
     onToggleItemInCart: PropTypes.func.isRequired,
     onUpdateItemQuantity: PropTypes.func.isRequired,
     onEmptyCart: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -61,11 +59,9 @@ export class ShoppingList extends React.Component {
       onToggleItemInCart,
       onUpdateItemQuantity,
       onEmptyCart,
-      onDelete,
     } = this.props;
     const { name } = this.state;
 
-    const hasItems = shoppingList.items.length > 0;
     const hasItemsInCart = shoppingList.items.some(item => item.inCart);
 
     return (
@@ -87,26 +83,6 @@ export class ShoppingList extends React.Component {
           >
             {shoppingList.name}
           </span>
-        )}
-
-        {hasItems ? (
-          <button
-            type="button"
-            className="shopping-list__button"
-            onClick={onEmptyCart}
-            disabled={!hasItemsInCart}
-          >
-            Empty Cart
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="shopping-list__button"
-            onClick={onDelete}
-            disabled={hasItems}
-          >
-            Delete
-          </button>
         )}
 
         <div className="shopping-list__items">
@@ -151,9 +127,18 @@ export class ShoppingList extends React.Component {
         <div className="shopping-list__add-item">
           <AddShoppingListItemInput itemTypes={shoppingList.itemTypes} onAddItem={onAddItem} />
         </div>
+
+        {hasItemsInCart && (
+          <button
+            type="button"
+            className="shopping-list__empty-cart-button"
+            onClick={onEmptyCart}
+            disabled={!hasItemsInCart}
+          >
+            Empty Cart
+          </button>
+        )}
       </div>
     );
   }
 }
-
-export default connect()(ShoppingList);
