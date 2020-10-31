@@ -1,8 +1,5 @@
 @import '../styles/general';
 
-$text-color: #777;
-$hover-background: gray;
-
 header {
   background: $background-color;
 
@@ -22,7 +19,7 @@ header {
     align-self: center;
     justify-self: center;
 
-    color: $text-color;
+    color: #777;
     font-size: 1.5rem;
     white-space: nowrap;
     text-decoration: none;
