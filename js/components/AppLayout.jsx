@@ -3,7 +3,6 @@ import * as PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import Header from './Header';
-import Navigation from './Navigvation';
 import { isUserAuthenticatedSelector } from '../selectors/UserSelectors';
 
 export function AppLayout(props) {
@@ -15,9 +14,6 @@ export function AppLayout(props) {
   return (
     <div className={layoutClassNames}>
       <Header />
-      <div className="nav-container">
-        <Navigation />
-      </div>
       <div className="main-container">
         <main>
           {props.children}

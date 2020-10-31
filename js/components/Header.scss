@@ -1,29 +1,43 @@
 @import '../styles/general';
 
 $text-color: #777;
+$hover-background: gray;
 
 header {
   background: $background-color;
-  color: $text-color;
 
   border-left: 1px solid $border-color;
   border-right: 1px solid $border-color;
   border-bottom: 1px solid $border-color;
 
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas: '. name logout';
 }
 
-.header__name {
-  grid-area: name;
+.header {
+  &__name {
+    grid-area: name;
 
-  font-size: 1.5rem;
-  padding-left: 0.5rem;
-  white-space: nowrap;
-}
+    align-self: center;
+    justify-self: center;
 
-@media (max-width: $small-screen-width-breakpoint) {
-  header {
-    justify-content: center;
+    color: $text-color;
+    font-size: 1.5rem;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  &__logout-button {
+    @extend %base-button;
+    grid-area: logout;
+
+    width: min-content;
+    justify-self: end;
+
+    background: inherit;
+    color: red;
+    border-radius: 0;
+    padding-right: 1.5rem;
   }
 }

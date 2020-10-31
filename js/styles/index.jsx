@@ -2,7 +2,6 @@ import './general.scss';
 // Components
 import '../components/AppLayout.scss';
 import '../components/Header.scss';
-import '../components/Navigation.scss';
 // Pages
 import '../page/login/LoginPage.scss';
 import '../page/registration/RegistrationForm.scss';
