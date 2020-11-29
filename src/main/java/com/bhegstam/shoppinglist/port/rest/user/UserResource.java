@@ -53,7 +53,7 @@ public class UserResource {
         return createAndLogResponse(OK, new GetUsersResponse(users));
     }
 
-    @Path("/{userId}")
+    @Path("{userId}")
     @RolesAllowed(ADMIN)
     @PUT
     public Response patchUser(@Auth User user, @PathParam("userId") String userIdString, @Valid UpdateUserRequest request) {

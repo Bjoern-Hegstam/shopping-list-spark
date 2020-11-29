@@ -53,7 +53,7 @@ public class ShoppingListResource {
         return createAndLogResponse(OK, new GetShoppingListsResponse(shoppingLists));
     }
 
-    @Path("/{shoppingListId}")
+    @Path("{shoppingListId}")
     @RolesAllowed({USER, ADMIN})
     @GET
     public Response getShoppingList(@Auth User user, @PathParam(SHOPPING_LIST_ID) String shoppingListIdString) {
@@ -77,7 +77,7 @@ public class ShoppingListResource {
         }
     }
 
-    @Path("/{shoppingListId}")
+    @Path("{shoppingListId}")
     @RolesAllowed({USER, ADMIN})
     @PUT
     public Response updateShoppingList(@Auth User user, @PathParam(SHOPPING_LIST_ID) String shoppingListIdString, @Valid UpdateShoppingListRequest request) {
@@ -101,7 +101,7 @@ public class ShoppingListResource {
         }
     }
 
-    @Path("/{shoppingListId}")
+    @Path("{shoppingListId}")
     @RolesAllowed({USER, ADMIN})
     @DELETE
     public Response deleteShoppingList(@Auth User user, @PathParam(SHOPPING_LIST_ID) String shoppingListIdString) {
@@ -125,7 +125,7 @@ public class ShoppingListResource {
         }
     }
 
-    @Path("/{shoppingListId}/item-type")
+    @Path("{shoppingListId}/item-type")
     @RolesAllowed({USER, ADMIN})
     @POST
     public Response postItemType(
@@ -158,7 +158,7 @@ public class ShoppingListResource {
         return createAndLogResponse(status, body);
     }
 
-    @Path("/{shoppingListId}/item-type")
+    @Path("{shoppingListId}/item-type")
     @RolesAllowed({USER, ADMIN})
     @GET
     public Response getItemTypes(
@@ -180,7 +180,7 @@ public class ShoppingListResource {
         return createAndLogResponse(OK, new ItemTypesResponse(itemTypes));
     }
 
-    @Path("/{shoppingListId}/item-type/{item_type_id}")
+    @Path("{shoppingListId}/item-type/{item_type_id}")
     @RolesAllowed({USER, ADMIN})
     @DELETE
     public Response deleteItemType(
@@ -221,7 +221,7 @@ public class ShoppingListResource {
         return createAndLogResponse(status, body);
     }
 
-    @Path("/{shoppingListId}/item")
+    @Path("{shoppingListId}/item")
     @RolesAllowed({USER, ADMIN})
     @POST
     public Response postShoppingListItem(@Auth User user, @PathParam(SHOPPING_LIST_ID) String shoppingListIdString, @Valid CreateShoppingListItemRequest request) {
@@ -253,7 +253,7 @@ public class ShoppingListResource {
         }
     }
 
-    @Path("/{shoppingListId}/item/{shoppingListItemId}")
+    @Path("{shoppingListId}/item/{shoppingListItemId}")
     @RolesAllowed({USER, ADMIN})
     @PUT
     public Response putShoppingListItem(
@@ -284,7 +284,7 @@ public class ShoppingListResource {
         }
     }
 
-    @Path("/{shoppingListId}/item/{shoppingListItemId}")
+    @Path("{shoppingListId}/item/{shoppingListItemId}")
     @RolesAllowed({USER, ADMIN})
     @DELETE
     public Response deleteShoppingListItem(
@@ -314,7 +314,7 @@ public class ShoppingListResource {
         }
     }
 
-    @Path("/{shoppingListId}/cart")
+    @Path("{shoppingListId}/cart")
     @RolesAllowed({USER, ADMIN})
     @DELETE
     public Response emptyCart(
