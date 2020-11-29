@@ -147,6 +147,11 @@ public class ShoppingList extends Entity<ShoppingListId> {
         markAsUpdated();
     }
 
+    public void removeFromCart(ShoppingListItemId listItemId) {
+        get(listItemId).setInCart(false);
+        markAsUpdated();
+    }
+
     public void removeItemsInCart() {
         List<ShoppingListItem> cartItems = items
                 .stream()

@@ -143,4 +143,16 @@ class ShoppingListApi {
                 .accept(apiVersion)
                 .post(Entity.json(json));
     }
+
+    public Response removeFromCart(String listId, String listItemId) {
+        return webTarget
+                .path("shopping-list")
+                .path(listId)
+                .path("cart")
+                .path("item")
+                .path(listItemId)
+                .request()
+                .accept(apiVersion)
+                .delete();
+    }
 }
