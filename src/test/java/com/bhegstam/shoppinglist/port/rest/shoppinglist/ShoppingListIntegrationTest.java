@@ -32,6 +32,8 @@ public class ShoppingListIntegrationTest {
     private static final String LIST_NAME = "Test list";
     private static final String ITEM_TYPE_NAME = "Apples";
     private static final String INVALID_ID = "invalid-id";
+    public static final String RANDOM_LIST_ID = new ShoppingListId().getId();
+    public static final String RANDOM_LIST_ITEM_ID = new ShoppingListItemId().getId();
 
     @ClassRule
     public static final DropwizardAppRule<ShoppingListApplicationConfiguration> service = DropwizardAppRuleFactory.forIntegrationTest();
@@ -426,7 +428,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_unknownListId() {
         // when
-        Response response = api.postShoppingListItem("26490c45-3ef2-422b-bf28-de14c04fce61", "{ \"itemTypeId\": \"item-type-id\", \"quantity\": 1 }");
+        Response response = api.postShoppingListItem(RANDOM_LIST_ID, "{ \"itemTypeId\": \"item-type-id\", \"quantity\": 1 }");
 
         // then
         assertResponseStatus(response, BAD_REQUEST);
@@ -536,7 +538,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void updateItem_invalidListId() {
         // when
-        Response response = api.putShoppingListItem(INVALID_ID, "ff428927-8618-4f3d-b1a8-a38a82c42c38", "{}");
+        Response response = api.putShoppingListItem(INVALID_ID, RANDOM_LIST_ITEM_ID, "{}");
 
         // then
         assertResponseStatus(response, BAD_REQUEST);
@@ -545,7 +547,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void updateItem_unknownListId() {
         // when
-        Response response = api.putShoppingListItem("26490c45-3ef2-422b-bf28-de14c04fce61", "ff428927-8618-4f3d-b1a8-a38a82c42c38", "{}");
+        Response response = api.putShoppingListItem(RANDOM_LIST_ID, RANDOM_LIST_ITEM_ID, "{}");
 
         // then
         assertResponseStatus(response, BAD_REQUEST);
@@ -554,7 +556,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void updateItem_invalidListItemId() {
         // when
-        Response response = api.putShoppingListItem("26490c45-3ef2-422b-bf28-de14c04fce61", INVALID_ID, "{}");
+        Response response = api.putShoppingListItem(RANDOM_LIST_ID, INVALID_ID, "{}");
 
         // then
         assertResponseStatus(response, BAD_REQUEST);
@@ -566,7 +568,7 @@ public class ShoppingListIntegrationTest {
         ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
 
         // when
-        Response response = api.putShoppingListItem(shoppingList.getId().getId(), "ff428927-8618-4f3d-b1a8-a38a82c42c38", "{}");
+        Response response = api.putShoppingListItem(shoppingList.getId().getId(), RANDOM_LIST_ITEM_ID, "{}");
 
         // then
         assertResponseStatus(response, BAD_REQUEST);
@@ -593,7 +595,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteItem_invalidListId() {
         // when
-        Response response = api.deleteShoppingListItem(INVALID_ID, "ff428927-8618-4f3d-b1a8-a38a82c42c38");
+        Response response = api.deleteShoppingListItem(INVALID_ID, RANDOM_LIST_ITEM_ID);
 
         // then
         assertResponseStatus(response, BAD_REQUEST);
@@ -602,7 +604,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteItem_unknownListId() {
         // when
-        Response response = api.deleteShoppingListItem("26490c45-3ef2-422b-bf28-de14c04fce61", "ff428927-8618-4f3d-b1a8-a38a82c42c38");
+        Response response = api.deleteShoppingListItem(RANDOM_LIST_ID, RANDOM_LIST_ITEM_ID);
 
         // then
         assertResponseStatus(response, BAD_REQUEST);
@@ -611,7 +613,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteItem_invalidListItemId() {
         // when
-        Response response = api.deleteShoppingListItem("26490c45-3ef2-422b-bf28-de14c04fce61", INVALID_ID);
+        Response response = api.deleteShoppingListItem(RANDOM_LIST_ID, INVALID_ID);
 
         // then
         assertResponseStatus(response, BAD_REQUEST);
@@ -624,14 +626,14 @@ public class ShoppingListIntegrationTest {
         shoppingListRepository.persist(shoppingList);
 
         // when
-        Response response = api.deleteShoppingListItem(shoppingList.getId().getId(), "ff428927-8618-4f3d-b1a8-a38a82c42c38");
+        Response response = api.deleteShoppingListItem(shoppingList.getId().getId(), RANDOM_LIST_ITEM_ID);
 
         // then
         assertResponseStatus(response, BAD_REQUEST);
     }
 
     @Test
-    public void addItemToCart() {
+    public void addToCart() {
         // given
         ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
@@ -643,9 +645,54 @@ public class ShoppingListIntegrationTest {
 
         // then
         assertResponseStatus(response, NO_CONTENT);
+
+        ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
+        assertTrue(persistedList.get(listItem.getId()).isInCart());
     }
 
-    // TODO: Add more tests for invalid/unknown list/item id
+    @Test
+    public void addToCart_invalidListId() {
+        // when
+        Response response = api.addToCart(INVALID_ID, "{\"shoppingListItemId\": \"" + RANDOM_LIST_ITEM_ID + "\"}");
+
+        // then
+        assertResponseStatus(response, BAD_REQUEST);
+    }
+
+    @Test
+    public void addToCart_unknownListId() {
+        // when
+        Response response = api.addToCart(RANDOM_LIST_ID, "{\"shoppingListItemId\": \"" + RANDOM_LIST_ITEM_ID + "\"}");
+
+        // then
+        assertResponseStatus(response, BAD_REQUEST);
+    }
+
+    @Test
+    public void addToCart_invalidListItemId() {
+        // given
+        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        shoppingListRepository.persist(shoppingList);
+
+        // when
+        Response response = api.addToCart(shoppingList.getId().getId(), "{\"shoppingListItemId\": \"" + INVALID_ID + "\"}");
+
+        // then
+        assertResponseStatus(response, BAD_REQUEST);
+    }
+
+    @Test
+    public void addToCart_unknownListItemId() {
+        // given
+        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        shoppingListRepository.persist(shoppingList);
+
+        // when
+        Response response = api.addToCart(shoppingList.getId().getId(), "{\"shoppingListItemId\": \"" + RANDOM_LIST_ITEM_ID + "\"}");
+
+        // then
+        assertResponseStatus(response, BAD_REQUEST);
+    }
 
     @Test
     public void emptyCart() {
@@ -672,7 +719,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void emptyCart_unknownListId() {
         // when
-        Response response = api.deleteShoppingListCart("26490c45-3ef2-422b-bf28-de14c04fce61");
+        Response response = api.deleteShoppingListCart(RANDOM_LIST_ID);
 
         // then
         assertResponseStatus(response, BAD_REQUEST);

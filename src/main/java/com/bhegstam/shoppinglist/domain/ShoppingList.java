@@ -110,7 +110,7 @@ public class ShoppingList extends Entity<ShoppingListId> {
     }
 
     public ShoppingListItem addItem(ItemType itemType) {
-        return this.addItem(itemType, 1);
+        return addItem(itemType, 1);
     }
 
     public ShoppingListItem addItem(ItemType itemType, int quantity) {
