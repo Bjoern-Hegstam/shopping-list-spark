@@ -45,6 +45,7 @@
 
 .shopping-list__empty-cart-button {
   @extend %button-danger;
+  height: 3rem;
   margin: 0.5rem;
 }
 
