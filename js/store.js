@@ -38,11 +38,14 @@ export const logoutUserWhenTokenExpires = store => next => action => {
     const state = store.getState();
     if (state.auth.token) {
       const claims = jwtDecode(state.auth.token);
-      const timeout = moment.unix(claims.exp).diff(moment());
-      tokenExpirationTimer = setTimeout(() => {
-        tokenExpirationTimer = null; // Or else the following logout action will cause the middleware to clear the timeout
-        store.dispatch(logout());
-      }, timeout);
+      const msUntilTokenExpiration = moment.unix(claims.exp).diff(moment());
+      tokenExpirationTimer = setTimeout(
+        () => {
+          tokenExpirationTimer = null; // Or else the following logout action will cause the middleware to clear the timeout
+          store.dispatch(logout());
+        },
+        Math.max(msUntilTokenExpiration, 0),
+      );
     }
   }
 };

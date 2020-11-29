@@ -11,13 +11,17 @@ describe('middleware', () => {
 
     beforeEach(() => {
       jest.useFakeTimers();
-      MockDate.set(moment.unix(1532231467)); // 1 hour before the token expiration time
+      MockDate.set(moment.unix(1532231467).toDate()); // 1 hour before the token expiration time
 
       store = {
         getState: () => ({ auth: { token } }),
         dispatch: jest.fn(),
       };
       next = jest.fn();
+    });
+
+    afterEach(() => {
+      jest.runAllTimers();
     });
 
     it('sets timer based on token expiration time', () => {
@@ -33,6 +37,17 @@ describe('middleware', () => {
 
       // then
       expect(store.dispatch).toHaveBeenCalledWith({ type: types.LOGOUT });
+    });
+
+    it('sets a timer with non-negative delay when token is expired', () => {
+      // given token expired 1ms ago
+      MockDate.set(moment.unix(1535831468).toDate());
+
+      // when
+      logoutUserWhenTokenExpires(store)(next)({});
+
+      // then
+      expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 0);
     });
 
     it('does not set a new timer when one is already running', () => {
