@@ -13,7 +13,7 @@ public class ShoppingList extends Entity<ShoppingListId> {
     private String name;
     private final Map<ItemTypeId, ItemType> itemTypes;
     private final Set<ItemTypeId> deletedItemTypes;
-    private final Map<ItemTypeId, ShoppingListItem> items;
+    private final List<ShoppingListItem> items;
     private final Set<ShoppingListItemId> removedItems;
 
     public static ShoppingList create(String name) {
@@ -47,7 +47,7 @@ public class ShoppingList extends Entity<ShoppingListId> {
         this.name = name;
         itemTypes = new HashMap<>();
         deletedItemTypes = new HashSet<>();
-        items = new HashMap<>();
+        items = new ArrayList<>();
         removedItems = new HashSet<>();
     }
 
@@ -88,7 +88,11 @@ public class ShoppingList extends Entity<ShoppingListId> {
     }
 
     public void deleteItemType(ItemTypeId itemTypeId) {
-        if (items.containsKey(itemTypeId)) {
+        boolean itemTypeInUse = items
+                .stream()
+                .anyMatch(item -> item.getItemType().getId().equals(itemTypeId));
+
+        if (itemTypeInUse) {
             throw new ItemTypeUsedInShoppingListException(itemTypeId);
         }
 
@@ -105,60 +109,55 @@ public class ShoppingList extends Entity<ShoppingListId> {
         deletedItemTypes.clear();
     }
 
-    public ShoppingListItem add(ItemType itemType) {
-        ShoppingListItem item = items.computeIfAbsent(itemType.getId(), k -> ShoppingListItem.create(itemType));
-        item.setQuantity(item.getQuantity() + 1);
+    public ShoppingListItem addItem(ItemType itemType) {
+        return this.addItem(itemType, 1);
+    }
+
+    public ShoppingListItem addItem(ItemType itemType, int quantity) {
+        ShoppingListItem item = ShoppingListItem.create(itemType, quantity);
+        items.add(item);
 
         markAsUpdated();
 
         return item;
     }
 
-    public boolean contains(ItemTypeId itemTypeId) {
-        return items.containsKey(itemTypeId);
-    }
-
-    public ShoppingListItem get(ItemTypeId itemTypeId) {
-        return items.get(itemTypeId);
-    }
-
     public ShoppingListItem get(ShoppingListItemId itemId) {
         return items
-                .values().stream()
+                .stream()
                 .filter(item -> item.getId().equals(itemId))
                 .collect(onlyOptionalElement())
                 .orElseThrow(() -> new ShoppingListItemNotFoundException(itemId));
     }
 
-    public void remove(ItemTypeId itemTypeId) {
-        ShoppingListItem item = items.remove(itemTypeId);
-        removedItems.add(item.getId());
-        markAsUpdated();
-    }
-
     public void remove(ShoppingListItemId listItemId) {
-        ItemTypeId itemTypeId = items
-                .entrySet().stream()
-                .filter(e -> e.getValue().getId().equals(listItemId))
-                .map(Map.Entry::getKey)
+        ShoppingListItem listItem = items
+                .stream()
+                .filter(item -> item.getId().equals(listItemId))
                 .collect(onlyOptionalElement())
                 .orElseThrow(() -> new ShoppingListItemNotFoundException(listItemId));
 
-        ShoppingListItem item = items.remove(itemTypeId);
-        removedItems.add(item.getId());
+        items.remove(listItem);
+        removedItems.add(listItem.getId());
+        markAsUpdated();
+    }
+
+    public void addToCart(ShoppingListItemId listItemId) {
+        get(listItemId).setInCart(true);
         markAsUpdated();
     }
 
     public void removeItemsInCart() {
-        List<ItemTypeId> itemTypeIds = items
-                .entrySet().stream()
-                .filter(e -> e.getValue().isInCart())
-                .map(Map.Entry::getKey)
+        List<ShoppingListItem> cartItems = items
+                .stream()
+                .filter(ShoppingListItem::isInCart)
                 .collect(toList());
+        cartItems.forEach(item -> {
+            items.remove(item);
+            removedItems.add(item.getId());
+        });
 
-        itemTypeIds.forEach(this::remove);
-
-        if (!itemTypeIds.isEmpty()) {
+        if (!cartItems.isEmpty()) {
             markAsUpdated();
         }
     }
@@ -172,7 +171,7 @@ public class ShoppingList extends Entity<ShoppingListId> {
     }
 
     public Collection<ShoppingListItem> getItems() {
-        return Collections.unmodifiableCollection(items.values());
+        return Collections.unmodifiableCollection(items);
     }
 
     public void loadFromDb(List<ItemType> itemTypes, Collection<ShoppingListItem> items) {
@@ -181,6 +180,6 @@ public class ShoppingList extends Entity<ShoppingListId> {
         this.items.clear();
         this.removedItems.clear();
         itemTypes.forEach(itemType -> this.itemTypes.put(itemType.getId(), itemType));
-        items.forEach(item -> this.items.put(item.getItemType().getId(), item));
+        this.items.addAll(items);
     }
 }

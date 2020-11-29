@@ -50,7 +50,6 @@ public class ShoppingListIntegrationTest {
         api = new ShoppingListApi(SHOPPING_LIST_1_0, serviceUrl, token);
 
         shoppingListRepository = testDatabaseSetup.getRepositoryFactory().createShoppingListRepository();
-
     }
 
     @Test
@@ -128,7 +127,7 @@ public class ShoppingListIntegrationTest {
         // given
         ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
-        shoppingList.add(itemType);
+        shoppingList.addItem(itemType);
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -180,7 +179,7 @@ public class ShoppingListIntegrationTest {
         // given
         ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
-        shoppingList.add(itemType);
+        shoppingList.addItem(itemType);
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -367,7 +366,7 @@ public class ShoppingListIntegrationTest {
         // given
         ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
-        shoppingList.add(itemType);
+        shoppingList.addItem(itemType);
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -505,7 +504,7 @@ public class ShoppingListIntegrationTest {
         // given
         ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
-        ShoppingListItem listItem = shoppingList.add(itemType);
+        ShoppingListItem listItem = shoppingList.addItem(itemType);
         shoppingListRepository.persist(shoppingList);
         ShoppingListId listId = shoppingList.getId();
 
@@ -578,7 +577,7 @@ public class ShoppingListIntegrationTest {
         // given
         ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
-        ShoppingListItem listItem = shoppingList.add(itemType);
+        ShoppingListItem listItem = shoppingList.addItem(itemType);
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -630,6 +629,23 @@ public class ShoppingListIntegrationTest {
         // then
         assertResponseStatus(response, BAD_REQUEST);
     }
+
+    @Test
+    public void addItemToCart() {
+        // given
+        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
+        ShoppingListItem listItem = shoppingList.addItem(itemType);
+        shoppingListRepository.persist(shoppingList);
+
+        // when
+        Response response = api.addToCart(shoppingList.getId().getId(), "{\"shoppingListItemId\": \"" + listItem.getId().getId() + "\"}");
+
+        // then
+        assertResponseStatus(response, NO_CONTENT);
+    }
+
+    // TODO: Add more tests for invalid/unknown list/item id
 
     @Test
     public void emptyCart() {

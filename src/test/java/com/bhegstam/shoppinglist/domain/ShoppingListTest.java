@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
+import org.junit.rules.ExpectedException;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -11,6 +12,7 @@ import java.time.temporal.ChronoUnit;
 import static com.bhegstam.shoppinglist.util.Matchers.isAfter;
 import static com.bhegstam.shoppinglist.util.Matchers.isAtOrAfter;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 public class ShoppingListTest {
@@ -20,6 +22,9 @@ public class ShoppingListTest {
 
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     private Instant before;
 
@@ -71,29 +76,29 @@ public class ShoppingListTest {
         ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
 
         // when item added for the first time
-        ShoppingListItem listItem = list.add(itemType);
+        ShoppingListItem listItem = list.addItem(itemType);
 
         // then
-        errorCollector.checkThat(list.get(itemType.getId()).getQuantity(), is(1));
-        errorCollector.checkThat(list.contains(itemType.getId()), is(true));
+        errorCollector.checkThat(list.get(listItem.getId()).getQuantity(), is(1));
 
         // when item added again
-        list.add(itemType);
+        ShoppingListItem listItem2 = list.addItem(itemType);
 
         // then
-        errorCollector.checkThat(list.get(itemType.getId()).getQuantity(), is(2));
+        errorCollector.checkThat(listItem2, not(is(listItem)));
+        errorCollector.checkThat(list.get(listItem.getId()).getQuantity(), is(1));
 
         // when quantity updated via list item
         listItem.setQuantity(5);
 
         // then
-        errorCollector.checkThat(list.get(itemType.getId()).getQuantity(), is(5));
+        errorCollector.checkThat(list.get(listItem.getId()).getQuantity(), is(5));
+        errorCollector.checkThat(list.get(listItem2.getId()).getQuantity(), is(1));
 
         // when item removed
-        list.remove(itemType.getId());
+        list.remove(listItem.getId());
 
         // then
-        errorCollector.checkThat(list.contains(itemType.getId()), is(false));
         errorCollector.checkThat(list.removedItemIds().contains(listItem.getId()), is(true));
     }
 
@@ -106,22 +111,7 @@ public class ShoppingListTest {
         ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
 
         // when
-        list.add(itemType);
-
-        // then
-        assertThat(list.updateRequired(), is(true));
-    }
-
-    @Test
-    public void removeItemByItemTypeFromPersistedShoppingList() {
-        // given
-        ShoppingList list = ShoppingList.create(LIST_NAME);
-        ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
-        list.add(itemType);
-        list.markAsPersisted();
-
-        // when
-        list.remove(itemType.getId());
+        list.addItem(itemType);
 
         // then
         assertThat(list.updateRequired(), is(true));
@@ -132,7 +122,7 @@ public class ShoppingListTest {
         // given
         ShoppingList list = ShoppingList.create(LIST_NAME);
         ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
-        ShoppingListItem listItem = list.add(itemType);
+        ShoppingListItem listItem = list.addItem(itemType);
         list.markAsPersisted();
 
         // when
@@ -149,7 +139,7 @@ public class ShoppingListTest {
         ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
 
         // when
-        ShoppingListItem listItem = list.add(itemType);
+        ShoppingListItem listItem = list.addItem(itemType);
 
         // then
         ShoppingListItem retrievedListItem = list.get(listItem.getId());
@@ -159,7 +149,8 @@ public class ShoppingListTest {
         list.remove(listItem.getId());
 
         // then
-        errorCollector.checkThat(list.contains(itemType.getId()), is(false));
+        expectedException.expect(ShoppingListItemNotFoundException.class);
+        list.get(listItem.getId());
     }
 
     @Test
@@ -169,18 +160,15 @@ public class ShoppingListTest {
         ItemType itemTypeA = ItemType.create(ITEM_TYPE_NAME + "_A");
         ItemType itemTypeB = ItemType.create(ITEM_TYPE_NAME + "_B");
 
-        ShoppingListItem itemA = list.add(itemTypeA);
-        list.add(itemTypeB);
+        ShoppingListItem itemA = list.addItem(itemTypeA);
+        list.addItem(itemTypeB);
 
         // when
         itemA.setInCart(true);
         list.removeItemsInCart();
 
         // then
-        errorCollector.checkThat(list.contains(itemTypeA.getId()), is(false));
         errorCollector.checkThat(list.removedItemIds().contains(itemA.getId()), is(true));
-
-        errorCollector.checkThat(list.contains(itemTypeB.getId()), is(true));
     }
 
     @Test
@@ -188,7 +176,7 @@ public class ShoppingListTest {
         // given
         ShoppingList list = ShoppingList.create(LIST_NAME);
         ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
-        ShoppingListItem listItem = list.add(itemType);
+        ShoppingListItem listItem = list.addItem(itemType);
         listItem.setInCart(true);
 
         list.markAsPersisted();

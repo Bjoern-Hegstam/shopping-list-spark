@@ -9,11 +9,11 @@ public class ShoppingListItem extends Entity<ShoppingListItemId> {
     private int quantity;
     private boolean inCart;
 
-    public static ShoppingListItem create(ItemType itemType) {
+    public static ShoppingListItem create(ItemType itemType, int quantity) {
         return new ShoppingListItem(
                 new ShoppingListItemId(),
                 itemType,
-                0,
+                quantity,
                 false,
                 Instant.now(),
                 null,

@@ -73,10 +73,10 @@ public class JdbiShoppingListRepositoryTest {
         // create new list with items
         ShoppingList shoppingList = ShoppingList.create("Foo");
         ItemType itemType1 = shoppingList.addItemType("Type 1");
-        ShoppingListItem item1 = shoppingList.add(itemType1);
+        ShoppingListItem item1 = shoppingList.addItem(itemType1);
 
         ItemType itemType2 = shoppingList.addItemType("Type 2");
-        ShoppingListItem item2 = shoppingList.add(itemType2);
+        ShoppingListItem item2 = shoppingList.addItem(itemType2);
         item2.setQuantity(5);
         item2.setInCart(true);
 
@@ -89,12 +89,12 @@ public class JdbiShoppingListRepositoryTest {
         assertThat(persistedList.isPersisted(), is(true));
         assertThat(persistedList.getItems(), containsInAnyOrder(item1, item2));
 
-        ShoppingListItem persistedItem1 = persistedList.get(itemType1.getId());
+        ShoppingListItem persistedItem1 = persistedList.get(item1.getId());
         errorCollector.checkThat(persistedItem1.getQuantity(), is(1));
         errorCollector.checkThat(persistedItem1.isInCart(), is(false));
         errorCollector.checkThat(persistedItem1.isPersisted(), is(true));
 
-        ShoppingListItem persistedItem2 = persistedList.get(itemType2.getId());
+        ShoppingListItem persistedItem2 = persistedList.get(item2.getId());
         errorCollector.checkThat(persistedItem2.getQuantity(), is(5));
         errorCollector.checkThat(persistedItem2.isInCart(), is(true));
         errorCollector.checkThat(persistedItem2.isPersisted(), is(true));
@@ -109,7 +109,7 @@ public class JdbiShoppingListRepositoryTest {
         shoppingListRepository.persist(shoppingList);
 
         // when
-        ShoppingListItem item1 = shoppingList.add(itemType1);
+        ShoppingListItem item1 = shoppingList.addItem(itemType1);
         shoppingListRepository.persist(shoppingList);
 
         // then
@@ -122,7 +122,7 @@ public class JdbiShoppingListRepositoryTest {
         // given
         ShoppingList shoppingList = ShoppingList.create("Foo");
         ItemType itemType1 = shoppingList.addItemType("Type 1");
-        ShoppingListItem item1 = shoppingList.add(itemType1);
+        ShoppingListItem item1 = shoppingList.addItem(itemType1);
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -141,9 +141,9 @@ public class JdbiShoppingListRepositoryTest {
         // given
         ShoppingList shoppingList = ShoppingList.create("Foo");
         ItemType itemType1 = shoppingList.addItemType("Type 1");
-        ShoppingListItem item1 = shoppingList.add(itemType1);
+        ShoppingListItem item1 = shoppingList.addItem(itemType1);
         ItemType itemType2 = shoppingList.addItemType("Type 2");
-        ShoppingListItem item2 = shoppingList.add(itemType2);
+        ShoppingListItem item2 = shoppingList.addItem(itemType2);
 
         shoppingListRepository.persist(shoppingList);
 
@@ -174,7 +174,7 @@ public class JdbiShoppingListRepositoryTest {
         expectedException.expect(OptimisticLockingException.class);
 
         // when
-        shoppingListInstance1.add(itemType1);
+        shoppingListInstance1.addItem(itemType1);
         shoppingListRepository.persist(shoppingListInstance1);
     }
 
@@ -183,18 +183,18 @@ public class JdbiShoppingListRepositoryTest {
         // given
         ShoppingList shoppingListInstance1 = ShoppingList.create("Foo");
         ItemType itemType1 = shoppingListInstance1.addItemType("Type 1");
-        shoppingListInstance1.add(itemType1);
+        ShoppingListItem item1 = shoppingListInstance1.addItem(itemType1);
         shoppingListRepository.persist(shoppingListInstance1);
 
         ShoppingList shoppingListInstance2 = shoppingListRepository.get(shoppingListInstance1.getId());
-        shoppingListInstance2.get(itemType1.getId()).setQuantity(2);
+        shoppingListInstance2.get(item1.getId()).setQuantity(2);
         shoppingListRepository.persist(shoppingListInstance2);
 
         // then
         expectedException.expect(OptimisticLockingException.class);
 
         // when
-        shoppingListInstance1.get(itemType1.getId()).setQuantity(2);
+        shoppingListInstance1.get(item1.getId()).setQuantity(2);
         shoppingListRepository.persist(shoppingListInstance1);
     }
 
@@ -206,14 +206,14 @@ public class JdbiShoppingListRepositoryTest {
 
         ShoppingList shoppingListInstance2 = shoppingListRepository.get(shoppingListInstance1.getId());
         ItemType itemType1 = shoppingListInstance2.addItemType("Type 1");
-        shoppingListInstance2.add(itemType1);
+        shoppingListInstance2.addItem(itemType1);
         shoppingListRepository.persist(shoppingListInstance2);
 
         // then
         expectedException.expect(OptimisticLockingException.class);
 
         // when
-        shoppingListInstance1.add(itemType1);
+        shoppingListInstance1.addItem(itemType1);
         shoppingListRepository.persist(shoppingListInstance1);
     }
 
@@ -231,7 +231,7 @@ public class JdbiShoppingListRepositoryTest {
         // given
         ShoppingList shoppingList1 = ShoppingList.create("Foo");
         ItemType itemType1 = shoppingList1.addItemType("Type 1");
-        ShoppingListItem item1 = shoppingList1.add(itemType1);
+        ShoppingListItem item1 = shoppingList1.addItem(itemType1);
         shoppingListRepository.persist(shoppingList1);
 
         ShoppingList shoppingList2 = ShoppingList.create("Bar");
@@ -270,7 +270,7 @@ public class JdbiShoppingListRepositoryTest {
         // given
         ShoppingList shoppingList = ShoppingList.create("Foo");
         ItemType itemType1 = shoppingList.addItemType("Type 1");
-        shoppingList.add(itemType1);
+        shoppingList.addItem(itemType1);
         shoppingListRepository.persist(shoppingList);
 
         // then

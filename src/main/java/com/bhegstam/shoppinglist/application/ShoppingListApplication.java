@@ -54,12 +54,9 @@ public class ShoppingListApplication {
 
     public ShoppingListItem addItem(ShoppingListId listId, ItemTypeId itemTypeId, Integer quantity) {
         ShoppingList shoppingList = shoppingListRepository.get(listId);
-
         ItemType itemType = shoppingList.getItemType(itemTypeId);
 
-        ShoppingListItem listItem = shoppingList.add(itemType);
-        listItem.setQuantity(quantity);
-
+        ShoppingListItem listItem = shoppingList.addItem(itemType, quantity);
         shoppingListRepository.persist(shoppingList);
 
         return listItem;
@@ -67,12 +64,9 @@ public class ShoppingListApplication {
 
     public ShoppingListItem addItem(ShoppingListId listId, String itemTypeName, Integer quantity) {
         ShoppingList shoppingList = shoppingListRepository.get(listId);
-
         ItemType itemType = shoppingList.addItemType(itemTypeName);
 
-        ShoppingListItem listItem = shoppingList.add(itemType);
-        listItem.setQuantity(quantity);
-
+        ShoppingListItem listItem = shoppingList.addItem(itemType, quantity);
         shoppingListRepository.persist(shoppingList);
 
         return listItem;
@@ -92,6 +86,12 @@ public class ShoppingListApplication {
     public void deleteItem(ShoppingListId listId, ShoppingListItemId listItemId) {
         ShoppingList shoppingList = shoppingListRepository.get(listId);
         shoppingList.remove(listItemId);
+        shoppingListRepository.persist(shoppingList);
+    }
+
+    public void addToCart(ShoppingListId listId, ShoppingListItemId listItemId) {
+        ShoppingList shoppingList = shoppingListRepository.get(listId);
+        shoppingList.addToCart(listItemId);
         shoppingListRepository.persist(shoppingList);
     }
 

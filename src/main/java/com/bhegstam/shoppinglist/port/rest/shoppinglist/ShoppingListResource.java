@@ -94,7 +94,7 @@ public class ShoppingListResource {
         try {
             shoppingListApplication.updateShoppingList(listId, request.getName());
 
-            return createAndLogResponse(NO_CONTENT, null);
+            return createAndLogResponse(NO_CONTENT);
         } catch (ShoppingListNotFoundException e) {
             LOGGER.error("Error while getting shopping list with id [" + shoppingListIdString + "]", e);
             return Response.status(UNPROCESSABLE_ENTITY).build();
@@ -118,7 +118,7 @@ public class ShoppingListResource {
         try {
             shoppingListApplication.deleteShoppingList(listId);
 
-            return createAndLogResponse(NO_CONTENT, null);
+            return createAndLogResponse(NO_CONTENT);
         } catch (ShoppingListDeleteNotAllowedException e) {
             LOGGER.error("Error while deleting shopping list with id [" + shoppingListIdString + "]");
             return Response.status(UNPROCESSABLE_ENTITY).build();
@@ -275,9 +275,10 @@ public class ShoppingListResource {
         }
 
         try {
+            // TODO: Migrate calls to add item to cart to new resource, then remove inCart from request
             shoppingListApplication.updateItem(listId, listItemId, request.getQuantity(), request.isInCart());
 
-            return createAndLogResponse(NO_CONTENT, null);
+            return createAndLogResponse(NO_CONTENT);
         } catch (ShoppingListNotFoundException | ShoppingListItemNotFoundException e) {
             LOGGER.error("Error while updating item [" + listItemId + "] in shopping list [" + listId + "] for user [" + user.getId() + "]", e);
             return Response.status(BAD_REQUEST).build();
@@ -307,9 +308,39 @@ public class ShoppingListResource {
         try {
             shoppingListApplication.deleteItem(listId, listItemId);
 
-            return createAndLogResponse(NO_CONTENT, null);
+            return createAndLogResponse(NO_CONTENT);
         } catch (ShoppingListNotFoundException | ShoppingListItemNotFoundException e) {
             LOGGER.error("Error while deleting item [" + listItemId + "] in shopping list [" + listId + "] for user [" + user.getId() + "]", e);
+            return Response.status(BAD_REQUEST).build();
+        }
+    }
+
+    @Path("{shoppingListId}/cart/item")
+    @RolesAllowed({USER, ADMIN})
+    @POST
+    public Response addToCart(
+            @Auth User user,
+            @PathParam(SHOPPING_LIST_ID) String shoppingListIdString,
+            @Valid AddShoppingListItemToCartRequest request
+    ) {
+        LOGGER.info("Received request to add shopping list item [{}] to the cart in shopping list [{}] for user [{}]", request.getShoppingListItemId(), shoppingListIdString, user.getId());
+
+        ShoppingListId listId;
+        ShoppingListItemId listItemId;
+        try {
+            listId = ShoppingListId.parse(shoppingListIdString);
+            listItemId = ShoppingListItemId.parse(request.getShoppingListItemId());
+        } catch (IllegalArgumentException e) {
+            LOGGER.error("Error while adding item [" + request.getShoppingListItemId() + "] to the cart in shopping list [" + shoppingListIdString + "] for user [" + user.getId() + "]", e);
+            return Response.status(BAD_REQUEST).build();
+        }
+
+        try {
+            shoppingListApplication.addToCart(listId, listItemId);
+
+            return createAndLogResponse(NO_CONTENT);
+        } catch (ShoppingListNotFoundException | ShoppingListItemNotFoundException e) {
+            LOGGER.error("Error while adding item [" + listItemId + "] to the cart in shopping list [" + listId + "] for user [" + user.getId() + "]", e);
             return Response.status(BAD_REQUEST).build();
         }
     }
@@ -334,11 +365,15 @@ public class ShoppingListResource {
         try {
             shoppingListApplication.emptyCart(listId);
 
-            return createAndLogResponse(NO_CONTENT, null);
+            return createAndLogResponse(NO_CONTENT);
         } catch (ShoppingListNotFoundException e) {
             LOGGER.error("Error while emptying card of shopping list [" + listId + "]", e);
             return Response.status(BAD_REQUEST).build();
         }
+    }
+
+    private Response createAndLogResponse(Response.Status status) {
+        return createAndLogResponse(status, null);
     }
 
     private Response createAndLogResponse(Response.Status status, Object body) {

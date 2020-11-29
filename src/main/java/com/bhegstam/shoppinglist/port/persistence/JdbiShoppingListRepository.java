@@ -10,6 +10,7 @@ import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @RegisterRowMapper(ShoppingListMapper.class)
 @RegisterRowMapper(ItemTypeMapper.class)
@@ -17,12 +18,12 @@ import java.util.List;
 public interface JdbiShoppingListRepository extends ShoppingListRepository {
     @Transaction
     default void persist(ShoppingList shoppingList) {
-        ShoppingList listInDatabase = findWithItems(shoppingList.getId());
-        if (listInDatabase != null && !listInDatabase.getUpdatedAt().equals(shoppingList.getUpdateAtOnFetch())) {
+        Optional<ShoppingList> listInDatabase = findWithItems(shoppingList.getId());
+        if (listInDatabase.isPresent() && !listInDatabase.get().getUpdatedAt().equals(shoppingList.getUpdateAtOnFetch())) {
             throw new OptimisticLockingException(String.format(
                     "Cannot persist shopping list [%s], list in database was last updated [%s]",
                     shoppingList,
-                    listInDatabase.getUpdatedAt()
+                    listInDatabase.get().getUpdatedAt()
             ));
         }
 
@@ -68,13 +69,16 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
                                 item.getId(),
                                 shoppingList.getId(),
                                 item.getItemType().getId(),
-                                item.getQuantity(), item.isInCart(),
+                                item.getQuantity(),
+                                item.isInCart(),
                                 Timestamp.from(item.getCreatedAt()),
                                 Timestamp.from(item.getUpdatedAt())
                         );
                         item.markAsPersisted();
                     } else if (item.updateRequired()) {
-                        ShoppingListItem itemInDatabase = listInDatabase.get(item.getId());
+                        ShoppingListItem itemInDatabase = listInDatabase
+                                .orElseThrow(() -> new ShoppingListNotFoundException(shoppingList.getId()))
+                                .get(item.getId());
                         if (!itemInDatabase.getUpdatedAt().equals(item.getUpdateAtOnFetch())) {
                             throw new OptimisticLockingException(String.format(
                                     "Cannot persist item [%s], iten in database was last updated [%s]",
@@ -172,21 +176,18 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
 
     @Transaction
     default ShoppingList get(ShoppingListId listId) {
-        ShoppingList shoppingList = findWithItems(listId);
-        if (shoppingList != null) {
-            return shoppingList;
-        }
-        throw new ShoppingListNotFoundException(listId);
+        return findWithItems(listId)
+                .orElseThrow(() -> new ShoppingListNotFoundException(listId));
     }
 
-    default ShoppingList findWithItems(ShoppingListId listId) {
+    default Optional<ShoppingList> findWithItems(ShoppingListId listId) {
         ShoppingList shoppingList = getShoppingListEntity(listId);
         if (shoppingList == null) {
-            return null;
+            return Optional.empty();
         }
 
         shoppingList.loadFromDb(getItemTypes(listId), getItems(listId));
-        return shoppingList;
+        return Optional.of(shoppingList);
     }
 
     @SqlQuery("select * from shopping_list where id = :listId.id")
@@ -223,10 +224,11 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
 
     @Transaction
     default void delete(ShoppingListId listId) {
-        ShoppingList shoppingList = findWithItems(listId);
-        if (shoppingList == null) {
+        Optional<ShoppingList> optionalShoppingList = findWithItems(listId);
+        if (optionalShoppingList.isEmpty()) {
             return;
         }
+        ShoppingList shoppingList = optionalShoppingList.get();
 
         if (shoppingList.getItems().isEmpty() && shoppingList.getItemTypes().isEmpty()) {
             deleteShoppingList(listId);
