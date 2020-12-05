@@ -315,66 +315,6 @@ public class ShoppingListResource {
         }
     }
 
-    @Path("{shoppingListId}/cart/item")
-    @RolesAllowed({USER, ADMIN})
-    @POST
-    public Response addToCart(
-            @Auth User user,
-            @PathParam(SHOPPING_LIST_ID) String shoppingListIdString,
-            @Valid AddShoppingListItemToCartRequest request
-    ) {
-        LOGGER.info("Received request to add shopping list item [{}] to the cart in shopping list [{}] for user [{}]", request.getShoppingListItemId(), shoppingListIdString, user.getId());
-
-        ShoppingListId listId;
-        ShoppingListItemId listItemId;
-        try {
-            listId = ShoppingListId.parse(shoppingListIdString);
-            listItemId = ShoppingListItemId.parse(request.getShoppingListItemId());
-        } catch (IllegalArgumentException e) {
-            LOGGER.error("Error while adding item [" + request.getShoppingListItemId() + "] to the cart in shopping list [" + shoppingListIdString + "] for user [" + user.getId() + "]", e);
-            return Response.status(BAD_REQUEST).build();
-        }
-
-        try {
-            shoppingListApplication.addToCart(listId, listItemId);
-
-            return createAndLogResponse(NO_CONTENT);
-        } catch (ShoppingListNotFoundException | ShoppingListItemNotFoundException e) {
-            LOGGER.error("Error while adding item [" + listItemId + "] to the cart in shopping list [" + listId + "] for user [" + user.getId() + "]", e);
-            return Response.status(BAD_REQUEST).build();
-        }
-    }
-
-    @Path("{shoppingListId}/cart/item/{shoppingListItemId}")
-    @RolesAllowed({USER, ADMIN})
-    @DELETE
-    public Response removeFromCart(
-            @Auth User user,
-            @PathParam(SHOPPING_LIST_ID) String shoppingListIdString,
-            @PathParam(SHOPPING_LIST_ITEM_ID) String shoppingListItemIdString
-    ) {
-        LOGGER.info("Received request to remove shopping list item [{}] from the cart in shopping list [{}] for user [{}]", shoppingListItemIdString, shoppingListIdString, user.getId());
-
-        ShoppingListId listId;
-        ShoppingListItemId listItemId;
-        try {
-            listId = ShoppingListId.parse(shoppingListIdString);
-            listItemId = ShoppingListItemId.parse(shoppingListItemIdString);
-        } catch (IllegalArgumentException e) {
-            LOGGER.error("Error while removing item [" + shoppingListItemIdString + "] from the cart in shopping list [" + shoppingListIdString + "] for user [" + user.getId() + "]", e);
-            return Response.status(BAD_REQUEST).build();
-        }
-
-        try {
-            shoppingListApplication.removeFromCart(listId, listItemId);
-
-            return createAndLogResponse(NO_CONTENT);
-        } catch (ShoppingListNotFoundException | ShoppingListItemNotFoundException e) {
-            LOGGER.error("Error while removing item [" + listItemId + "] from the cart in shopping list [" + listId + "] for user [" + user.getId() + "]", e);
-            return Response.status(BAD_REQUEST).build();
-        }
-    }
-
     @Path("{shoppingListId}/cart")
     @RolesAllowed({USER, ADMIN})
     @DELETE

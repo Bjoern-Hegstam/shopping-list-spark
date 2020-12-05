@@ -25,7 +25,8 @@ import static javax.ws.rs.core.Response.Status.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class ShoppingListIntegrationTest {
     private static final String LIST_NAME = "Test list";
@@ -626,131 +627,6 @@ public class ShoppingListIntegrationTest {
 
         // when
         Response response = api.deleteShoppingListItem(shoppingList.getId().getId(), RANDOM_LIST_ITEM_ID);
-
-        // then
-        assertResponseStatus(response, BAD_REQUEST);
-    }
-
-    @Test
-    public void addToCart() {
-        // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
-        ShoppingListItem listItem = shoppingList.addItem(itemType);
-        shoppingListRepository.persist(shoppingList);
-
-        // when
-        Response response = api.addToCart(shoppingList.getId().getId(), "{\"shoppingListItemId\": \"" + listItem.getId().getId() + "\"}");
-
-        // then
-        assertResponseStatus(response, NO_CONTENT);
-
-        ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
-        assertTrue(persistedList.get(listItem.getId()).isInCart());
-    }
-
-    @Test
-    public void addToCart_invalidListId() {
-        // when
-        Response response = api.addToCart(INVALID_ID, "{\"shoppingListItemId\": \"" + RANDOM_LIST_ITEM_ID + "\"}");
-
-        // then
-        assertResponseStatus(response, BAD_REQUEST);
-    }
-
-    @Test
-    public void addToCart_unknownListId() {
-        // when
-        Response response = api.addToCart(RANDOM_LIST_ID, "{\"shoppingListItemId\": \"" + RANDOM_LIST_ITEM_ID + "\"}");
-
-        // then
-        assertResponseStatus(response, BAD_REQUEST);
-    }
-
-    @Test
-    public void addToCart_invalidListItemId() {
-        // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        shoppingListRepository.persist(shoppingList);
-
-        // when
-        Response response = api.addToCart(shoppingList.getId().getId(), "{\"shoppingListItemId\": \"" + INVALID_ID + "\"}");
-
-        // then
-        assertResponseStatus(response, BAD_REQUEST);
-    }
-
-    @Test
-    public void addToCart_unknownListItemId() {
-        // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        shoppingListRepository.persist(shoppingList);
-
-        // when
-        Response response = api.addToCart(shoppingList.getId().getId(), "{\"shoppingListItemId\": \"" + RANDOM_LIST_ITEM_ID + "\"}");
-
-        // then
-        assertResponseStatus(response, BAD_REQUEST);
-    }
-
-    @Test
-    public void removeFromCart() {
-        // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
-        ShoppingListItem listItem = shoppingList.addItem(itemType);
-        shoppingList.addToCart(listItem.getId());
-        shoppingListRepository.persist(shoppingList);
-
-        // when
-        Response response = api.removeFromCart(shoppingList.getId().getId(), listItem.getId().getId());
-
-        // then
-        assertResponseStatus(response, NO_CONTENT);
-
-        ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
-        assertFalse(persistedList.get(listItem.getId()).isInCart());
-    }
-
-    @Test
-    public void removeFromCart_invalidListId() {
-        // when
-        Response response = api.removeFromCart(INVALID_ID, RANDOM_LIST_ITEM_ID);
-
-        // then
-        assertResponseStatus(response, BAD_REQUEST);
-    }
-
-    @Test
-    public void removeFromCart_unknownListId() {
-        // when
-        Response response = api.removeFromCart(RANDOM_LIST_ID, RANDOM_LIST_ITEM_ID);
-
-        // then
-        assertResponseStatus(response, BAD_REQUEST);
-    }
-
-    @Test
-    public void removeFromCart_invalidListItemId() {
-        // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        shoppingListRepository.persist(shoppingList);
-
-        // when
-        Response response = api.removeFromCart(shoppingList.getId().getId(), INVALID_ID);
-
-        // then
-        assertResponseStatus(response, BAD_REQUEST);
-    }
-
-    @Test
-    public void removeFromCart_unknownListItemId() {
-        // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        shoppingListRepository.persist(shoppingList);
-
-        // when
-        Response response = api.removeFromCart(shoppingList.getId().getId(), RANDOM_LIST_ITEM_ID);
 
         // then
         assertResponseStatus(response, BAD_REQUEST);

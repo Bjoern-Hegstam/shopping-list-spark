@@ -89,18 +89,6 @@ public class ShoppingListApplication {
         shoppingListRepository.persist(shoppingList);
     }
 
-    public void addToCart(ShoppingListId listId, ShoppingListItemId listItemId) {
-        ShoppingList shoppingList = shoppingListRepository.get(listId);
-        shoppingList.addToCart(listItemId);
-        shoppingListRepository.persist(shoppingList);
-    }
-
-    public void removeFromCart(ShoppingListId listId, ShoppingListItemId listItemId) {
-        ShoppingList shoppingList = shoppingListRepository.get(listId);
-        shoppingList.removeFromCart(listItemId);
-        shoppingListRepository.persist(shoppingList);
-    }
-
     public void emptyCart(ShoppingListId listId) {
         ShoppingList shoppingList = shoppingListRepository.get(listId);
         shoppingList.removeItemsInCart();

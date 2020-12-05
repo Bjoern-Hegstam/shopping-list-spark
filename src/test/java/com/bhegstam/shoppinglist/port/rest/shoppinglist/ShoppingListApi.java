@@ -132,27 +132,4 @@ class ShoppingListApi {
                 .accept(apiVersion)
                 .delete();
     }
-
-    public Response addToCart(String listId, String json) {
-        return webTarget
-                .path("shopping-list")
-                .path(listId)
-                .path("cart")
-                .path("item")
-                .request()
-                .accept(apiVersion)
-                .post(Entity.json(json));
-    }
-
-    public Response removeFromCart(String listId, String listItemId) {
-        return webTarget
-                .path("shopping-list")
-                .path(listId)
-                .path("cart")
-                .path("item")
-                .path(listItemId)
-                .request()
-                .accept(apiVersion)
-                .delete();
-    }
 }
