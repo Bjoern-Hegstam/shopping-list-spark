@@ -16,6 +16,7 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 public class ShoppingListTest {
+    private static final WorkspaceId WORKSPACE_ID = new WorkspaceId();
     private static final ShoppingListId LIST_ID = new ShoppingListId();
     private static final String LIST_NAME = "LIST";
     private static final String ITEM_TYPE_NAME = "ITEM_TYPE";
@@ -36,7 +37,7 @@ public class ShoppingListTest {
     @Test
     public void setNameOfNotPersistedShoppingList() {
         // given
-        ShoppingList list = ShoppingList.create(LIST_NAME);
+        ShoppingList list = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
 
         assertThat(list.insertRequired(), is(true));
         assertThat(list.getCreatedAt(), isAtOrAfter(before));
@@ -55,7 +56,7 @@ public class ShoppingListTest {
     public void setNameOfPersistedShoppingList() {
         // given
         Instant createdAt = before.minus(1, ChronoUnit.HOURS);
-        ShoppingList list = ShoppingList.fromDb(LIST_ID.getId(), LIST_NAME, createdAt, createdAt);
+        ShoppingList list = ShoppingList.fromDb(WORKSPACE_ID.getId(), LIST_ID.getId(), LIST_NAME, createdAt, createdAt);
 
         assertThat(list.getCreatedAt(), is(createdAt));
         assertThat(list.getUpdatedAt(), is(createdAt));
@@ -72,7 +73,7 @@ public class ShoppingListTest {
     @Test
     public void addAndUpdateItemQuantity() {
         // given
-        ShoppingList list = ShoppingList.create(LIST_NAME);
+        ShoppingList list = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
 
         // when item added for the first time
@@ -105,7 +106,7 @@ public class ShoppingListTest {
     @Test
     public void addItemToPersistedShoppingList() {
         // given
-        ShoppingList list = ShoppingList.create(LIST_NAME);
+        ShoppingList list = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         list.markAsPersisted();
 
         ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
@@ -120,7 +121,7 @@ public class ShoppingListTest {
     @Test
     public void removeItemByIdFromPersistedShoppingList() {
         // given
-        ShoppingList list = ShoppingList.create(LIST_NAME);
+        ShoppingList list = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
         ShoppingListItem listItem = list.addItem(itemType);
         list.markAsPersisted();
@@ -135,7 +136,7 @@ public class ShoppingListTest {
     @Test
     public void accessByShoppingListItemId() {
         // given
-        ShoppingList list = ShoppingList.create(LIST_NAME);
+        ShoppingList list = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
 
         // when
@@ -156,7 +157,7 @@ public class ShoppingListTest {
     @Test
     public void cartManagement() {
         // given
-        ShoppingList list = ShoppingList.create(LIST_NAME);
+        ShoppingList list = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemTypeA = ItemType.create(ITEM_TYPE_NAME + "_A");
         ItemType itemTypeB = ItemType.create(ITEM_TYPE_NAME + "_B");
 
@@ -174,7 +175,7 @@ public class ShoppingListTest {
     @Test
     public void removeItemsInCartOfPersistedShoppingList() {
         // given
-        ShoppingList list = ShoppingList.create(LIST_NAME);
+        ShoppingList list = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = ItemType.create(ITEM_TYPE_NAME);
         ShoppingListItem listItem = list.addItem(itemType);
         listItem.setInCart(true);
@@ -191,7 +192,7 @@ public class ShoppingListTest {
     @Test
     public void removeItemsInCartOfAlreadyEmptyPersistedShoppingList() {
         // given
-        ShoppingList list = ShoppingList.create(LIST_NAME);
+        ShoppingList list = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         list.markAsPersisted();
 
         // when

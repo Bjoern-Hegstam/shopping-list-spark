@@ -29,11 +29,14 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class ShoppingListIntegrationTest {
+    private static final UserId USER_ID = TestData.ADMIN.getId();
+    private static final WorkspaceId WORKSPACE_ID = TestData.ADMIN_DEFAULT_WORKSPACE.getId();
+    private static final WorkspaceId OTHER_WORKSPACE_ID = TestData.USER_DEFAULT_WORKSPACE.getId();
     private static final String LIST_NAME = "Test list";
     private static final String ITEM_TYPE_NAME = "Apples";
     private static final String INVALID_ID = "invalid-id";
-    public static final String RANDOM_LIST_ID = new ShoppingListId().getId();
-    public static final String RANDOM_LIST_ITEM_ID = new ShoppingListItemId().getId();
+    private static final String RANDOM_LIST_ID = new ShoppingListId().getId();
+    private static final String RANDOM_LIST_ITEM_ID = new ShoppingListItemId().getId();
 
     @ClassRule
     public static final DropwizardAppRule<ShoppingListApplicationConfiguration> service = DropwizardAppRuleFactory.forIntegrationTest();
@@ -41,14 +44,13 @@ public class ShoppingListIntegrationTest {
     @Rule
     public TestDatabaseSetup testDatabaseSetup = new TestDatabaseSetup();
 
-    private final JsonMapper jsonMapper = new JsonMapper();
     private ShoppingListRepository shoppingListRepository;
     private ShoppingListApi api;
 
     @Before
     public void setUp() throws JoseException {
         String serviceUrl = "http://localhost:" + service.getLocalPort() + "/api/";
-        String token = TokenGenerator.generate(TestData.ADMIN, service.getConfiguration().getJwtTokenSecret());
+        String token = TokenGenerator.generate(TestData.ADMIN.getUsername(), service.getConfiguration().getJwtTokenSecret());
         api = new ShoppingListApi(SHOPPING_LIST_1_0, serviceUrl, token);
 
         shoppingListRepository = testDatabaseSetup.getRepositoryFactory().createShoppingListRepository();
@@ -59,7 +61,7 @@ public class ShoppingListIntegrationTest {
         Response response = api.getShoppingLists();
         assertResponseStatus(response, OK);
 
-        JsonNode responseJson = jsonMapper.read(response);
+        JsonNode responseJson = JsonMapper.read(response);
         ArrayNode shoppingLists = (ArrayNode) responseJson.findValue("shoppingLists");
 
         assertThat(shoppingLists.size(), is(0));
@@ -68,15 +70,15 @@ public class ShoppingListIntegrationTest {
     @Test
     public void getShoppingLists_existsLists() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        shoppingListRepository.persist(shoppingList);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.getShoppingLists();
-        assertResponseStatus(response, OK);
 
         // then
-        JsonNode responseJson = jsonMapper.read(response);
+        assertResponseStatus(response, OK);
+        JsonNode responseJson = JsonMapper.read(response);
 
         JsonNode shoppingLists = responseJson.findValue("shoppingLists");
         assertThat(shoppingLists.size(), is(1));
@@ -87,12 +89,27 @@ public class ShoppingListIntegrationTest {
     }
 
     @Test
+    public void getShoppingLists_doesNotGetListsFromWorkspaceUserCannotAccess() {
+        // given
+        ShoppingList listInOtherWorkspace = ShoppingList.create(OTHER_WORKSPACE_ID, "Other list");
+        shoppingListRepository.persist(USER_ID, listInOtherWorkspace);
+
+        // when
+        Response response = api.getShoppingLists();
+
+        // then
+        assertResponseStatus(response, OK);
+        JsonNode responseJson = JsonMapper.read(response);
+        assertThat(responseJson.get("shoppingLists").size(), is(0));
+    }
+
+    @Test
     public void createAndGetShoppingList() {
         // Create
         Response createResponse = api.postShoppingList("{ \"name\": \"Test list\" }");
         assertResponseStatus(createResponse, CREATED);
 
-        JsonNode createResponseJson = jsonMapper.read(createResponse);
+        JsonNode createResponseJson = JsonMapper.read(createResponse);
         String listId = createResponseJson.findValue("id").asText();
         assertThat(listId, notNullValue());
 
@@ -100,7 +117,7 @@ public class ShoppingListIntegrationTest {
         Response getNewListResponse = api.getShoppingList(listId);
         assertResponseStatus(getNewListResponse, OK);
 
-        JsonNode getNewListResponseJson = jsonMapper.read(getNewListResponse);
+        JsonNode getNewListResponseJson = JsonMapper.read(getNewListResponse);
         assertThat(getNewListResponseJson.findValue("id").asText(), is(listId));
         assertThat(getNewListResponseJson.findValue("name").asText(), is(LIST_NAME));
         assertThat(getNewListResponseJson.findValue("items").size(), is(0));
@@ -127,17 +144,17 @@ public class ShoppingListIntegrationTest {
     @Test
     public void updateShoppingList() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
         shoppingList.addItem(itemType);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.updateShoppingList(shoppingList.getId().getId(), "{ \"name\": \"Bar\" }");
 
         // then
         assertResponseStatus(response, NO_CONTENT);
-        ShoppingList persistedList = shoppingListRepository.get(shoppingList.getId());
+        ShoppingList persistedList = shoppingListRepository.get(USER_ID, shoppingList.getId());
         assertThat(persistedList.getName(), is("Bar"));
         assertThat(persistedList.getItems().size(), is(1));
     }
@@ -163,26 +180,39 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteShoppingList() {
         // given
-        ShoppingList list1 = ShoppingList.create("name");
-        ShoppingList list2 = ShoppingList.create("name");
-        shoppingListRepository.persist(list1);
-        shoppingListRepository.persist(list2);
+        ShoppingList list1 = ShoppingList.create(WORKSPACE_ID, "name");
+        ShoppingList list2 = ShoppingList.create(WORKSPACE_ID, "name");
+        shoppingListRepository.persist(USER_ID, list1);
+        shoppingListRepository.persist(USER_ID, list2);
 
         // when
         Response response = api.deleteShoppingList(list1.getId().getId());
 
         // then
         assertResponseStatus(response, NO_CONTENT);
-        assertThat(shoppingListRepository.getShoppingLists(), containsInAnyOrder(list2));
+        assertThat(shoppingListRepository.getShoppingLists(USER_ID), containsInAnyOrder(list2));
+    }
+
+    @Test
+    public void deleteShoppingList_belongingToWorkspaceUserCannotAccess() {
+        // given
+        ShoppingList listInOtherWorkspace = ShoppingList.create(OTHER_WORKSPACE_ID, "Other list");
+        shoppingListRepository.persist(USER_ID, listInOtherWorkspace);
+
+        // when
+        Response response = api.deleteShoppingList(listInOtherWorkspace.getId().getId());
+
+        // then
+        assertResponseStatus(response, NOT_FOUND);
     }
 
     @Test
     public void deleteShoppingListWithItems() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
         shoppingList.addItem(itemType);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.deleteShoppingList(shoppingList.getId().getId());
@@ -194,9 +224,9 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteShoppingListWithItemTypeButNoItems() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         shoppingList.addItemType(ITEM_TYPE_NAME);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.deleteShoppingList(shoppingList.getId().getId());
@@ -211,7 +241,7 @@ public class ShoppingListIntegrationTest {
         Response response = api.deleteShoppingList("6b837531-7773-4a20-ad17-93d018a65a47");
 
         // then
-        assertResponseStatus(response, NO_CONTENT);
+        assertResponseStatus(response, NOT_FOUND);
     }
 
     @Test
@@ -226,8 +256,8 @@ public class ShoppingListIntegrationTest {
     @Test
     public void postItemType() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        shoppingListRepository.persist(shoppingList);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.postItemType(shoppingList.getId().getId(), "{ \"name\": \"Bananas\" }");
@@ -235,18 +265,18 @@ public class ShoppingListIntegrationTest {
         // then
         assertResponseStatus(response, CREATED);
 
-        JsonNode responseJson = jsonMapper.read(response);
+        JsonNode responseJson = JsonMapper.read(response);
         String itemTypeId = responseJson.findValue("id").asText();
         assertThat(itemTypeId, notNullValue());
 
-        ItemType itemType = shoppingListRepository.get(shoppingList.getId()).getItemType(ItemTypeId.parse(itemTypeId));
+        ItemType itemType = shoppingListRepository.get(USER_ID, shoppingList.getId()).getItemType(ItemTypeId.parse(itemTypeId));
         assertThat(itemType.getName(), is("Bananas"));
     }
 
     @Test
     public void postItemType_emptyName() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
 
         // when
         Response response = api.postItemType(shoppingList.getId().getId(), "{ \"name\": \"\" }");
@@ -258,7 +288,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void missingName() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
 
         // when
         Response response = api.postItemType(shoppingList.getId().getId(), "{ }");
@@ -270,9 +300,9 @@ public class ShoppingListIntegrationTest {
     @Test
     public void postItemType_itemTypeWithSameNameAlreadyExists() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         shoppingList.addItemType(ITEM_TYPE_NAME);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.postItemType(shoppingList.getId().getId(), "{ \"name\": \"" + ITEM_TYPE_NAME + "\" }");
@@ -280,21 +310,21 @@ public class ShoppingListIntegrationTest {
         // then
         assertResponseStatus(response, CONFLICT);
 
-        JsonNode responseJson = jsonMapper.read(response);
+        JsonNode responseJson = JsonMapper.read(response);
         assertThat(responseJson.get("errorCode").asText(), is("ITEM_TYPE_NAME_ALREADY_TAKEN"));
     }
 
     @Test
     public void getItemTypes_noItemTypesExist() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        shoppingListRepository.persist(shoppingList);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.getItemTypes(shoppingList.getId().getId());
 
         // then
-        JsonNode responseJson = jsonMapper.read(response);
+        JsonNode responseJson = JsonMapper.read(response);
         ArrayNode itemTypes = (ArrayNode) responseJson.findValue("itemTypes");
 
         assertThat(itemTypes.size(), is(0));
@@ -303,15 +333,15 @@ public class ShoppingListIntegrationTest {
     @Test
     public void getItemTypes() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.getItemTypes(shoppingList.getId().getId());
 
         // then
-        JsonNode responseJson = jsonMapper.read(response);
+        JsonNode responseJson = JsonMapper.read(response);
         JsonNode itemTypes = responseJson.findValue("itemTypes");
 
         assertThat(itemTypes.size(), is(1));
@@ -324,9 +354,9 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteItemType() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.deleteItemType(shoppingList.getId().getId(), itemType.getId().getId());
@@ -334,14 +364,14 @@ public class ShoppingListIntegrationTest {
         // then
         assertResponseStatus(response, NO_CONTENT);
 
-        assertTrue(shoppingListRepository.get(shoppingList.getId()).getItemTypes().isEmpty());
+        assertTrue(shoppingListRepository.get(USER_ID, shoppingList.getId()).getItemTypes().isEmpty());
     }
 
     @Test
     public void deleteItemType_unknownId() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        shoppingListRepository.persist(shoppingList);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.deleteItemType(shoppingList.getId().getId(), "a4a255b5-cdbd-47ac-8868-69a7475adc2a");
@@ -353,8 +383,8 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteItemType_invalidId() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        shoppingListRepository.persist(shoppingList);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.deleteItemType(shoppingList.getId().getId(), "invalid-id");
@@ -366,10 +396,10 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteItemType_usedByShoppingList() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
         shoppingList.addItem(itemType);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.deleteItemType(shoppingList.getId().getId(), itemType.getId().getId());
@@ -377,7 +407,7 @@ public class ShoppingListIntegrationTest {
         // then
         assertResponseStatus(response, CONFLICT);
 
-        JsonNode responseJson = jsonMapper.read(response);
+        JsonNode responseJson = JsonMapper.read(response);
         assertThat(responseJson.get("errorCode").asText(), is("ITEM_TYPE_USED_IN_SHOPPING_LIST"));
         assertThat(responseJson.get("message").asText(), is(itemType.getId().getId()));
     }
@@ -385,9 +415,9 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItemToEmptyShoppingList() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.persist(USER_ID, shoppingList);
         ShoppingListId listId = shoppingList.getId();
 
         // Add item to list
@@ -399,7 +429,7 @@ public class ShoppingListIntegrationTest {
         Response getListResponse = api.getShoppingList(listId.getId());
         assertResponseStatus(getListResponse, OK);
 
-        JsonNode getListResponseJson = jsonMapper.read(getListResponse);
+        JsonNode getListResponseJson = JsonMapper.read(getListResponse);
         assertThat(getListResponseJson.findValue("id").asText(), is(listId.getId()));
         assertThat(getListResponseJson.findValue("name").asText(), is(LIST_NAME));
 
@@ -437,8 +467,8 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_invalidItemTypeId() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        shoppingListRepository.persist(shoppingList);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.postShoppingListItem(shoppingList.getId().getId(), "{ \"itemTypeId\": \"" + INVALID_ID + "\", \"quantity\": 3 }");
@@ -450,8 +480,8 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_unknownItemTypeId() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        shoppingListRepository.persist(shoppingList);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.postShoppingListItem(shoppingList.getId().getId(), "{ \"itemTypeId\": \"d432242b-94f8-4d6a-b930-d3603485d470\", \"quantity\": 3 }");
@@ -463,8 +493,8 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_missingItemTypeId() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        shoppingListRepository.persist(shoppingList);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.postShoppingListItem(shoppingList.getId().getId(), "{ \"quantity\": 3 }");
@@ -476,9 +506,9 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_missingQuantity() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.postShoppingListItem(shoppingList.getId().getId(), "{ \"itemTypeId\": \"" + itemType.getId().getId() + "\" }");
@@ -490,9 +520,9 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_negativeQuantity() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.postShoppingListItem(shoppingList.getId().getId(), "{ \"itemTypeId\": \"" + itemType.getId().getId() + "\", \"quantity\": -1 }");
@@ -504,10 +534,10 @@ public class ShoppingListIntegrationTest {
     @Test
     public void updateItem() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
         ShoppingListItem listItem = shoppingList.addItem(itemType);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.persist(USER_ID, shoppingList);
         ShoppingListId listId = shoppingList.getId();
 
         // when
@@ -518,7 +548,7 @@ public class ShoppingListIntegrationTest {
         Response getListResponse = api.getShoppingList(listId.getId());
         assertResponseStatus(getListResponse, OK);
 
-        JsonNode getListResponseJson = jsonMapper.read(getListResponse);
+        JsonNode getListResponseJson = JsonMapper.read(getListResponse);
         assertThat(getListResponseJson.findValue("id").asText(), is(listId.getId()));
         assertThat(getListResponseJson.findValue("name").asText(), is(LIST_NAME));
 
@@ -565,7 +595,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void updateItem_unknownListItemId() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
 
         // when
         Response response = api.putShoppingListItem(shoppingList.getId().getId(), RANDOM_LIST_ITEM_ID, "{}");
@@ -577,10 +607,10 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteItem() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
         ShoppingListItem listItem = shoppingList.addItem(itemType);
-        shoppingListRepository.persist(shoppingList);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.deleteShoppingListItem(shoppingList.getId().getId(), listItem.getId().getId());
@@ -588,7 +618,7 @@ public class ShoppingListIntegrationTest {
         // then
         assertResponseStatus(response, NO_CONTENT);
 
-        shoppingList = shoppingListRepository.get(shoppingList.getId());
+        shoppingList = shoppingListRepository.get(USER_ID, shoppingList.getId());
         assertTrue(shoppingList.getItems().isEmpty());
     }
 
@@ -622,8 +652,8 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteItem_unknownListItemId() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        shoppingListRepository.persist(shoppingList);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.deleteShoppingListItem(shoppingList.getId().getId(), RANDOM_LIST_ITEM_ID);
@@ -635,8 +665,8 @@ public class ShoppingListIntegrationTest {
     @Test
     public void emptyCart() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
-        shoppingListRepository.persist(shoppingList);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
+        shoppingListRepository.persist(USER_ID, shoppingList);
 
         // when
         Response response = api.deleteShoppingListCart(shoppingList.getId().getId());

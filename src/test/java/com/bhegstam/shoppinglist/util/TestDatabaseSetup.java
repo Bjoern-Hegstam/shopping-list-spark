@@ -3,6 +3,7 @@ package com.bhegstam.shoppinglist.util;
 import com.bhegstam.shoppinglist.configuration.DbMigrationBundle;
 import com.bhegstam.shoppinglist.configuration.ShoppingListApplicationConfiguration;
 import com.bhegstam.shoppinglist.domain.UserRepository;
+import com.bhegstam.shoppinglist.domain.WorkspaceRepository;
 import com.bhegstam.shoppinglist.port.persistence.RepositoryFactory;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.health.HealthCheckRegistry;
@@ -29,10 +30,12 @@ import static org.mockito.Mockito.mock;
 
 public class TestDatabaseSetup implements TestRule {
     private static final List<String> CLEANUP_SQL_STATEMENTS = asList(
+            "delete from user_in_workspace",
             "delete from application_user",
             "delete from shopping_list_item",
             "delete from item_type",
-            "delete from shopping_list"
+            "delete from shopping_list",
+            "delete from workspace"
     );
 
     private final RepositoryFactory repositoryFactory;
@@ -91,9 +94,14 @@ public class TestDatabaseSetup implements TestRule {
 
     private void insertUsers() {
         UserRepository userRepository = repositoryFactory.createUserRepository();
-        userRepository.add(TestData.ADMIN);
-        userRepository.add(TestData.USER);
-        userRepository.add(TestData.UNVERIFIED_USER);
+        userRepository.create(TestData.ADMIN);
+        userRepository.create(TestData.USER);
+        userRepository.create(TestData.UNVERIFIED_USER);
+
+        WorkspaceRepository workspaceRepository = repositoryFactory.createWorkspaceRepository();
+        workspaceRepository.create(TestData.ADMIN.getId(), TestData.ADMIN_DEFAULT_WORKSPACE);
+        workspaceRepository.create(TestData.USER.getId(), TestData.USER_DEFAULT_WORKSPACE);
+        workspaceRepository.create(TestData.UNVERIFIED_USER.getId(), TestData.UNVERIFIED_USER_DEFAULT_WORKSPACE);
     }
 
     private void after() {

@@ -1,4 +1,4 @@
-package com.bhegstam.shoppinglist.port.rest.user;
+package com.bhegstam.shoppinglist.port.rest.admin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;

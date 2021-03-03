@@ -1,23 +1,16 @@
 package com.bhegstam.shoppinglist.port.rest.user;
 
-import com.bhegstam.shoppinglist.domain.User;
+import com.bhegstam.shoppinglist.domain.Workspace;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
-
-class GetUsersResponse {
+public class WorkspaceResponse {
     @JsonProperty
-    private final List<UserResponse> users;
+    private final String name;
 
-    GetUsersResponse(List<User> users) {
-        this.users = users
-                .stream()
-                .map(UserResponse::new)
-                .collect(toList());
+    public WorkspaceResponse(Workspace workspace) {
+        this.name = workspace.getName();
     }
 
     @Override

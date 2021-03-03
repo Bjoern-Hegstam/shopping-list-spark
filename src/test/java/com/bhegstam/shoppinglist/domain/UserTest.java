@@ -18,20 +18,6 @@ public class UserTest {
     }
 
     @Test
-    public void validateUsername() {
-        assertTrue(userWithUsername("a").hasValidUsername());
-        assertFalse(userWithUsername("").hasValidUsername());
-    }
-
-    private User userWithUsername(String username) {
-        return new User(
-                username,
-                "password",
-                "user@domain.com"
-        );
-    }
-
-    @Test
     public void validateEmail() {
         assertTrue(userWithEmail("first@domain.com").hasValidEmail());
         assertTrue(userWithEmail("first.last@domain.com").hasValidEmail());

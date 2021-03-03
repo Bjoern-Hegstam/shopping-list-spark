@@ -36,11 +36,11 @@ public class JdbiUserRepositoryTest {
 
         unpersistedUser = new User("Foo", "bar", "foo@bar.com");
         userId = unpersistedUser.getId();
-        userRepository.add(unpersistedUser);
+        userRepository.create(unpersistedUser);
 
         unpersistedAdmin = new User("FooAdmin", "bar", "foo@admin.com", true, Role.ADMIN);
         adminId = unpersistedAdmin.getId();
-        userRepository.add(unpersistedAdmin);
+        userRepository.create(unpersistedAdmin);
     }
 
     @Test

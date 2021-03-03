@@ -17,8 +17,8 @@ import java.util.Optional;
 @RegisterRowMapper(ShoppingListItemMapper.class)
 public interface JdbiShoppingListRepository extends ShoppingListRepository {
     @Transaction
-    default void persist(ShoppingList shoppingList) {
-        Optional<ShoppingList> listInDatabase = findWithItems(shoppingList.getId());
+    default void persist(UserId userId, ShoppingList shoppingList) {
+        Optional<ShoppingList> listInDatabase = findWithItems(userId, shoppingList.getId());
         if (listInDatabase.isPresent() && !listInDatabase.get().getUpdatedAt().equals(shoppingList.getUpdateAtOnFetch())) {
             throw new OptimisticLockingException(String.format(
                     "Cannot persist shopping list [%s], list in database was last updated [%s]",
@@ -29,6 +29,7 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
 
         if (shoppingList.insertRequired()) {
             createShoppingList(
+                    shoppingList.getWorkspaceId(),
                     shoppingList.getId(),
                     shoppingList.getName(),
                     Timestamp.from(shoppingList.getCreatedAt()),
@@ -110,8 +111,9 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
         shoppingList.clearDeletedItemTypes();
     }
 
-    @SqlUpdate("insert into shopping_list(id, name, created_at, updated_at) values (:listId.id, :name, :createdAt, :updatedAt)")
+    @SqlUpdate("insert into shopping_list(workspace_id, id, name, created_at, updated_at) values (:workspaceId.id, :listId.id, :name, :createdAt, :updatedAt)")
     void createShoppingList(
+            @BindBean("workspaceId") WorkspaceId workspaceId,
             @BindBean("listId") ShoppingListId listId,
             @Bind("name") String name,
             @Bind("createdAt") Timestamp createdAt,
@@ -131,14 +133,6 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
             @BindBean("itemTypeId") ItemTypeId itemTypeId,
             @Bind("name") String name,
             @Bind("createdAt") Timestamp createdAt,
-            @Bind("updatedAt") Timestamp updatedAt
-    );
-
-    @SqlUpdate("update item_type set name = :name, updated_at = :updatedAt where shopping_list_id = :listId.id and id = :itemTypeId.id")
-    void updateItemType(
-            @BindBean("listId") ShoppingListId listId,
-            @BindBean("itemTypeId") ItemTypeId itemTypeId,
-            @Bind("name") String name,
             @Bind("updatedAt") Timestamp updatedAt
     );
 
@@ -175,13 +169,13 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
     );
 
     @Transaction
-    default ShoppingList get(ShoppingListId listId) {
-        return findWithItems(listId)
+    default ShoppingList get(UserId userId, ShoppingListId listId) {
+        return findWithItems(userId, listId)
                 .orElseThrow(() -> new ShoppingListNotFoundException(listId));
     }
 
-    default Optional<ShoppingList> findWithItems(ShoppingListId listId) {
-        ShoppingList shoppingList = getShoppingListEntity(listId);
+    default Optional<ShoppingList> findWithItems(UserId userId, ShoppingListId listId) {
+        ShoppingList shoppingList = getShoppingListEntity(userId, listId);
         if (shoppingList == null) {
             return Optional.empty();
         }
@@ -190,8 +184,16 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
         return Optional.of(shoppingList);
     }
 
-    @SqlQuery("select * from shopping_list where id = :listId.id")
-    ShoppingList getShoppingListEntity(@BindBean("listId") ShoppingListId listId);
+    @SqlQuery("select shopping_list.*" +
+            " from shopping_list" +
+            " inner join user_in_workspace on user_in_workspace.workspace_id = shopping_list.workspace_id" +
+            " where user_in_workspace.user_id = :userId.id" +
+            " and shopping_list.id = :listId.id" +
+            " order by name")
+    ShoppingList getShoppingListEntity(
+            @BindBean("userId") UserId userId,
+            @BindBean("listId") ShoppingListId listId
+    );
 
     @SqlQuery("select * from item_type where shopping_list_id = :listId.id")
     List<ItemType> getItemTypes(@BindBean("listId") ShoppingListId listId);
@@ -213,22 +215,22 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
     List<ShoppingListItem> getItems(@BindBean("listId") ShoppingListId listId);
 
     @Transaction
-    default List<ShoppingList> getShoppingLists() {
-        List<ShoppingList> lists = getShoppingLists_internal();
+    default List<ShoppingList> getShoppingLists(UserId userId) {
+        List<ShoppingList> lists = getShoppingLists_internal(userId);
         lists.forEach(list -> list.loadFromDb(getItemTypes(list.getId()), getItems(list.getId())));
         return lists;
     }
 
-    @SqlQuery("select * from shopping_list order by name")
-    List<ShoppingList> getShoppingLists_internal();
+    @SqlQuery("select shopping_list.*" +
+            " from shopping_list" +
+            " inner join user_in_workspace on user_in_workspace.workspace_id = shopping_list.workspace_id" +
+            " where user_in_workspace.user_id = :userId.id" +
+            " order by name")
+    List<ShoppingList> getShoppingLists_internal(@BindBean("userId") UserId userId);
 
     @Transaction
-    default void delete(ShoppingListId listId) {
-        Optional<ShoppingList> optionalShoppingList = findWithItems(listId);
-        if (optionalShoppingList.isEmpty()) {
-            return;
-        }
-        ShoppingList shoppingList = optionalShoppingList.get();
+    default void delete(UserId userId, ShoppingListId listId) {
+        ShoppingList shoppingList = findWithItems(userId, listId).orElseThrow(() -> new ShoppingListNotFoundException(listId));
 
         if (shoppingList.getItems().isEmpty() && shoppingList.getItemTypes().isEmpty()) {
             deleteShoppingList(listId);

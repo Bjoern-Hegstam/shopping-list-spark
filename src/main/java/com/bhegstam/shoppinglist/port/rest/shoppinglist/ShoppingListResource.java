@@ -35,20 +35,20 @@ public class ShoppingListResource {
 
     @RolesAllowed({USER, ADMIN})
     @POST
-    public Response postShoppingList(@Auth User user, @Valid CreateShoppingListRequest request) {
-        LOGGER.info("Received request [{}] to create shopping list for user [{}]", request, user.getId());
+    public Response postShoppingList(@Auth User authenticatedUser, @Valid CreateShoppingListRequest request) {
+        LOGGER.info("Received request [{}] to create shopping list for user [{}]", request, authenticatedUser.getId());
 
-        ShoppingList shoppingList = shoppingListApplication.createShoppingList(request.getName());
+        ShoppingList shoppingList = shoppingListApplication.createShoppingList(authenticatedUser.getId(), request.getName());
 
         return createAndLogResponse(CREATED, new CreateShoppingListResponse(shoppingList.getId()));
     }
 
     @RolesAllowed({USER, ADMIN})
     @GET
-    public Response getShoppingLists(@Auth User user) {
-        LOGGER.info("Received request to get shopping lists for user [{}]", user.getId());
+    public Response getShoppingLists(@Auth User authenticatedUser) {
+        LOGGER.info("Received request to get shopping lists for user [{}]", authenticatedUser.getId());
 
-        List<ShoppingList> shoppingLists = shoppingListApplication.getShoppingLists();
+        List<ShoppingList> shoppingLists = shoppingListApplication.getShoppingLists(authenticatedUser.getId());
 
         return createAndLogResponse(OK, new GetShoppingListsResponse(shoppingLists));
     }
@@ -56,8 +56,8 @@ public class ShoppingListResource {
     @Path("{shoppingListId}")
     @RolesAllowed({USER, ADMIN})
     @GET
-    public Response getShoppingList(@Auth User user, @PathParam(SHOPPING_LIST_ID) String shoppingListIdString) {
-        LOGGER.info("Received request to get shopping list with id [{}] for user [{}]", shoppingListIdString, user.getId());
+    public Response getShoppingList(@Auth User authenticatedUser, @PathParam(SHOPPING_LIST_ID) String shoppingListIdString) {
+        LOGGER.info("Received request to get shopping list with id [{}] for user [{}]", shoppingListIdString, authenticatedUser.getId());
 
         ShoppingListId listId;
         try {
@@ -68,7 +68,7 @@ public class ShoppingListResource {
         }
 
         try {
-            ShoppingList shoppingList = shoppingListApplication.getShoppingList(listId);
+            ShoppingList shoppingList = shoppingListApplication.getShoppingList(authenticatedUser.getId(), listId);
 
             return createAndLogResponse(OK, new GetShoppingListResponse(shoppingList));
         } catch (ShoppingListNotFoundException e) {
@@ -80,8 +80,8 @@ public class ShoppingListResource {
     @Path("{shoppingListId}")
     @RolesAllowed({USER, ADMIN})
     @PUT
-    public Response updateShoppingList(@Auth User user, @PathParam(SHOPPING_LIST_ID) String shoppingListIdString, @Valid UpdateShoppingListRequest request) {
-        LOGGER.info("Received request [{}] to update shopping list with id [{}] for user [{}]", request, shoppingListIdString, user.getId());
+    public Response updateShoppingList(@Auth User authenticatedUser, @PathParam(SHOPPING_LIST_ID) String shoppingListIdString, @Valid UpdateShoppingListRequest request) {
+        LOGGER.info("Received request [{}] to update shopping list with id [{}] for user [{}]", request, shoppingListIdString, authenticatedUser.getId());
 
         ShoppingListId listId;
         try {
@@ -92,7 +92,7 @@ public class ShoppingListResource {
         }
 
         try {
-            shoppingListApplication.updateShoppingList(listId, request.getName());
+            shoppingListApplication.updateShoppingList(authenticatedUser.getId(), listId, request.getName());
 
             return createAndLogResponse(NO_CONTENT);
         } catch (ShoppingListNotFoundException e) {
@@ -104,8 +104,8 @@ public class ShoppingListResource {
     @Path("{shoppingListId}")
     @RolesAllowed({USER, ADMIN})
     @DELETE
-    public Response deleteShoppingList(@Auth User user, @PathParam(SHOPPING_LIST_ID) String shoppingListIdString) {
-        LOGGER.info("Received request to delete shopping list with id [{}] for user [{}]", shoppingListIdString, user.getId());
+    public Response deleteShoppingList(@Auth User authenticatedUser, @PathParam(SHOPPING_LIST_ID) String shoppingListIdString) {
+        LOGGER.info("Received request to delete shopping list with id [{}] for user [{}]", shoppingListIdString, authenticatedUser.getId());
 
         ShoppingListId listId;
         try {
@@ -116,9 +116,12 @@ public class ShoppingListResource {
         }
 
         try {
-            shoppingListApplication.deleteShoppingList(listId);
+            shoppingListApplication.deleteShoppingList(authenticatedUser.getId(), listId);
 
             return createAndLogResponse(NO_CONTENT);
+        } catch (ShoppingListNotFoundException e) {
+            LOGGER.error("Could not find shopping list with id [" + shoppingListIdString + "]");
+            return Response.status(NOT_FOUND).build();
         } catch (ShoppingListDeleteNotAllowedException e) {
             LOGGER.error("Error while deleting shopping list with id [" + shoppingListIdString + "]");
             return Response.status(UNPROCESSABLE_ENTITY).build();
@@ -129,11 +132,11 @@ public class ShoppingListResource {
     @RolesAllowed({USER, ADMIN})
     @POST
     public Response postItemType(
-            @Auth User user,
+            @Auth User authenticatedUser,
             @PathParam(SHOPPING_LIST_ID) String shoppingListIdString,
             @Valid CreateItemTypeRequest request
     ) {
-        LOGGER.info("Received request [{}] to create item type for shopping list [{}] by user [{}]", request, shoppingListIdString, user.getId());
+        LOGGER.info("Received request [{}] to create item type for shopping list [{}] by user [{}]", request, shoppingListIdString, authenticatedUser.getId());
 
         ShoppingListId listId;
         try {
@@ -146,7 +149,7 @@ public class ShoppingListResource {
         Response.Status status;
         Object body;
         try {
-            ItemType itemType = shoppingListApplication.createItemType(listId, request.getName());
+            ItemType itemType = shoppingListApplication.createItemType(authenticatedUser.getId(), listId, request.getName());
 
             status = CREATED;
             body = new ItemTypeResponse(itemType);
@@ -162,10 +165,10 @@ public class ShoppingListResource {
     @RolesAllowed({USER, ADMIN})
     @GET
     public Response getItemTypes(
-            @Auth User user,
+            @Auth User authenticatedUser,
             @PathParam(SHOPPING_LIST_ID) String shoppingListIdString
     ) {
-        LOGGER.info("Received request to get item types for shopping list [{}] by user [{}]", shoppingListIdString, user.getId());
+        LOGGER.info("Received request to get item types for shopping list [{}] by user [{}]", shoppingListIdString, authenticatedUser.getId());
 
         ShoppingListId listId;
         try {
@@ -175,7 +178,7 @@ public class ShoppingListResource {
             return Response.status(BAD_REQUEST).build();
         }
 
-        List<ItemType> itemTypes = shoppingListApplication.getItemTypes(listId);
+        List<ItemType> itemTypes = shoppingListApplication.getItemTypes(authenticatedUser.getId(), listId);
 
         return createAndLogResponse(OK, new ItemTypesResponse(itemTypes));
     }
@@ -184,11 +187,11 @@ public class ShoppingListResource {
     @RolesAllowed({USER, ADMIN})
     @DELETE
     public Response deleteItemType(
-            @Auth User user,
+            @Auth User authenticatedUser,
             @PathParam(SHOPPING_LIST_ID) String shoppingListIdString,
             @PathParam("item_type_id") String itemTypeIdString
     ) {
-        LOGGER.info("Received request to delete item type [{}] for shopping list [{}] by user [{}]", itemTypeIdString, shoppingListIdString, user.getId());
+        LOGGER.info("Received request to delete item type [{}] for shopping list [{}] by user [{}]", itemTypeIdString, shoppingListIdString, authenticatedUser.getId());
 
         ShoppingListId listId;
         try {
@@ -202,7 +205,7 @@ public class ShoppingListResource {
         try {
             itemTypeId = ItemTypeId.parse(itemTypeIdString);
         } catch (IllegalArgumentException e) {
-            LOGGER.error("Error while deleting item type [" + itemTypeIdString + "] for user [" + user.getId() + "]", e);
+            LOGGER.error("Error while deleting item type [" + itemTypeIdString + "] for user [" + authenticatedUser.getId() + "]", e);
             return Response
                     .status(BAD_REQUEST)
                     .build();
@@ -211,7 +214,7 @@ public class ShoppingListResource {
         Response.Status status;
         Object body = null;
         try {
-            shoppingListApplication.deleteItemType(listId, itemTypeId);
+            shoppingListApplication.deleteItemType(authenticatedUser.getId(), listId, itemTypeId);
             status = NO_CONTENT;
         } catch (ItemTypeUsedInShoppingListException e) {
             status = CONFLICT;
@@ -224,8 +227,8 @@ public class ShoppingListResource {
     @Path("{shoppingListId}/item")
     @RolesAllowed({USER, ADMIN})
     @POST
-    public Response postShoppingListItem(@Auth User user, @PathParam(SHOPPING_LIST_ID) String shoppingListIdString, @Valid CreateShoppingListItemRequest request) {
-        LOGGER.info("Received request [{}] to create shopping list item in shopping list [{}] for user [{}]", request, shoppingListIdString, user.getId());
+    public Response postShoppingListItem(@Auth User authenticatedUser, @PathParam(SHOPPING_LIST_ID) String shoppingListIdString, @Valid CreateShoppingListItemRequest request) {
+        LOGGER.info("Received request [{}] to create shopping list item in shopping list [{}] for user [{}]", request, shoppingListIdString, authenticatedUser.getId());
 
         ShoppingListId listId;
         ItemTypeId itemTypeId;
@@ -234,21 +237,21 @@ public class ShoppingListResource {
             listId = ShoppingListId.parse(shoppingListIdString);
             itemTypeId = request.getItemTypeId() != null ? ItemTypeId.parse(request.getItemTypeId()) : null;
         } catch (IllegalArgumentException | NullPointerException e) {
-            LOGGER.error("Error while adding item to shopping list [" + shoppingListIdString + "] for user [" + user.getId() + "]", e);
+            LOGGER.error("Error while adding item to shopping list [" + shoppingListIdString + "] for user [" + authenticatedUser.getId() + "]", e);
             return Response.status(BAD_REQUEST).build();
         }
 
         try {
             ShoppingListItem listItem;
             if (itemTypeId != null) {
-                listItem = shoppingListApplication.addItem(listId, itemTypeId, request.getQuantity());
+                listItem = shoppingListApplication.addItem(authenticatedUser.getId(), listId, itemTypeId, request.getQuantity());
             } else {
-                listItem = shoppingListApplication.addItem(listId, itemTypeName, request.getQuantity());
+                listItem = shoppingListApplication.addItem(authenticatedUser.getId(), listId, itemTypeName, request.getQuantity());
             }
 
             return createAndLogResponse(CREATED, new ShoppingListItemResponse(listItem));
         } catch (ItemTypeNotFoundException | ShoppingListNotFoundException e) {
-            LOGGER.error("Error while adding item of type [" + itemTypeId + "] to shopping list [" + listId + "] for user [" + user.getId() + "]", e);
+            LOGGER.error("Error while adding item of type [" + itemTypeId + "] to shopping list [" + listId + "] for user [" + authenticatedUser.getId() + "]", e);
             return Response.status(UNPROCESSABLE_ENTITY).build();
         }
     }
@@ -257,12 +260,12 @@ public class ShoppingListResource {
     @RolesAllowed({USER, ADMIN})
     @PUT
     public Response putShoppingListItem(
-            @Auth User user,
+            @Auth User authenticatedUser,
             @PathParam(SHOPPING_LIST_ID) String shoppingListIdString,
             @PathParam(SHOPPING_LIST_ITEM_ID) String shoppingListItemIdString,
             @Valid UpdateShoppingListItemRequest request
     ) {
-        LOGGER.info("Received request [{}] to update shopping list item [{}] in shopping list [{}] for user [{}]", request, shoppingListItemIdString, shoppingListIdString, user.getId());
+        LOGGER.info("Received request [{}] to update shopping list item [{}] in shopping list [{}] for user [{}]", request, shoppingListItemIdString, shoppingListIdString, authenticatedUser.getId());
 
         ShoppingListId listId;
         ShoppingListItemId listItemId;
@@ -270,17 +273,17 @@ public class ShoppingListResource {
             listId = ShoppingListId.parse(shoppingListIdString);
             listItemId = ShoppingListItemId.parse(shoppingListItemIdString);
         } catch (IllegalArgumentException e) {
-            LOGGER.error("Error while updating item [" + shoppingListItemIdString + "] in shopping list [" + shoppingListIdString + "] for user [" + user.getId() + "]", e);
+            LOGGER.error("Error while updating item [" + shoppingListItemIdString + "] in shopping list [" + shoppingListIdString + "] for user [" + authenticatedUser.getId() + "]", e);
             return Response.status(BAD_REQUEST).build();
         }
 
         try {
             // TODO: Migrate calls to add item to cart to new resource, then remove inCart from request
-            shoppingListApplication.updateItem(listId, listItemId, request.getQuantity(), request.isInCart());
+            shoppingListApplication.updateItem(authenticatedUser.getId(), listId, listItemId, request.getQuantity(), request.isInCart());
 
             return createAndLogResponse(NO_CONTENT);
         } catch (ShoppingListNotFoundException | ShoppingListItemNotFoundException e) {
-            LOGGER.error("Error while updating item [" + listItemId + "] in shopping list [" + listId + "] for user [" + user.getId() + "]", e);
+            LOGGER.error("Error while updating item [" + listItemId + "] in shopping list [" + listId + "] for user [" + authenticatedUser.getId() + "]", e);
             return Response.status(BAD_REQUEST).build();
         }
     }
@@ -289,11 +292,11 @@ public class ShoppingListResource {
     @RolesAllowed({USER, ADMIN})
     @DELETE
     public Response deleteShoppingListItem(
-            @Auth User user,
+            @Auth User authenticatedUser,
             @PathParam(SHOPPING_LIST_ID) String shoppingListIdString,
             @PathParam(SHOPPING_LIST_ITEM_ID) String shoppingListItemIdString
     ) {
-        LOGGER.info("Received request to delete shopping list item [{}] in shopping list [{}] for user [{}]", shoppingListItemIdString, shoppingListIdString, user.getId());
+        LOGGER.info("Received request to delete shopping list item [{}] in shopping list [{}] for user [{}]", shoppingListItemIdString, shoppingListIdString, authenticatedUser.getId());
 
         ShoppingListId listId;
         ShoppingListItemId listItemId;
@@ -301,16 +304,16 @@ public class ShoppingListResource {
             listId = ShoppingListId.parse(shoppingListIdString);
             listItemId = ShoppingListItemId.parse(shoppingListItemIdString);
         } catch (IllegalArgumentException e) {
-            LOGGER.error("Error while deleting item [" + shoppingListItemIdString + "] in shopping list [" + shoppingListIdString + "] for user [" + user.getId() + "]", e);
+            LOGGER.error("Error while deleting item [" + shoppingListItemIdString + "] in shopping list [" + shoppingListIdString + "] for user [" + authenticatedUser.getId() + "]", e);
             return Response.status(BAD_REQUEST).build();
         }
 
         try {
-            shoppingListApplication.deleteItem(listId, listItemId);
+            shoppingListApplication.deleteItem(authenticatedUser.getId(), listId, listItemId);
 
             return createAndLogResponse(NO_CONTENT);
         } catch (ShoppingListNotFoundException | ShoppingListItemNotFoundException e) {
-            LOGGER.error("Error while deleting item [" + listItemId + "] in shopping list [" + listId + "] for user [" + user.getId() + "]", e);
+            LOGGER.error("Error while deleting item [" + listItemId + "] in shopping list [" + listId + "] for user [" + authenticatedUser.getId() + "]", e);
             return Response.status(BAD_REQUEST).build();
         }
     }
@@ -319,25 +322,25 @@ public class ShoppingListResource {
     @RolesAllowed({USER, ADMIN})
     @DELETE
     public Response emptyCart(
-            @Auth User user,
+            @Auth User authenticatedUser,
             @PathParam(SHOPPING_LIST_ID) String shoppingListIdString
     ) {
-        LOGGER.info("Received request to empty cart of shopping list [{}] for user [{}]", shoppingListIdString, user.getId());
+        LOGGER.info("Received request to empty cart of shopping list [{}] for user [{}]", shoppingListIdString, authenticatedUser.getId());
 
         ShoppingListId listId;
         try {
             listId = ShoppingListId.parse(shoppingListIdString);
         } catch (IllegalArgumentException e) {
-            LOGGER.error("Error while emptying card of shopping list [" + shoppingListIdString + "]", e);
+            LOGGER.error("Error while emptying cart of shopping list [" + shoppingListIdString + "]", e);
             return Response.status(BAD_REQUEST).build();
         }
 
         try {
-            shoppingListApplication.emptyCart(listId);
+            shoppingListApplication.emptyCart(authenticatedUser.getId(), listId);
 
             return createAndLogResponse(NO_CONTENT);
         } catch (ShoppingListNotFoundException e) {
-            LOGGER.error("Error while emptying card of shopping list [" + listId + "]", e);
+            LOGGER.error("Error while emptying cart of shopping list [" + listId + "]", e);
             return Response.status(BAD_REQUEST).build();
         }
     }

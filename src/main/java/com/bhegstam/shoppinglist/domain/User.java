@@ -1,5 +1,7 @@
 package com.bhegstam.shoppinglist.domain;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -79,10 +81,6 @@ public class User implements Principal {
         this.verified = verified;
     }
 
-    public boolean hasValidUsername() {
-        return !username.isEmpty();
-    }
-
     public boolean hasValidEmail() {
         return EmailValidator
                 .getInstance()
@@ -115,5 +113,16 @@ public class User implements Principal {
     @Override
     public String getName() {
         return username;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("id", id)
+                .append("username", username)
+                .append("email", email)
+                .append("verified", verified)
+                .append("role", role)
+                .toString();
     }
 }

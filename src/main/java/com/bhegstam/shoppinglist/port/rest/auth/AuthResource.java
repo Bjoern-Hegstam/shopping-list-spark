@@ -32,27 +32,27 @@ public class AuthResource {
 
     @RolesAllowed({USER, ADMIN})
     @POST
-    public Response generateTokenAndGetUser(@Auth User user) {
-        LOGGER.debug("Received request to generate token for user [{}]", user.getId());
+    public Response generateTokenAndGetUser(@Auth User authenticatedUser) {
+        LOGGER.debug("Received request to generate token for user [{}]", authenticatedUser.getId());
 
         String token;
         try {
-            token = TokenGenerator.generate(user, tokenSecret);
+            token = TokenGenerator.generate(authenticatedUser.getUsername(), tokenSecret);
         } catch (JoseException e) {
-            LOGGER.error("Error when returning token for user [" + user.getUsername() + "]", e);
+            LOGGER.error("Error when returning token for user [" + authenticatedUser.getUsername() + "]", e);
             return Response.serverError().build();
         }
         return Response
                 .status(OK)
-                .entity(new AuthResponse(token, user))
+                .entity(new AuthResponse(token, authenticatedUser))
                 .build();
     }
 
     @Path("ping")
     @RolesAllowed({USER, ADMIN})
     @GET
-    public Response ping(@Auth User user) {
-        LOGGER.info("Received ping from user [{}]", user.getId());
+    public Response ping(@Auth User authenticatedUser) {
+        LOGGER.info("Received ping from user [{}]", authenticatedUser.getId());
         return Response
                 .status(OK)
                 .build();
