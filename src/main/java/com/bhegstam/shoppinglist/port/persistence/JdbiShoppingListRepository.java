@@ -134,14 +134,6 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
             @Bind("updatedAt") Timestamp updatedAt
     );
 
-    @SqlUpdate("update item_type set name = :name, updated_at = :updatedAt where shopping_list_id = :listId.id and id = :itemTypeId.id")
-    void updateItemType(
-            @BindBean("listId") ShoppingListId listId,
-            @BindBean("itemTypeId") ItemTypeId itemTypeId,
-            @Bind("name") String name,
-            @Bind("updatedAt") Timestamp updatedAt
-    );
-
     @SqlUpdate("delete from item_type where shopping_list_id = :listId.id and id = :itemTypeId.id")
     void deleteItemType(
             @BindBean("listId") ShoppingListId listId,
