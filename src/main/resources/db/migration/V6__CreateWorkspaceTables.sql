@@ -1,19 +1,25 @@
 CREATE TABLE workspace (
-  id UUID PRIMARY KEY,
+  id VARCHAR(36) PRIMARY KEY,
   name CHARACTER VARYING NOT NULL,
   created_by CHARACTER VARYING NOT NULL,
   created_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE user_in_workspace (
-  user_id UUID NOT NULL,
-  workspace_id UUID NOT NULL,
+  user_id VARCHAR(36) NOT NULL,
+  workspace_id VARCHAR(36) NOT NULL,
   is_default_workspace BIT NOT NULL,
+  created_by CHARACTER VARYING NOT NULL,
+  created_at TIMESTAMP NOT NULL,
 
-  CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES application_user(id),
-  CONSTRAINT fk_workspace FOREIGN KEY(workspace_id) REFERENCES workspace(id),
-  UNIQUE(user_id, is_default_workspace)
+  PRIMARY KEY (user_id, workspace_id),
+
+  CONSTRAINT fk__user_in_workspace__user_id__application_user FOREIGN KEY(user_id) REFERENCES application_user(id),
+  CONSTRAINT fk__user_in_workspace__workspace_id__workspace FOREIGN KEY(workspace_id) REFERENCES workspace(id)
 );
 
 ALTER TABLE shopping_list
-    ADD COLUMN ;
+    ADD COLUMN workspace_id VARCHAR(36) NULL;
+
+ALTER TABLE shopping_list
+    ADD CONSTRAINT fk__shopping_list__workspace_id__workspace FOREIGN KEY(workspace_id) REFERENCES workspace(id);
