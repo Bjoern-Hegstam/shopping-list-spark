@@ -5,6 +5,7 @@ CREATE TABLE workspace (
   created_at TIMESTAMP NOT NULL
 );
 
+-- TODO: Add user role? Need to know who is the owner of the workspace.
 CREATE TABLE user_in_workspace (
   user_id VARCHAR(36) NOT NULL,
   workspace_id VARCHAR(36) NOT NULL,

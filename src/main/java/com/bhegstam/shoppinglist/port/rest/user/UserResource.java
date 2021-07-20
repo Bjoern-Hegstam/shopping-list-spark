@@ -12,9 +12,9 @@ import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 import static com.bhegstam.shoppinglist.domain.Role.RoleName.ADMIN;
+import static com.bhegstam.shoppinglist.domain.Role.RoleName.USER;
 import static com.bhegstam.shoppinglist.port.rest.user.RestApiMimeType.USER_1_0;
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.OK;
@@ -43,20 +43,18 @@ public class UserResource {
         return createAndLogResponse(CREATED, new UserCreatedResponse(userId));
     }
 
-    @RolesAllowed(ADMIN)
+    @RolesAllowed({USER, ADMIN})
     @GET
-    public Response getUsers(@Auth User user) {
-        LOGGER.info("Received request to get users for user [{}]", user.getId());
+    public Response getAuthenticatedUser(@Auth User user) {
+        LOGGER.info("Received request to get self for user [{}]", user.getId());
 
-        List<User> users = userApplication.getUsers();
-
-        return createAndLogResponse(OK, new GetUsersResponse(users));
+        return createAndLogResponse(OK, new UserResponse(user));
     }
 
     @Path("{userId}")
     @RolesAllowed(ADMIN)
     @PUT
-    public Response patchUser(@Auth User user, @PathParam("userId") String userIdString, @Valid UpdateUserRequest request) {
+    public Response updateUser(@Auth User user, @PathParam("userId") String userIdString, @Valid UpdateUserRequest request) {
         LOGGER.info("Received request [{}] to update user [{}] for user [{}]", request, userIdString, user);
 
         UserId userId = UserId.from(userIdString);

@@ -1,23 +1,26 @@
 package com.bhegstam.shoppinglist.application;
 
-import com.bhegstam.shoppinglist.domain.Role;
-import com.bhegstam.shoppinglist.domain.User;
-import com.bhegstam.shoppinglist.domain.UserId;
-import com.bhegstam.shoppinglist.domain.UserRepository;
+import com.bhegstam.shoppinglist.domain.*;
 
 import java.util.List;
 import java.util.Optional;
 
 public class UserApplication {
     private final UserRepository userRepository;
+    private final WorkspaceRepository workspaceRepository;
 
-    public UserApplication(UserRepository userRepository) {
+    public UserApplication(UserRepository userRepository, WorkspaceRepository workspaceRepository) {
         this.userRepository = userRepository;
+        this.workspaceRepository = workspaceRepository;
     }
 
     public UserId addUser(String username, String password, String email) {
         User user = new User(username, password, email);
         userRepository.add(user);
+
+        Workspace workspace = Workspace.create("Default", user);
+        workspaceRepository.add(user.getId(), workspace);
+
         return user.getId();
     }
 

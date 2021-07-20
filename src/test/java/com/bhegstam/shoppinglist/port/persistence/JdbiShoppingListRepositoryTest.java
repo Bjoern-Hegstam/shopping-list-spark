@@ -33,7 +33,7 @@ public class JdbiShoppingListRepositoryTest {
         RepositoryFactory repositoryFactory = testDatabaseSetup.getRepositoryFactory();
 
         User user = new User("test-user", "test-password", "test-email");
-        workspace = new Workspace("test-workspace", user);
+        workspace = Workspace.create("test-workspace", user);
 
         repositoryFactory.createUserRepository().add(user);
         repositoryFactory.createWorkspaceRepository().add(user.getId(), workspace);

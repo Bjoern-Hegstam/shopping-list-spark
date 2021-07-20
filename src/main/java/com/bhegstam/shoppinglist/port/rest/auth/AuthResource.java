@@ -37,7 +37,7 @@ public class AuthResource {
 
         String token;
         try {
-            token = TokenGenerator.generate(user, tokenSecret);
+            token = TokenGenerator.generate(user.getUsername(), tokenSecret);
         } catch (JoseException e) {
             LOGGER.error("Error when returning token for user [" + user.getUsername() + "]", e);
             return Response.serverError().build();

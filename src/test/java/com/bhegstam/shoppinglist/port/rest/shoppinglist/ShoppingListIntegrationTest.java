@@ -42,14 +42,13 @@ public class ShoppingListIntegrationTest {
     @Rule
     public TestDatabaseSetup testDatabaseSetup = new TestDatabaseSetup();
 
-    private final JsonMapper jsonMapper = new JsonMapper();
     private ShoppingListRepository shoppingListRepository;
     private ShoppingListApi api;
 
     @Before
     public void setUp() throws JoseException {
         String serviceUrl = "http://localhost:" + service.getLocalPort() + "/api/";
-        String token = TokenGenerator.generate(TestData.ADMIN, service.getConfiguration().getJwtTokenSecret());
+        String token = TokenGenerator.generate(TestData.ADMIN.getUsername(), service.getConfiguration().getJwtTokenSecret());
         api = new ShoppingListApi(SHOPPING_LIST_1_0, serviceUrl, token);
 
         shoppingListRepository = testDatabaseSetup.getRepositoryFactory().createShoppingListRepository();
@@ -60,7 +59,7 @@ public class ShoppingListIntegrationTest {
         Response response = api.getShoppingLists();
         assertResponseStatus(response, OK);
 
-        JsonNode responseJson = jsonMapper.read(response);
+        JsonNode responseJson = JsonMapper.read(response);
         ArrayNode shoppingLists = (ArrayNode) responseJson.findValue("shoppingLists");
 
         assertThat(shoppingLists.size(), is(0));
@@ -77,7 +76,7 @@ public class ShoppingListIntegrationTest {
         assertResponseStatus(response, OK);
 
         // then
-        JsonNode responseJson = jsonMapper.read(response);
+        JsonNode responseJson = JsonMapper.read(response);
 
         JsonNode shoppingLists = responseJson.findValue("shoppingLists");
         assertThat(shoppingLists.size(), is(1));
@@ -93,7 +92,7 @@ public class ShoppingListIntegrationTest {
         Response createResponse = api.postShoppingList("{ \"name\": \"Test list\" }");
         assertResponseStatus(createResponse, CREATED);
 
-        JsonNode createResponseJson = jsonMapper.read(createResponse);
+        JsonNode createResponseJson = JsonMapper.read(createResponse);
         String listId = createResponseJson.findValue("id").asText();
         assertThat(listId, notNullValue());
 
@@ -101,7 +100,7 @@ public class ShoppingListIntegrationTest {
         Response getNewListResponse = api.getShoppingList(listId);
         assertResponseStatus(getNewListResponse, OK);
 
-        JsonNode getNewListResponseJson = jsonMapper.read(getNewListResponse);
+        JsonNode getNewListResponseJson = JsonMapper.read(getNewListResponse);
         assertThat(getNewListResponseJson.findValue("id").asText(), is(listId));
         assertThat(getNewListResponseJson.findValue("name").asText(), is(LIST_NAME));
         assertThat(getNewListResponseJson.findValue("items").size(), is(0));
@@ -236,7 +235,7 @@ public class ShoppingListIntegrationTest {
         // then
         assertResponseStatus(response, CREATED);
 
-        JsonNode responseJson = jsonMapper.read(response);
+        JsonNode responseJson = JsonMapper.read(response);
         String itemTypeId = responseJson.findValue("id").asText();
         assertThat(itemTypeId, notNullValue());
 
@@ -281,7 +280,7 @@ public class ShoppingListIntegrationTest {
         // then
         assertResponseStatus(response, CONFLICT);
 
-        JsonNode responseJson = jsonMapper.read(response);
+        JsonNode responseJson = JsonMapper.read(response);
         assertThat(responseJson.get("errorCode").asText(), is("ITEM_TYPE_NAME_ALREADY_TAKEN"));
     }
 
@@ -295,7 +294,7 @@ public class ShoppingListIntegrationTest {
         Response response = api.getItemTypes(shoppingList.getId().getId());
 
         // then
-        JsonNode responseJson = jsonMapper.read(response);
+        JsonNode responseJson = JsonMapper.read(response);
         ArrayNode itemTypes = (ArrayNode) responseJson.findValue("itemTypes");
 
         assertThat(itemTypes.size(), is(0));
@@ -312,7 +311,7 @@ public class ShoppingListIntegrationTest {
         Response response = api.getItemTypes(shoppingList.getId().getId());
 
         // then
-        JsonNode responseJson = jsonMapper.read(response);
+        JsonNode responseJson = JsonMapper.read(response);
         JsonNode itemTypes = responseJson.findValue("itemTypes");
 
         assertThat(itemTypes.size(), is(1));
@@ -378,7 +377,7 @@ public class ShoppingListIntegrationTest {
         // then
         assertResponseStatus(response, CONFLICT);
 
-        JsonNode responseJson = jsonMapper.read(response);
+        JsonNode responseJson = JsonMapper.read(response);
         assertThat(responseJson.get("errorCode").asText(), is("ITEM_TYPE_USED_IN_SHOPPING_LIST"));
         assertThat(responseJson.get("message").asText(), is(itemType.getId().getId()));
     }
@@ -400,7 +399,7 @@ public class ShoppingListIntegrationTest {
         Response getListResponse = api.getShoppingList(listId.getId());
         assertResponseStatus(getListResponse, OK);
 
-        JsonNode getListResponseJson = jsonMapper.read(getListResponse);
+        JsonNode getListResponseJson = JsonMapper.read(getListResponse);
         assertThat(getListResponseJson.findValue("id").asText(), is(listId.getId()));
         assertThat(getListResponseJson.findValue("name").asText(), is(LIST_NAME));
 
@@ -519,7 +518,7 @@ public class ShoppingListIntegrationTest {
         Response getListResponse = api.getShoppingList(listId.getId());
         assertResponseStatus(getListResponse, OK);
 
-        JsonNode getListResponseJson = jsonMapper.read(getListResponse);
+        JsonNode getListResponseJson = JsonMapper.read(getListResponse);
         assertThat(getListResponseJson.findValue("id").asText(), is(listId.getId()));
         assertThat(getListResponseJson.findValue("name").asText(), is(LIST_NAME));
 

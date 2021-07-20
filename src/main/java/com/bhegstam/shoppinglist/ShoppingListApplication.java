@@ -71,7 +71,7 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
         WorkspaceRepository workspaceRepository = repositoryFactory.createWorkspaceRepository();
         ShoppingListRepository shoppingListRepository = repositoryFactory.createShoppingListRepository();
 
-        configureAuth(config, environment, userRepository);
+        configureAuth(config, environment, userRepository, workspaceRepository);
 
         environment.jersey().register(new AuthResource(config.getJwtTokenSecret()));
         environment.jersey().register(new ShoppingListResource(
@@ -80,7 +80,7 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
                         shoppingListRepository
                 )
         ));
-        environment.jersey().register(new UserResource(new UserApplication(userRepository)));
+        environment.jersey().register(new UserResource(new UserApplication(userRepository, workspaceRepository)));
 
         configureCors(environment);
     }
@@ -98,11 +98,11 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
     }
 
-    private void configureAuth(ShoppingListApplicationConfiguration config, Environment environment, UserRepository userRepository) {
+    private void configureAuth(ShoppingListApplicationConfiguration config, Environment environment, UserRepository userRepository, WorkspaceRepository workspaceRepository) {
         UserRoleAuthorizer userRoleAuthorizer = new UserRoleAuthorizer();
 
         BasicCredentialAuthFilter<User> basicAuthFilter = new BasicCredentialAuthFilter.Builder<User>()
-                .setAuthenticator(new BasicAuthenticator(new UserApplication(userRepository)))
+                .setAuthenticator(new BasicAuthenticator(new UserApplication(userRepository, workspaceRepository)))
                 .setAuthorizer(userRoleAuthorizer)
                 .setPrefix("Basic")
                 .buildAuthFilter();
@@ -118,7 +118,7 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
 
         JwtAuthFilter<User> tokenAuthFilter = new JwtAuthFilter.Builder<User>()
                 .setJwtConsumer(consumer)
-                .setAuthenticator(new JwtTokenAuthenticator(new UserApplication(userRepository)))
+                .setAuthenticator(new JwtTokenAuthenticator(new UserApplication(userRepository, workspaceRepository)))
                 .setAuthorizer(userRoleAuthorizer)
                 .setPrefix("Bearer")
                 .buildAuthFilter();

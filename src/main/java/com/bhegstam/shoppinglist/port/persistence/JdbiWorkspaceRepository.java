@@ -4,6 +4,7 @@ import com.bhegstam.shoppinglist.domain.UserId;
 import com.bhegstam.shoppinglist.domain.Workspace;
 import com.bhegstam.shoppinglist.domain.WorkspaceId;
 import com.bhegstam.shoppinglist.domain.WorkspaceRepository;
+import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
@@ -12,6 +13,7 @@ import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import java.time.Instant;
 
+@RegisterRowMapper(WorkspaceMapper.class)
 public interface JdbiWorkspaceRepository extends WorkspaceRepository {
     @Transaction
     default void add(UserId userId, Workspace workspace) {
@@ -32,7 +34,10 @@ public interface JdbiWorkspaceRepository extends WorkspaceRepository {
     }
 
     @Override
-    @SqlQuery("select workspace_id, created_by, created_at from workspace where user_id = :userId.id and is_default_workspace = true")
+    @SqlQuery("select workspace.id, workspace.name, workspace.created_by " +
+            "from workspace " +
+            "inner join user_in_workspace " +
+            "where user_id = :userId.id and is_default_workspace = true")
     Workspace getDefaultWorkspace(@BindBean("userId") UserId userId);
 
     @SqlUpdate("insert into workspace(id, name, created_by, created_at) values (:workspaceId.id, :name, :createdBy, :createdAt)")
