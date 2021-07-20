@@ -1,5 +1,7 @@
 package com.bhegstam.shoppinglist.domain;
 
 public interface WorkspaceRepository {
-    void persist(Workspace workspace);
+    void add(UserId userId, Workspace workspace);
+
+    Workspace getDefaultWorkspace(UserId userId);
 }

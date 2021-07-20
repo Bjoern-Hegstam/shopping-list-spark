@@ -38,3 +38,7 @@ SELECT
 FROM application_user;
 
 UPDATE shopping_list SET workspace_id = '2a07710d-9047-4653-b348-2776dd42e02f';
+
+-- Require workspace for new shopping lists
+ALTER TABLE shopping_list
+    ALTER COLUMN workspace_id VARCHAR(36) NOT NULL;

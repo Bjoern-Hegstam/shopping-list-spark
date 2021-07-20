@@ -29,6 +29,7 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
 
         if (shoppingList.insertRequired()) {
             createShoppingList(
+                    shoppingList.getWorkspaceId(),
                     shoppingList.getId(),
                     shoppingList.getName(),
                     Timestamp.from(shoppingList.getCreatedAt()),
@@ -110,8 +111,9 @@ public interface JdbiShoppingListRepository extends ShoppingListRepository {
         shoppingList.clearDeletedItemTypes();
     }
 
-    @SqlUpdate("insert into shopping_list(id, name, created_at, updated_at) values (:listId.id, :name, :createdAt, :updatedAt)")
+    @SqlUpdate("insert into shopping_list(workspace_id, id, name, created_at, updated_at) values (:workspaceId.id, :listId.id, :name, :createdAt, :updatedAt)")
     void createShoppingList(
+            @BindBean("workspaceId") WorkspaceId workspaceId,
             @BindBean("listId") ShoppingListId listId,
             @Bind("name") String name,
             @Bind("createdAt") Timestamp createdAt,

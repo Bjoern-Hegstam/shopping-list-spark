@@ -5,9 +5,11 @@ import com.bhegstam.shoppinglist.domain.*;
 import java.util.List;
 
 public class ShoppingListApplication {
+    private final WorkspaceRepository workspaceRepository;
     private final ShoppingListRepository shoppingListRepository;
 
-    public ShoppingListApplication(ShoppingListRepository shoppingListRepository) {
+    public ShoppingListApplication(WorkspaceRepository workspaceRepository, ShoppingListRepository shoppingListRepository) {
+        this.workspaceRepository = workspaceRepository;
         this.shoppingListRepository = shoppingListRepository;
     }
 
@@ -19,8 +21,9 @@ public class ShoppingListApplication {
         return shoppingListRepository.get(shoppingListId);
     }
 
-    public ShoppingList createShoppingList(String name) {
-        ShoppingList shoppingList = ShoppingList.create(name);
+    public ShoppingList createShoppingList(UserId userId, String name) {
+        final Workspace workspaceId = workspaceRepository.getDefaultWorkspace(userId);
+        ShoppingList shoppingList = ShoppingList.create(workspaceId.getId(), name);
         shoppingListRepository.persist(shoppingList);
         return shoppingList;
     }

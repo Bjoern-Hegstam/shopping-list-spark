@@ -9,6 +9,7 @@ import com.bhegstam.shoppinglist.configuration.auth.UserRoleAuthorizer;
 import com.bhegstam.shoppinglist.domain.ShoppingListRepository;
 import com.bhegstam.shoppinglist.domain.User;
 import com.bhegstam.shoppinglist.domain.UserRepository;
+import com.bhegstam.shoppinglist.domain.WorkspaceRepository;
 import com.bhegstam.shoppinglist.port.persistence.RepositoryFactory;
 import com.bhegstam.shoppinglist.port.rest.auth.AuthResource;
 import com.bhegstam.shoppinglist.port.rest.shoppinglist.ShoppingListResource;
@@ -67,6 +68,7 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
         RepositoryFactory repositoryFactory = new RepositoryFactory(environment, config.getDataSourceFactory());
 
         UserRepository userRepository = repositoryFactory.createUserRepository();
+        WorkspaceRepository workspaceRepository = repositoryFactory.createWorkspaceRepository();
         ShoppingListRepository shoppingListRepository = repositoryFactory.createShoppingListRepository();
 
         configureAuth(config, environment, userRepository);
@@ -74,6 +76,7 @@ public class ShoppingListApplication extends Application<ShoppingListApplication
         environment.jersey().register(new AuthResource(config.getJwtTokenSecret()));
         environment.jersey().register(new ShoppingListResource(
                 new com.bhegstam.shoppinglist.application.ShoppingListApplication(
+                        workspaceRepository,
                         shoppingListRepository
                 )
         ));

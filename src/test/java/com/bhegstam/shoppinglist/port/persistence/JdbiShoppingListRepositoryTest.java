@@ -25,11 +25,19 @@ public class JdbiShoppingListRepositoryTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
+    private Workspace workspace;
     private ShoppingListRepository shoppingListRepository;
 
     @Before
     public void setUp() {
-        shoppingListRepository = testDatabaseSetup.getRepositoryFactory().createShoppingListRepository();
+        RepositoryFactory repositoryFactory = testDatabaseSetup.getRepositoryFactory();
+
+        User user = new User("test-user", "test-password", "test-email");
+        workspace = new Workspace("test-workspace", user);
+
+        repositoryFactory.createUserRepository().add(user);
+        repositoryFactory.createWorkspaceRepository().add(user.getId(), workspace);
+        shoppingListRepository = repositoryFactory.createShoppingListRepository();
     }
 
     @Test(expected = ShoppingListNotFoundException.class)
@@ -40,7 +48,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_newEmptyList() {
         // given
-        ShoppingList shoppingList = ShoppingList.create("Foo");
+        ShoppingList shoppingList = ShoppingList.create(workspace.getId(), "Foo");
 
         // when
         shoppingListRepository.persist(shoppingList);
@@ -55,7 +63,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_updateNameOfPersistedList() {
         // given
-        ShoppingList shoppingList = ShoppingList.create("Foo");
+        ShoppingList shoppingList = ShoppingList.create(workspace.getId(), "Foo");
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -71,7 +79,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_newListWithItems() {
         // create new list with items
-        ShoppingList shoppingList = ShoppingList.create("Foo");
+        ShoppingList shoppingList = ShoppingList.create(workspace.getId(), "Foo");
         ItemType itemType1 = shoppingList.addItemType("Type 1");
         ShoppingListItem item1 = shoppingList.addItem(itemType1);
 
@@ -104,7 +112,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_addItemsToPersistedList() {
         // given
-        ShoppingList shoppingList = ShoppingList.create("Foo");
+        ShoppingList shoppingList = ShoppingList.create(workspace.getId(), "Foo");
         ItemType itemType1 = shoppingList.addItemType("Type 1");
         shoppingListRepository.persist(shoppingList);
 
@@ -120,7 +128,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_updateItemInPersistedList() {
         // given
-        ShoppingList shoppingList = ShoppingList.create("Foo");
+        ShoppingList shoppingList = ShoppingList.create(workspace.getId(), "Foo");
         ItemType itemType1 = shoppingList.addItemType("Type 1");
         ShoppingListItem item1 = shoppingList.addItem(itemType1);
         shoppingListRepository.persist(shoppingList);
@@ -139,7 +147,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_itemDeletedFromList() {
         // given
-        ShoppingList shoppingList = ShoppingList.create("Foo");
+        ShoppingList shoppingList = ShoppingList.create(workspace.getId(), "Foo");
         ItemType itemType1 = shoppingList.addItemType("Type 1");
         ShoppingListItem item1 = shoppingList.addItem(itemType1);
         ItemType itemType2 = shoppingList.addItemType("Type 2");
@@ -162,7 +170,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_throwsExceptionIfListInDatabaseModifiedSinceFetch() {
         // given
-        ShoppingList shoppingListInstance1 = ShoppingList.create("Foo");
+        ShoppingList shoppingListInstance1 = ShoppingList.create(workspace.getId(), "Foo");
         ItemType itemType1 = shoppingListInstance1.addItemType("Type 1");
         shoppingListRepository.persist(shoppingListInstance1);
 
@@ -181,7 +189,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_throwsExceptionIfItemInListInDatabaseModifiedSinceFetch() {
         // given
-        ShoppingList shoppingListInstance1 = ShoppingList.create("Foo");
+        ShoppingList shoppingListInstance1 = ShoppingList.create(workspace.getId(), "Foo");
         ItemType itemType1 = shoppingListInstance1.addItemType("Type 1");
         ShoppingListItem item1 = shoppingListInstance1.addItem(itemType1);
         shoppingListRepository.persist(shoppingListInstance1);
@@ -201,7 +209,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void persist_throwsExceptionIfTryingToInsertItemAlreadyInList() {
         // given
-        ShoppingList shoppingListInstance1 = ShoppingList.create("Foo");
+        ShoppingList shoppingListInstance1 = ShoppingList.create(workspace.getId(), "Foo");
         shoppingListRepository.persist(shoppingListInstance1);
 
         ShoppingList shoppingListInstance2 = shoppingListRepository.get(shoppingListInstance1.getId());
@@ -229,12 +237,12 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void getShoppingLists() {
         // given
-        ShoppingList shoppingList1 = ShoppingList.create("Foo");
+        ShoppingList shoppingList1 = ShoppingList.create(workspace.getId(), "Foo");
         ItemType itemType1 = shoppingList1.addItemType("Type 1");
         ShoppingListItem item1 = shoppingList1.addItem(itemType1);
         shoppingListRepository.persist(shoppingList1);
 
-        ShoppingList shoppingList2 = ShoppingList.create("Bar");
+        ShoppingList shoppingList2 = ShoppingList.create(workspace.getId(), "Bar");
         shoppingListRepository.persist(shoppingList2);
 
         // when
@@ -248,8 +256,8 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void delete() {
         // given
-        ShoppingList shoppingList1 = ShoppingList.create("Foo");
-        ShoppingList shoppingList2 = ShoppingList.create("Bar");
+        ShoppingList shoppingList1 = ShoppingList.create(workspace.getId(), "Foo");
+        ShoppingList shoppingList2 = ShoppingList.create(workspace.getId(), "Bar");
         shoppingListRepository.persist(shoppingList1);
         shoppingListRepository.persist(shoppingList2);
 
@@ -268,7 +276,7 @@ public class JdbiShoppingListRepositoryTest {
     @Test
     public void delete_listHasItems() {
         // given
-        ShoppingList shoppingList = ShoppingList.create("Foo");
+        ShoppingList shoppingList = ShoppingList.create(workspace.getId(), "Foo");
         ItemType itemType1 = shoppingList.addItemType("Type 1");
         shoppingList.addItem(itemType1);
         shoppingListRepository.persist(shoppingList);

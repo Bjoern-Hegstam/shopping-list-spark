@@ -10,14 +10,16 @@ import static com.bhegstam.shoppinglist.util.CustomCollectors.onlyOptionalElemen
 import static java.util.stream.Collectors.toList;
 
 public class ShoppingList extends Entity<ShoppingListId> {
+    private final WorkspaceId workspaceId;
     private String name;
     private final Map<ItemTypeId, ItemType> itemTypes;
     private final Set<ItemTypeId> deletedItemTypes;
     private final List<ShoppingListItem> items;
     private final Set<ShoppingListItemId> removedItems;
 
-    public static ShoppingList create(String name) {
+    public static ShoppingList create(WorkspaceId workspaceId, String name) {
         return new ShoppingList(
+                workspaceId,
                 new ShoppingListId(),
                 name,
                 Instant.now(),
@@ -26,8 +28,9 @@ public class ShoppingList extends Entity<ShoppingListId> {
         );
     }
 
-    public static ShoppingList fromDb(String id, String name, Instant createdAt, Instant updatedAt) {
+    public static ShoppingList fromDb(String workspaceId, String id, String name, Instant createdAt, Instant updatedAt) {
         return new ShoppingList(
+                WorkspaceId.from(workspaceId),
                 ShoppingListId.parse(id),
                 name,
                 createdAt,
@@ -37,6 +40,7 @@ public class ShoppingList extends Entity<ShoppingListId> {
     }
 
     private ShoppingList(
+            WorkspaceId workspaceId,
             ShoppingListId id,
             String name,
             Instant createdAt,
@@ -44,11 +48,16 @@ public class ShoppingList extends Entity<ShoppingListId> {
             PersistenceStatus persistenceStatus
     ) {
         super(id, createdAt, updatedAt, persistenceStatus);
+        this.workspaceId = workspaceId;
         this.name = name;
         itemTypes = new HashMap<>();
         deletedItemTypes = new HashSet<>();
         items = new ArrayList<>();
         removedItems = new HashSet<>();
+    }
+
+    public WorkspaceId getWorkspaceId() {
+        return workspaceId;
     }
 
     public String getName() {

@@ -38,7 +38,7 @@ public class ShoppingListResource {
     public Response postShoppingList(@Auth User user, @Valid CreateShoppingListRequest request) {
         LOGGER.info("Received request [{}] to create shopping list for user [{}]", request, user.getId());
 
-        ShoppingList shoppingList = shoppingListApplication.createShoppingList(request.getName());
+        ShoppingList shoppingList = shoppingListApplication.createShoppingList(user.getId(), request.getName());
 
         return createAndLogResponse(CREATED, new CreateShoppingListResponse(shoppingList.getId()));
     }

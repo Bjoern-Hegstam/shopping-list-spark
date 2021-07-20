@@ -29,11 +29,12 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class ShoppingListIntegrationTest {
+    private static final WorkspaceId WORKSPACE_ID = TestData.ADMIN_DEFAULT_WORKSPACE.getId();
     private static final String LIST_NAME = "Test list";
     private static final String ITEM_TYPE_NAME = "Apples";
     private static final String INVALID_ID = "invalid-id";
-    public static final String RANDOM_LIST_ID = new ShoppingListId().getId();
-    public static final String RANDOM_LIST_ITEM_ID = new ShoppingListItemId().getId();
+    private static final String RANDOM_LIST_ID = new ShoppingListId().getId();
+    private static final String RANDOM_LIST_ITEM_ID = new ShoppingListItemId().getId();
 
     @ClassRule
     public static final DropwizardAppRule<ShoppingListApplicationConfiguration> service = DropwizardAppRuleFactory.forIntegrationTest();
@@ -68,7 +69,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void getShoppingLists_existsLists() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -127,7 +128,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void updateShoppingList() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
         shoppingList.addItem(itemType);
         shoppingListRepository.persist(shoppingList);
@@ -163,8 +164,8 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteShoppingList() {
         // given
-        ShoppingList list1 = ShoppingList.create("name");
-        ShoppingList list2 = ShoppingList.create("name");
+        ShoppingList list1 = ShoppingList.create(WORKSPACE_ID, "name");
+        ShoppingList list2 = ShoppingList.create(WORKSPACE_ID, "name");
         shoppingListRepository.persist(list1);
         shoppingListRepository.persist(list2);
 
@@ -179,7 +180,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteShoppingListWithItems() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
         shoppingList.addItem(itemType);
         shoppingListRepository.persist(shoppingList);
@@ -194,7 +195,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteShoppingListWithItemTypeButNoItems() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         shoppingList.addItemType(ITEM_TYPE_NAME);
         shoppingListRepository.persist(shoppingList);
 
@@ -226,7 +227,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void postItemType() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -246,7 +247,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void postItemType_emptyName() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
 
         // when
         Response response = api.postItemType(shoppingList.getId().getId(), "{ \"name\": \"\" }");
@@ -258,7 +259,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void missingName() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
 
         // when
         Response response = api.postItemType(shoppingList.getId().getId(), "{ }");
@@ -270,7 +271,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void postItemType_itemTypeWithSameNameAlreadyExists() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         shoppingList.addItemType(ITEM_TYPE_NAME);
         shoppingListRepository.persist(shoppingList);
 
@@ -287,7 +288,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void getItemTypes_noItemTypesExist() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -303,7 +304,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void getItemTypes() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
         shoppingListRepository.persist(shoppingList);
 
@@ -324,7 +325,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteItemType() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
         shoppingListRepository.persist(shoppingList);
 
@@ -340,7 +341,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteItemType_unknownId() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -353,7 +354,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteItemType_invalidId() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -366,7 +367,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteItemType_usedByShoppingList() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
         shoppingList.addItem(itemType);
         shoppingListRepository.persist(shoppingList);
@@ -385,7 +386,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItemToEmptyShoppingList() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
         shoppingListRepository.persist(shoppingList);
         ShoppingListId listId = shoppingList.getId();
@@ -437,7 +438,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_invalidItemTypeId() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -450,7 +451,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_unknownItemTypeId() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -463,7 +464,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_missingItemTypeId() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -476,7 +477,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_missingQuantity() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
         shoppingListRepository.persist(shoppingList);
 
@@ -490,7 +491,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void addItem_negativeQuantity() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
         shoppingListRepository.persist(shoppingList);
 
@@ -504,7 +505,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void updateItem() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
         ShoppingListItem listItem = shoppingList.addItem(itemType);
         shoppingListRepository.persist(shoppingList);
@@ -565,7 +566,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void updateItem_unknownListItemId() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
 
         // when
         Response response = api.putShoppingListItem(shoppingList.getId().getId(), RANDOM_LIST_ITEM_ID, "{}");
@@ -577,7 +578,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteItem() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         ItemType itemType = shoppingList.addItemType(ITEM_TYPE_NAME);
         ShoppingListItem listItem = shoppingList.addItem(itemType);
         shoppingListRepository.persist(shoppingList);
@@ -622,7 +623,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void deleteItem_unknownListItemId() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         shoppingListRepository.persist(shoppingList);
 
         // when
@@ -635,7 +636,7 @@ public class ShoppingListIntegrationTest {
     @Test
     public void emptyCart() {
         // given
-        ShoppingList shoppingList = ShoppingList.create(LIST_NAME);
+        ShoppingList shoppingList = ShoppingList.create(WORKSPACE_ID, LIST_NAME);
         shoppingListRepository.persist(shoppingList);
 
         // when
