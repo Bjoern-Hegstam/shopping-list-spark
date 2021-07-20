@@ -53,6 +53,7 @@ public class UserIntegrationTest {
         assertResponseStatus(updateUserResponse, OK);
 
         // as new user get info about self
+        // TODO: Replace with use of the auth resource
         String userToken = TokenGenerator.generate("test-username", service.getConfiguration().getJwtTokenSecret());
         UserApi userApi = new UserApi(USER_1_0, serviceUrl, userToken);
 
@@ -68,4 +69,6 @@ public class UserIntegrationTest {
         JsonNode workspacesJson = usersJson.get("workspaces");
         assertThat(workspacesJson.size(), is(1)); // TODO: Implement. A default workspace should have been created for the user.
     }
+
+    // TODO: Migrate tests in UserShoppingListApplicationIntegrationTest to this class
 }

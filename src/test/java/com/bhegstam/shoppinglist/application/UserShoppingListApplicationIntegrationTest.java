@@ -10,6 +10,10 @@ import org.junit.rules.ErrorCollector;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+/**
+ * @deprecated Tests to be migrated to UserIntegrationTest
+ */
+@Deprecated
 public class UserShoppingListApplicationIntegrationTest {
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();

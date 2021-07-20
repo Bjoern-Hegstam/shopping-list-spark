@@ -60,4 +60,6 @@ public class AuthIntegrationTest {
                 .get();
         assertThat(pingResponse.getStatus(), is(OK.getStatusCode()));
     }
+
+    // TODO: Add test verifying that an unverified user cannot get a token
 }
