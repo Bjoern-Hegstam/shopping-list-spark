@@ -12,9 +12,9 @@ public class WorkspaceMapper implements RowMapper<Workspace> {
     @Override
     public Workspace map(ResultSet rs, StatementContext ctx) throws SQLException {
         return Workspace.fromDb(
-                WorkspaceId.from(rs.getString("workspace.id")),
-                rs.getString("workspace.name"),
-                rs.getString("workspace.created_by")
+                WorkspaceId.from(rs.getString("id")),
+                rs.getString("name"),
+                rs.getString("created_by")
         );
     }
 }
