@@ -11,7 +11,7 @@ public class TokenGenerator {
     public static String generate(String username, byte[] tokenSecret) throws JoseException {
         JwtClaims claims = new JwtClaims();
         claims.setSubject(username);
-        claims.setExpirationTimeMinutesInTheFuture(60);
+        claims.setExpirationTimeMinutesInTheFuture(480); // Should preferably be as short as possible, but some users (i.e. my wife) don't like having to constantly re-authenticate. Allowing a full day until support for refresh tokens has been implemented.
         claims.setIssuedAtToNow();
 
         JsonWebSignature jws = new JsonWebSignature();
