@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.bhegstam.shoppinglist.util.Matchers.isPresent;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 
 public class JdbiUserRepositoryTest {
     @Rule

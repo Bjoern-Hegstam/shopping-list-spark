@@ -4,7 +4,7 @@ import org.hamcrest.Matchers;
 
 import javax.ws.rs.core.Response;
 
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ResponseTestUtil {
     public static final int UNPROCESSABLE_ENTITY = 422;

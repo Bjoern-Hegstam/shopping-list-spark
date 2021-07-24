@@ -11,8 +11,8 @@ import org.junit.rules.ExpectedException;
 import java.util.List;
 
 import static com.bhegstam.shoppinglist.util.Matchers.isEmpty;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class JdbiShoppingListRepositoryTest {

@@ -25,8 +25,8 @@ import static com.bhegstam.shoppinglist.port.rest.auth.RestApiMimeType.AUTH_1_0;
 import static com.bhegstam.shoppinglist.port.rest.user.RestApiMimeType.USER_1_0;
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.OK;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 public class UserIntegrationTest {
     @ClassRule

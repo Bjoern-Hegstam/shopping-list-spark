@@ -12,8 +12,8 @@ import java.time.temporal.ChronoUnit;
 import static com.bhegstam.shoppinglist.util.Matchers.isAfter;
 import static com.bhegstam.shoppinglist.util.Matchers.isAtOrAfter;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
 
 public class ShoppingListTest {
     private static final WorkspaceId WORKSPACE_ID = new WorkspaceId();
