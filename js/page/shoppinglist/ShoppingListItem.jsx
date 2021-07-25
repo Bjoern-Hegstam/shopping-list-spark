@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import * as PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { MdAddShoppingCart, MdRemoveShoppingCart } from 'react-icons/md';
@@ -6,26 +6,23 @@ import { MdAddShoppingCart, MdRemoveShoppingCart } from 'react-icons/md';
 import { ShoppingListItemType } from '../../propTypes';
 import ShoppingListItemSubPanel from './ShoppingListItemSubPanel';
 
-export default function ShoppingListItem({ item, onToggleInCart, onUpdateQuantity }) {
-  const [showSubPanel, setShowSubPanel] = useState(false);
-
+export default function ShoppingListItem({ item, showExpandedView, onClick, onToggleInCart, onUpdateQuantity }) {
   const itemClassNames = classNames('shopping-list-item', {
     ' shopping-list-item--in-cart': item.inCart,
   });
 
-  // TODO: Disable editing while item is being added/updated/deleted
   return (
     <div className={itemClassNames}>
       <div className="shopping-list-item__main">
         <span
           className="shopping-list-item__main__quantity"
-          onClick={() => setShowSubPanel(!showSubPanel)}
+          onClick={() => onClick(item.id)}
         >
           {item.quantity}
         </span>
         <span
           className="shopping-list-item__main__name"
-          onClick={() => setShowSubPanel(!showSubPanel)}
+          onClick={() => onClick(item.id)}
         >
           {item.itemType.name}
         </span>
@@ -36,7 +33,7 @@ export default function ShoppingListItem({ item, onToggleInCart, onUpdateQuantit
           {item.inCart ? <MdRemoveShoppingCart /> : <MdAddShoppingCart />}
         </span>
       </div>
-      {showSubPanel && (
+      {showExpandedView && (
         <ShoppingListItemSubPanel
           onIncrementClick={() => onUpdateQuantity({ item, newQuantity: item.quantity + 1 })}
           onDecrementClick={() => onUpdateQuantity({ item, newQuantity: item.quantity - 1 })}
@@ -48,6 +45,8 @@ export default function ShoppingListItem({ item, onToggleInCart, onUpdateQuantit
 
 ShoppingListItem.propTypes = {
   item: ShoppingListItemType.isRequired,
+  showExpandedView: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
   onToggleInCart: PropTypes.func.isRequired,
   onUpdateQuantity: PropTypes.func.isRequired,
 };

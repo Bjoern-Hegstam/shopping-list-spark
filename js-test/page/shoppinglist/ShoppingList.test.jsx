@@ -201,6 +201,51 @@ describe('ShoppingListItem', () => {
     // then
     expect(props.onUpdateItemQuantity).toHaveBeenCalledTimes(1);
   });
+
+  it('expands item view when item clicked', () => {
+    // given
+    component.setProps({ shoppingList: shoppingListWithItemsInCart });
+
+    // when
+    const firstItem = component.find(ShoppingListItem).first();
+    firstItem.simulate('click', firstItem.prop('item').id);
+
+    // then
+    const item = component.find(ShoppingListItem).first();
+    expect(item.prop('showExpandedView')).toBe(true);
+  });
+
+  it('collapses item view when expanded item clicked', () => {
+    // given
+    component.setProps({ shoppingList: shoppingListWithItemsInCart });
+    const firstItem = component.find(ShoppingListItem).first();
+    firstItem.simulate('click', firstItem.prop('item').id);
+
+    // when
+    firstItem.simulate('click', firstItem.prop('item').id);
+
+    // then
+    const item = component.find(ShoppingListItem).first();
+    expect(item.prop('showExpandedView')).toBe(false);
+  });
+
+  it('collapses item view when other item clicked', () => {
+    // given
+    component.setProps({ shoppingList: shoppingListWithItemsInCart });
+    const firstItem = component.find(ShoppingListItem).at(0);
+    firstItem.simulate('click', firstItem.prop('item').id);
+
+    // when
+    const secondItem = component.find(ShoppingListItem).at(1);
+    secondItem.simulate('click', secondItem.prop('item').id);
+
+    // then
+    const firstItemAfterClick = component.find(ShoppingListItem).at(0);
+    expect(firstItemAfterClick.prop('showExpandedView')).toBe(false);
+
+    const secondItemAfterClick = component.find(ShoppingListItem).at(1);
+    expect(secondItemAfterClick.prop('showExpandedView')).toBe(true);
+  });
 });
 
 describe('AddShoppingListItemInput', () => {

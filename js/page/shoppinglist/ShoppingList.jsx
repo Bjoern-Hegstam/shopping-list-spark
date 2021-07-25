@@ -24,6 +24,7 @@ export default class ShoppingList extends React.Component {
     super(props);
     this.state = {
       name: '',
+      expandedItemId: null,
     };
     this.inputRef = React.createRef();
   }
@@ -34,7 +35,7 @@ export default class ShoppingList extends React.Component {
     }
   }
 
-  handleStartEdit = () => {
+  handleStartEditName = () => {
     this.setState({ name: this.props.shoppingList.name }, () => this.props.onStartEdit());
   };
 
@@ -51,6 +52,13 @@ export default class ShoppingList extends React.Component {
     }
   };
 
+  handleItemClick = itemId => {
+    this.setState(prevState => ({
+      ...prevState,
+      expandedItemId: prevState.expandedItemId !== itemId ? itemId : null,
+    }));
+  };
+
   render() {
     const {
       shoppingList,
@@ -60,7 +68,7 @@ export default class ShoppingList extends React.Component {
       onUpdateItemQuantity,
       onEmptyCart,
     } = this.props;
-    const { name } = this.state;
+    const { name, expandedItemId } = this.state;
 
     const hasItemsInCart = shoppingList.items.some(item => item.inCart);
 
@@ -79,7 +87,7 @@ export default class ShoppingList extends React.Component {
         ) : (
           <span
             className="shopping-list__name"
-            onClick={this.handleStartEdit}
+            onClick={this.handleStartEditName}
           >
             {shoppingList.name}
           </span>
@@ -106,6 +114,8 @@ export default class ShoppingList extends React.Component {
                   <ShoppingListItem
                     key={item.id}
                     item={item}
+                    showExpandedView={item.id === expandedItemId}
+                    onClick={this.handleItemClick}
                     onToggleInCart={onToggleItemInCart}
                     onUpdateQuantity={onUpdateItemQuantity}
                   />
@@ -125,6 +135,8 @@ export default class ShoppingList extends React.Component {
                   <ShoppingListItem
                     key={item.id || item.requestId}
                     item={item}
+                    showExpandedView={item.id === expandedItemId}
+                    onClick={this.handleItemClick}
                     onToggleInCart={onToggleItemInCart}
                     onUpdateQuantity={onUpdateItemQuantity}
                   />

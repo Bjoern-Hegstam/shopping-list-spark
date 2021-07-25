@@ -15,7 +15,9 @@ function setup(optProps) {
     ShoppingListItem,
     {
       item,
+      showExpandedView: false,
 
+      onClick: jest.fn(),
       onToggleInCart: jest.fn(),
       onUpdateQuantity: jest.fn(),
     },
@@ -37,33 +39,31 @@ it('initial render', () => {
   expect(component.find(ShoppingListItemSubPanel)).toHaveLength(0);
 });
 
-describe('sub panel', () => {
-  it('shows sub panel when quantity clicked', () => {
+describe('expanded view', () => {
+  it('enabled', () => {
+    component.setProps({ showExpandedView: true });
+
+    expect(component.find(ShoppingListItemSubPanel)).toHaveLength(1);
+  });
+
+  it('disabled', () => {
+    component.setProps({ showExpandedView: false });
+
+    expect(component.find(ShoppingListItemSubPanel)).toHaveLength(0);
+  });
+});
+
+describe('onClick', () => {
+  it('quantity clicked', () => {
     component.find('.shopping-list-item__main__quantity').simulate('click');
 
-    expect(component.find(ShoppingListItemSubPanel)).toHaveLength(1);
+    expect(props.onClick).toHaveBeenCalledWith(item.id);
   });
 
-  it('shows sub panel when name clicked', () => {
+  it('name clicked', () => {
     component.find('.shopping-list-item__main__name').simulate('click');
 
-    expect(component.find(ShoppingListItemSubPanel)).toHaveLength(1);
-  });
-
-  it('onIncrementClick', () => {
-    component.find('.shopping-list-item__main__name').simulate('click');
-
-    component.find(ShoppingListItemSubPanel).simulate('incrementClick');
-
-    expect(props.onUpdateQuantity).toHaveBeenCalledWith({ item, newQuantity: item.quantity + 1 });
-  });
-
-  it('onDecrementClick', () => {
-    component.find('.shopping-list-item__main__name').simulate('click');
-
-    component.find(ShoppingListItemSubPanel).simulate('decrementClick');
-
-    expect(props.onUpdateQuantity).toHaveBeenCalledWith({ item, newQuantity: item.quantity - 1 });
+    expect(props.onClick).toHaveBeenCalledWith(item.id);
   });
 });
 
