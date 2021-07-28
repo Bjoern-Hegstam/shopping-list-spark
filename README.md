@@ -6,7 +6,7 @@ This is a simple shopping list webapp designed by me for me. The backend is buil
 
 Set up your environment with:
 * JDK: 16
-* Node.js: 12
+* Node.js: 14
 
 and run `maven package`. Maven is configured to build both backend and frontend, and package them in a fat JAR. The webapp is started by running:
 
