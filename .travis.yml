@@ -22,6 +22,6 @@ install: true # Disable default install step. Maven runs install as part of the 
 script: mvn test -B
 
 deploy:
- - provider: heroku:api
+ - provider: heroku:git
    app: shopping-list--staging
    edge: true # opt in to dpl v2
