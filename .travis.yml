@@ -20,8 +20,3 @@ before_install:
 install: true # Disable default install step. Maven runs install as part of the test life cycle anyway.
 
 script: mvn test -B
-
-deploy:
- - provider: heroku:git
-   app: shopping-list--staging
-   edge: true # opt in to dpl v2
